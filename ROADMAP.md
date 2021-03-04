@@ -18,5 +18,5 @@
    - The platform can be localized;
    - implement a recommendation system for showcasing similar goods;
    - ensure the taxation laws can be enforced;
-   - ensure compliance with data retention laws (if at all possible fora blockchain-based technology.)
+   - ensure compliance with data retention laws (if at all possible for a blockchain-based technology.)
    
