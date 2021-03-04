@@ -1,6 +1,5 @@
-
 # Legal
-Copyright (C) Catalyst 2020; Kragujevac, Serbia.
+Copyright (C) Catalyst 2021; Kragujevac, Serbia.
 
 Code owners, in no particular order:
    - Jelena Gogić
