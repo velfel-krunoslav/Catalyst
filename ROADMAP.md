@@ -1,4 +1,5 @@
 # Roadmap
+
 ## Mandatory
    - Ensure the application is multi-platform (The Web, mobile, tablet, ...);
    - Product Catalog is intuitively categorized;
