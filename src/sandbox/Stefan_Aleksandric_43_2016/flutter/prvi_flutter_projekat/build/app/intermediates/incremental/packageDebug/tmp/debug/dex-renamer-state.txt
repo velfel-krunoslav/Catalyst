@@ -1,0 +1,4 @@
+#Mon Mar 08 20:55:00 CET 2021
+base.0=C\:\\Users\\97ste\\Desktop\\Flutter\\probniprojekat\\prvi_flutter_projekat\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/prvi_flutter_projekat.iml" filepath="$PROJECT_DIR$/prvi_flutter_projekat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/prvi_flutter_projekat_android.iml" filepath="$PROJECT_DIR$/android/prvi_flutter_projekat_android.iml" />
+    </modules>
+  </component>
+</project>
