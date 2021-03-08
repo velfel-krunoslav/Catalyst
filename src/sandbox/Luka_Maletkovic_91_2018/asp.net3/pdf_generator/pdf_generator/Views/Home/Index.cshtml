@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<button id="btnPdf">Generisi Pdf</button>
+
+<script type="text/javascript">
+    $("#btnPdf").click(function () {
+        window.open('../Home/PrintOsoba?param=1','_blank');
+    });
+
+</script>
