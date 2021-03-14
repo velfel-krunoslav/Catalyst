@@ -19,9 +19,9 @@ Components found in the Figma prototype will **always** consist of one of the fo
 | ![dark_grey](img/dark_grey.png) | `0x6D6D6D` | DARK_GREY |
 | ![light_grey](img/light_grey.png) | `0xECECEC` | LIGHT_GREY |
 | ![dark_green](img/dark_green.png) | `0x07630B` | DARK_GREEN |
-| ![mint](img/mint.png) | `0x1BD14C ` | MINT_GREEN |
-| ![olive](img/olive.png) | `0x009A29` | OLIVE_GREEN |
-| ![teal](img/teal.png) | `0x0EAD65` | GREEN_TEAL |
+| ![mint](img/mint.png) | `0x1BD14C ` | MINT |
+| ![olive](img/olive.png) | `0x009A29` | OLIVE |
+| ![teal](img/teal.png) | `0x0EAD65` | TEAL |
 
 ## Icons
 The icons you need in order to implement the UI can be found in the `assets/icons` directory.
