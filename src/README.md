@@ -1,3 +1,9 @@
+# Coding guidelines
+
+Use the standard Dart coding syntax, as defined [here](https://dart.dev/guides/language/effective-dart/style). Use the Dart formatter to make the life easier.
+
+Names of variables, fields, methods, classes, interfaces, etc. must be written in English. The same applies to comments in your code.
+
 # Design and brand identity guidelines
 ## Fonts
 You should use the Inter typeface, as provided in the `assets/fonts` directory.
