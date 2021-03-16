@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_svg: ^0.19.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -45,10 +45,32 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-
+  assets:
+    - assets/icons/ArrowDown.svg
+    - assets/icons/ArrowLeft.svg
+    - assets/icons/ArrowUp.svg
+    - assets/icons/CarouselActivePage.svg
+    - assets/icons/CarouselInctivePage.svg
+    - assets/icons/DotsNine.svg
+    - assets/icons/DotsThreeVertical.svg
+    - assets/icons/Envelope.svg
+    - assets/icons/EyeSlash.svg
+    - assets/icons/KotaricaIconMonochrome.svg
+    - assets/icons/KotaricaLogomark.svg
+    - assets/icons/LogomarkBlack.svg
+    - assets/icons/MagnifyingGlass.svg
+    - assets/icons/ShoppingBag.svg
+    - assets/icons/ShoppingCart.svg
+    - assets/icons/StarFilled.svg
+    - assets/icons/StarOutline.svg
+    - assets/product_listings/honey_shawn_caza_cc_by_sa.jpg
+    - assets/product_listings/martin_cathrae_by_sa.jpg
+    - assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg
+    - assets/product_listings/prosciutto_46137_by.jpg
+    - assets/product_listings/rakija_silverije_cc_by_sa.jpg
+    - assets/product_listings/salami_pbkwee_by_sa.jpg
+    - assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg
+    - assets/avatars/vendor_andrew_ballantyne_cc_by.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -60,6 +82,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.otf
+        - asset: assets/fonts/Inter-Bold.otf
+          weight: 900
+        - asset: assets/fonts/Inter-Medium.otf
+          weight: 700
+        - asset: assets/fonts/Inter-SemiBold.otf
+          weight: 800
   # fonts:
   #   - family: Schyler
   #     fonts:
