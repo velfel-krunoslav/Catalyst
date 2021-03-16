@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 const CYAN = 0xFF0F62FE;
 const MINT = 0xFF1BD14C;
@@ -29,9 +29,57 @@ class MainApplication extends StatelessWidget {
             Container(
                 height: 240,
                 width: double.infinity,
-                child: Image.asset(
-                    'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
-                    fit: BoxFit.cover)),
+                child: Stack(
+                  children: [
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 240,
+                        viewportFraction: 1,
+                      ),
+                      items: [
+                        'washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
+                        'martin_cathrae_by_sa.jpg',
+                        'honey_shawn_caza_cc_by_sa.jpg'
+                      ].map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Image.asset(
+                              'assets/product_listings/$i',
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            Spacer(),
+                            SvgPicture.asset(
+                                'assets/icons/CarouselActivePage.svg'),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            SvgPicture.asset(
+                                'assets/icons/CarouselInctivePage.svg'),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            SvgPicture.asset(
+                                'assets/icons/CarouselInctivePage.svg'),
+                            Spacer()
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    )
+                  ],
+                )),
             Card(
                 margin: EdgeInsets.fromLTRB(0, 235, 0, 0),
                 child: Padding(
@@ -267,7 +315,7 @@ class MainApplication extends StatelessWidget {
               children: [
                 SizedBox(width: 20),
                 TextButton(
-                    onPressed: () => {},
+                    onPressed: () {},
                     child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
                         color: Colors.black),
                     style: TextButton.styleFrom(
@@ -275,7 +323,7 @@ class MainApplication extends StatelessWidget {
                         minimumSize: Size(36, 36))),
                 Spacer(),
                 TextButton(
-                    onPressed: () => {},
+                    onPressed: () {},
                     child: SvgPicture.asset(
                         'assets/icons/DotsThreeVertical.svg',
                         color: Colors.black),
