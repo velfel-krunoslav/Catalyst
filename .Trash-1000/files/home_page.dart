@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+/*import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,35 +30,49 @@ class _HomePageState extends State<HomePage> {
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   List<ProductEntry> products = [
     new ProductEntry(
-        url: 'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg',
-        title: 'Domaći med',
-        price: '13.90€ (750g)'),
+        assetUrls: List<String>['assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'],
+        name: 'Domaći med',
+        price: 13.90,
+classification: Classification.Weight,
+quantifier: 750),
     new ProductEntry(
-        url: 'assets/product_listings/martin_cathrae_by_sa.jpg',
-        title: 'Pasirani paradajz',
-        price: '2.40€ (500g)'),
-    new ProductEntry(
-        url:
-            'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg',
-        title: 'Maslinovo ulje',
-        price: '15€ (750g)'),
-    new ProductEntry(
-        url: 'assets/product_listings/prosciutto_46137_by.jpg',
-        title: 'Pršut',
-        price: '15€ (750g)'),
-    new ProductEntry(
-        url: 'assets/product_listings/rakija_silverije_cc_by_sa.jpg',
-        title: 'Rakija',
-        price: '12.40€ (1000 ml)'),
-    new ProductEntry(
-        url: 'assets/product_listings/salami_pbkwee_by_sa.jpg',
-        title: 'Kobasica',
-        price: '16.70€ (1000g)'),
+        assetUrls: List<String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
+        name: 'Pasirani paradajz',
+        price: 2.40,
+classification: Classification.Weight,
+quantifier: 500),
     new ProductEntry(
         url:
-            'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
-        title: 'Kamamber',
-        price: '29.90€ (500g)'),
+            'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg'],
+        name: 'Maslinovo ulje',
+        price: 15,
+classification: Classification.Weight,
+quantifier: 750),
+    new ProductEntry(
+        assetUrls: List<String>['assets/product_listings/prosciutto_46137_by.jpg'],
+        name: 'Pršut',
+        price: 15,
+classification: Classification.Weight,
+quantifier: 750),
+    new ProductEntry(
+        assetUrls: List<String>['assets/product_listings/rakija_silverije_cc_by_sa.jpg'],
+        name: 'Rakija',
+        price: 12.40,
+classification: Classification.Volume,
+quantifier: 1000),
+    new ProductEntry(
+        assetUrls: List<String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
+        name: 'Kobasica',
+        price: 16.70,
+classification: Classification.Weight,
+quantifier: 1000),
+    new ProductEntry(
+        url:
+            'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'],
+        name: 'Kamamber',
+        price: 29.90,
+classification: Classification.Weight,
+quantifier: 500),
   ];
   List<ProductEntry> recently;
   List<ProductEntry> productsToDispay;
@@ -537,4 +551,4 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-}
+}*/
