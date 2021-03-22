@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/sign_up.dart';
@@ -90,8 +91,7 @@ class Login extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => new ConsumerHomePage()),
+                    MaterialPageRoute(builder: (context) => new SearchPage()),
                   );
                 },
               ),
