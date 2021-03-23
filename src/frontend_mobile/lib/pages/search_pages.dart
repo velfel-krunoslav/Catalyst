@@ -11,8 +11,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
 import '../internals.dart';
+
+/*TODO alignments,paddings and dropdownmenu items*/
 
 class SearchPage extends StatefulWidget {
   @override
@@ -20,9 +21,15 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
   int activeMenu = 0;
   int cardItemsCount = 0;
-  List menuItems = ['Lokacija', 'Filteri'];
   List<ProductEntry> products = [
     new ProductEntry(
         assetUrls: <String>[
@@ -79,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
   List<ProductEntry> productsToDispay;
   ScrollController _ScrollController;
   bool reachPoint = false;
-  double _height = 1460;
+  //double _height = 1460;
 
   _scrollListener() {
     if (_ScrollController.offset >= 50) {
@@ -106,11 +113,262 @@ class _SearchPageState extends State<SearchPage> {
     _PageController = PageController(initialPage: 0);
   }
 
+  /*TODO categories dropdown menu items*/
+  void _FilterButtonPress() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 300,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Filteri',
+                          style: TextStyle(
+                              color: Color(DARK_GREY),
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(),
+                      Text('Kategorija:',
+                          style: TextStyle(
+                              color: Color(BLACK),
+                              fontFamily: 'Inter',
+                              fontSize: 14)),
+                      SizedBox(
+                        width: 208,
+                        height: 44,
+                        child: DropdownButtonFormField(
+                          items: null,
+                          decoration: const InputDecoration(
+                            filled: true,
+                            border: const OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(5.0),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Raspon cena (€):",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                    SizedBox(
+                      width: 89,
+                      height: 44,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(LIGHT_GREY),
+                          border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(5.0),
+                              ),
+                              borderSide: BorderSide.none),
+                        ),
+                      ),
+                    ),
+                    Text("-",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                    SizedBox(
+                      width: 89,
+                      height: 44,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(LIGHT_GREY),
+                          border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(5.0),
+                              ),
+                              borderSide: BorderSide.none),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Proizvodi na akciji:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                    Switch(
+                        value: _value,
+                        activeColor: Color(BLACK),
+                        onChanged: (bool value) {
+                          onSwitchValueChanged(value);
+                        }),
+                    SizedBox(
+                      width: 140,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 86,
+                      height: 36,
+                      child: FlatButton(
+                        color: Color(LIGHT_GREY),
+                        onPressed: () {},
+                        child: Text('Primeni',
+                            style: TextStyle(
+                                color: Color(BLACK),
+                                fontFamily: 'Inter',
+                                fontSize: 14)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  final _textController = new TextEditingController();
+  String distance = "3";
+
+  void _LocationButtonPress() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 250,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Lokacija',
+                          style: TextStyle(
+                              color: Color(DARK_GREY),
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 69,
+                        height: 55,
+                        child: TextField(
+                          controller: _textController,
+                          onChanged: (String value) async {
+                            setState(() {
+                              distance = _textController.text;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: '3',
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: new OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(5.0),
+                                ),
+                                borderSide: BorderSide.none),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text("km",
+                            style: TextStyle(
+                                color: Color(BLACK),
+                                fontFamily: 'Inter',
+                                fontSize: 14)),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: 282,
+                        height: 34,
+                        child: Text(
+                            "Prikazati proizvode dobavljaca koji su udaljeni najvise $distance km.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(BLACK),
+                                fontFamily: 'Inter',
+                                fontSize: 14)),
+                      ),
+                    ),
+                    SizedBox(),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 86,
+                      height: 36,
+                      child: FlatButton(
+                        color: Color(LIGHT_GREY),
+                        onPressed: () {},
+                        child: Text('Primeni',
+                            style: TextStyle(
+                                color: Color(BLACK),
+                                fontFamily: 'Inter',
+                                fontSize: 14)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: menuItems.length,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 160,
@@ -184,30 +442,50 @@ class _SearchPageState extends State<SearchPage> {
                           borderSide: BorderSide.none),
                     ),
                   ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(top: 8.0),
+                          child: FlatButton.icon(
+                              onPressed: () => _FilterButtonPress(),
+                              icon: Icon(Icons.pin_drop, size: 24.0),
+                              label: Text(
+                                'Lokacija',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              )),
+                        ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(top: 8.0),
+                          child: FlatButton.icon(
+                              onPressed: () => _LocationButtonPress(),
+                              icon: Icon(
+                                Icons.filter_alt,
+                                size: 24.0,
+                              ),
+                              label: Text(
+                                'Filteri',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             )),
-            bottom: TabBar(
-                indicatorColor: Colors.black,
-                labelPadding: EdgeInsets.all(8),
-                tabs: List.generate(menuItems.length, (index) {
-                  return Text(
-                    menuItems[index],
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  );
-                })),
             backgroundColor: Colors.white,
           ),
-          body: TabBarView(
-            children: [
-              SingleChildScrollView(child: SearchContent()),
-              SingleChildScrollView(child: SearchContent()),
-            ],
-          ),
+          body: SingleChildScrollView(child: SearchContent()),
         ),
       ),
     );
@@ -251,52 +529,6 @@ class _SearchPageState extends State<SearchPage> {
             }),
           ),
         ),
-        recently != null
-            ? Padding(
-                padding: const EdgeInsets.only(left: 20, top: 30, bottom: 20),
-                child: Text(
-                  'Nedavno ste pogledali',
-                  style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 28,
-                      color: Color(DARK_GREY),
-                      fontWeight: FontWeight.w700),
-                ),
-              )
-            : Container(),
-        productsToDispay.length > 6
-            ? InkWell(
-                onTap: () {
-                  _ScrollController.animateTo(0.0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color(LIGHT_GREY),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 36,
-                        color: Color(DARK_GREY),
-                      ),
-                      Text(
-                        'Nazad na vrh',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(DARK_GREY)),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            : Container()
       ],
     );
   }
