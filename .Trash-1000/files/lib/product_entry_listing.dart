@@ -4,34 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
-import '../internals.dart';
-import '../config.dart';
+import './internals.dart';
+import './config.dart';
+
+List<String> items = [
+  'washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
+  'martin_cathrae_by_sa.jpg',
+  'honey_shawn_caza_cc_by_sa.jpg'
+];
 
 class ProductEntryListing extends StatefulWidget {
-  ProductEntryListingPage _data;
-
-  ProductEntryListing(ProductEntryListingPage productData) {
-    this._data = productData;
-  }
-
   @override
   State<StatefulWidget> createState() {
-    return _ProductEntryListing(this._data);
+    return _ProductEntryListing();
   }
 }
 
 class _ProductEntryListing extends State<ProductEntryListing> {
   int _current = 0;
-  ProductEntryListingPage _data;
-  _ProductEntryListing(ProductEntryListingPage _data) {
-    this._data = _data;
-  }
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
-        home: SafeArea(
-            child: Stack(
+        home: Stack(
       children: [
         Stack(
           children: [
@@ -49,11 +45,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               _current = index;
                             });
                           }),
-                      items: _data.assetUrls.map((i) {
+                      items: items.map((i) {
                         return Builder(
                           builder: (BuildContext context) {
                             return Image.asset(
-                              '$i',
+                              'assets/product_listings/$i',
                               width: double.infinity,
                               fit: BoxFit.cover,
                             );
@@ -66,8 +62,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       children: [
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: _data.assetUrls.map((assetUrl) {
-                              int index = _data.assetUrls.indexOf(assetUrl);
+                            children: items.map((assetUrl) {
+                              int index = items.indexOf(assetUrl);
                               return Padding(
                                 padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
                                 child: SvgPicture.asset(
@@ -93,7 +89,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       children: [
                         SizedBox(width: double.infinity),
                         Text(
-                          _data.name,
+                          'Kamamber',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.black,
@@ -103,18 +99,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               fontWeight: FontWeight.w800),
                         ),
                         Text(
-                          _data.price.toString() +
-                              ' €' +
-                              ' (' +
-                              _data.quantifier.toString() +
-                              ' ' +
-                              ((_data.classification == Classification.Volume)
-                                  ? 'ml'
-                                  : ((_data.classification ==
-                                          Classification.Weight)
-                                      ? 'gr'
-                                      : 'kom')) +
-                              ')',
+                          '29.90€ (500g)',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.grey[600],
@@ -125,7 +110,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          _data.description,
+                          'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka. Uz beli zreli sir, kakav je kamamber, preporučuju se mlada crvena voćna vina. ',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.black,
@@ -137,51 +122,33 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         SizedBox(height: 10),
                         Row(
                           children: [
-                            Row(
-                              children: List<int>.generate(
-                                      _data.averageReviewScore, (i) => i + 1)
-                                  .map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarFilled.svg');
-                              }).toList(),
-                            ),
-                            Row(
-                              children: List<int>.generate(
-                                  5 - _data.averageReviewScore,
-                                  (i) => i + 1).map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarOutline.svg');
-                              }).toList(),
-                            ),
+                            SvgPicture.asset('assets/icons/StarFilled.svg'),
+                            SvgPicture.asset('assets/icons/StarFilled.svg'),
+                            SvgPicture.asset('assets/icons/StarFilled.svg'),
+                            SvgPicture.asset('assets/icons/StarFilled.svg'),
+                            SvgPicture.asset('assets/icons/StarOutline.svg'),
                             SizedBox(
                               width: 5,
                             ),
                             Text(
-                              '(' + _data.numberOfReviews.toString() + ')',
+                              '(6)',
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: Colors.black,
                                   fontSize: 14),
                             )
-                          ].toList(),
+                          ],
                         ),
                         SizedBox(
                           height: 5,
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductReviews()));
-                            },
-                            child: Text(
-                              'Sve ocene ->',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Color(CYAN),
-                                  fontSize: 14),
-                            )),
+                        Text(
+                          'Sve ocene ->',
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: Color(CYAN),
+                              fontSize: 14),
+                        ),
                       ]),
                 )),
             Padding(
@@ -201,7 +168,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
                                   child: Image.asset(
-                                      _data.userInfo.profilePictureAssetUrl,
+                                      'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
                                       width: 60,
                                       height: 60,
                                       fit: BoxFit.cover),
@@ -213,7 +180,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data.userInfo.fullName,
+                                        Text('Puniša Radojević',
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w800,
@@ -238,9 +205,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   padding: EdgeInsets.all(3),
                                                   child: Center(
                                                       child: Text(
-                                                    _data.userInfo
-                                                        .reputationPositive
-                                                        .toString(),
+                                                    '356',
                                                     style: TextStyle(
                                                         fontFamily: 'Inter',
                                                         fontSize: 14,
@@ -265,9 +230,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   padding: EdgeInsets.all(3),
                                                   child: Center(
                                                       child: Text(
-                                                    _data.userInfo
-                                                        .reputationNegative
-                                                        .toString(),
+                                                    '0',
                                                     style: TextStyle(
                                                         fontFamily: 'Inter',
                                                         fontSize: 14,
@@ -373,6 +336,6 @@ class _ProductEntryListing extends State<ProductEntryListing> {
           ],
         ),
       ],
-    )));
+    ));
   }
 }

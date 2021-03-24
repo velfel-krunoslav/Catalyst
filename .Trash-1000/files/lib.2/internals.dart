@@ -78,28 +78,3 @@ class ProductEntryListingPage extends ProductEntry {
             classification: classification,
             quantifier: quantifier);
 }
-
-class User {
-  String forename;
-  String surname;
-  String photoUrl;
-  String phoneNumber;
-  String address;
-  String city;
-  String mail;
-  String about;
-  double rating;
-  int reviewsCount;
-
-  User(
-      {this.forename,
-      this.surname,
-      this.photoUrl,
-      this.phoneNumber,
-      this.address,
-      this.city,
-      this.mail,
-      this.about,
-      this.rating,
-      this.reviewsCount});
-}

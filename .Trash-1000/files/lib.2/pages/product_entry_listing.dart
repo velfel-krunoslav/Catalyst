@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
 import '../internals.dart';
 import '../config.dart';
 
@@ -168,20 +167,13 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         SizedBox(
                           height: 5,
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductReviews()));
-                            },
-                            child: Text(
-                              'Sve ocene ->',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Color(CYAN),
-                                  fontSize: 14),
-                            )),
+                        Text(
+                          'Sve ocene ->',
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: Color(CYAN),
+                              fontSize: 14),
+                        ),
                       ]),
                 )),
             Padding(

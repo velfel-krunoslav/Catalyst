@@ -17,8 +17,8 @@ class ButtonFill extends TextButton {
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(MINT),
-                      Color(TEAL),
+                      const Color(MINT),
+                      const Color(TEAL),
                     ],
                     stops: [0.0, 1.0],
                     tileMode: TileMode.clamp,
@@ -72,8 +72,8 @@ class ButtonOutline extends TextButton {
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(MINT),
-                      Color(TEAL),
+                      const Color(MINT),
+                      const Color(TEAL),
                     ],
                     stops: [0.0, 1.0],
                     tileMode: TileMode.clamp,
@@ -366,13 +366,24 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2),
+                            product.price.toString() +
+                                ' €' +
+                                ' (' +
+                                product.quantifier.toString() +
+                                ' ' +
+                                ((product.classification ==
+                                        Classification.Volume)
+                                    ? 'ml'
+                                    : ((product.classification ==
+                                            Classification.Weight)
+                                        ? 'gr'
+                                        : 'kom')) +
+                                ')',
                             style: TextStyle(
-                              decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
                               fontSize: 16,
                               color: Color(DARK_GREY),
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -380,18 +391,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      product.prevPrice.toStringAsFixed(2) +
-                          ' €' +
-                          ' (' +
-                          product.quantifier.toString() +
-                          ' ' +
-                          ((product.classification == Classification.Volume)
-                              ? 'ml'
-                              : ((product.classification ==
-                                      Classification.Weight)
-                                  ? 'gr'
-                                  : 'kom')) +
-                          ')',
+                      product.prevPrice.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(RED_ATTENTION),
@@ -438,77 +438,4 @@ class CategoryCard extends InkWell {
               ],
             ),
             onTap: onPressed);
-}
-
-class DrawerOption extends StatelessWidget {
-  String text;
-  var onPressed;
-  String iconUrl;
-
-  DrawerOption({this.text, this.onPressed, this.iconUrl});
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            this.iconUrl,
-            color: Colors.white,
-          ),
-          SizedBox(
-            width: 15,
-          ),
-          Text(
-            this.text,
-            style: TextStyle(
-                fontFamily: 'Inter', color: Colors.white, fontSize: 16),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class SettingsOption extends StatelessWidget {
-  String text;
-  Icon icon;
-  var onPressed;
-
-  SettingsOption({this.text, this.icon, this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        height: 45,
-        decoration: BoxDecoration(
-            border: Border.all(color: Color(DARK_GREY)),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.white),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 20,
-            ),
-            this.icon,
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              this.text,
-              style: TextStyle(
-                  fontFamily: "Inter", fontSize: 15, color: Colors.black),
-            ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios_outlined),
-            SizedBox(
-              width: 20,
-            )
-          ],
-        ),
-      ),
-    );
-  }
 }

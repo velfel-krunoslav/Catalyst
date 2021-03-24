@@ -4,12 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
-import 'package:frontend_mobile/pages/consumer_cart.dart';
-import 'package:frontend_mobile/pages/search_pages.dart';
-import 'package:frontend_mobile/pages/settings.dart';
-import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:frontend_mobile/pages/consumer_home.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 import '../internals.dart';
 
 class ConsumerHomePage extends StatefulWidget {
@@ -21,19 +24,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
-  User user = new User(
-      forename: "Petar",
-      surname: "Nikolić",
-      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-      phoneNumber: "+49 76 859 69 58",
-      address: "4070 Jehovah Drive",
-      city: "Roanoke",
-      mail: "jay.ritter@gmail.com",
-      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-          " sed do eiusmod tempor incididunt ut labore et dolore magna "
-          "aliqua.",
-      rating: 4.5,
-      reviewsCount: 67);
   List<ProductEntry> products = [
     new ProductEntry(
         assetUrls: <String>[
@@ -94,7 +84,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user),
           appBar: AppBar(
             toolbarHeight: 160,
             flexibleSpace: SafeArea(
@@ -113,19 +102,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   'assets/icons/DotsNine.svg',
                                   width: 36,
                                   height: 36),
-                              onPressed: () {
-                                Scaffold.of(context).openDrawer();
-                              })),
+                              onPressed: () {} /* TODO DOTS NINE PRESSED */)),
                       Spacer(),
                       IconButton(
                         icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
                             width: 36, height: 36),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ConsumerCart()));
-                        },
+                        onPressed: () {},
                       ),
                       Container(
                         child: Center(
@@ -147,7 +129,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     ],
                   ),
                   TextField(
-                    onChanged: (text) {},
+                    onChanged: (text) {
+                      text = text.toLowerCase();
+                      setState(() {
+                        products = products.where((product) {
+                          var productTitle = product.name.toLowerCase();
+                          return productTitle.contains(text);
+                        }).toList();
+                      });
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 36),
                       fillColor: Color(LIGHT_GREY),
@@ -165,12 +155,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           ),
                           borderSide: BorderSide.none),
                     ),
-                    onEditingComplete: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPage()));
-                    },
                   ),
                 ],
               ),
@@ -325,81 +309,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
-
-Widget HomeDrawer(BuildContext context, User user) {
-  return Container(
-    width: 255,
-    child: new Drawer(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
-            ),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {},
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {},
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {},
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 class Categories extends StatefulWidget {
