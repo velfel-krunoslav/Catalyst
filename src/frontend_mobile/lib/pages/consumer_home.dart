@@ -7,6 +7,7 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/widgets.dart';
+import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:sticky_headers/sticky_headers.dart';
@@ -76,35 +77,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         quantifier: 500),
   ];
   List<ProductEntry> recently;
-  List<ProductEntry> productsToDispay;
-  ScrollController _ScrollController;
-  bool reachPoint = false;
-  double _height = 1460;
-
-  _scrollListener() {
-    if (_ScrollController.offset >= 50) {
-      setState(() {
-        reachPoint = true;
-      });
-    }
-    if (_ScrollController.offset < 50) {
-      setState(() {
-        reachPoint = false;
-      });
-    }
-  }
-
-  PageController _PageController;
-  @override
-  void initState() {
-    super.initState();
-    _ScrollController = ScrollController();
-    setState(() {
-      productsToDispay = products;
-    });
-    _ScrollController.addListener(_scrollListener);
-    _PageController = PageController(initialPage: 0);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +132,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     onChanged: (text) {
                       text = text.toLowerCase();
                       setState(() {
-                        productsToDispay = products.where((product) {
+                        products = products.where((product) {
                           var productTitle = product.name.toLowerCase();
                           return productTitle.contains(text);
                         }).toList();
@@ -202,11 +174,44 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                 })),
             backgroundColor: Colors.white,
           ),
-          body: TabBarView(
+          body: Stack(
             children: [
-              SingleChildScrollView(child: HomeContent()),
-              SingleChildScrollView(child: Categories()),
-              SingleChildScrollView(child: BestDeals())
+              TabBarView(
+                children: [
+                  SingleChildScrollView(child: HomeContent()),
+                  SingleChildScrollView(child: Categories()),
+                  SingleChildScrollView(child: BestDeals())
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ProductEntryListing(ProductEntryListingPage(
+                                  assetUrls: <String>[
+                                    'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
+                                    'assets/product_listings/martin_cathrae_by_sa.jpg',
+                                    'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
+                                  ],
+                                  name: 'Kamamber',
+                                  price: 29.90,
+                                  classification: Classification.Weight,
+                                  quantifier: 500,
+                                  description:
+                                      'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka.',
+                                  averageReviewScore: 4,
+                                  numberOfReviews: 17,
+                                  userInfo: new UserInfo(
+                                    profilePictureAssetUrl:
+                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                    fullName: 'Petar Nikolić',
+                                    reputationNegative: 7,
+                                    reputationPositive: 240,
+                                  )))));
+                },
+              )
             ],
           ),
         ),
@@ -236,7 +241,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsToDispay.length, (index) {
+            children: List.generate(products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -246,7 +251,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: productsToDispay[index], onPressed: () {})),
+                          product: products[index], onPressed: () {})),
                 ),
               );
             }),
@@ -264,39 +269,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       fontWeight: FontWeight.w700),
                 ),
               )
-            : Container(),
-        productsToDispay.length > 6
-            ? InkWell(
-                onTap: () {
-                  _ScrollController.animateTo(0.0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color(LIGHT_GREY),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 36,
-                        color: Color(DARK_GREY),
-                      ),
-                      Text(
-                        'Nazad na vrh',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(DARK_GREY)),
-                      )
-                    ],
-                  ),
-                ),
-              )
             : Container()
       ],
     );
@@ -311,7 +283,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsToDispay.length, (index) {
+            children: List.generate(products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -322,51 +294,18 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: productsToDispay[index].assetUrls,
-                              name: productsToDispay[index].name,
-                              price: productsToDispay[index].price,
-                              prevPrice: productsToDispay[index].price * 0.8,
-                              classification:
-                                  productsToDispay[index].classification,
-                              quantifier: productsToDispay[index].quantifier),
+                              assetUrls: products[index].assetUrls,
+                              name: products[index].name,
+                              price: products[index].price,
+                              prevPrice: products[index].price * 0.8,
+                              classification: products[index].classification,
+                              quantifier: products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
             }),
           ),
-        ),
-        productsToDispay.length > 6
-            ? InkWell(
-                onTap: () {
-                  _ScrollController.animateTo(0.0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Color(LIGHT_GREY),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 35,
-                        color: Color(DARK_GREY),
-                      ),
-                      Text(
-                        'Nazad na vrh',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(DARK_GREY)),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            : Container()
+        )
       ],
     );
   }

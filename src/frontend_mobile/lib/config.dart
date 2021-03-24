@@ -8,6 +8,7 @@ const DARK_GREEN = 0xFF07630B;
 const MINT = 0xFF1BD14C;
 const OLIVE = 0xFF009A29;
 const TEAL = 0xFF0EAD65;
+const CYAN = 0xFF0F62FE;
 
 /* PARAMS: */
 const double ICON_SIZE = 36;
