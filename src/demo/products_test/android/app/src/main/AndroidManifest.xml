@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.frontend_mobile">
-    <uses-permission android:name="android.permission.INTERNET" />
+    package="luka.products_test">
+   <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="frontend_mobile"
+        android:label="products_test"
         android:icon="@mipmap/ic_launcher"
-       android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true">
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
