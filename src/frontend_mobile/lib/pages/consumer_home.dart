@@ -10,7 +10,9 @@ import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
+import '../productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -18,6 +20,8 @@ class ConsumerHomePage extends StatefulWidget {
 }
 
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
+
+
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
@@ -40,13 +44,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
         ],
         name: 'Domaći med',
-        price: 13.90,
+        price: 13,
         classification: Classification.Weight,
         quantifier: 750),
     new ProductEntry(
         assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
         name: 'Pasirani paradajz',
-        price: 2.40,
+        price: 2,
         classification: Classification.Weight,
         quantifier: 500),
     new ProductEntry(
@@ -87,9 +91,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         quantifier: 500),
   ];
   List<ProductEntry> recently;
-
+  var listModel;
   @override
   Widget build(BuildContext context) {
+
+    listModel = Provider.of<ProductsModel>(context);
+
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
@@ -194,7 +201,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             children: [
               TabBarView(
                 children: [
-                  SingleChildScrollView(child: HomeContent()),
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  HomeContent()),
                   SingleChildScrollView(child: Categories()),
                   SingleChildScrollView(child: BestDeals())
                 ],
@@ -257,7 +267,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -266,8 +276,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       : EdgeInsets.only(right: 10, bottom: 15),
                   child: SizedBox(
                       width: (size.width - 60) / 2,
-                      child: ProductEntryCard(
-                          product: products[index], onPressed: () {})),
+                      child: ProductCard(
+                          product: listModel.products[index], onPressed: () {})),
                 ),
               );
             }),

@@ -11,6 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  web3dart: ^1.2.3
+  web_socket_channel: ^1.1.0
+  http: ^0.12.1
+  provider: ^4.1.3
+
   flutter_svg: ^0.19.3
   cupertino_icons: ^1.0.2
   flutter_search_bar: ^2.1.0
@@ -25,6 +30,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - src/abis/Products.json
     - assets/icons/
     - assets/avatars/
     - assets/product_listings/

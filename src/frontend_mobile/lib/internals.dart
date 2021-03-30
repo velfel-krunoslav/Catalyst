@@ -1,5 +1,7 @@
 enum Classification { Single, Weight, Volume }
 
+
+
 class ProductEntry {
   List<String> assetUrls;
   String name;
