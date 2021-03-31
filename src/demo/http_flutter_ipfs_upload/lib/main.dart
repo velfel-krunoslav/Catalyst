@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -86,8 +87,9 @@ class UploadImage extends StatefulWidget {
 class UploadImageState extends State<UploadImage> {
   //
   static final String uploadEndPoint =
-      'http://localhost/flutter_test/upload_image.php';
+      'http://127.0.0.1:5001/ipfs/bafybeif4zkmu7qdhkpf3pnhwxipylqleof7rl6ojbe7mq3fzogz6m4xk3i/#/files';
   Future<File> file;
+  File file1;
   final picker = ImagePicker();
   String status = '';
   String base64Image;
@@ -97,7 +99,7 @@ class UploadImageState extends State<UploadImage> {
     final pickedFile =
         await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     setState(() {
-      file = File(pickedFile.path) as Future<File>;
+      file1 = File(pickedFile.path);
     });
     setStatus('');
   }
@@ -107,6 +109,22 @@ class UploadImageState extends State<UploadImage> {
       status = message;
     });
   }
+/*
+  submitForm() async {
+    final response = await http.post(
+      Uri.parse(uploadEndPoint),
+      headers: {},
+      body: {
+        'image': file1 != null
+            ? 'data:image;base64,' + base64Encode(file1.readAsBytesSync())
+            : '',
+        'name': 'slika',
+      },
+    );
+    final responseJson = json.decode(response.body);
+    print(responseJson);
+  }
+*/
 
   startUpload() {
     setStatus('Uploading Image...');
@@ -119,19 +137,17 @@ class UploadImageState extends State<UploadImage> {
   }
 
   upload(String fileName) {
-    http.post(
-        Uri.dataFromString(
-            'http://localhost/flutter_test/upload_image.php'), ///////beware of this line of code
-        body: {
-          "image": base64Image,
-          "name": fileName,
-        }).then((result) {
+    http.post(Uri.parse('/ipfs-companion-imports/%Y-%M-%D_%h%m%s/'), body: {
+      "image": base64Image,
+      "name": fileName,
+    }).then((result) {
       setStatus(result.statusCode == 200 ? result.body : errMessage);
     }).catchError((error) {
       setStatus(error);
     });
   }
 
+  /*
   Widget showImage() {
     return FutureBuilder<File>(
       future: file,
@@ -159,6 +175,10 @@ class UploadImageState extends State<UploadImage> {
         }
       },
     );
+  }*/
+
+  Widget showImage() {
+    return Image.file(file1);
   }
 
   @override
@@ -180,13 +200,13 @@ class UploadImageState extends State<UploadImage> {
             SizedBox(
               height: 20.0,
             ),
-            showImage(),
+            file1 != null ? showImage() : SizedBox(),
             SizedBox(
               height: 20.0,
             ),
             // ignore: deprecated_member_use
             OutlineButton(
-              onPressed: startUpload,
+              onPressed: () {}, //upload('name'),
               child: Text('Upload Image'),
             ),
             SizedBox(
