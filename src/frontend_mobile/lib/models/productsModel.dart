@@ -1,21 +1,20 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
-import 'internals.dart';
+import '../internals.dart';
 
 
 
 class ProductsModel extends ChangeNotifier{
-  List<Product> products = [];
+  List<ProductEntry> products = [];
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
-  final String _privateKey = "a0e8a742d8d57aa6704d59d79cf1ef8f7f43f9d365b555b8e1adc22f789ee30f";
+  final String _privateKey = "7d0c0d1a2105e86ea410e89856739755eddd37430a427f92c67ff1df96c95dec";
   int productsCount = 0;
 
   bool isLoading = true;
@@ -93,7 +92,7 @@ class ProductsModel extends ChangeNotifier{
       else{
         classif = Classification.Volume;
       }
-      products.add(Product(name: temp[0], price: temp[1], assetUrls: list, classification: classif, quantifier: temp[4]));
+      products.add(ProductEntry(name: temp[0], price: temp[1].toInt(), assetUrls: list, classification: classif, quantifier: temp[4].toInt()));
     }
 
     isLoading = false;
@@ -117,14 +116,4 @@ class ProductsModel extends ChangeNotifier{
   }
 
 
-}
-//enum Classification { Single, Weight, Volume }
-class Product{
-  String name;
-  BigInt price;
-  var assetUrls;
-  Classification classification;
-  BigInt quantifier;
-
-  Product({this.name,this.price, this.assetUrls,this.classification,this.quantifier});
 }

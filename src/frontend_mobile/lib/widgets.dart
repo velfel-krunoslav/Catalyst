@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/productsModel.dart';
+
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -367,7 +367,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2),
+                            product.price.toString(),
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -381,7 +381,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      product.prevPrice.toStringAsFixed(2) +
+                      product.prevPrice.toString() +
                           ' €' +
                           ' (' +
                           product.quantifier.toString() +
@@ -512,66 +512,4 @@ class SettingsOption extends StatelessWidget {
       ),
     );
   }
-}
-class ProductCard extends GestureDetector {
-  ProductCard({VoidCallback onPressed, Product product})
-      : super(
-      onTap: onPressed,
-      child: Card(
-        color: Color(LIGHT_GREY),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: PRODUCT_ENTRY_HEIGHT,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                      topRight: Radius.circular(5)),
-                  image: DecorationImage(
-                      image: AssetImage(product.assetUrls[0]),
-                      fit: BoxFit.cover)),
-            ),
-            SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                product.name.length > 15
-                    ? product.name.substring(0, 15) + '...'
-                    : product.name,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 16),
-              ),
-            ),
-            SizedBox(height: 5),
-            Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Row(
-                  children: [
-                    Text(
-                      product.price.toString() +
-                          ' €' +
-                          ' (' +
-                          product.quantifier.toString() +
-                          ' ' +
-                          ((product.classification ==
-                              Classification.Volume)
-                              ? 'ml'
-                              : ((product.classification ==
-                              Classification.Weight)
-                              ? 'gr'
-                              : 'kom')) +
-                          ')',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16,
-                        color: Color(DARK_GREY),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                )),
-            SizedBox(height: 15),
-          ],
-        ),
-      ));
 }

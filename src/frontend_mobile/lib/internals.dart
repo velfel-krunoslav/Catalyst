@@ -5,9 +5,9 @@ enum Classification { Single, Weight, Volume }
 class ProductEntry {
   List<String> assetUrls;
   String name;
-  double price;
+  int price;
   Classification classification;
-  double quantifier;
+  int quantifier;
 
   ProductEntry(
       {this.assetUrls,
@@ -18,15 +18,15 @@ class ProductEntry {
 }
 
 class DiscountedProductEntry extends ProductEntry {
-  double prevPrice;
+  int prevPrice;
 
   DiscountedProductEntry(
       {List<String> assetUrls,
       String name,
-      double price,
-      double prevPrice,
+      int price,
+      int prevPrice,
       Classification classification,
-      double quantifier})
+      int quantifier})
       : super(
             assetUrls: assetUrls,
             name: name,
@@ -66,9 +66,9 @@ class ProductEntryListingPage extends ProductEntry {
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
-      double price,
+      int price,
       Classification classification,
-      double quantifier,
+      int quantifier,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,

@@ -12,7 +12,7 @@ import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
-import '../productsModel.dart';
+import '../models/productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -38,59 +38,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           "aliqua.",
       rating: 4.5,
       reviewsCount: 67);
-  List<ProductEntry> products = [
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-        ],
-        name: 'Domaći med',
-        price: 13,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
-        name: 'Pasirani paradajz',
-        price: 2,
-        classification: Classification.Weight,
-        quantifier: 500),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg'
-        ],
-        name: 'Maslinovo ulje',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/prosciutto_46137_by.jpg'],
-        name: 'Pršut',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/rakija_silverije_cc_by_sa.jpg'
-        ],
-        name: 'Rakija',
-        price: 12.40,
-        classification: Classification.Volume,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
-        name: 'Kobasica',
-        price: 16.70,
-        classification: Classification.Weight,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'
-        ],
-        name: 'Kamamber',
-        price: 29.90,
-        classification: Classification.Weight,
-        quantifier: 500),
-  ];
   List<ProductEntry> recently;
+  List<ProductEntry> products = [];
   var listModel;
   @override
   Widget build(BuildContext context) {
@@ -222,9 +171,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
                                   ],
                                   name: 'Kamamber',
-                                  price: 29.90,
+                                  price: 30,
                                   classification: Classification.Weight,
-                                  quantifier: 500,
+                                  quantifier: 255,
                                   description:
                                       'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka.',
                                   averageReviewScore: 4,
@@ -276,7 +225,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       : EdgeInsets.only(right: 10, bottom: 15),
                   child: SizedBox(
                       width: (size.width - 60) / 2,
-                      child: ProductCard(
+                      child: ProductEntryCard(
                           product: listModel.products[index], onPressed: () {})),
                 ),
               );
@@ -323,7 +272,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               assetUrls: products[index].assetUrls,
                               name: products[index].name,
                               price: products[index].price,
-                              prevPrice: products[index].price * 0.8,
+                              prevPrice: products[index].price * 2,
                               classification: products[index].classification,
                               quantifier: products[index].quantifier),
                           onPressed: () {})),

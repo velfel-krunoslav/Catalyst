@@ -36,13 +36,13 @@ class _SearchPageState extends State<SearchPage> {
           'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
         ],
         name: 'Domaći med',
-        price: 13.90,
+        price: 14,
         classification: Classification.Weight,
         quantifier: 750),
     new ProductEntry(
         assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
         name: 'Pasirani paradajz',
-        price: 2.40,
+        price: 3,
         classification: Classification.Weight,
         quantifier: 500),
     new ProductEntry(
@@ -64,13 +64,13 @@ class _SearchPageState extends State<SearchPage> {
           'assets/product_listings/rakija_silverije_cc_by_sa.jpg'
         ],
         name: 'Rakija',
-        price: 12.40,
+        price: 13,
         classification: Classification.Volume,
         quantifier: 1000),
     new ProductEntry(
         assetUrls: <String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
         name: 'Kobasica',
-        price: 16.70,
+        price: 17,
         classification: Classification.Weight,
         quantifier: 1000),
     new ProductEntry(
@@ -78,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
           'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'
         ],
         name: 'Kamamber',
-        price: 29.90,
+        price: 30,
         classification: Classification.Weight,
         quantifier: 500),
   ];
