@@ -103,3 +103,50 @@ class User {
       this.rating,
       this.reviewsCount});
 }
+
+class UserReview extends User {
+  String text;
+  int stars;
+
+  UserReview(
+      {String forename,
+      String surname,
+      String photoUrl,
+      String phoneNumber,
+      String address,
+      String city,
+      String mail,
+      String about,
+      double rating,
+      int reviewsCount,
+      this.text,
+      this.stars})
+      : super(
+            forename: forename,
+            surname: surname,
+            photoUrl: photoUrl,
+            phoneNumber: phoneNumber,
+            address: address,
+            city: city,
+            mail: mail,
+            about: about,
+            rating: rating,
+            reviewsCount: reviewsCount);
+}
+
+class ReviewPage {
+  double average;
+  int reviewsCount;
+  List<int> stars;
+  List<UserReview> reviews;
+
+  ReviewPage({this.average, this.reviews, this.reviewsCount, this.stars});
+}
+
+class ChatUsers {
+  String name;
+  String messageText;
+  String imageURL;
+  String time;
+  ChatUsers({this.name, this.messageText, this.imageURL, this.time});
+}

@@ -8,7 +8,11 @@ const BACKGROUNDCOLOR = 0xFFE5E5E5;
 const YELLOW = 0xFFE7A600; //added
 const GREY = 0xFFC8C8C8; //added
 
-class ProductReviews extends StatelessWidget {
+class ProductReview extends StatelessWidget {
+  ReviewPage data;
+  ProductReview(ReviewPage data) {
+    this.data = data;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +29,15 @@ class ProductReviews extends StatelessWidget {
                   Row(
                     children: [
                       //Padding(padding: EdgeInsets.fromLTRB(20, 20, 0, 0)),
-                      SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                      IconButton(
+                          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
+                      /*SvgPicture.asset('assets/icons/ArrowLeft.svg',
                           //width: ICON_SIZE,
                           width: 28,
-                          height: 28),
+                          height: 28),*/
                       Spacer(),
                       Text('Recenzije',
                           style: TextStyle(
@@ -41,7 +50,7 @@ class ProductReviews extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    "4.0",
+                    data.average.toString(),
                     style: TextStyle(
                         fontSize: 36,
                         fontFamily: 'Inter',
@@ -51,48 +60,29 @@ class ProductReviews extends StatelessWidget {
                     height: 15,
                   ),
                   Container(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              child: SvgPicture.asset(
-                            'assets/icons/StarFilled.svg',
-                            width: 16,
-                            height: 16,
-                            color: Color(YELLOW),
-                          )),
-                          Container(
-                              child: SvgPicture.asset(
-                            'assets/icons/StarFilled.svg',
-                            width: 16,
-                            height: 16,
-                            color: Color(YELLOW),
-                          )),
-                          Container(
-                              child: SvgPicture.asset(
-                            'assets/icons/StarFilled.svg',
-                            width: 16,
-                            height: 16,
-                            color: Color(YELLOW),
-                          )),
-                          Container(
-                              child: SvgPicture.asset(
-                            'assets/icons/StarFilled.svg',
-                            width: 16,
-                            height: 16,
-                            color: Color(YELLOW),
-                          )),
-                          Container(
-                              child: SvgPicture.asset(
-                            'assets/icons/StarFilled.svg',
-                            width: 16,
-                            height: 16,
-                            color: Color(GREY),
-                          )),
-                        ]),
-                  ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(data.average.toInt(),
+                                  (index) {
+                                return Container(
+                                    child: SvgPicture.asset(
+                                  'assets/icons/StarFilled.svg',
+                                  width: 16,
+                                  height: 16,
+                                  color: Color(YELLOW),
+                                ));
+                              }).toList() +
+                              List.generate(5 - data.average.toInt(), (index) {
+                                return Container(
+                                    child: SvgPicture.asset(
+                                  'assets/icons/StarFilled.svg',
+                                  width: 16,
+                                  height: 16,
+                                  color: Color(LIGHT_GREY),
+                                ));
+                              }).toList())),
                   Text(
-                    "17 recenzija",
+                    data.reviewsCount.toString() + " recenzija",
                     style: TextStyle(
                         fontFamily: 'Inter', fontSize: 16, color: Colors.black),
                   ),
@@ -101,11 +91,27 @@ class ProductReviews extends StatelessWidget {
                   ),
                   Column(
                       children: [
-                    [5, '33AE08', 180],
-                    [4, '83AE08', 80],
-                    [3, 'D7C205', 40],
-                    [2, 'EA7E00', 30],
-                    [1, 'DC3535', 30]
+                    [
+                      5,
+                      '33AE08',
+                      1.0 * data.stars[4] / data.reviewsCount * 260
+                    ],
+                    [
+                      4,
+                      '83AE08',
+                      1.0 * data.stars[3] / data.reviewsCount * 260
+                    ],
+                    [
+                      3,
+                      'D7C205',
+                      1.0 * data.stars[2] / data.reviewsCount * 260
+                    ],
+                    [
+                      2,
+                      'EA7E00',
+                      1.0 * data.stars[1] / data.reviewsCount * 260
+                    ],
+                    [1, 'DC3535', 1.0 * data.stars[0] / data.reviewsCount * 260]
                   ].map((e) {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,115 +140,79 @@ class ProductReviews extends StatelessWidget {
                   SizedBox(
                     height: 50,
                   ),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.fromLTRB(20, 20, 0, 0)),
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Color(TEAL),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: AssetImage(
-                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
-                          )),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
+                  Column(
+                    children: data.reviews.map((e) {
+                      return Column(
                         children: [
-                          Padding(
-                              padding:
-                                  EdgeInsets.only(left: 0, right: 16, top: 0)),
-                          Text("Petar Nikolić",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.black)),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 24,
+                              ),
+                              CircleAvatar(
+                                  radius: 36,
+                                  backgroundColor: Color(TEAL),
+                                  child: CircleAvatar(
+                                    radius: 36,
+                                    backgroundImage: AssetImage(e.photoUrl),
+                                  )),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    e.forename + ' ' + e.surname,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Row(
+                                      children: List.generate(e.stars, (index) {
+                                            return SvgPicture.asset(
+                                              'assets/icons/StarFilled.svg',
+                                              width: 14,
+                                              height: 14,
+                                            );
+                                          }).toList() +
+                                          List.generate(5 - e.stars, (index) {
+                                            return SvgPicture.asset(
+                                              'assets/icons/StarFilled.svg',
+                                              width: 14,
+                                              height: 14,
+                                              color: Color(GREY),
+                                            );
+                                          }))
+                                ],
+                              ),
+                              SizedBox(
+                                width: 24,
+                              )
+                            ],
+                          ),
                           SizedBox(
-                            height: 20,
+                            height: 14,
                           ),
-                          Container(
-                            child: Row(children: [
-                              Container(
-                                  child: SvgPicture.asset(
-                                'assets/icons/StarFilled.svg',
-                                width: 14,
-                                height: 14,
-                              )),
-                              Container(
-                                  child: SvgPicture.asset(
-                                'assets/icons/StarFilled.svg',
-                                width: 14,
-                                height: 14,
-                              )),
-                              Container(
-                                  child: SvgPicture.asset(
-                                'assets/icons/StarFilled.svg',
-                                width: 14,
-                                height: 14,
-                              )),
-                              Container(
-                                  child: SvgPicture.asset(
-                                'assets/icons/StarFilled.svg',
-                                width: 14,
-                                height: 14,
-                              )),
-                              Container(
-                                  child: SvgPicture.asset(
-                                'assets/icons/StarFilled.svg',
-                                width: 14,
-                                height: 14,
-                                color: Color(GREY),
-                              )),
-                            ]),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                          //height: 100,
-                          ),
-                      Spacer(),
-                      Text("Pre 1 dan",
-                          style: TextStyle(
-                              fontSize: 16,
+                          Text(
+                            e.text,
+                            style: TextStyle(
+                              fontSize: 14,
                               fontFamily: 'Inter',
-                              fontWeight: FontWeight.w800,
-                              color: Color(DARK_GREY))),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-                    child: Container(
-                        //width: 300,
-                        child: Text(
-                      "Nula dictum rhoncus turpis condimentium rutrum, Vivamus cursus rhoncus dolor eu varies. Donec orci leo, tempus a dui in, viverra fermentum urna.",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                      ),
-                    )),
+                            ),
+                          )
+                        ],
+                      );
+                    }).toList(),
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 14,
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 15.0),
-                        ButtonOutline(
-                          text: 'Ostavite recenziju',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new Reviews()),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                  ButtonOutline(
+                    text: 'Ostavite recenziju',
                   )
                 ],
               ),

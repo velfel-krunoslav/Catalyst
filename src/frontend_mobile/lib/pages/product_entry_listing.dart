@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:frontend_mobile/pages/inbox.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import '../internals.dart';
 import '../config.dart';
@@ -173,7 +174,31 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProductReviews()));
+                                      builder: (context) => ProductReview(
+                                              ReviewPage(
+                                                  average: 4.0,
+                                                  reviewsCount: 15,
+                                                  stars: [
+                                                1,
+                                                2,
+                                                3,
+                                                4,
+                                                5
+                                              ],
+                                                  reviews: [
+                                                UserReview(
+                                                    forename: 'Petar',
+                                                    surname: 'Nikolić',
+                                                    photoUrl:
+                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                    phoneNumber: '06135478',
+                                                    city: 'London',
+                                                    mail: 'test@gmail.com',
+                                                    address: 'Main Blvd 5',
+                                                    text:
+                                                        'Nula dictum rhoncus turpis condimentium rutrum, Vivamus cursus rhoncus dolor eu varies. Donec orci leo, tempus a dui in, viverra fermentum urna.',
+                                                    stars: 4)
+                                              ]))));
                             },
                             child: Text(
                               'Sve ocene ->',
@@ -281,7 +306,18 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                     )),
                                 Spacer(),
                                 TextButton(
-                                    onPressed: () => {},
+                                    onPressed: () => {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Inbox(
+                                                      ChatUsers(
+                                                          name: _data.userInfo
+                                                              .fullName,
+                                                          imageURL: _data
+                                                              .userInfo
+                                                              .profilePictureAssetUrl))))
+                                        },
                                     child: SvgPicture.asset(
                                         'assets/icons/Envelope.svg',
                                         width: 38,
