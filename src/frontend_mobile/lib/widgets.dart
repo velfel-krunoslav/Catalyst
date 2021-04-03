@@ -367,7 +367,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toString(),
+                            product.prevPrice.toString(),
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -381,7 +381,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      product.prevPrice.toString() +
+                      product.price.toString() +
                           ' €' +
                           ' (' +
                           product.quantifier.toString() +

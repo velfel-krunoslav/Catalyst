@@ -14,7 +14,7 @@ class ProductsModel extends ChangeNotifier{
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
-  final String _privateKey = "7d0c0d1a2105e86ea410e89856739755eddd37430a427f92c67ff1df96c95dec";
+  final String _privateKey = "3304e91aa45a96e61292070260ef0ce97ef8ecf48aa4ef00dc0a39d527bc559b";
   int productsCount = 0;
 
   bool isLoading = true;
@@ -49,7 +49,7 @@ class ProductsModel extends ChangeNotifier{
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
     _contractAddress = EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
-    //print(_contractAddress);
+
   }
 
   Future<void> getCredentials() async{
@@ -79,20 +79,27 @@ class ProductsModel extends ChangeNotifier{
 
       print(temp);
 
-      String assets = temp[2];
-      var list = temp[2].split(",").toList();
+      String assets = temp[3];
+      var list = temp[3].split(",").toList();
 
       Classification classif;
-      if (temp[3] == 0){
+      if (temp[4] == 0){
         classif = Classification.Single;
       }
-      else if (temp[3] == 1){
+      else if (temp[4] == 1){
         classif = Classification.Weight;
       }
       else{
         classif = Classification.Volume;
       }
-      products.add(ProductEntry(name: temp[0], price: temp[1].toInt(), assetUrls: list, classification: classif, quantifier: temp[4].toInt()));
+      products.add(ProductEntry(id: temp[0].toInt(),
+                                name: temp[1],
+                                price: temp[2].toInt(),
+                                assetUrls: list,
+                                classification: classif,
+                                quantifier: temp[5].toInt(),
+                                desc: temp[6],
+                                sellerId: temp[7].toInt()));
     }
 
     isLoading = false;

@@ -180,7 +180,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: Color(CYAN),
-                                  fontSize: 14),
+                                  fontSize: 17),
                             )),
                       ]),
                 )),
@@ -352,7 +352,9 @@ class _ProductEntryListing extends State<ProductEntryListing> {
               children: [
                 SizedBox(width: 20),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
                         color: Colors.black),
                     style: TextButton.styleFrom(

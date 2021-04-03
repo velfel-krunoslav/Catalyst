@@ -155,38 +155,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     ,) :
                   HomeContent()),
                   SingleChildScrollView(child: Categories()),
-                  SingleChildScrollView(child: BestDeals())
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  BestDeals())
                 ],
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ProductEntryListing(ProductEntryListingPage(
-                                  assetUrls: <String>[
-                                    'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
-                                    'assets/product_listings/martin_cathrae_by_sa.jpg',
-                                    'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-                                  ],
-                                  name: 'Kamamber',
-                                  price: 30,
-                                  classification: Classification.Weight,
-                                  quantifier: 255,
-                                  description:
-                                      'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka.',
-                                  averageReviewScore: 4,
-                                  numberOfReviews: 17,
-                                  userInfo: new UserInfo(
-                                    profilePictureAssetUrl:
-                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                    fullName: 'Petar Nikolić',
-                                    reputationNegative: 7,
-                                    reputationPositive: 240,
-                                  )))));
-                },
-              )
+
             ],
           ),
         ),
@@ -226,7 +201,29 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: listModel.products[index], onPressed: () {})),
+                          product: listModel.products[index], onPressed: () {
+                            ProductEntry product = listModel.products[index];
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductEntryListing(ProductEntryListingPage(
+                                            assetUrls: product.assetUrls,
+                                            name: product.name,
+                                            price: product.price,
+                                            classification: product.classification,
+                                            quantifier: product.quantifier,
+                                            description: product.desc,
+                                            averageReviewScore: 4,
+                                            numberOfReviews: 17,
+                                            userInfo: new UserInfo(
+                                              profilePictureAssetUrl:
+                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                              fullName: 'Petar Nikolić',
+                                              reputationNegative: 7,
+                                              reputationPositive: 240,
+                                            )))));
+                      })),
                 ),
               );
             }),
@@ -258,7 +255,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -269,12 +266,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: products[index].assetUrls,
-                              name: products[index].name,
-                              price: products[index].price,
-                              prevPrice: products[index].price * 2,
-                              classification: products[index].classification,
-                              quantifier: products[index].quantifier),
+                              assetUrls: listModel.products[index].assetUrls,
+                              name: listModel.products[index].name,
+                              price: listModel.products[index].price,
+                              prevPrice: listModel.products[index].price * 2,
+                              classification: listModel.products[index].classification,
+                              quantifier: listModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );

@@ -3,18 +3,25 @@ enum Classification { Single, Weight, Volume }
 
 
 class ProductEntry {
+  int id;
   List<String> assetUrls;
   String name;
   int price;
   Classification classification;
   int quantifier;
+  String desc;
+  int sellerId;
 
   ProductEntry(
-      {this.assetUrls,
+      {
+        this.id,
+        this.assetUrls,
       this.name,
       this.price,
       this.classification,
-      this.quantifier});
+      this.quantifier,
+      this.desc,
+      this.sellerId});
 }
 
 class DiscountedProductEntry extends ProductEntry {

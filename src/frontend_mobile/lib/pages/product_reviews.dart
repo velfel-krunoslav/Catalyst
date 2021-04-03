@@ -25,10 +25,15 @@ class ProductReviews extends StatelessWidget {
                   Row(
                     children: [
                       //Padding(padding: EdgeInsets.fromLTRB(20, 20, 0, 0)),
-                      SvgPicture.asset('assets/icons/ArrowLeft.svg',
-                          //width: ICON_SIZE,
-                          width: 28,
-                          height: 28),
+                      InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                            //width: ICON_SIZE,
+                            width: 28,
+                            height: 28),
+                      ),
                       Spacer(),
                       Text('Recenzije',
                           style: TextStyle(
@@ -137,16 +142,20 @@ class ProductReviews extends StatelessWidget {
                   Row(
                     children: [
                       Padding(padding: EdgeInsets.fromLTRB(20, 20, 0, 0)),
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Color(TEAL),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: AssetImage(
-                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
-                          )),
                       SizedBox(
-                        width: 20,
+                        width: 60,
+                        height: 60,
+                        child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Color(TEAL),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundImage: AssetImage(
+                                  'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
+                            )),
+                      ),
+                      SizedBox(
+                        width: 15,
                       ),
                       Column(
                         children: [
@@ -160,7 +169,7 @@ class ProductReviews extends StatelessWidget {
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black)),
                           SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           Container(
                             child: Row(children: [
@@ -212,7 +221,7 @@ class ProductReviews extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+                    padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
                     child: Container(
                         //width: 300,
                         child: Text(
