@@ -14,7 +14,7 @@ class ProductsModel extends ChangeNotifier{
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
-  final String _privateKey = "3304e91aa45a96e61292070260ef0ce97ef8ecf48aa4ef00dc0a39d527bc559b";
+  final String _privateKey = "0ee349b5ba46e3075f513bf6a613089a603f3a32d2316636c9c1ded0a8444d0e";
   int productsCount = 0;
 
   bool isLoading = true;
@@ -78,15 +78,15 @@ class ProductsModel extends ChangeNotifier{
       var temp = await _client.call(contract: _contract, function: _products, params: [BigInt.from(i)]);
 
       print(temp);
-
-      String assets = temp[3];
-      var list = temp[3].split(",").toList();
+      double price = temp[2].toInt() / temp[3].toInt();
+      String assets = temp[4];
+      var list = temp[4].split(",").toList();
 
       Classification classif;
-      if (temp[4] == 0){
+      if (temp[5] == 0){
         classif = Classification.Single;
       }
-      else if (temp[4] == 1){
+      else if (temp[5] == 1){
         classif = Classification.Weight;
       }
       else{
@@ -94,12 +94,12 @@ class ProductsModel extends ChangeNotifier{
       }
       products.add(ProductEntry(id: temp[0].toInt(),
                                 name: temp[1],
-                                price: temp[2].toInt(),
+                                price: price,
                                 assetUrls: list,
                                 classification: classif,
-                                quantifier: temp[5].toInt(),
-                                desc: temp[6],
-                                sellerId: temp[7].toInt()));
+                                quantifier: temp[6].toInt(),
+                                desc: temp[7],
+                                sellerId: temp[8].toInt()));
     }
 
     isLoading = false;

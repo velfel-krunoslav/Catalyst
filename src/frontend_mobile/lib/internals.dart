@@ -6,12 +6,12 @@ class ProductEntry {
   int id;
   List<String> assetUrls;
   String name;
-  int price;
+  double price;
   Classification classification;
   int quantifier;
   String desc;
   int sellerId;
-
+  int categoryId;
   ProductEntry(
       {
         this.id,
@@ -21,17 +21,18 @@ class ProductEntry {
       this.classification,
       this.quantifier,
       this.desc,
-      this.sellerId});
+      this.sellerId,
+      this.categoryId});
 }
 
 class DiscountedProductEntry extends ProductEntry {
-  int prevPrice;
+  double prevPrice;
 
   DiscountedProductEntry(
       {List<String> assetUrls,
       String name,
-      int price,
-      int prevPrice,
+      double price,
+      double prevPrice,
       Classification classification,
       int quantifier})
       : super(
@@ -45,10 +46,11 @@ class DiscountedProductEntry extends ProductEntry {
 }
 
 class Category {
+  int id;
   String assetUrl;
   String name;
 
-  Category({this.name, this.assetUrl});
+  Category({this.id, this.name, this.assetUrl});
 }
 
 class UserInfo {
@@ -73,7 +75,7 @@ class ProductEntryListingPage extends ProductEntry {
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
-      int price,
+      double price,
       Classification classification,
       int quantifier,
       this.description,

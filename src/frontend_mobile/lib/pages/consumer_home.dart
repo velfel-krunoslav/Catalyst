@@ -14,17 +14,18 @@ import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
 
+
 class ConsumerHomePage extends StatefulWidget {
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
-
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
-
+  int category = -1;
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
+  //int category = -1;
   User user = new User(
       forename: "Petar",
       surname: "Nikolić",
@@ -154,7 +155,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
                     ,) :
                   HomeContent()),
-                  SingleChildScrollView(child: Categories()),
+                  SingleChildScrollView(child: category == -1 ?
+                  Categories() :
+                  Container()
+                  ),
                   SingleChildScrollView(child: listModel.isLoading ?
                   Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
                     ,) :
@@ -370,8 +374,15 @@ class _CategoriesState extends State<Categories> {
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return CategoryEntry(
-              categories[index].assetUrl, categories[index].name);
+          return InkWell(
+            onTap: () {
+              setState(() {
+
+              });
+            },
+            child: CategoryEntry(
+                categories[index].assetUrl, categories[index].name),
+          );
         })));
   }
 
@@ -424,35 +435,32 @@ class CategoryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return InkWell(
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 125.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          Positioned(
-            left: 35.0,
-            child: Text(categoryName,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                    color: Color(LIGHT_GREY),
-                    shadows: <Shadow>[
-                      Shadow(blurRadius: 5, color: Colors.black)
-                    ])),
-          ),
-        ],
-      ),
-      onTap: () {} /* TODO ON CATEGORY CLICKED */,
+        ),
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
+      ],
     );
   }
 }
