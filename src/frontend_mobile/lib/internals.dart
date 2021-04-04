@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 enum Classification { Single, Weight, Volume }
 
 class ProductEntry {
@@ -149,4 +151,10 @@ class ChatUsers {
   String imageURL;
   String time;
   ChatUsers({this.name, this.messageText, this.imageURL, this.time});
+}
+
+class ChatMessage {
+  String messageContent;
+  String messageType;
+  ChatMessage({@required this.messageContent, @required this.messageType});
 }
