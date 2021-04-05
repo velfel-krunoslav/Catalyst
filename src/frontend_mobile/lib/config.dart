@@ -10,6 +10,7 @@ const OLIVE = 0xFF009A29;
 const TEAL = 0xFF0EAD65;
 const CYAN = 0xFF0F62FE;
 const LIGHT_BLACK = 0xFF202020;
+const BLUE = 0xFF09A6FF;
 
 /* PARAMS: */
 const double ICON_SIZE = 36;

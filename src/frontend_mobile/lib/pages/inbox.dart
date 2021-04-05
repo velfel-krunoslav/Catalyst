@@ -4,6 +4,13 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/widgets.dart';
 
+List<ChatMessage> messages = [
+  ChatMessage(messageContent: "Zdravo, Petre", messageType: "receiver"),
+  ChatMessage(messageContent: "Da li je sir svez?", messageType: "receiver"),
+  ChatMessage(messageContent: "Zdravo. Sir je svez...", messageType: "sender"),
+  ChatMessage(messageContent: "OK.", messageType: "receiver"),
+];
+
 class Inbox extends StatelessWidget {
   ChatUsers data;
   Inbox(ChatUsers data) {
@@ -81,13 +88,40 @@ class Inbox extends StatelessWidget {
                       ),
                       backgroundColor: Color(LIGHT_GREY),
                     ),
-                    /* ListView.builder(
-                      itemCount: messages.le,
-                      itemBuilder: ),*/
                   ],
                 ),
               ),
-            )
+            ),
+            ListView.builder(
+                itemCount: messages.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: EdgeInsets.only(
+                        left: 16, right: 16, top: 10, bottom: 10),
+                    child: Align(
+                      //Text(messages[index].messageContent),
+                      alignment: (messages[index].messageType == "receiver"
+                          ? Alignment.topLeft
+                          : Alignment.topRight),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: (messages[index].messageType == "receiver"
+                                ? Colors.blue[200]
+                                : Colors.grey.shade200),
+                          ),
+                          padding: EdgeInsets.all(16),
+                          child: Text(
+                            messages[index].messageContent,
+                            style: TextStyle(fontSize: 15),
+                          )),
+                    ),
+                  );
+                }),
+            //}),
           ],
         ));
   }
