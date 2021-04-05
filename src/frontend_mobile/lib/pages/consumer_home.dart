@@ -11,6 +11,7 @@ import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import '../internals.dart';
+import 'new_product.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -353,7 +354,7 @@ Widget HomeDrawer(BuildContext context, User user) {
                 )
               ],
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Moj nalog",
                 onPressed: () {
@@ -363,22 +364,33 @@ Widget HomeDrawer(BuildContext context, User user) {
                           builder: (context) => MyAccount(user: user)));
                 },
                 iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
+            DrawerOption(
+              text: "Dodaj proizvod",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewProduct()),
+                );
+              },
+              iconUrl: "assets/icons/PlusCircle.svg"
+            ),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Poruke",
                 onPressed: () {},
                 iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Istorija narudžbi",
                 onPressed: () {},
                 iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Pomoć i podrška",
                 onPressed: () {},
                 iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Podešavanja",
                 onPressed: () {
@@ -388,7 +400,7 @@ Widget HomeDrawer(BuildContext context, User user) {
                   );
                 },
                 iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 50),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {
