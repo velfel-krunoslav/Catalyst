@@ -70,7 +70,7 @@ class UserInfo {
 
 class ProductEntryListingPage extends ProductEntry {
   String description;
-  int averageReviewScore;
+  double averageReviewScore;
   int numberOfReviews;
   UserInfo userInfo;
 

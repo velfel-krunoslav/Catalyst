@@ -6,13 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../config.dart';
 
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
-
   ProductEntryListing(ProductEntryListingPage productData) {
     this._data = productData;
   }
@@ -26,11 +26,15 @@ class ProductEntryListing extends StatefulWidget {
 class _ProductEntryListing extends State<ProductEntryListing> {
   int _current = 0;
   ProductEntryListingPage _data;
+  var reviewsModel;
   _ProductEntryListing(ProductEntryListingPage _data) {
     this._data = _data;
   }
   @override
   Widget build(BuildContext context) {
+    reviewsModel = Provider.of<ReviewsModel>(context);
+    _data.averageReviewScore = reviewsModel.average;
+    _data.numberOfReviews = reviewsModel.reviewsForProductCount;
     return MaterialApp(
         home: SafeArea(
             child: Stack(
@@ -137,11 +141,16 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               fontWeight: FontWeight.normal),
                         ),
                         SizedBox(height: 10),
+                        reviewsModel.isLoading? Row(
+                          children: [
+                            JumpingDotsProgressIndicator(fontSize: 20.0,),
+                          ],
+                        ) :
                         Row(
                           children: [
                             Row(
                               children: List<int>.generate(
-                                      _data.averageReviewScore, (i) => i + 1)
+                                      _data.averageReviewScore.round(), (i) => i + 1)
                                   .map((e) {
                                 return SvgPicture.asset(
                                     'assets/icons/StarFilled.svg');
@@ -149,7 +158,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             ),
                             Row(
                               children: List<int>.generate(
-                                  5 - _data.averageReviewScore,
+                                  5 - _data.averageReviewScore.round(),
                                   (i) => i + 1).map((e) {
                                 return SvgPicture.asset(
                                     'assets/icons/StarOutline.svg');

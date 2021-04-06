@@ -14,6 +14,9 @@ class ReviewsModel extends ChangeNotifier{
   int productId;
   List<Review> reviews = [];
   List<Review> reviewsForProduct = [];
+  double average = 0;
+  List<int> starsCount = [0,0,0,0,0];
+
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
@@ -80,6 +83,7 @@ class ReviewsModel extends ChangeNotifier{
     _reviewsForProductCount = _contract.function("reviewsForProductCount");
 
     getReviewsForProduct(productId);
+    //getAverage();
   }
 
   getReviews() async{
@@ -137,8 +141,8 @@ class ReviewsModel extends ChangeNotifier{
         contract: _contract, function: _reviewsForProductCount, params: []);
     BigInt totalReviews = totalReviewsList[0];
     reviewsForProductCount = totalReviews.toInt();
-    print(productId);
-    print(reviewsForProductCount);
+    //print("productId "+ productId.toString());
+    //print("count " + reviewsForProductCount.toString());
     for (int i = 0; i < totalReviews.toInt(); i++) {
       var temp = await _client.call(
           contract: _contract, function: _reviewsForProduct, params: [BigInt.from(i)]);
@@ -153,7 +157,26 @@ class ReviewsModel extends ChangeNotifier{
 
 
     }
+    getAverage();
+    getStars();
     isLoading = false;
     notifyListeners();
+  }
+
+  getAverage() async{
+    List sumList = await _client.call(
+        contract: _contract, function: _getSum, params: []);
+    BigInt sumTemp = sumList[0];
+    int sum = sumTemp.toInt();
+    //print("sum "+sum.toString());
+    if (reviewsForProductCount > 0)
+      average = sum/reviewsForProductCount;
+    notifyListeners();
+  }
+
+  getStars(){
+    for(int i = 0; i < reviewsForProductCount; i++){
+      starsCount[reviewsForProduct[i].rating - 1]++;
+    }
   }
 }

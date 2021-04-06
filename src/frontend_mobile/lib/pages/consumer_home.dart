@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
@@ -206,28 +207,49 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
                           product: listModel.products[index], onPressed: () {
+
                             ProductEntry product = listModel.products[index];
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductEntryListing(ProductEntryListingPage(
-                                            assetUrls: product.assetUrls,
-                                            name: product.name,
-                                            price: product.price,
-                                            classification: product.classification,
-                                            quantifier: product.quantifier,
-                                            description: product.desc,
-                                            averageReviewScore: 4,
-                                            numberOfReviews: 17,
-                                            id: product.id,
-                                            userInfo: new UserInfo(
-                                              profilePictureAssetUrl:
-                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                              fullName: 'Petar Nikolić',
-                                              reputationNegative: 7,
-                                              reputationPositive: 240,
-                                            )))));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new ChangeNotifierProvider(
+                                      create: (context) => ReviewsModel(product.id),
+                                      child: ProductEntryListing(ProductEntryListingPage(
+                                          assetUrls: product.assetUrls,
+                                          name: product.name,
+                                          price: product.price,
+                                          classification: product.classification,
+                                          quantifier: product.quantifier,
+                                          description: product.desc,
+                                          id: product.id,
+                                          userInfo: new UserInfo(
+                                            profilePictureAssetUrl:
+                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                            fullName: 'Petar Nikolić',
+                                            reputationNegative: 7,
+                                            reputationPositive: 240,
+                                          )))
+                                  )),
+                            );
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             ProductEntryListing(ProductEntryListingPage(
+                            //                 assetUrls: product.assetUrls,
+                            //                 name: product.name,
+                            //                 price: product.price,
+                            //                 classification: product.classification,
+                            //                 quantifier: product.quantifier,
+                            //                 description: product.desc,
+                            //                 id: product.id,
+                            //                 userInfo: new UserInfo(
+                            //                   profilePictureAssetUrl:
+                            //                   'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                            //                   fullName: 'Petar Nikolić',
+                            //                   reputationNegative: 7,
+                            //                   reputationPositive: 240,
+                            //                 )))));
                       })),
                 ),
               );

@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/product_reviews.dart';
 
 
 class ButtonFill extends TextButton {
@@ -510,6 +511,107 @@ class SettingsOption extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ReviewWidget extends StatelessWidget {
+
+  Review review;
+
+  ReviewWidget({this.review});
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(TEAL),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage(
+                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
+                  )),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding:
+                    EdgeInsets.only(left: 0, right: 16, top: 0)),
+                Text("Petar Nikolić",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black)),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+
+                  child: Container(
+                    width: 200,
+                      child: Text(
+                        review.desc.length > 100 ? review.desc.substring(0, 100)+"...":
+                        review.desc,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                        ),
+                      )),
+                ),
+              ],
+            ),
+            SizedBox(
+              //height: 100,
+            ),
+            Spacer(),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      children: List.generate(review.rating, (index) {
+                        return SvgPicture.asset("assets/icons/StarFilled.svg",);
+                      }),
+                    ),
+                    Wrap(
+                      children: List.generate(5 - review.rating.round(), (index) {
+                        return SvgPicture.asset("assets/icons/StarOutline.svg", color: Color(LIGHT_GREY));
+                      }),
+                    ),
+                    SizedBox(width: 10,),
+                  ],
+                ),
+                SizedBox(height: 5,),
+                Text("Pre 1 dan",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Color(DARK_GREY))),
+              ],
+            ),
+
+          ],
+
+        ),
+
+         SizedBox(height: 20,)
+      ],
     );
   }
 }
