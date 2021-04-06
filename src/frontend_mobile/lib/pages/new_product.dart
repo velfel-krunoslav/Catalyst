@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 
 import '../internals.dart';
+import '../widgets.dart';
 import 'blank_page.dart';
 import 'consumer_home.dart';
 
@@ -14,7 +15,8 @@ class NewProduct extends StatefulWidget {
 }
 
 String chosenValue;
-int selected = 1;
+int selected;
+bool textFld = false;
 
 List<String> categories = [
   'Peciva',
@@ -100,7 +102,7 @@ class _NewProductState extends State<NewProduct> {
                 SizedBox(height: 10),
                 SizedBox(
                   child: TextField(
-                    maxLines: 4,
+                    maxLines: 2,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Color(LIGHT_GREY),
@@ -142,36 +144,52 @@ class _NewProductState extends State<NewProduct> {
                 Row(
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: DropdownButton(
-                          value: chosenValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              chosenValue = newValue;
-                            });
-                          },
-                          items: categories.map((valueItem) {
-                            return DropdownMenuItem(
-                              child: Text(valueItem),
-                              value: valueItem);
-                          }).toList()
+                        flex: 8,
+                        child: Container(
+                          padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          height: 44,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          child: DropdownButton(
+                            underline: Container(color: Colors.transparent),
+                            icon: SvgPicture.asset('assets/icons/ArrowDown.svg', color: Color(DARK_GREY)),
+                            isExpanded: true,
+                            value: chosenValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                chosenValue = newValue;
+                              });
+                            },
+                            items: categories.map((valueItem) {
+                              return DropdownMenuItem(
+                                child: Text(valueItem, style: TextStyle(color: Color(DARK_GREY), fontSize: 14, fontFamily: 'Inter')),
+                                value: valueItem);
+                            }).toList()
+                          ),
                         )
                       ),
                       Expanded(
-                          flex: 1,
-                          child: SizedBox(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Color(LIGHT_GREY),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0))
-                              )
-                            ),
-                            height: 44,
-                            width: 142
-                          )
+                        flex: 1,
+                        child: SizedBox(width: 5)
+                      ),
+                      Expanded(
+                        flex: 9,
+                        child: SizedBox(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(LIGHT_GREY),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0))
+                            )
+                          ),
+                          height: 44,
+                          width: 142
+                        )
                       )
                     ]
                 ),
@@ -206,34 +224,73 @@ class _NewProductState extends State<NewProduct> {
                 Row(
                   children: [
                     Expanded(
-                      flex: 1,
-                      child: DropdownButton(
+                      flex: 8,
+                      child: Container(
+                        padding:
+                          EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Color(LIGHT_GREY),
+                          borderRadius: BorderRadius.circular(5)
+                        ),
+                        child: DropdownButton(
+                          underline: Container(color: Colors.transparent),
+                          icon: SvgPicture.asset('assets/icons/ArrowDown.svg', color: Color(DARK_GREY)),
+                          dropdownColor: Color(LIGHT_GREY),
+                          isExpanded: true,
                           value: selected,
                           items: [
                             DropdownMenuItem(
-                              child: Text("Komad"),
+                              child: Text(
+                                "Komad",
+                                style: TextStyle(
+                                  color: Color(DARK_GREY),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter'
+                                )
+                              ),
                               value: 1,
                             ),
                             DropdownMenuItem(
-                              child: Text("Težina"),
+                              child: Text(
+                                "Težina",
+                                style: TextStyle(
+                                  color: Color(DARK_GREY),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter'
+                                )
+                              ),
                               value: 2,
                             ),
                             DropdownMenuItem(
-                                child: Text("Zapremina"),
-                                value: 3
-                            ),
+                              child: Text(
+                                "Zapremina",
+                                style: TextStyle(
+                                  color: Color(DARK_GREY),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter'
+                                )
+                              ),
+                              value: 3
+                            )
                           ],
                           onChanged: (value) {
                             setState(() {
                               selected = value;
+                              textFld = true;
                             });
                           })
+                        )
                     ),
                     Expanded(
-                      flex: 1,
+                        flex:1,
+                        child: SizedBox(width: 5)
+                    ),
+                    Expanded(
+                      flex: 9,
                       child: SizedBox(
                         child: TextField(
-                          enabled: false,
+                          enabled: textFld,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(LIGHT_GREY),
@@ -256,7 +313,8 @@ class _NewProductState extends State<NewProduct> {
                         fontFamily: 'Inter',
                         fontSize: 14,
                         color: Color(DARK_GREY)
-                      ))
+                      )
+                    )
                   ]
                 ),
                 SizedBox(height: 10),
@@ -274,48 +332,58 @@ class _NewProductState extends State<NewProduct> {
                       ),
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => new Blank() // TODO ADD PICTURES
-                            )
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new Blank() // TODO ADD PICTURES
+                          )
                         );
                       }
                     ),
                     SizedBox(width: 10),
                     InkWell(
-                        child: Image.asset(
-                            'assets/product_listings/rakija_silverije_cc_by_sa.jpg',
-                            height: 80,
-                            width: 80
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (
-                                      context) => new Blank() // TODO SELECT PICTURE
-                              )
-                          );
-                        }
+                      child: Image.asset(
+                        'assets/product_listings/rakija_silverije_cc_by_sa.jpg',
+                        height: 80,
+                        width: 80
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new Blank() // TODO SELECT PICTURE
+                          )
+                        );
+                      }
                     ),
                     //SizedBox(width: 20),
                     InkWell(
-                        child: Image.asset(
-                            'assets/product_listings/salami_pbkwee_by_sa.jpg',
-                            height: 80,
-                            width: 80
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (
-                                      context) => new Blank() // TODO SELECT PICTURE
-                              )
-                          );
-                        }
+                      child: Image.asset(
+                        'assets/product_listings/salami_pbkwee_by_sa.jpg',
+                        height: 80,
+                        width: 80
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new Blank() // TODO SELECT PICTURE
+                          )
+                        );
+                      }
                     )
                   ]
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 40,
+                  height: 60,
+                  child: ButtonFill(
+                    text: 'Dodaj proizvod',
+                    onPressed: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Scaffold(body: Center(child: Text('Uspesno dodat proizvod!')))));
+                    }
+                  ),
                 )
               ])
             )
