@@ -14,7 +14,7 @@ class CategoriesModel extends ChangeNotifier{
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
-  final String _privateKey = "3304e91aa45a96e61292070260ef0ce97ef8ecf48aa4ef00dc0a39d527bc559b";
+  final String _privateKey = "4ae9cd8ba39afc4693bea1aa5970b1dec9cd042231b8c45ea3d66208618240d6";
   int categoriesCount = 0;
 
   bool isLoading = true;
@@ -43,7 +43,7 @@ class CategoriesModel extends ChangeNotifier{
   }
 
   Future<void> getAbi() async {
-    String abiStringFile = await rootBundle.loadString("src/abis/Products.json");
+    String abiStringFile = await rootBundle.loadString("src/abis/Categories.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
     _contractAddress = EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);

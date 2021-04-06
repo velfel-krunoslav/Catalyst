@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 enum Classification { Single, Weight, Volume }
 
 
@@ -78,11 +80,13 @@ class ProductEntryListingPage extends ProductEntry {
       double price,
       Classification classification,
       int quantifier,
+        int id,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
       this.userInfo})
       : super(
+            id: id,
             assetUrls: assetUrls,
             name: name,
             price: price,
@@ -113,4 +117,14 @@ class User {
       this.about,
       this.rating,
       this.reviewsCount});
+}
+class Review {
+
+  int id;
+  int productId;
+  int rating;
+  String desc;
+  int userId;
+
+  Review({this.id, this.productId, this.rating, this.desc, this.userId});
 }

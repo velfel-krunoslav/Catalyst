@@ -220,6 +220,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                             description: product.desc,
                                             averageReviewScore: 4,
                                             numberOfReviews: 17,
+                                            id: product.id,
                                             userInfo: new UserInfo(
                                               profilePictureAssetUrl:
                                               'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',

@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
+import 'package:provider/provider.dart';
 
 const BACKGROUNDCOLOR = 0xFFE5E5E5;
 const YELLOW = 0xFFE7A600; //added
 const GREY = 0xFFC8C8C8; //added
 
 class ProductReviews extends StatelessWidget {
+  int productId = 0;
+  var listModel;
+  List<Review> reviews = [];
+
+
   @override
   Widget build(BuildContext context) {
+
+    listModel = Provider.of<ReviewsModel>(context);
+
+    var reviewsCount = 100;
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -97,7 +108,7 @@ class ProductReviews extends StatelessWidget {
                         ]),
                   ),
                   Text(
-                    "17 recenzija",
+                    reviewsCount.toString() + " recenzija",
                     style: TextStyle(
                         fontFamily: 'Inter', fontSize: 16, color: Colors.black),
                   ),
@@ -246,7 +257,7 @@ class ProductReviews extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => new Reviews()),
+                                  builder: (context) => new Container()),
                             );
                           },
                         ),
@@ -261,9 +272,3 @@ class ProductReviews extends StatelessWidget {
   }
 }
 
-class Reviews extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}

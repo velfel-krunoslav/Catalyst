@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../config.dart';
 
@@ -103,7 +105,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               fontWeight: FontWeight.w800),
                         ),
                         Text(
-                          _data.price.toString() +
+                          _data.price.toStringAsFixed(2) +
                               ' €' +
                               ' (' +
                               _data.quantifier.toString() +
@@ -170,10 +172,15 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         GestureDetector(
                             onTap: () {
+                              //print(_data.id.toString());
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductReviews()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => new ChangeNotifierProvider(
+                                        create: (context) => ReviewsModel(_data.id),
+                                        child: ProductReviews()
+                                    )),
+                              );
                             },
                             child: Text(
                               'Sve ocene ->',

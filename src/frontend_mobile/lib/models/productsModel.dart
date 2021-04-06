@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:fraction/fraction.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
@@ -14,7 +15,7 @@ class ProductsModel extends ChangeNotifier{
   final String _rpcUrl = "HTTP://192.168.0.198:7545";
   final String _wsUrl = "ws://192.168.0.198:7545/";
 
-  final String _privateKey = "0ee349b5ba46e3075f513bf6a613089a603f3a32d2316636c9c1ded0a8444d0e";
+  final String _privateKey = "4ae9cd8ba39afc4693bea1aa5970b1dec9cd042231b8c45ea3d66208618240d6";
   int productsCount = 0;
 
   bool isLoading = true;
@@ -106,10 +107,13 @@ class ProductsModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  addProduct(String name) async{
+  addProduct(String name, double price, String assetUrl, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
     isLoading = true;
     notifyListeners();
-
+    price = double.parse(price.toStringAsFixed(2));
+    Fraction frac1 = price.toFraction();
+    int numinator = frac1.numerator;
+    int denuminator = frac1.denominator;
 
     await _client.sendTransaction(
         _credentials,
@@ -117,7 +121,7 @@ class ProductsModel extends ChangeNotifier{
             maxGas: 6721925,
             contract: _contract,
             function: _createProduct,
-            parameters: [name, BigInt.from(144), "slika.png", BigInt.from(0),BigInt.from(1444)],
+            parameters: [name, BigInt.from(numinator), BigInt.from(denuminator),  assetUrl, BigInt.from(classification),BigInt.from(quantifier), desc, BigInt.from(sellerId),BigInt.from(categoryId)],
             gasPrice: EtherAmount.inWei(BigInt.one)));
     getProducts();
   }
