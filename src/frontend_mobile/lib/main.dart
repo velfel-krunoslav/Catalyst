@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter_svg/flutter_svg.dart';
 //import 'package:dropdownfield/dropdownfield.dart';
 
@@ -441,6 +442,14 @@ class ForgottenPassword extends StatelessWidget {
       ),
     );
   }
+=======
+import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/welcome.dart';
+import 'pages/product_entry_listing.dart';
+
+void main() {
+  runApp(MaterialApp(home: Welcome()));
+>>>>>>> 1f2c8f372e4a68ae2d9a684a0e0a546f625b8aca
 }
 
 class SuccessfulRegistration extends StatelessWidget {
