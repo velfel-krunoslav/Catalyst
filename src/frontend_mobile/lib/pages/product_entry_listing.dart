@@ -34,7 +34,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
     _data.averageReviewScore = reviewsModel.average;
-    _data.numberOfReviews = reviewsModel.reviewsForProductCount;
+    _data.numberOfReviews = reviewsModel.reviewsCount;
     return MaterialApp(
         home: SafeArea(
             child: Stack(

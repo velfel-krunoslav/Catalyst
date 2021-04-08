@@ -231,25 +231,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                           )))
                                   )),
                             );
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             ProductEntryListing(ProductEntryListingPage(
-                            //                 assetUrls: product.assetUrls,
-                            //                 name: product.name,
-                            //                 price: product.price,
-                            //                 classification: product.classification,
-                            //                 quantifier: product.quantifier,
-                            //                 description: product.desc,
-                            //                 id: product.id,
-                            //                 userInfo: new UserInfo(
-                            //                   profilePictureAssetUrl:
-                            //                   'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                            //                   fullName: 'Petar Nikolić',
-                            //                   reputationNegative: 7,
-                            //                   reputationPositive: 240,
-                            //                 )))));
+
                       })),
                 ),
               );

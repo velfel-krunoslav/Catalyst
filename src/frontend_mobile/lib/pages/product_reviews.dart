@@ -13,15 +13,13 @@ const GREY = 0xFFC8C8C8; //added
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
-  List<Review> reviews = [];
-  final items = List<String>.generate(10000, (i) => "Item $i");
 
   @override
   Widget build(BuildContext context) {
 
     reviewsModel = Provider.of<ReviewsModel>(context);
 
-    var reviewsCount = 100;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -80,7 +78,7 @@ class ProductReviews extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    reviewsModel.reviewsForProductCount.toString() + " recenzija",
+                    reviewsModel.reviewsCount.toString() + " recenzija",
                     style: TextStyle(
                         fontFamily: 'Inter', fontSize: 16, color: Colors.black),
                   ),
@@ -144,8 +142,8 @@ class ProductReviews extends StatelessWidget {
                     ),
                     child: SingleChildScrollView(
                       child: Wrap(
-                          children: List<Widget>.generate(reviewsModel.reviewsForProductCount, (int index){
-                            return ReviewWidget(review: reviewsModel.reviewsForProduct[index],);
+                          children: List<Widget>.generate(reviewsModel.reviewsCount, (int index){
+                            return ReviewWidget(review: reviewsModel.reviews[index],);
                           })// [0, 1, 4]
                       )
                     ),

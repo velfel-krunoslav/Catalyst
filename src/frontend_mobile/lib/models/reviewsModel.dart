@@ -13,16 +13,14 @@ import '../internals.dart';
 class ReviewsModel extends ChangeNotifier{
   int productId;
   List<Review> reviews = [];
-  List<Review> reviewsForProduct = [];
   double average = 0;
   List<int> starsCount = [0,0,0,0,0];
 
-  final String _rpcUrl = "HTTP://192.168.0.198:7545";
-  final String _wsUrl = "ws://192.168.0.198:7545/";
+  final String _rpcUrl = "HTTP://192.168.1.3:7545";
+  final String _wsUrl = "ws://192.168.1.3:7545";
 
-  final String _privateKey = "4ae9cd8ba39afc4693bea1aa5970b1dec9cd042231b8c45ea3d66208618240d6";
+  final String _privateKey = "e8de1703013b67c88f29dbea9169ba5262be62dbf3dddefdbff2c366829d0e7d";
   int reviewsCount = 0;
-  int reviewsForProductCount = 0;
 
   bool isLoading = true;
   Credentials _credentials;
@@ -35,12 +33,10 @@ class ReviewsModel extends ChangeNotifier{
   ContractFunction _reviewsCount;
   ContractFunction _reviews;
   ContractFunction _createReview;
-  ContractFunction _reviewsForProduct;
   ContractFunction _getSum;
   ContractFunction _getReviews;
   ContractFunction _countStars;
-  ContractFunction _reviewsForProductCount;
-
+  ContractFunction _getReviewsCount;
 
 
   ReviewsModel(int productId){
@@ -77,37 +73,40 @@ class ReviewsModel extends ChangeNotifier{
     _reviews = _contract.function("reviews");
     _createReview = _contract.function("createReview");
     _getSum = _contract.function("getSum");
-    _reviewsForProduct = _contract.function("reviewsForProduct");
     _getReviews = _contract.function("getReviews");
     _countStars = _contract.function("countStars");
-    _reviewsForProductCount = _contract.function("reviewsForProductCount");
+    _getReviewsCount = _contract.function("getReviewsCount");
 
-    getReviewsForProduct(productId);
-    //getAverage();
+    await getReviews(productId);
+    await getAverage();
+    await getStars();
+
   }
-
-  getReviews() async{
-    List totalReviewsList = await _client.call(contract: _contract, function: _reviewsCount, params: []);
+  getReviews(int productId) async {
+    List totalReviewsList = await _client.call(
+        contract: _contract, function: _getReviewsCount, params: [BigInt.from(productId)]);
     BigInt totalReviews = totalReviewsList[0];
     reviewsCount = totalReviews.toInt();
-    reviews.clear();
 
-    for(int i=0; i < totalReviews.toInt(); i++){
-      var temp = await _client.call(contract: _contract, function: _reviews, params: [BigInt.from(i)]);
+      var temp = await _client.call(
+          contract: _contract,
+          function: _getReviews,
+          params: [BigInt.from(productId),totalReviews]);
 
-      print(temp);
-
-      reviews.add(Review(id: temp[0].toInt(),
-                        productId: temp[1].toInt(),
-                        rating: temp[2].toInt(),
-                        desc: temp[3],
-                        userId: temp[4].toInt()
-      ));
+    for (int i = 0; i < reviewsCount; i++) {
+      var t = temp[0][i];
+      //print(t);
+      reviews.add(Review(id: t[0].toInt(),
+          userId: t[4].toInt(),
+          desc: t[3],
+          productId: t[1].toInt(),
+          rating: t[2].toInt()));
     }
 
-    isLoading = false;
     notifyListeners();
-  }
+    }
+
+
   addReview(int productId, int rating, String desc, int userId) async{
     isLoading = true;
     notifyListeners();
@@ -121,62 +120,32 @@ class ReviewsModel extends ChangeNotifier{
             function: _createReview,
             parameters: [BigInt.from(productId), BigInt.from(rating), desc, BigInt.from(userId)],
             gasPrice: EtherAmount.inWei(BigInt.one)));
-    getReviews();
+    getReviews(productId);
   }
 
 
-  getReviewsForProduct(int productId) async {
-    List<Review> rew = [];
 
-    await _client.sendTransaction(
-        _credentials,
-        Transaction.callContract(
-            maxGas: 6721925,
-            contract: _contract,
-            function: _getReviews,
-            parameters: [BigInt.from(productId)],
-            gasPrice: EtherAmount.inWei(BigInt.one)));
-
-    List totalReviewsList = await _client.call(
-        contract: _contract, function: _reviewsForProductCount, params: []);
-    BigInt totalReviews = totalReviewsList[0];
-    reviewsForProductCount = totalReviews.toInt();
-    //print("productId "+ productId.toString());
-    //print("count " + reviewsForProductCount.toString());
-    for (int i = 0; i < totalReviews.toInt(); i++) {
-      var temp = await _client.call(
-          contract: _contract, function: _reviewsForProduct, params: [BigInt.from(i)]);
-
-      print(temp);
-
-      reviewsForProduct.add(Review(id: temp[0].toInt(),
-          userId: temp[4].toInt(),
-          desc: temp[3],
-          productId: temp[1].toInt(),
-          rating: temp[2].toInt()));
-
-
-    }
-    getAverage();
-    getStars();
-    isLoading = false;
-    notifyListeners();
-  }
 
   getAverage() async{
     List sumList = await _client.call(
-        contract: _contract, function: _getSum, params: []);
+        contract: _contract, function: _getSum, params: [BigInt.from(productId)]);
     BigInt sumTemp = sumList[0];
     int sum = sumTemp.toInt();
-    //print("sum "+sum.toString());
-    if (reviewsForProductCount > 0)
-      average = sum/reviewsForProductCount;
+    if (reviewsCount > 0)
+      average = sum/reviewsCount;
     notifyListeners();
   }
 
-  getStars(){
-    for(int i = 0; i < reviewsForProductCount; i++){
-      starsCount[reviewsForProduct[i].rating - 1]++;
+  getStars() async {
+
+    for(int i = 0; i < 5; i++){
+      List starC = await _client.call(
+          contract: _contract, function: _countStars, params: [BigInt.from(productId), BigInt.from(i+1)]);
+      BigInt temp = starC[0];
+      int starCount = temp.toInt();
+      starsCount[i] = starCount;
     }
+    isLoading = false;
+    notifyListeners();
   }
 }

@@ -12,10 +12,11 @@ import '../internals.dart';
 
 class ProductsModel extends ChangeNotifier{
   List<ProductEntry> products = [];
-  final String _rpcUrl = "HTTP://192.168.0.198:7545";
-  final String _wsUrl = "ws://192.168.0.198:7545/";
+  final String _rpcUrl = "HTTP://192.168.1.3:7545";
+  final String _wsUrl = "ws://192.168.1.3:7545";
 
-  final String _privateKey = "4ae9cd8ba39afc4693bea1aa5970b1dec9cd042231b8c45ea3d66208618240d6";
+
+  final String _privateKey = "e8de1703013b67c88f29dbea9169ba5262be62dbf3dddefdbff2c366829d0e7d";
   int productsCount = 0;
 
   bool isLoading = true;
