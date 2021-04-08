@@ -110,7 +110,7 @@ class ProductReviews extends StatelessWidget {
                           <svg width="260" height="5" />
                           <rect width="260" height="5" fill="#ECECEC">
                           <rect width="''' +
-                              e[2].toString() +
+                              (reviewsModel.reviewsCount != 0 ? ((e[2]/reviewsModel.reviewsCount) * 260).toString() : 0.toString()) +
                               '''" height="5" fill="#''' +
                               e[1] +
                               '''">
