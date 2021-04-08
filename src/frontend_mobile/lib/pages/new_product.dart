@@ -253,7 +253,7 @@ class _NewProductState extends State<NewProduct> {
                             ),
                             DropdownMenuItem(
                               child: Text(
-                                "Težina",
+                                "Masa",
                                 style: TextStyle(
                                   color: Color(DARK_GREY),
                                   fontSize: 14,
@@ -334,7 +334,7 @@ class _NewProductState extends State<NewProduct> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => new Blank() // TODO ADD PICTURES
+                            builder: (context) => new Blank() // TODO - ADD PICTURES
                           )
                         );
                       }
@@ -350,7 +350,7 @@ class _NewProductState extends State<NewProduct> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => new Blank() // TODO SELECT PICTURE
+                            builder: (context) => new Blank() // TODO - SELECT PICTURE TO ADD
                           )
                         );
                       }
@@ -366,7 +366,7 @@ class _NewProductState extends State<NewProduct> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => new Blank() // TODO SELECT PICTURE
+                            builder: (context) => new Blank() // TODO - SELECT PICTURE TO ADD
                           )
                         );
                       }
