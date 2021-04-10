@@ -51,9 +51,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user),
+          drawer: HomeDrawer(context, user), //TODO context
           appBar: AppBar(
-            leading: new Container(),
             toolbarHeight: 160,
             flexibleSpace: Container(
               child: SafeArea(
