@@ -103,3 +103,12 @@ class User {
       this.rating,
       this.reviewsCount});
 }
+
+class CartProduct {
+  List<String> photoUrl;
+  String name;
+  double price;
+  int cartQuantity;
+
+  CartProduct({this.photoUrl, this.name, this.price, this.cartQuantity});
+}

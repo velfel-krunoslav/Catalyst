@@ -4,10 +4,36 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
+import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
+import '../internals.dart';
 import 'blank_page.dart';
+import 'consumer_home.dart';
+
+String customerAddress = 'Kralja Aleksandra I Karađorđevića 36';
+String walletKey = '1BvBMSEYstWetqTFn5Au4m4G';
+
+int quantityFirst = 1;
+int quantitySecond = 1;
+
+double priceFirst = 2.40;
+double priceSecond = 13.90;
+
+double total = quantityFirst * priceFirst + quantitySecond * priceSecond;
+
+final _textController = new TextEditingController();
+
+List<CartProduct> products = [
+  new CartProduct(photoUrl: <String>[
+    'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
+  ], name: 'Domaći med', price: 13.9, cartQuantity: 1),
+  new CartProduct(
+      photoUrl: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
+      name: 'Pasirani paradajz',
+      price: 2.4,
+      cartQuantity: 1)
+];
 
 class ConsumerCart extends StatefulWidget {
   @override
@@ -37,7 +63,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Blank()),
+                  MaterialPageRoute(builder: (context) => ConsumerHomePage()),
                 );
               },
             )),
@@ -46,36 +72,6 @@ class _ConsumerCartState extends State<ConsumerCart> {
               child: Container(
                   width: MediaQuery.of(context).size.width - 40,
                   child: Column(children: [
-                    /*Row(
-                  children: [
-                    Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/Back.svg',
-                          width: ICON_SIZE,
-                          height: ICON_SIZE
-                        )
-                      ]
-                    ),
-
-                    Column(
-                      children: [
-                        Text(
-                          'Korpa',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            color: Color(DARK_GREY)
-                          )
-                        )
-                      ]
-                    )
-                  ]
-                ),
-
-                SizedBox(height: 20),*/
-
                     Row(children: [
                       Expanded(
                           flex: 3,
@@ -97,7 +93,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           ]),
                           Row(children: [
                             Text(
-                                '2.40$CURRENCY', // should not be hardcoded; solve in dot net
+                                '$priceFirst$CURRENCY', // should not be hardcoded; solve in dot net
                                 style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 16,
@@ -105,16 +101,50 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           ]),
                           Row(children: [
                             Expanded(
-                                flex: 7,
-                                child: Column(children: [
-                                  Align(
-                                      child: SvgPicture.asset(
-                                          'assets/icons/Quantity.svg',
-                                          height: ICON_SIZE),
-                                      alignment: Alignment.centerLeft)
-                                ])),
+                                flex: 1,
+                                child: Align(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            quantityFirst -= 1;
+                                          });
+                                          setState(() {
+                                            total -= priceFirst;
+                                          });
+                                        },
+                                        child: Text(' - ',
+                                            style: TextStyle(
+                                                backgroundColor: Color(GREY),
+                                                fontFamily: 'Inter',
+                                                color: Color(BLACK)))),
+                                    alignment: Alignment.centerLeft)),
                             Expanded(
-                              flex: 3,
+                                flex: 1,
+                                child: Align(
+                                    child: Text(' $quantityFirst ',
+                                        style: TextStyle(fontFamily: 'Inter')),
+                                    alignment: Alignment.centerLeft)),
+                            Expanded(
+                                flex: 1,
+                                child: Align(
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          quantityFirst += 1;
+                                        });
+                                        setState(() {
+                                          total += priceFirst;
+                                        });
+                                      },
+                                      child: Text(' + ',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              backgroundColor: Color(GREY),
+                                              color: Color(BLACK)))),
+                                  alignment: Alignment.centerLeft,
+                                )),
+                            Expanded(
+                              flex: 6,
                               child: Column(
                                 children: [
                                   Align(
@@ -164,7 +194,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           Row(
                             children: [
                               Text(
-                                  '15$CURRENCY', // should not be hardcoded; solve in dot net
+                                  '$priceSecond$CURRENCY', // should not be hardcoded; solve in dot net
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 16,
@@ -173,17 +203,50 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           ),
                           Row(children: [
                             Expanded(
-                              flex: 7,
-                              child: Column(children: [
-                                Align(
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Quantity.svg',
-                                        height: ICON_SIZE),
-                                    alignment: Alignment.centerLeft)
-                              ]),
-                            ),
+                                flex: 1,
+                                child: Align(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            quantitySecond -= 1;
+                                          });
+                                          setState(() {
+                                            total -= priceSecond;
+                                          });
+                                        },
+                                        child: Text(' - ',
+                                            style: TextStyle(
+                                                backgroundColor: Color(GREY),
+                                                fontFamily: 'Inter',
+                                                color: Color(BLACK)))),
+                                    alignment: Alignment.centerLeft)),
                             Expanded(
-                              flex: 3,
+                                flex: 1,
+                                child: Align(
+                                    child: Text(' $quantitySecond ',
+                                        style: TextStyle(fontFamily: 'Inter')),
+                                    alignment: Alignment.centerLeft)),
+                            Expanded(
+                                flex: 1,
+                                child: Align(
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          quantitySecond += 1;
+                                        });
+                                        setState(() {
+                                          total += priceSecond;
+                                        });
+                                      },
+                                      child: Text(' + ',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              backgroundColor: Color(GREY),
+                                              color: Color(BLACK)))),
+                                  alignment: Alignment.centerLeft,
+                                )),
+                            Expanded(
+                              flex: 6,
                               child: Column(
                                 children: [
                                   Align(
@@ -199,7 +262,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                       Blank()),
                                             );
                                           }),
-                                      alignment: Alignment.centerRight)
+                                      alignment: Alignment.centerRight),
                                 ],
                               ),
                             )
@@ -229,7 +292,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           flex: 9,
                           child: Column(children: [
                             Row(children: [
-                              Text('Kralja Aleksandra I Karađorđevića 36',
+                              Text('$customerAddress',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 16,
@@ -252,11 +315,117 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                   height: ICON_SIZE,
                                   color: Color(DARK_GREY)),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Blank()),
-                                );
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        height: 250,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      'Promena adrese za dostavu',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(DARK_GREY),
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 18)),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15.0),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                          width: 280,
+                                                          height: 36,
+                                                          child: TextField(
+                                                              controller:
+                                                                  _textController,
+                                                              onChanged: (String
+                                                                  value) async {
+                                                                setState(() {
+                                                                  customerAddress =
+                                                                      _textController
+                                                                          .text;
+                                                                });
+                                                              },
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                      hintText:
+                                                                          'Izmeni adresu',
+                                                                      filled:
+                                                                          true,
+                                                                      fillColor:
+                                                                          Color(
+                                                                              LIGHT_GREY),
+                                                                      border: new OutlineInputBorder(
+                                                                          borderRadius: const BorderRadius.all(
+                                                                            const Radius.circular(5.0),
+                                                                          ),
+                                                                          borderSide: BorderSide.none))))
+                                                    ])),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                SizedBox(),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Container(
+                                                    width: 280,
+                                                    height: 36,
+                                                    child: Text(
+                                                        "Trenutna adresa za dostavu je $customerAddress",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(BLACK),
+                                                            fontFamily: 'Inter',
+                                                            fontSize: 16)),
+                                                  ),
+                                                ),
+                                                SizedBox(),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100,
+                                                  height: 50,
+                                                  child: FlatButton(
+                                                    color: Color(LIGHT_GREY),
+                                                    onPressed: () {},
+                                                    child: Text('Primeni',
+                                                        style: TextStyle(
+                                                            color: Color(BLACK),
+                                                            fontFamily: 'Inter',
+                                                            fontSize: 16)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               }))
                     ]),
 
@@ -271,7 +440,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           flex: 9,
                           child: Column(children: [
                             Row(children: [
-                              Text('Bitcoin novčanik',
+                              Text('Novčanik',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 16,
@@ -279,7 +448,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                       color: Color(BLACK)))
                             ]),
                             Row(children: [
-                              Text('1BvBMSEYstWetqTFn5Au4m4G',
+                              Text('$walletKey',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 16,
@@ -294,11 +463,117 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                   height: ICON_SIZE,
                                   color: Color(DARK_GREY)),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Blank()),
-                                );
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        height: 250,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      'Promena javnog ključa novčanika',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(DARK_GREY),
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 18)),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15.0),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                          width: 280,
+                                                          height: 36,
+                                                          child: TextField(
+                                                              controller:
+                                                                  _textController,
+                                                              onChanged: (String
+                                                                  value) async {
+                                                                setState(() {
+                                                                  customerAddress =
+                                                                      _textController
+                                                                          .text;
+                                                                });
+                                                              },
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                      hintText:
+                                                                          'Unesi nov ključ',
+                                                                      filled:
+                                                                          true,
+                                                                      fillColor:
+                                                                          Color(
+                                                                              LIGHT_GREY),
+                                                                      border: new OutlineInputBorder(
+                                                                          borderRadius: const BorderRadius.all(
+                                                                            const Radius.circular(5.0),
+                                                                          ),
+                                                                          borderSide: BorderSide.none))))
+                                                    ])),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                SizedBox(),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Container(
+                                                    width: 280,
+                                                    height: 36,
+                                                    child: Text(
+                                                        "Trenutni ključ je $walletKey",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(BLACK),
+                                                            fontFamily: 'Inter',
+                                                            fontSize: 16)),
+                                                  ),
+                                                ),
+                                                SizedBox(),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100,
+                                                  height: 50,
+                                                  child: FlatButton(
+                                                    color: Color(LIGHT_GREY),
+                                                    onPressed: () {},
+                                                    child: Text('Primeni',
+                                                        style: TextStyle(
+                                                            color: Color(BLACK),
+                                                            fontFamily: 'Inter',
+                                                            fontSize: 16)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               }))
                     ]),
 
@@ -328,7 +603,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                         flex: 4,
                         child: Column(children: [
                           Align(
-                              child: Text('17.40$CURRENCY',
+                              child: Text('$total$CURRENCY',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 16,
@@ -364,7 +639,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                           child: Column(children: [
                             Align(
                                 child: Text(
-                                    '22.40$CURRENCY', // this should show the total of selected items, should not be hardcoded; solve in dot net
+                                    '$total$CURRENCY', // this should show the total of selected items, should not be hardcoded; solve in dot net
                                     style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 18,
