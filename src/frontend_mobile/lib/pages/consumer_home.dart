@@ -15,10 +15,7 @@ import 'package:provider/provider.dart';
 import '../internals.dart';
 import 'new_product.dart';
 import '../models/productsModel.dart';
-<<<<<<< HEAD
 
-=======
->>>>>>> ffa1b81e37344dcf247f2adbdbe5a9f427965c58
 class ConsumerHomePage extends StatefulWidget {
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
@@ -56,85 +53,88 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         child: Scaffold(
           drawer: HomeDrawer(context, user),
           appBar: AppBar(
+            leading: new Container(),
             toolbarHeight: 160,
-            flexibleSpace: SafeArea(
-                child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(0),
-                          width: 36,
-                          child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () {
-                                Scaffold.of(context).openDrawer();
-                              })),
-                      Spacer(),
-                      IconButton(
-                        icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
-                            width: 36, height: 36),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ConsumerCart()));
-                        },
-                      ),
-                      Container(
-                        child: Center(
-                          child: Text(
-                            cardItemsCount.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Color(DARK_GREY)),
-                          ),
+            flexibleSpace: Container(
+              child: SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(0),
+                            width: 36,
+                            child: IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/DotsNine.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                })),
+                        Spacer(),
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
+                              width: 36, height: 36),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ConsumerCart()));
+                          },
                         ),
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                            color: Color(LIGHT_GREY),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                      )
-                    ],
-                  ),
-                  TextField(
-                    onChanged: (text) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 36),
-                      fillColor: Color(LIGHT_GREY),
-                      filled: true,
-                      hintText: 'Pretraga',
-                      hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(left: 15, right: 10),
-                        child: SvgPicture.asset(
-                            'assets/icons/MagnifyingGlass.svg'),
-                      ),
-                      border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(5.0),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              cardItemsCount.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)),
+                            ),
                           ),
-                          borderSide: BorderSide.none),
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                        )
+                      ],
                     ),
-                    onEditingComplete: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPage()));
-                    },
-                  ),
-                ],
-              ),
-            )),
+                    TextField(
+                      onChanged: (text) {},
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(top: 36),
+                        fillColor: Color(LIGHT_GREY),
+                        filled: true,
+                        hintText: 'Pretraga',
+                        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(left: 15, right: 10),
+                          child: SvgPicture.asset(
+                              'assets/icons/MagnifyingGlass.svg'),
+                        ),
+                        border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(5.0),
+                            ),
+                            borderSide: BorderSide.none),
+                      ),
+                      onEditingComplete: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchPage()));
+                      },
+                    ),
+                  ],
+                ),
+              )),
+            ),
             bottom: TabBar(
                 indicatorColor: Colors.black,
                 labelPadding: EdgeInsets.all(8),

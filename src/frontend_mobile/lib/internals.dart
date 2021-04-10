@@ -125,10 +125,7 @@ class Review {
 
   Review({this.id, this.productId, this.rating, this.desc, this.userId});
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 339f9af2beb31e1d075e24afcc0967387da0de22
 class CartProduct {
   List<String> photoUrl;
   String name;

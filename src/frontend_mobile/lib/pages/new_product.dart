@@ -52,10 +52,7 @@ class _NewProductState extends State<NewProduct> {
                 width: ICON_SIZE,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConsumerHomePage()),
-                );
+                Navigator.pop(context);
               },
             )),
       body: Center(

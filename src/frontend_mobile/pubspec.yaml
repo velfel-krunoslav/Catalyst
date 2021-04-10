@@ -37,7 +37,6 @@ flutter:
     - assets/avatars/
     - assets/product_listings/
     - assets/product_categories/
-    
 
   fonts:
     - family: Inter
