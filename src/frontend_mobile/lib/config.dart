@@ -19,7 +19,7 @@ const double PRODUCT_ENTRY_HEIGHT = 200;
 const double CATEGORY_HEIGHT = 126;
 const String CURRENCY = '€';
 
-
 /* GLOBALS: */
-const PRIVATE_KEY = "5a3fc3671f821e2ec723b3649453b7d706c4f272da6e401247c1319ba8da60ba";
-const HOST = "192.168.0.198:7545";
+const PRIVATE_KEY =
+    "8aab6975633618c9e934c71ae9a0d9bff86d828d79710bec496418d6458864d2";
+const HOST = "192.168.1.11:7545";
