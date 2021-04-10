@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 enum Classification { Single, Weight, Volume }
 
-
-
 class ProductEntry {
   int id;
   List<String> assetUrls;
@@ -15,9 +13,8 @@ class ProductEntry {
   int sellerId;
   int categoryId;
   ProductEntry(
-      {
-        this.id,
-        this.assetUrls,
+      {this.id,
+      this.assetUrls,
       this.name,
       this.price,
       this.classification,
@@ -80,7 +77,7 @@ class ProductEntryListingPage extends ProductEntry {
       double price,
       Classification classification,
       int quantifier,
-        int id,
+      int id,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
@@ -118,8 +115,8 @@ class User {
       this.rating,
       this.reviewsCount});
 }
-class Review {
 
+class Review {
   int id;
   int productId;
   int rating;
@@ -128,6 +125,10 @@ class Review {
 
   Review({this.id, this.productId, this.rating, this.desc, this.userId});
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 339f9af2beb31e1d075e24afcc0967387da0de22
 class CartProduct {
   List<String> photoUrl;
   String name;
