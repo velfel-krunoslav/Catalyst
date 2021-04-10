@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:frontend_mobile/pages/inbox.dart';
 import '../internals.dart';
 import '../config.dart';
 
@@ -281,7 +282,18 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                     )),
                                 Spacer(),
                                 TextButton(
-                                    onPressed: () => {},
+                                    onPressed: () => {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Inbox(
+                                                      ChatUsers(
+                                                          name: _data.userInfo
+                                                              .fullName,
+                                                          imageURL: _data
+                                                              .userInfo
+                                                              .profilePictureAssetUrl))))
+                                        },
                                     child: SvgPicture.asset(
                                         'assets/icons/Envelope.svg',
                                         width: 38,
