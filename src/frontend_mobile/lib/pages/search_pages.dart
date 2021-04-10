@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
@@ -86,7 +87,6 @@ class _SearchPageState extends State<SearchPage> {
   List<ProductEntry> productsToDispay;
   ScrollController _ScrollController;
   bool reachPoint = false;
-  //double _height = 1460;
 
   _scrollListener() {
     if (_ScrollController.offset >= 50) {
@@ -113,151 +113,209 @@ class _SearchPageState extends State<SearchPage> {
     _PageController = PageController(initialPage: 0);
   }
 
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
   /*TODO categories dropdown menu items*/
+
+  // ignore: unused_field
+  var _categories = [
+    'Peciva',
+    'Suhomesnato',
+    'Mlečni proizvodi',
+    'Voće i povrće',
+    'Bezalkoholna pića',
+    'Alkohol',
+    'Žita',
+    'Živina',
+    'Zimnice',
+    'Ostali proizvodi',
+  ];
+  var _currentCategorySelected = "Izaberite kategoriju...";
+
+  void _DropDownCategorySelected(String newCategorySelected) {
+    setState(() {
+      this._currentCategorySelected = newCategorySelected;
+    });
+  }
+
+  // ignore: non_constant_identifier_names
   void _FilterButtonPress() {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Container(
-            height: 300,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Filteri',
-                          style: TextStyle(
-                              color: Color(DARK_GREY),
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18)),
-                    ],
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter stateSetter) {
+            return Container(
+              height: 300,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Filteri',
+                            style: TextStyle(
+                                color: Color(DARK_GREY),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18)),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(),
-                      Text('Kategorija:',
-                          style: TextStyle(
-                              color: Color(BLACK),
-                              fontFamily: 'Inter',
-                              fontSize: 16)),
-                      SizedBox(
-                        width: 208,
-                        height: 44,
-                        child: DropdownButtonFormField(
-                          items: null,
-                          decoration: const InputDecoration(
-                            filled: true,
-                            border: const OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(5.0),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50.0),
+                          child: Text('Kategorija:',
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                        SizedBox(
+                          width: 230,
+                          height: 60,
+                          child: DropdownButtonFormField<String>(
+                            items: _categories.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                  value: dropDownStringItem,
+                                  child: Text(dropDownStringItem));
+                            }).toList(),
+                            onChanged: (String newCategorySelected) {
+                              _DropDownCategorySelected(newCategorySelected);
+                            },
+                            hint: Text(_currentCategorySelected),
+                            decoration: const InputDecoration(
+                              filled: true,
+                              border: const OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(5.0),
+                                ),
+                                borderSide: BorderSide.none,
                               ),
-                              borderSide: BorderSide.none,
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Raspon cena (€):",
-                        style: TextStyle(
-                            color: Color(BLACK),
-                            fontFamily: 'Inter',
-                            fontSize: 16)),
-                    SizedBox(
-                      width: 89,
-                      height: 44,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color(LIGHT_GREY),
-                          border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(5.0),
-                              ),
-                              borderSide: BorderSide.none),
-                        ),
-                      ),
-                    ),
-                    Text("-",
-                        style: TextStyle(
-                            color: Color(BLACK),
-                            fontFamily: 'Inter',
-                            fontSize: 16)),
-                    SizedBox(
-                      width: 89,
-                      height: 44,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color(LIGHT_GREY),
-                          border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(5.0),
-                              ),
-                              borderSide: BorderSide.none),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Proizvodi na akciji:",
-                        style: TextStyle(
-                            color: Color(BLACK),
-                            fontFamily: 'Inter',
-                            fontSize: 16)),
-                    Switch(
-                        value: _value,
-                        activeColor: Color(BLACK),
-                        onChanged: (bool value) {
-                          onSwitchValueChanged(value);
-                        }),
-                    SizedBox(
-                      width: 140,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: FlatButton(
-                        color: Color(LIGHT_GREY),
-                        onPressed: () {},
-                        child: Text('Primeni',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2.0),
+                        child: Text("Raspon cena ($CURRENCY):",
                             style: TextStyle(
                                 color: Color(BLACK),
                                 fontFamily: 'Inter',
-                                fontSize: 16)),
+                                fontSize: 14)),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+                      SizedBox(
+                        width: 89,
+                        height: 44,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: new OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(5.0),
+                                ),
+                                borderSide: BorderSide.none),
+                          ),
+                        ),
+                      ),
+                      Text("-",
+                          style: TextStyle(
+                              color: Color(BLACK),
+                              fontFamily: 'Inter',
+                              fontSize: 14)),
+                      SizedBox(
+                        width: 89,
+                        height: 44,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: new OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(5.0),
+                                ),
+                                borderSide: BorderSide.none),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24.0),
+                        child: Text("Proizvodi na akciji:",
+                            style: TextStyle(
+                                color: Color(BLACK),
+                                fontFamily: 'Inter',
+                                fontSize: 14)),
+                      ),
+                      Switch(
+                          value: _value,
+                          activeColor: Color(BLACK),
+                          onChanged: (bool value) {
+                            stateSetter(() => onSwitchValueChanged(value));
+                          }),
+                      Spacer(),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 86,
+                        height: 36,
+                        // ignore: deprecated_member_use
+                        child: FlatButton(
+                          color: Color(LIGHT_GREY),
+                          onPressed: () {},
+                          child: Text('Primeni',
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
         });
   }
 
   final _textController = new TextEditingController();
-  String distance = "3";
+  String hintDistance = "3";
 
+  // ignore: non_constant_identifier_names
   void _LocationButtonPress() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -293,9 +351,13 @@ class _SearchPageState extends State<SearchPage> {
                           controller: _textController,
                           onChanged: (String value) async {
                             setState(() {
-                              distance = _textController.text;
+                              hintDistance = _textController.text;
                             });
                           },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
                           decoration: InputDecoration(
                             hintText: '3',
                             filled: true,
@@ -314,7 +376,7 @@ class _SearchPageState extends State<SearchPage> {
                             style: TextStyle(
                                 color: Color(BLACK),
                                 fontFamily: 'Inter',
-                                fontSize: 16)),
+                                fontSize: 14)),
                       ),
                     ],
                   ),
@@ -329,12 +391,12 @@ class _SearchPageState extends State<SearchPage> {
                         width: 282,
                         height: 34,
                         child: Text(
-                            "Prikazati proizvode dobavljaca koji su udaljeni najvise $distance km.",
+                            "Prikazati proizvode dobavljaca koji su udaljeni najvise $hintDistance km.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color(BLACK),
                                 fontFamily: 'Inter',
-                                fontSize: 16)),
+                                fontSize: 14)),
                       ),
                     ),
                     SizedBox(),
@@ -344,8 +406,9 @@ class _SearchPageState extends State<SearchPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 100,
-                      height: 50,
+                      width: 86,
+                      height: 36,
+                      // ignore: deprecated_member_use
                       child: FlatButton(
                         color: Color(LIGHT_GREY),
                         onPressed: () {},
@@ -353,7 +416,7 @@ class _SearchPageState extends State<SearchPage> {
                             style: TextStyle(
                                 color: Color(BLACK),
                                 fontFamily: 'Inter',
-                                fontSize: 16)),
+                                fontSize: 14)),
                       ),
                     ),
                   ],
@@ -371,48 +434,53 @@ class _SearchPageState extends State<SearchPage> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: 160,
+            toolbarHeight: 161,
             flexibleSpace: SafeArea(
                 child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(0),
-                          width: 36,
-                          child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () {} /* TODO DOTS NINE PRESSED */)),
-                      Spacer(),
-                      IconButton(
-                        icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
-                            width: 36, height: 36),
-                        onPressed: () {},
-                      ),
-                      Container(
-                        child: Center(
-                          child: Text(
-                            cardItemsCount.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Color(DARK_GREY)),
-                          ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(0),
+                            width: 36,
+                            child: IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/DotsNine.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {} /* TODO DOTS NINE PRESSED */)),
+                        Spacer(),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                              'assets/icons/ShoppingCart.svg',
+                              width: 36,
+                              height: 36),
+                          onPressed: () {},
                         ),
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                            color: Color(LIGHT_GREY),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                      )
-                    ],
+                        Container(
+                          child: Center(
+                            child: Text(
+                              cardItemsCount.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)),
+                            ),
+                          ),
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        )
+                      ],
+                    ),
                   ),
                   TextField(
                     onChanged: (text) {
@@ -446,36 +514,45 @@ class _SearchPageState extends State<SearchPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.only(top: 8.0),
-                          child: FlatButton.icon(
-                              onPressed: () => _FilterButtonPress(),
-                              icon: Icon(Icons.pin_drop, size: 24.0),
-                              label: Text(
-                                'Lokacija',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                ),
-                              )),
+                        Expanded(
+                          // ignore: deprecated_member_use
+                          child: FlatButton(
+                            onPressed: () => {_LocationButtonPress()},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SvgPicture.asset('assets/icons/Location.svg',
+                                    width: 24, height: 24),
+                                Text(
+                                  "Lokacija",
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(BLACK)),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.only(top: 8.0),
-                          child: FlatButton.icon(
-                              onPressed: () => _LocationButtonPress(),
-                              icon: Icon(
-                                Icons.filter_alt,
-                                size: 24.0,
-                              ),
-                              label: Text(
-                                'Filteri',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                              )),
+                        Expanded(
+                          // ignore: deprecated_member_use
+                          child: FlatButton(
+                            onPressed: () => {_FilterButtonPress()},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SvgPicture.asset('assets/icons/Filters.svg',
+                                    width: 24, height: 24),
+                                Text(
+                                  "Filteri",
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(BLACK)),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -497,6 +574,18 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Text(
+            'Preporučeno',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 28,
+                color: Color(DARK_GREY),
+                fontWeight: FontWeight.w700),
+          ),
+        ),
         SizedBox(height: 15),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
