@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "python3": "^0.0.1",
     "socket.io": "^4.0.1"
   },
   "devDependencies": {
