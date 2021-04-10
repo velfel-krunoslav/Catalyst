@@ -4,114 +4,55 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:sticky_headers/sticky_headers.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
+import 'package:frontend_mobile/pages/product_entry_listing.dart';
+import 'package:frontend_mobile/pages/consumer_cart.dart';
+import 'package:frontend_mobile/pages/search_pages.dart';
+import 'package:frontend_mobile/pages/settings.dart';
+import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
+import '../models/productsModel.dart';
+
 
 class ConsumerHomePage extends StatefulWidget {
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
-
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
+
+  int category = -1;
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
-  List<ProductEntry> products = [
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-        ],
-        name: 'Domaći med',
-        price: 13.90,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
-        name: 'Pasirani paradajz',
-        price: 2.40,
-        classification: Classification.Weight,
-        quantifier: 500),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg'
-        ],
-        name: 'Maslinovo ulje',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/prosciutto_46137_by.jpg'],
-        name: 'Pršut',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/rakija_silverije_cc_by_sa.jpg'
-        ],
-        name: 'Rakija',
-        price: 12.40,
-        classification: Classification.Volume,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
-        name: 'Kobasica',
-        price: 16.70,
-        classification: Classification.Weight,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'
-        ],
-        name: 'Kamamber',
-        price: 29.90,
-        classification: Classification.Weight,
-        quantifier: 500),
-  ];
+  //int category = -1;
+  User user = new User(
+      forename: "Petar",
+      surname: "Nikolić",
+      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
+      phoneNumber: "+49 76 859 69 58",
+      address: "4070 Jehovah Drive",
+      city: "Roanoke",
+      mail: "jay.ritter@gmail.com",
+      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+          " sed do eiusmod tempor incididunt ut labore et dolore magna "
+          "aliqua.",
+      rating: 4.5,
+      reviewsCount: 67);
   List<ProductEntry> recently;
-  List<ProductEntry> productsToDispay;
-  ScrollController _ScrollController;
-  bool reachPoint = false;
-  double _height = 1460;
-
-  _scrollListener() {
-    if (_ScrollController.offset >= 50) {
-      setState(() {
-        reachPoint = true;
-      });
-    }
-    if (_ScrollController.offset < 50) {
-      setState(() {
-        reachPoint = false;
-      });
-    }
-  }
-
-  PageController _PageController;
-  @override
-  void initState() {
-    super.initState();
-    _ScrollController = ScrollController();
-    setState(() {
-      productsToDispay = products;
-    });
-    _ScrollController.addListener(_scrollListener);
-    _PageController = PageController(initialPage: 0);
-  }
-
+  List<ProductEntry> products = [];
+  var listModel;
   @override
   Widget build(BuildContext context) {
+
+    listModel = Provider.of<ProductsModel>(context);
+
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
+          drawer: HomeDrawer(context, user),
           appBar: AppBar(
             toolbarHeight: 160,
             flexibleSpace: SafeArea(
@@ -130,12 +71,19 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   'assets/icons/DotsNine.svg',
                                   width: 36,
                                   height: 36),
-                              onPressed: () {} /* TODO DOTS NINE PRESSED */)),
+                              onPressed: () {
+                                Scaffold.of(context).openDrawer();
+                              })),
                       Spacer(),
                       IconButton(
                         icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
                             width: 36, height: 36),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ConsumerCart()));
+                        },
                       ),
                       Container(
                         child: Center(
@@ -157,15 +105,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     ],
                   ),
                   TextField(
-                    onChanged: (text) {
-                      text = text.toLowerCase();
-                      setState(() {
-                        productsToDispay = products.where((product) {
-                          var productTitle = product.name.toLowerCase();
-                          return productTitle.contains(text);
-                        }).toList();
-                      });
-                    },
+                    onChanged: (text) {},
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 36),
                       fillColor: Color(LIGHT_GREY),
@@ -183,6 +123,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           ),
                           borderSide: BorderSide.none),
                     ),
+                    onEditingComplete: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()));
+                    },
                   ),
                 ],
               ),
@@ -202,11 +148,25 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                 })),
             backgroundColor: Colors.white,
           ),
-          body: TabBarView(
+          body: Stack(
             children: [
-              SingleChildScrollView(child: HomeContent()),
-              SingleChildScrollView(child: Categories()),
-              SingleChildScrollView(child: BestDeals())
+              TabBarView(
+                children: [
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  HomeContent()),
+                  SingleChildScrollView(child: category == -1 ?
+                  Categories() :
+                  Container()
+                  ),
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  BestDeals())
+                ],
+              ),
+
             ],
           ),
         ),
@@ -236,7 +196,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsToDispay.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -246,7 +206,33 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: productsToDispay[index], onPressed: () {})),
+                          product: listModel.products[index], onPressed: () {
+
+                            ProductEntry product = listModel.products[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new ChangeNotifierProvider(
+                                      create: (context) => ReviewsModel(product.id),
+                                      child: ProductEntryListing(ProductEntryListingPage(
+                                          assetUrls: product.assetUrls,
+                                          name: product.name,
+                                          price: product.price,
+                                          classification: product.classification,
+                                          quantifier: product.quantifier,
+                                          description: product.desc,
+                                          id: product.id,
+                                          userInfo: new UserInfo(
+                                            profilePictureAssetUrl:
+                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                            fullName: 'Petar Nikolić',
+                                            reputationNegative: 7,
+                                            reputationPositive: 240,
+                                          )))
+                                  )),
+                            );
+
+                      })),
                 ),
               );
             }),
@@ -264,39 +250,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       fontWeight: FontWeight.w700),
                 ),
               )
-            : Container(),
-        productsToDispay.length > 6
-            ? InkWell(
-                onTap: () {
-                  _ScrollController.animateTo(0.0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color(LIGHT_GREY),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 36,
-                        color: Color(DARK_GREY),
-                      ),
-                      Text(
-                        'Nazad na vrh',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(DARK_GREY)),
-                      )
-                    ],
-                  ),
-                ),
-              )
             : Container()
       ],
     );
@@ -311,7 +264,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsToDispay.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -322,54 +275,96 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: productsToDispay[index].assetUrls,
-                              name: productsToDispay[index].name,
-                              price: productsToDispay[index].price,
-                              prevPrice: productsToDispay[index].price * 0.8,
-                              classification:
-                                  productsToDispay[index].classification,
-                              quantifier: productsToDispay[index].quantifier),
+                              assetUrls: listModel.products[index].assetUrls,
+                              name: listModel.products[index].name,
+                              price: listModel.products[index].price,
+                              prevPrice: listModel.products[index].price * 2,
+                              classification: listModel.products[index].classification,
+                              quantifier: listModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
             }),
           ),
-        ),
-        productsToDispay.length > 6
-            ? InkWell(
-                onTap: () {
-                  _ScrollController.animateTo(0.0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Color(LIGHT_GREY),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 35,
-                        color: Color(DARK_GREY),
-                      ),
-                      Text(
-                        'Nazad na vrh',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(DARK_GREY)),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            : Container()
+        )
       ],
     );
   }
+}
+
+Widget HomeDrawer(BuildContext context, User user) {
+  return Container(
+    width: 255,
+    child: new Drawer(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+        color: Color(LIGHT_BLACK),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(user.photoUrl),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  user.forename + " " + user.surname,
+                  style: TextStyle(
+                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
+                )
+              ],
+            ),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Moj nalog",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAccount(user: user)));
+                },
+                iconUrl: "assets/icons/User.svg"),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Poruke",
+                onPressed: () {},
+                iconUrl: "assets/icons/Envelope.svg"),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Istorija narudžbi",
+                onPressed: () {},
+                iconUrl: "assets/icons/Newspaper.svg"),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Pomoć i podrška",
+                onPressed: () {},
+                iconUrl: "assets/icons/Handshake.svg"),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Podešavanja",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Settings()),
+                  );
+                },
+                iconUrl: "assets/icons/Gear.svg"),
+            SizedBox(height: 50),
+            DrawerOption(
+                text: "Odjavi se",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                iconUrl: "assets/icons/SignOut.svg"),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class Categories extends StatefulWidget {
@@ -384,8 +379,15 @@ class _CategoriesState extends State<Categories> {
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return CategoryEntry(
-              categories[index].assetUrl, categories[index].name);
+          return InkWell(
+            onTap: () {
+              setState(() {
+
+              });
+            },
+            child: CategoryEntry(
+                categories[index].assetUrl, categories[index].name),
+          );
         })));
   }
 
@@ -438,35 +440,32 @@ class CategoryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return InkWell(
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 125.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          Positioned(
-            left: 35.0,
-            child: Text(categoryName,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                    color: Color(LIGHT_GREY),
-                    shadows: <Shadow>[
-                      Shadow(blurRadius: 5, color: Colors.black)
-                    ])),
-          ),
-        ],
-      ),
-      onTap: () {} /* TODO ON CATEGORY CLICKED */,
+        ),
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
+      ],
     );
   }
 }

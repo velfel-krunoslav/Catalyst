@@ -22,6 +22,13 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
   int activeMenu = 0;
   int cardItemsCount = 0;
   List<ProductEntry> products = [

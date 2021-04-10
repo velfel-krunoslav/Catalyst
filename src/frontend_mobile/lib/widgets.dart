@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/product_reviews.dart';
+
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -302,7 +304,7 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toString() +
+                            product.price.toStringAsFixed(2) +
                                 ' €' +
                                 ' (' +
                                 product.quantifier.toString() +
@@ -366,7 +368,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2),
+                            product.prevPrice.toStringAsFixed(2),
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -380,7 +382,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      product.prevPrice.toStringAsFixed(2) +
+                      product.price.toStringAsFixed(2) +
                           ' €' +
                           ' (' +
                           product.quantifier.toString() +
@@ -438,4 +440,178 @@ class CategoryCard extends InkWell {
               ],
             ),
             onTap: onPressed);
+}
+
+class DrawerOption extends StatelessWidget {
+  String text;
+  var onPressed;
+  String iconUrl;
+
+  DrawerOption({this.text, this.onPressed, this.iconUrl});
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            this.iconUrl,
+            color: Colors.white,
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          Text(
+            this.text,
+            style: TextStyle(
+                fontFamily: 'Inter', color: Colors.white, fontSize: 16),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SettingsOption extends StatelessWidget {
+  String text;
+  Icon icon;
+  var onPressed;
+
+  SettingsOption({this.text, this.icon, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        height: 45,
+        decoration: BoxDecoration(
+            border: Border.all(color: Color(DARK_GREY)),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.white),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 20,
+            ),
+            this.icon,
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              this.text,
+              style: TextStyle(
+                  fontFamily: "Inter", fontSize: 15, color: Colors.black),
+            ),
+            Spacer(),
+            Icon(Icons.arrow_forward_ios_outlined),
+            SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReviewWidget extends StatelessWidget {
+
+  Review review;
+
+  ReviewWidget({this.review});
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(TEAL),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage(
+                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
+                  )),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding:
+                    EdgeInsets.only(left: 0, right: 16, top: 0)),
+                Text("Petar Nikolić",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black)),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+
+                  child: Container(
+                    width: 200,
+                      child: Text(
+                        review.desc.length > 100 ? review.desc.substring(0, 100)+"...":
+                        review.desc,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                        ),
+                      )),
+                ),
+              ],
+            ),
+            SizedBox(
+              //height: 100,
+            ),
+            Spacer(),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      children: List.generate(review.rating, (index) {
+                        return SvgPicture.asset("assets/icons/StarFilled.svg",);
+                      }),
+                    ),
+                    Wrap(
+                      children: List.generate(5 - review.rating.round(), (index) {
+                        return SvgPicture.asset("assets/icons/StarOutline.svg", color: Color(LIGHT_GREY));
+                      }),
+                    ),
+                    SizedBox(width: 10,),
+                  ],
+                ),
+                SizedBox(height: 5,),
+                Text("Pre 1 dan",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Color(DARK_GREY))),
+              ],
+            ),
+
+          ],
+
+        ),
+
+         SizedBox(height: 20,)
+      ],
+    );
+  }
 }
