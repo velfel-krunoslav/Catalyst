@@ -6,17 +6,17 @@ import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
+import '../config.dart';
 import '../internals.dart';
 
 
 
 class ProductsModel extends ChangeNotifier{
   List<ProductEntry> products = [];
-  final String _rpcUrl = "HTTP://192.168.0.198:7545";
-  final String _wsUrl = "ws://192.168.0.198:7545";
+  final String _rpcUrl = "HTTP://"+HOST;
+  final String _wsUrl = "ws://"+HOST;
 
-
-  final String _privateKey = "5a3fc3671f821e2ec723b3649453b7d706c4f272da6e401247c1319ba8da60ba";
+  final String _privateKey = PRIVATE_KEY;
   int productsCount = 0;
 
   bool isLoading = true;
