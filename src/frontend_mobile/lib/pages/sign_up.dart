@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -139,9 +140,12 @@ class SignUp extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new ChangeNotifierProvider(
-                                  create: (context) => ProductsModel(),
-                                  child: ConsumerHomePage()
+                                builder: (context) => new MultiProvider(
+                                    providers: [
+                                      ChangeNotifierProvider<ProductsModel>(create: (_) => ProductsModel()),
+                                      ChangeNotifierProvider<CategoriesModel>(create: (_) => CategoriesModel()),
+                                    ],
+                                    child: ConsumerHomePage()
                                 )),
                           );
                         },

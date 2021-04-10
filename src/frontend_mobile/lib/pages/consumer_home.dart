@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -26,7 +27,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
-  //int category = -1;
+
   User user = new User(
       forename: "Petar",
       surname: "Nikolić",
@@ -42,10 +43,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       reviewsCount: 67);
   List<ProductEntry> recently;
   List<ProductEntry> products = [];
-  var listModel;
+  var productsModel;
+  var categoriesModel;
   @override
   Widget build(BuildContext context) {
-    listModel = Provider.of<ProductsModel>(context);
+    productsModel = Provider.of<ProductsModel>(context);
+    categoriesModel = Provider.of<CategoriesModel>(context);
 
     return MaterialApp(
       home: DefaultTabController(
@@ -154,7 +157,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               TabBarView(
                 children: [
                   SingleChildScrollView(
-                      child: listModel.isLoading
+                      child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
                                 backgroundColor: Colors.grey,
@@ -162,9 +165,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             )
                           : HomeContent()),
                   SingleChildScrollView(
-                      child: category == -1 ? Categories() : Container()),
+                      child: categoriesModel.isLoading
+                          ? Center(
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.grey,
+                        ),
+                      )
+                          : Categories(categories: categoriesModel.categories)),
                   SingleChildScrollView(
-                      child: listModel.isLoading
+                      child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
                                 backgroundColor: Colors.grey,
@@ -202,7 +211,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(listModel.products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -212,9 +221,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: listModel.products[index],
+                          product: productsModel.products[index],
                           onPressed: () {
-                            ProductEntry product = listModel.products[index];
+                            ProductEntry product = productsModel.products[index];
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -273,7 +282,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(listModel.products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -284,13 +293,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: listModel.products[index].assetUrls,
-                              name: listModel.products[index].name,
-                              price: listModel.products[index].price,
-                              prevPrice: listModel.products[index].price * 2,
+                              assetUrls: productsModel.products[index].assetUrls,
+                              name: productsModel.products[index].name,
+                              price: productsModel.products[index].price,
+                              prevPrice: productsModel.products[index].price * 2,
                               classification:
-                                  listModel.products[index].classification,
-                              quantifier: listModel.products[index].quantifier),
+                              productsModel.products[index].classification,
+                              quantifier: productsModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
@@ -389,11 +398,19 @@ Widget HomeDrawer(BuildContext context, User user) {
 }
 
 class Categories extends StatefulWidget {
+  List<Category> categories = [];
+  Categories({this.categories});
+
   @override
-  _CategoriesState createState() => _CategoriesState();
+  _CategoriesState createState() => _CategoriesState(categories: categories);
 }
 
 class _CategoriesState extends State<Categories> {
+  _CategoriesState({this.categories});
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -410,44 +427,7 @@ class _CategoriesState extends State<Categories> {
         })));
   }
 
-  List<Category> categories = [
-    Category(
-        name: 'Peciva',
-        assetUrl: 'assets/product_categories/baked_goods_benediktv_cc_by.jpg'),
-    Category(
-        name: 'Suhomesnato',
-        assetUrl:
-            'assets/product_categories/cured_meats_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Mlečni proizvodi',
-        assetUrl: 'assets/product_categories/dairy_benjamin_horn_cc_by.jpg'),
-    Category(
-        name: 'Voće i povrće',
-        assetUrl:
-            'assets/product_categories/fruits_and_veg_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Bezalkoholna pića',
-        assetUrl: 'assets/product_categories/juice_caitlin_regan_cc_by.jpg'),
-    Category(
-        name: 'Alkohol',
-        assetUrl:
-            'assets/product_categories/alcohol_shunichi_kouroki_cc_by.jpg'),
-    Category(
-        name: 'Žita',
-        assetUrl:
-            'assets/product_categories/grains_christian_schnettelker_cc_by.jpg'),
-    Category(
-        name: 'Živina',
-        assetUrl: 'assets/product_categories/livestock_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Zimnice',
-        assetUrl:
-            'assets/product_categories/preserved_food_dennis_yang_cc_by.jpg'),
-    Category(
-        name: 'Ostali proizvodi',
-        assetUrl:
-            'assets/product_categories/animal_produce_john_morgan_cc_by.jpg')
-  ];
+  List<Category> categories = [];
 }
 
 class CategoryEntry extends StatelessWidget {

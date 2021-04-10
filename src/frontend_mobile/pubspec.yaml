@@ -31,8 +31,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - src/abis/Products.json
-    - src/abis/Reviews.json
+    - src/abis/
     - assets/icons/
     - assets/avatars/
     - assets/product_listings/
