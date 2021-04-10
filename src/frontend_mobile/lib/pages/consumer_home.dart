@@ -15,13 +15,12 @@ import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
 
-
 class ConsumerHomePage extends StatefulWidget {
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
-class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
+class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int category = -1;
   int activeMenu = 0;
   int cardItemsCount = 0;
@@ -45,7 +44,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   var listModel;
   @override
   Widget build(BuildContext context) {
-
     listModel = Provider.of<ProductsModel>(context);
 
     return MaterialApp(
@@ -152,21 +150,26 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             children: [
               TabBarView(
                 children: [
-                  SingleChildScrollView(child: listModel.isLoading ?
-                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
-                    ,) :
-                  HomeContent()),
-                  SingleChildScrollView(child: category == -1 ?
-                  Categories() :
-                  Container()
-                  ),
-                  SingleChildScrollView(child: listModel.isLoading ?
-                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
-                    ,) :
-                  BestDeals())
+                  SingleChildScrollView(
+                      child: listModel.isLoading
+                          ? Center(
+                              child: LinearProgressIndicator(
+                                backgroundColor: Colors.grey,
+                              ),
+                            )
+                          : HomeContent()),
+                  SingleChildScrollView(
+                      child: category == -1 ? Categories() : Container()),
+                  SingleChildScrollView(
+                      child: listModel.isLoading
+                          ? Center(
+                              child: LinearProgressIndicator(
+                                backgroundColor: Colors.grey,
+                              ),
+                            )
+                          : BestDeals())
                 ],
               ),
-
             ],
           ),
         ),
@@ -206,33 +209,36 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: listModel.products[index], onPressed: () {
-
+                          product: listModel.products[index],
+                          onPressed: () {
                             ProductEntry product = listModel.products[index];
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => new ChangeNotifierProvider(
-                                      create: (context) => ReviewsModel(product.id),
-                                      child: ProductEntryListing(ProductEntryListingPage(
-                                          assetUrls: product.assetUrls,
-                                          name: product.name,
-                                          price: product.price,
-                                          classification: product.classification,
-                                          quantifier: product.quantifier,
-                                          description: product.desc,
-                                          id: product.id,
-                                          userInfo: new UserInfo(
-                                            profilePictureAssetUrl:
-                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                            fullName: 'Petar Nikolić',
-                                            reputationNegative: 7,
-                                            reputationPositive: 240,
-                                          )))
-                                  )),
+                                  builder: (context) =>
+                                      new ChangeNotifierProvider(
+                                          create: (context) =>
+                                              ReviewsModel(product.id),
+                                          child: ProductEntryListing(
+                                              ProductEntryListingPage(
+                                                  assetUrls: product.assetUrls,
+                                                  name: product.name,
+                                                  price: product.price,
+                                                  classification:
+                                                      product.classification,
+                                                  quantifier:
+                                                      product.quantifier,
+                                                  description: product.desc,
+                                                  id: product.id,
+                                                  userInfo: new UserInfo(
+                                                    profilePictureAssetUrl:
+                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                    fullName: 'Petar Nikolić',
+                                                    reputationNegative: 7,
+                                                    reputationPositive: 240,
+                                                  ))))),
                             );
-
-                      })),
+                          })),
                 ),
               );
             }),
@@ -279,7 +285,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               name: listModel.products[index].name,
                               price: listModel.products[index].price,
                               prevPrice: listModel.products[index].price * 2,
-                              classification: listModel.products[index].classification,
+                              classification:
+                                  listModel.products[index].classification,
                               quantifier: listModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
@@ -381,9 +388,7 @@ class _CategoriesState extends State<Categories> {
             children: List.generate(categories.length, (index) {
           return InkWell(
             onTap: () {
-              setState(() {
-
-              });
+              setState(() {});
             },
             child: CategoryEntry(
                 categories[index].assetUrl, categories[index].name),

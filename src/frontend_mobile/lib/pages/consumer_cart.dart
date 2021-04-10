@@ -7,7 +7,7 @@ import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../internals.dart';
+import 'package:frontend_mobile/internals.dart';
 import 'blank_page.dart';
 import 'consumer_home.dart';
 
