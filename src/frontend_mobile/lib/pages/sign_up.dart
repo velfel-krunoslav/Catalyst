@@ -7,6 +7,9 @@ import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/login.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
+import 'package:provider/provider.dart';
+
+import '../models/productsModel.dart';
 
 class SignUp extends StatelessWidget {
   @override
@@ -135,7 +138,10 @@ class SignUp extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new ConsumerHomePage()),
+                                builder: (context) => new ChangeNotifierProvider(
+                                  create: (context) => ProductsModel(),
+                                  child: ConsumerHomePage()
+                                )),
                           );
                         },
                       ),

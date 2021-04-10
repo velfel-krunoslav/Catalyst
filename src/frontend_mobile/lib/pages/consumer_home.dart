@@ -4,23 +4,29 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
+import '../models/productsModel.dart';
+
 
 class ConsumerHomePage extends StatefulWidget {
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
-
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
+
+  int category = -1;
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
+  //int category = -1;
   User user = new User(
       forename: "Petar",
       surname: "Nikolić",
@@ -34,62 +40,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           "aliqua.",
       rating: 4.5,
       reviewsCount: 67);
-  List<ProductEntry> products = [
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-        ],
-        name: 'Domaći med',
-        price: 13.90,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
-        name: 'Pasirani paradajz',
-        price: 2.40,
-        classification: Classification.Weight,
-        quantifier: 500),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg'
-        ],
-        name: 'Maslinovo ulje',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/prosciutto_46137_by.jpg'],
-        name: 'Pršut',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/rakija_silverije_cc_by_sa.jpg'
-        ],
-        name: 'Rakija',
-        price: 12.40,
-        classification: Classification.Volume,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
-        name: 'Kobasica',
-        price: 16.70,
-        classification: Classification.Weight,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'
-        ],
-        name: 'Kamamber',
-        price: 29.90,
-        classification: Classification.Weight,
-        quantifier: 500),
-  ];
   List<ProductEntry> recently;
-
+  List<ProductEntry> products = [];
+  var listModel;
   @override
   Widget build(BuildContext context) {
+
+    listModel = Provider.of<ProductsModel>(context);
+
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
@@ -194,40 +152,21 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             children: [
               TabBarView(
                 children: [
-                  SingleChildScrollView(child: HomeContent()),
-                  SingleChildScrollView(child: Categories()),
-                  SingleChildScrollView(child: BestDeals())
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  HomeContent()),
+                  SingleChildScrollView(child: category == -1 ?
+                  Categories() :
+                  Container()
+                  ),
+                  SingleChildScrollView(child: listModel.isLoading ?
+                  Center(child: LinearProgressIndicator(backgroundColor: Colors.grey,)
+                    ,) :
+                  BestDeals())
                 ],
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ProductEntryListing(ProductEntryListingPage(
-                                  assetUrls: <String>[
-                                    'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
-                                    'assets/product_listings/martin_cathrae_by_sa.jpg',
-                                    'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-                                  ],
-                                  name: 'Kamamber',
-                                  price: 29.90,
-                                  classification: Classification.Weight,
-                                  quantifier: 500,
-                                  description:
-                                      'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka.',
-                                  averageReviewScore: 4,
-                                  numberOfReviews: 17,
-                                  userInfo: new UserInfo(
-                                    profilePictureAssetUrl:
-                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                    fullName: 'Petar Nikolić',
-                                    reputationNegative: 7,
-                                    reputationPositive: 240,
-                                  )))));
-                },
-              )
+
             ],
           ),
         ),
@@ -257,7 +196,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -267,7 +206,33 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: products[index], onPressed: () {})),
+                          product: listModel.products[index], onPressed: () {
+
+                            ProductEntry product = listModel.products[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new ChangeNotifierProvider(
+                                      create: (context) => ReviewsModel(product.id),
+                                      child: ProductEntryListing(ProductEntryListingPage(
+                                          assetUrls: product.assetUrls,
+                                          name: product.name,
+                                          price: product.price,
+                                          classification: product.classification,
+                                          quantifier: product.quantifier,
+                                          description: product.desc,
+                                          id: product.id,
+                                          userInfo: new UserInfo(
+                                            profilePictureAssetUrl:
+                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                            fullName: 'Petar Nikolić',
+                                            reputationNegative: 7,
+                                            reputationPositive: 240,
+                                          )))
+                                  )),
+                            );
+
+                      })),
                 ),
               );
             }),
@@ -299,7 +264,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(listModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -310,12 +275,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: products[index].assetUrls,
-                              name: products[index].name,
-                              price: products[index].price,
-                              prevPrice: products[index].price * 0.8,
-                              classification: products[index].classification,
-                              quantifier: products[index].quantifier),
+                              assetUrls: listModel.products[index].assetUrls,
+                              name: listModel.products[index].name,
+                              price: listModel.products[index].price,
+                              prevPrice: listModel.products[index].price * 2,
+                              classification: listModel.products[index].classification,
+                              quantifier: listModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
@@ -414,8 +379,15 @@ class _CategoriesState extends State<Categories> {
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return CategoryEntry(
-              categories[index].assetUrl, categories[index].name);
+          return InkWell(
+            onTap: () {
+              setState(() {
+
+              });
+            },
+            child: CategoryEntry(
+                categories[index].assetUrl, categories[index].name),
+          );
         })));
   }
 
@@ -468,35 +440,32 @@ class CategoryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return InkWell(
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 125.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          Positioned(
-            left: 35.0,
-            child: Text(categoryName,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                    color: Color(LIGHT_GREY),
-                    shadows: <Shadow>[
-                      Shadow(blurRadius: 5, color: Colors.black)
-                    ])),
-          ),
-        ],
-      ),
-      onTap: () {} /* TODO ON CATEGORY CLICKED */,
+        ),
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
+      ],
     );
   }
 }

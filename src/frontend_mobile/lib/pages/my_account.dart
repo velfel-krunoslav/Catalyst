@@ -50,23 +50,23 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Wrap(
-                children: List.generate(user.rating.round(), (index) {
-                return SvgPicture.asset("assets/icons/StarFilled.svg", color: Colors.yellow[700]);
-              }),
-              ),
-              Wrap(
-                children: List.generate(5 - user.rating.round(), (index) {
-                  return SvgPicture.asset("assets/icons/StarOutline.svg", color: Colors.yellow[700]);
-                }),
-              ),
-              SizedBox(width: 10,),
-              Text("("+user.reviewsCount.toString()+")")
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Wrap(
+          //       children: List.generate(user.rating.round(), (index) {
+          //       return SvgPicture.asset("assets/icons/StarFilled.svg", color: Colors.yellow[700]);
+          //     }),
+          //     ),
+          //     Wrap(
+          //       children: List.generate(5 - user.rating.round(), (index) {
+          //         return SvgPicture.asset("assets/icons/StarOutline.svg", color: Colors.yellow[700]);
+          //       }),
+          //     ),
+          //     SizedBox(width: 10,),
+          //     Text("("+user.reviewsCount.toString()+")")
+          //   ],
+          // ),
           SizedBox(height: 10,),
           Center(
             child: Text(
