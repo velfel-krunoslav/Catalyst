@@ -61,10 +61,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                 width: ICON_SIZE,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConsumerHomePage()),
-                );
+                Navigator.pop(context);
               },
             )),
         body: Center(

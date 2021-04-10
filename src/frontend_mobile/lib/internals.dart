@@ -127,7 +127,7 @@ class Review {
   int userId;
 
   Review({this.id, this.productId, this.rating, this.desc, this.userId});
-
+}
 class CartProduct {
   List<String> photoUrl;
   String name;

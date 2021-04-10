@@ -113,12 +113,12 @@ class _SearchPageState extends State<SearchPage> {
     _PageController = PageController(initialPage: 0);
   }
 
-  bool _value = false;
-  onSwitchValueChanged(bool value) {
-    setState(() {
-      _value = value;
-    });
-  }
+  // boolean _value = false;
+  // onSwitchValueChanged(bool value) {
+  //   setState(() {
+  //     _value = value;
+  //   });
+  // }
 
   /*TODO categories dropdown menu items*/
 

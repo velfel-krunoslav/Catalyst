@@ -11,10 +11,10 @@ import '../internals.dart';
 
 class CategoriesModel extends ChangeNotifier{
   List<Category> categories = [];
-  final String _rpcUrl = "HTTP://192.168.1.3:7545";
-  final String _wsUrl = "ws://192.168.1.3:7545";
+  final String _rpcUrl = "HTTP://192.168.0.198:7545";
+  final String _wsUrl = "ws://192.168.0.198:7545";
 
-  final String _privateKey = "e8de1703013b67c88f29dbea9169ba5262be62dbf3dddefdbff2c366829d0e7d";
+  final String _privateKey = "5a3fc3671f821e2ec723b3649453b7d706c4f272da6e401247c1319ba8da60ba";
   int categoriesCount = 0;
 
   bool isLoading = true;
