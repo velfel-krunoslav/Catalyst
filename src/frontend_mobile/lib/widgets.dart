@@ -681,11 +681,9 @@ class Contacts extends StatelessWidget {
 class Chats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-            //color: Color(LIGHT_GREY),
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular((30.0)),
@@ -704,7 +702,7 @@ class Chats extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                     decoration: BoxDecoration(
-                      color: chat.unread ? Color(LIGHT_GREY) : Color(DARK_GREY),
+                      color: chat.unread ? Color(DARK_GREY) : Color(LIGHT_GREY),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(20.0),
                         bottomRight: Radius.circular(20.0),
@@ -739,8 +737,8 @@ class Chats extends StatelessWidget {
                                     chat.text,
                                     style: TextStyle(
                                         color: chat.unread
-                                            ? Color(DARK_GREY)
-                                            : Color(LIGHT_GREY),
+                                            ? Color(LIGHT_GREY)
+                                            : Color(DARK_GREY),
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w600),
                                     overflow: TextOverflow.ellipsis,
@@ -767,14 +765,14 @@ class Chats extends StatelessWidget {
                                       width: 40.0,
                                       height: 20.0,
                                       decoration: BoxDecoration(
-                                          color: Color(DARK_GREY),
+                                          color: Color(LIGHT_GREY),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       alignment: Alignment.center,
                                       child: Text(
                                         'NEW',
                                         style: TextStyle(
-                                            color: Colors.grey,
+                                            color: Color(DARK_GREY),
                                             fontSize: 12.0,
                                             fontWeight: FontWeight.bold),
                                       ),
