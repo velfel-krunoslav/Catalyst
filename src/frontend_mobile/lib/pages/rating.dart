@@ -47,7 +47,7 @@ class _Rating extends State<Rating> {
         Row(
           children: stars,
         ),
-        FlatButton(
+        /* FlatButton(
           child: Text(
             "Obrisi",
             style: TextStyle(color: Colors.blue),
@@ -58,7 +58,7 @@ class _Rating extends State<Rating> {
             });
             this.widget.onRatingSelected(_currentRating);
           },
-        )
+        )*/
       ],
     );
   }

@@ -1,8 +1,8 @@
 //import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/material.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/pages/blank_page.dart';
 import 'package:frontend_mobile/pages/rating.dart';
 
 import '../widgets.dart';
@@ -57,25 +57,28 @@ class _RatingPage extends State<RatingPage> {
             SizedBox(
               height: 40,
             ),
-            TextField(
-              decoration: InputDecoration(
-                  hintText: "Unesi komentar",
-                  // labelText: "Dodaj komentar",
-                  labelStyle: TextStyle(
-                      fontSize: 16, fontFamily: 'Inter', color: Color(BLACK)),
-                  border: InputBorder.none,
-                  //border: OutlineInputBorder(),
-                  fillColor: Color(LIGHT_GREY),
-                  filled: true),
-              // obscureText: false,
-              maxLength: 240,
-              maxLines: 6,
-            ),
-            SizedBox(
-              height: 110,
-            ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: TextField(
+                decoration: InputDecoration(
+                    hintText: "Unesi komentar",
+                    // labelText: "Dodaj komentar",
+                    labelStyle: TextStyle(
+                        fontSize: 16, fontFamily: 'Inter', color: Color(BLACK)),
+                    border: InputBorder.none,
+                    //border: OutlineInputBorder(),
+                    fillColor: Color(LIGHT_GREY),
+                    filled: true),
+                // obscureText: false,
+                maxLength: 240,
+                maxLines: 6,
+              ),
+            ),
+            SizedBox(
+              height: 150,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
               child: Column(
                 children: [
                   SizedBox(height: 15.0),
@@ -84,8 +87,7 @@ class _RatingPage extends State<RatingPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => new RatingPage()),
+                        MaterialPageRoute(builder: (context) => new Blank()),
                       );
                     },
                   ),
