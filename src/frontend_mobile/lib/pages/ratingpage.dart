@@ -72,7 +72,7 @@ class _RatingPage extends State<RatingPage> {
               maxLines: 6,
             ),
             SizedBox(
-              height: 120,
+              height: 110,
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
