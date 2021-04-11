@@ -4,6 +4,8 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/add_reviews.dart';
+import 'package:frontend_mobile/pages/rating.dart';
+import 'package:frontend_mobile/pages/ratingpage.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -178,7 +180,7 @@ class ProductReviews extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => new AddReviews()),
+                                        builder: (context) => new RatingPage()),
                                   );
                                 },
                               ),

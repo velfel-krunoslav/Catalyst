@@ -1,15 +1,15 @@
 {
   "contractName": "Users",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/F/Softversko inzenjerstvo/Flutter/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/F/Softversko inzenjerstvo/Flutter/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x22ca11e4973205eecf27f10ffceb84c4d9abdd4e367354fe4582705da7bf65ff\",\"urls\":[\"bzz-raw://b2b403f315797b9dcbde0053bf1b1cec2d6c82cce5f1fcb56f84109940f72b93\",\"dweb:/ipfs/QmbRWoRgERg6dZ4tuetik5wtYsQudaKhJv6TR8EG94cF6b\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a723158202eea330737f1b7539f2aeacb66860138ad63fe6e7061578e1b34fc39b70ced2a64736f6c63430005100032",
-  "deployedBytecode": "0x6080604052600080fdfea265627a7a723158202eea330737f1b7539f2aeacb66860138ad63fe6e7061578e1b34fc39b70ced2a64736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/F/SI/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/F/SI/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x22ca11e4973205eecf27f10ffceb84c4d9abdd4e367354fe4582705da7bf65ff\",\"urls\":[\"bzz-raw://b2b403f315797b9dcbde0053bf1b1cec2d6c82cce5f1fcb56f84109940f72b93\",\"dweb:/ipfs/QmbRWoRgERg6dZ4tuetik5wtYsQudaKhJv6TR8EG94cF6b\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a7231582016e287973080dd00490072c8ee25bbd0a688a87d6c6f1b1859a66ecd0a76538e64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a7231582016e287973080dd00490072c8ee25bbd0a688a87d6c6f1b1859a66ecd0a76538e64736f6c63430005100032",
   "sourceMap": "36:25:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;36:25:4;;;;;;;",
   "deployedSourceMap": "36:25:4:-;;;;;",
   "source": "pragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract Users {\r\n\r\n\r\n\r\n}\r\n",
-  "sourcePath": "F:/Softversko inzenjerstvo/Flutter/Catalyst/src/frontend_mobile/contracts/Users.sol",
+  "sourcePath": "F:/SI/Catalyst/src/frontend_mobile/contracts/Users.sol",
   "ast": {
-    "absolutePath": "/F/Softversko inzenjerstvo/Flutter/Catalyst/src/frontend_mobile/contracts/Users.sol",
+    "absolutePath": "/F/SI/Catalyst/src/frontend_mobile/contracts/Users.sol",
     "exportedSymbols": {
       "Users": [
         720
@@ -53,7 +53,7 @@
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/F/Softversko inzenjerstvo/Flutter/Catalyst/src/frontend_mobile/contracts/Users.sol",
+      "absolutePath": "/F/SI/Catalyst/src/frontend_mobile/contracts/Users.sol",
       "exportedSymbols": {
         "Users": [
           720
@@ -112,7 +112,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-10T20:40:21.083Z",
+  "updatedAt": "2021-04-11T10:09:10.264Z",
   "devdoc": {
     "methods": {}
   },

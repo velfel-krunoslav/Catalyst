@@ -1,26 +1,18 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/pages/blank_page.dart';
-import 'package:rate_my_app/rate_my_app.dart';
-import '../internals.dart';
-import '../config.dart';
-import '../widgets.dart';
+//import 'package:rate_my_app/rate_my_app.dart';
+//import '../internals.dart';
+//import '../config.dart';
+//import '../widgets.dart';
 import 'package:flutter/rendering.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
-import 'package:progress_indicators/progress_indicators.dart';
-import 'package:provider/provider.dart';
-import 'package:frontend_mobile/pages/inbox.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+//import 'package:frontend_mobile/models/reviewsModel.dart';
+//import 'package:frontend_mobile/pages/product_reviews.dart';
+//import 'package:progress_indicators/progress_indicators.dart';
+//import 'package:provider/provider.dart';
+//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class AddReviews extends StatelessWidget {
-  //RateMyApp = _rateMyApp = RateMyApp(preferencesPrefix:'rateMyApp_',
-  //);
-  // final int maximumRating;
-  //final Function(int) onRatingSelected;
-
-  //Rating(this.onRatingSelected)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +59,6 @@ class AddReviews extends StatelessWidget {
         body: Stack(
           children: [
             Column(children: [
-              Text("upomooc")
               /*ButtonFill(
                   text: 'Dodaj recenziju',
                   onPressed: () {
@@ -93,11 +84,12 @@ class AddReviews extends StatelessWidget {
           ],
         ));
   }
-}
-
+}*/
+/*
 class Blank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 }
+*/
