@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class ProductEntryListing extends StatefulWidget {
 
 class _ProductEntryListing extends State<ProductEntryListing> {
   int _current = 0;
+  bool _stateChange = false;
   ProductEntryListingPage _data;
   var reviewsModel;
   _ProductEntryListing(ProductEntryListingPage _data) {
@@ -47,8 +49,17 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    CarouselSlider(
+                    GestureDetector(
+                        /* onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      new FullscreenSlider()));
+                        },*/
+                        child: CarouselSlider(
                       options: CarouselOptions(
+                          autoPlay: false,
                           height: 240,
                           viewportFraction: 1,
                           onPageChanged: (index, reason) {
@@ -59,15 +70,25 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       items: _data.assetUrls.map((i) {
                         return Builder(
                           builder: (BuildContext context) {
-                            return Image.asset(
-                              '$i',
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                            return GestureDetector(
+                              child: Image.asset(
+                                '$i',
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new FullscreenSlider(
+                                                widget._data)));
+                              },
                             );
                           },
                         );
                       }).toList(),
-                    ),
+                    )),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -142,41 +163,46 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               fontWeight: FontWeight.normal),
                         ),
                         SizedBox(height: 10),
-                        reviewsModel.isLoading? Row(
-                          children: [
-                            JumpingDotsProgressIndicator(fontSize: 20.0,),
-                          ],
-                        ) :
-                        Row(
-                          children: [
-                            Row(
-                              children: List<int>.generate(
-                                      _data.averageReviewScore.round(), (i) => i + 1)
-                                  .map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarFilled.svg');
-                              }).toList(),
-                            ),
-                            Row(
-                              children: List<int>.generate(
-                                  5 - _data.averageReviewScore.round(),
-                                  (i) => i + 1).map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarOutline.svg');
-                              }).toList(),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '(' + _data.numberOfReviews.toString() + ')',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )
-                          ].toList(),
-                        ),
+                        reviewsModel.isLoading
+                            ? Row(
+                                children: [
+                                  JumpingDotsProgressIndicator(
+                                    fontSize: 20.0,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Row(
+                                    children: List<int>.generate(
+                                        _data.averageReviewScore.round(),
+                                        (i) => i + 1).map((e) {
+                                      return SvgPicture.asset(
+                                          'assets/icons/StarFilled.svg');
+                                    }).toList(),
+                                  ),
+                                  Row(
+                                    children: List<int>.generate(
+                                        5 - _data.averageReviewScore.round(),
+                                        (i) => i + 1).map((e) {
+                                      return SvgPicture.asset(
+                                          'assets/icons/StarOutline.svg');
+                                    }).toList(),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '(' +
+                                        _data.numberOfReviews.toString() +
+                                        ')',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black,
+                                        fontSize: 14),
+                                  )
+                                ].toList(),
+                              ),
                         SizedBox(
                           height: 5,
                         ),
@@ -186,10 +212,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => new ChangeNotifierProvider(
-                                        create: (context) => ReviewsModel(_data.id),
-                                        child: ProductReviews()
-                                    )),
+                                    builder: (context) =>
+                                        new ChangeNotifierProvider(
+                                            create: (context) =>
+                                                ReviewsModel(_data.id),
+                                            child: ProductReviews())),
                               );
                             },
                             child: Text(
@@ -404,5 +431,41 @@ class _ProductEntryListing extends State<ProductEntryListing> {
         ),
       ],
     )));
+  }
+}
+
+class FullscreenSlider extends StatelessWidget {
+  ProductEntryListingPage _data;
+
+  FullscreenSlider(ProductEntryListingPage _data) {
+    this._data = _data;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Builder(
+        builder: (context) {
+          final double height = MediaQuery.of(context).size.height;
+          return CarouselSlider(
+            options: CarouselOptions(
+              height: height,
+              viewportFraction: 1.0,
+              enlargeCenterPage: false,
+              // autoPlay: false,
+            ),
+            items: _data.assetUrls
+                .map((item) => Container(
+                      child: Center(
+                          child: Image.network(
+                        item,
+                        fit: BoxFit.cover,
+                        height: height,
+                      )),
+                    ))
+                .toList(),
+          );
+        },
+      ),
+    );
   }
 }

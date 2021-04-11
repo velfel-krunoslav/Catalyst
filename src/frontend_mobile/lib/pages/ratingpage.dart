@@ -71,7 +71,7 @@ class _RatingPage extends State<RatingPage> {
                     filled: true),
                 // obscureText: false,
                 maxLength: 240,
-                maxLines: 6,
+                maxLines: 7,
               ),
             ),
             SizedBox(
