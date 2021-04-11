@@ -45,6 +45,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List<ProductEntry> products = [];
   var productsModel;
   var categoriesModel;
+  void callback(int cat) {
+    setState(() {
+      this.category = cat;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
@@ -165,13 +170,20 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             )
                           : HomeContent()),
                   SingleChildScrollView(
-                      child: categoriesModel.isLoading
-                          ? Center(
+                      child: category == -1 ? (categoriesModel.isLoading ?
+                      Center(
                         child: LinearProgressIndicator(
                           backgroundColor: Colors.grey,
                         ),
+                      ) : Categories(categoriesModel.categories)
                       )
-                          : Categories(categories: categoriesModel.categories)),
+                          :
+                      ChangeNotifierProvider(
+                              create: (context) =>
+                                  ProductsModel(category),
+                              child: ProductsForCategory(category: category, categoryName: categoriesModel.categories[category].name, callback: this.callback) )
+                  )
+                  ,
                   SingleChildScrollView(
                       child: productsModel.isLoading
                           ? Center(
@@ -187,7 +199,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         ),
       ),
     );
+
   }
+
 
   Widget HomeContent() {
     var size = MediaQuery.of(context).size;
@@ -309,162 +323,27 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
+  Widget Categories(List<Category> categories){
 
-Widget HomeDrawer(BuildContext context, User user) {
-  return Container(
-    width: 255,
-    child: new Drawer(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
-            ),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-              text: "Dodaj proizvod",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewProduct()),
-                );
-              },
-              iconUrl: "assets/icons/PlusCircle.svg"
-            ),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {},
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {},
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {},
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class Categories extends StatefulWidget {
-  List<Category> categories = [];
-  Categories({this.categories});
-
-  @override
-  _CategoriesState createState() => _CategoriesState(categories: categories);
-}
-
-class _CategoriesState extends State<Categories> {
-  _CategoriesState({this.categories});
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return InkWell(
-            onTap: () {
-              setState(() {});
-            },
-            child: CategoryEntry(
-                categories[index].assetUrl, categories[index].name),
-          );
-        })));
-  }
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    category = index;
+                  });
+                },
+                child: CategoryEntry(
+                    categories[index].assetUrl, categories[index].name),
+              );
+            })));
 
-  List<Category> categories = [];
-}
 
-class CategoryEntry extends StatelessWidget {
-  final String assetImagePath;
-  final String categoryName;
-
-  const CategoryEntry(this.assetImagePath, this.categoryName);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(10),
-          width: double.infinity,
-          height: 125.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-        ),
-        Positioned(
-          left: 35.0,
-          child: Text(categoryName,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  color: Color(LIGHT_GREY),
-                  shadows: <Shadow>[
-                    Shadow(blurRadius: 5, color: Colors.black)
-                  ])),
-        ),
-      ],
-    );
   }
 }
+
+
+
+

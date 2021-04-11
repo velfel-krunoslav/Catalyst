@@ -13,6 +13,9 @@ import '../internals.dart';
 
 class ProductsModel extends ChangeNotifier{
   List<ProductEntry> products = [];
+  List<ProductEntry> productsForCategory = [];
+  int category = -1;
+
   final String _rpcUrl = "HTTP://"+HOST;
   final String _wsUrl = "ws://"+HOST;
 
@@ -31,12 +34,14 @@ class ProductsModel extends ChangeNotifier{
   ContractFunction _products;
   ContractFunction _createProduct;
   ContractEvent _productCreatedEvent;
+  ContractFunction _getProductsForCategoryCount;
+  ContractFunction _getProductsForCategory;
 
-
-  ProductsModel(){
+  ProductsModel([int c = -1]){
+    this.category = c;
     initiateSetup();
   }
-
+  //ProductsModel(int c){this.category = c;}
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: (){
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -66,8 +71,10 @@ class ProductsModel extends ChangeNotifier{
     _createProduct = _contract.function("createProduct");
     _products = _contract.function("products");
     _productCreatedEvent = _contract.event("ProductCreated");
-
+    _getProductsForCategoryCount = _contract.function("getProductsForCategoryCount");
+    _getProductsForCategory = _contract.function("getProductsForCategory");
     getProducts();
+    getProductsForCategory(category);
   }
 
   getProducts() async{
@@ -79,21 +86,13 @@ class ProductsModel extends ChangeNotifier{
     for(int i=0; i < totalProducts.toInt(); i++){
       var temp = await _client.call(contract: _contract, function: _products, params: [BigInt.from(i)]);
 
-      print(temp);
+      //print(temp);
       double price = temp[2].toInt() / temp[3].toInt();
       String assets = temp[4];
       var list = temp[4].split(",").toList();
 
-      Classification classif;
-      if (temp[5] == 0){
-        classif = Classification.Single;
-      }
-      else if (temp[5] == 1){
-        classif = Classification.Weight;
-      }
-      else{
-        classif = Classification.Volume;
-      }
+      Classification classif = getClassification(temp[5].toInt());
+
       products.add(ProductEntry(id: temp[0].toInt(),
                                 name: temp[1],
                                 price: price,
@@ -107,7 +106,17 @@ class ProductsModel extends ChangeNotifier{
     isLoading = false;
     notifyListeners();
   }
-
+  getClassification(int num){
+    if (num == 0){
+      return Classification.Single;
+    }
+    else if (num == 1){
+      return Classification.Weight;
+    }
+    else{
+      return Classification.Volume;
+    }
+  }
   addProduct(String name, double price, String assetUrl, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
     isLoading = true;
     notifyListeners();
@@ -127,5 +136,32 @@ class ProductsModel extends ChangeNotifier{
     getProducts();
   }
 
+  getProductsForCategory(int c) async {
+    if (c != -1) {
+      List totalProductsList = await _client.call(
+          contract: _contract,
+          function: _getProductsForCategoryCount,
+          params: [BigInt.from(c)]);
+      BigInt totalProducts = totalProductsList[0];
+      productsCount = totalProducts.toInt();
+      var temp = await _client.call(
+          contract: _contract,
+          function: _getProductsForCategory,
+          params: [BigInt.from(c), totalProducts]);
+      for (int i = 0; i < productsCount; i++) {
+        var t = temp[0][i];
+        //print(t);
+        productsForCategory.add(ProductEntry(id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[4].split(",").toList(),
+            classification: getClassification(t[5].toInt()),
+            quantifier: t[6].toInt(),
+            desc: t[7],
+            sellerId: t[8].toInt()));
+      }
 
+      //notifyListeners();
+    }
+  }
 }

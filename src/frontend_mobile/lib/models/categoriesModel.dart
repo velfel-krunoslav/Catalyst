@@ -73,7 +73,7 @@ class CategoriesModel extends ChangeNotifier{
     for(int i=0; i < totalCategories.toInt(); i++){
       var temp = await _client.call(contract: _contract, function: _categories, params: [BigInt.from(i)]);
 
-      print(temp);
+      //print(temp);
 
       categories.add(Category(id: temp[0].toInt(),
           name: temp[1],

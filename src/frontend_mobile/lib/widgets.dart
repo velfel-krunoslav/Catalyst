@@ -5,7 +5,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:frontend_mobile/pages/new_product.dart';
+import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:frontend_mobile/pages/settings.dart';
+import 'package:provider/provider.dart';
+
+import 'models/productsModel.dart';
+import 'models/reviewsModel.dart';
 
 
 class ButtonFill extends TextButton {
@@ -614,4 +622,250 @@ class ReviewWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+class ProductsForCategory extends StatefulWidget {
+  ProductsForCategory({this.category,this.categoryName, this.callback});
+  int category;
+  Function callback;
+  String categoryName;
+  @override
+  _ProductsForCategoryState createState() => _ProductsForCategoryState(category: category, categoryName: categoryName, callback: callback);
+}
+
+class _ProductsForCategoryState extends State<ProductsForCategory> {
+  _ProductsForCategoryState({this.category, this.categoryName, this.callback});
+  List<ProductEntry> products;
+  int category;
+  Function callback;
+  String categoryName;
+  var productsModel;
+  var size;
+
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
+    products = productsModel.productsForCategory;
+
+    return productsModel.isLoading ?
+    Center(
+      child: LinearProgressIndicator(
+        backgroundColor: Colors.grey,
+      ),
+    ) :Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/icons/ArrowLeft.svg',
+                    height: ICON_SIZE,
+                    width: ICON_SIZE,
+                  ),
+                  onPressed: () {
+                    this.widget.callback(-1);
+                  },
+
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  categoryName,
+                  style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 28,
+                      color: Color(DARK_GREY),
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Wrap(
+              children: List.generate(products.length, (index) {
+                return InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: (index + 1) % 2 == 0
+                        ? EdgeInsets.only(left: 10, bottom: 15)
+                        : EdgeInsets.only(right: 10, bottom: 15),
+                    child: SizedBox(
+                        width: (size.width - 60) / 2,
+                        child: ProductEntryCard(
+                            product: products[index],
+                            onPressed: () {
+                              ProductEntry product = products[index];
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    new ChangeNotifierProvider(
+                                        create: (context) =>
+                                            ReviewsModel(product.id),
+                                        child: ProductEntryListing(
+                                            ProductEntryListingPage(
+                                                assetUrls: product.assetUrls,
+                                                name: product.name,
+                                                price: product.price,
+                                                classification:
+                                                product.classification,
+                                                quantifier:
+                                                product.quantifier,
+                                                description: product.desc,
+                                                id: product.id,
+                                                userInfo: new UserInfo(
+                                                  profilePictureAssetUrl:
+                                                  'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                  fullName: 'Petar Nikolić',
+                                                  reputationNegative: 7,
+                                                  reputationPositive: 240,
+                                                ))))),
+                              );
+                            })),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
+      ),
+
+    );
+  }
+}
+
+class CategoryEntry extends StatelessWidget {
+  final String assetImagePath;
+  final String categoryName;
+
+  const CategoryEntry(this.assetImagePath, this.categoryName);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
+        ),
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
+      ],
+    );
+  }
+}
+
+Widget HomeDrawer(BuildContext context, User user) {
+
+  return Container(
+    width: 255,
+    child: new Drawer(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+        color: Color(LIGHT_BLACK),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(user.photoUrl),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  user.forename + " " + user.surname,
+                  style: TextStyle(
+                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
+                )
+              ],
+            ),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Moj nalog",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAccount(user: user)));
+                },
+                iconUrl: "assets/icons/User.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Dodaj proizvod",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewProduct()),
+                  );
+                },
+                iconUrl: "assets/icons/PlusCircle.svg"
+            ),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Poruke",
+                onPressed: () {},
+                iconUrl: "assets/icons/Envelope.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Istorija narudžbi",
+                onPressed: () {},
+                iconUrl: "assets/icons/Newspaper.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Pomoć i podrška",
+                onPressed: () {},
+                iconUrl: "assets/icons/Handshake.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Podešavanja",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Settings()),
+                  );
+                },
+                iconUrl: "assets/icons/Gear.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Odjavi se",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                iconUrl: "assets/icons/SignOut.svg"),
+          ],
+        ),
+      ),
+    ),
+  );
 }
