@@ -5,8 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/chat_screen.dart';
+import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
-
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -516,14 +517,12 @@ class SettingsOption extends StatelessWidget {
 }
 
 class ReviewWidget extends StatelessWidget {
-
   Review review;
 
   ReviewWidget({this.review});
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Row(
@@ -547,9 +546,7 @@ class ReviewWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                    padding:
-                    EdgeInsets.only(left: 0, right: 16, top: 0)),
+                Padding(padding: EdgeInsets.only(left: 0, right: 16, top: 0)),
                 Text("Petar Nikolić",
                     style: TextStyle(
                         fontSize: 14,
@@ -560,12 +557,12 @@ class ReviewWidget extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-
                   child: Container(
-                    width: 200,
+                      width: 200,
                       child: Text(
-                        review.desc.length > 100 ? review.desc.substring(0, 100)+"...":
-                        review.desc,
+                        review.desc.length > 100
+                            ? review.desc.substring(0, 100) + "..."
+                            : review.desc,
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -575,8 +572,8 @@ class ReviewWidget extends StatelessWidget {
               ],
             ),
             SizedBox(
-              //height: 100,
-            ),
+                //height: 100,
+                ),
             Spacer(),
             Column(
               children: [
@@ -585,18 +582,26 @@ class ReviewWidget extends StatelessWidget {
                   children: [
                     Wrap(
                       children: List.generate(review.rating, (index) {
-                        return SvgPicture.asset("assets/icons/StarFilled.svg",);
+                        return SvgPicture.asset(
+                          "assets/icons/StarFilled.svg",
+                        );
                       }),
                     ),
                     Wrap(
-                      children: List.generate(5 - review.rating.round(), (index) {
-                        return SvgPicture.asset("assets/icons/StarOutline.svg", color: Color(LIGHT_GREY));
+                      children:
+                          List.generate(5 - review.rating.round(), (index) {
+                        return SvgPicture.asset("assets/icons/StarOutline.svg",
+                            color: Color(LIGHT_GREY));
                       }),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                   ],
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text("Pre 1 dan",
                     style: TextStyle(
                         fontSize: 14,
@@ -605,13 +610,186 @@ class ReviewWidget extends StatelessWidget {
                         color: Color(DARK_GREY))),
               ],
             ),
-
           ],
-
         ),
-
-         SizedBox(height: 20,)
+        SizedBox(
+          height: 20,
+        )
       ],
+    );
+  }
+}
+
+class Contacts extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Kontakti:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ChatScreen())),
+          child: Container(
+            height: 95.0,
+            child: ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                scrollDirection: Axis.horizontal,
+                itemCount: favorites.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 25.0,
+                          backgroundImage:
+                              AssetImage(favorites[index].photoUrl),
+                        ),
+                        Text(
+                          favorites[index].name,
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class Chats extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+            //color: Color(LIGHT_GREY),
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular((30.0)),
+                topRight: Radius.circular((30.0)))),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular((30.0)),
+              topRight: Radius.circular((30.0))),
+          child: ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Message chat = chats[index];
+                return GestureDetector(
+                  onTap: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => ChatScreen())),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                    decoration: BoxDecoration(
+                      color: chat.unread ? Color(LIGHT_GREY) : Color(DARK_GREY),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 25.0,
+                              backgroundImage: AssetImage(chat.sender.photoUrl),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  chat.sender.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  child: Text(
+                                    chat.text,
+                                    style: TextStyle(
+                                        color: chat.unread
+                                            ? Color(DARK_GREY)
+                                            : Color(LIGHT_GREY),
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                chat.time,
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 5.0),
+                              chat.unread
+                                  ? Container(
+                                      width: 40.0,
+                                      height: 20.0,
+                                      decoration: BoxDecoration(
+                                          color: Color(DARK_GREY),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'NEW',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
     );
   }
 }

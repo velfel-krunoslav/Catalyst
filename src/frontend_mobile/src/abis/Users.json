@@ -1,15 +1,15 @@
 {
   "contractName": "Users",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x22ca11e4973205eecf27f10ffceb84c4d9abdd4e367354fe4582705da7bf65ff\",\"urls\":[\"bzz-raw://b2b403f315797b9dcbde0053bf1b1cec2d6c82cce5f1fcb56f84109940f72b93\",\"dweb:/ipfs/QmbRWoRgERg6dZ4tuetik5wtYsQudaKhJv6TR8EG94cF6b\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a7231582086a7ac7b3134fd65bb19a38bff8a4e603b4eddcfafec368d85913984b0e99ab864736f6c63430005100032",
-  "deployedBytecode": "0x6080604052600080fdfea265627a7a7231582086a7ac7b3134fd65bb19a38bff8a4e603b4eddcfafec368d85913984b0e99ab864736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/97ste/Desktop/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/97ste/Desktop/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x22ca11e4973205eecf27f10ffceb84c4d9abdd4e367354fe4582705da7bf65ff\",\"urls\":[\"bzz-raw://b2b403f315797b9dcbde0053bf1b1cec2d6c82cce5f1fcb56f84109940f72b93\",\"dweb:/ipfs/QmbRWoRgERg6dZ4tuetik5wtYsQudaKhJv6TR8EG94cF6b\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820d429b748dc130984ddf12b7777e45f228c038094a970e69e23724c7599ccfd8a64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820d429b748dc130984ddf12b7777e45f228c038094a970e69e23724c7599ccfd8a64736f6c63430005100032",
   "sourceMap": "36:25:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;36:25:4;;;;;;;",
   "deployedSourceMap": "36:25:4:-;;;;;",
   "source": "pragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract Users {\r\n\r\n\r\n\r\n}\r\n",
-  "sourcePath": "C:/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
+  "sourcePath": "C:/Users/97ste/Desktop/Catalyst/src/frontend_mobile/contracts/Users.sol",
   "ast": {
-    "absolutePath": "/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
+    "absolutePath": "/C/Users/97ste/Desktop/Catalyst/src/frontend_mobile/contracts/Users.sol",
     "exportedSymbols": {
       "Users": [
         720
@@ -53,7 +53,7 @@
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
+      "absolutePath": "/C/Users/97ste/Desktop/Catalyst/src/frontend_mobile/contracts/Users.sol",
       "exportedSymbols": {
         "Users": [
           720
@@ -112,7 +112,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-10T17:59:58.409Z",
+  "updatedAt": "2021-04-10T20:43:09.414Z",
   "devdoc": {
     "methods": {}
   },

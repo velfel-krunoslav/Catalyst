@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 enum Classification { Single, Weight, Volume }
 
@@ -103,17 +104,18 @@ class User {
   double rating;
   int reviewsCount;
 
-  User(
-      {this.forename,
-      this.surname,
-      this.photoUrl,
-      this.phoneNumber,
-      this.address,
-      this.city,
-      this.mail,
-      this.about,
-      this.rating,
-      this.reviewsCount});
+  User({
+    this.forename,
+    this.surname,
+    this.photoUrl,
+    this.phoneNumber,
+    this.address,
+    this.city,
+    this.mail,
+    this.about,
+    this.rating,
+    this.reviewsCount,
+  });
 }
 
 class Review {
@@ -174,16 +176,80 @@ class ReviewPage {
   ReviewPage({this.average, this.reviews, this.reviewsCount, this.stars});
 }
 
-class ChatUsers {
+class ChatUser {
+  int id;
   String name;
-  String messageText;
-  String imageURL;
-  String time;
-  ChatUsers({this.name, this.messageText, this.imageURL, this.time});
+  String photoUrl;
+
+  ChatUser({this.id, this.name, this.photoUrl});
 }
 
-class ChatMessage {
-  String messageContent;
-  String messageType;
-  ChatMessage({this.messageContent, this.messageType});
+class Message {
+  ChatUser sender;
+  String time;
+  String text;
+  bool unread;
+
+  Message({this.sender, this.time, this.text, this.unread});
 }
+
+ChatUser currentUser = ChatUser(
+  id: 0,
+  name: 'Trenutni user',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser jelena = ChatUser(
+  id: 1,
+  name: 'Jelena',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser luka = ChatUser(
+  id: 2,
+  name: 'Luka',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser marija = ChatUser(
+  id: 3,
+  name: 'Marija',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser pera = ChatUser(
+  id: 4,
+  name: 'Pera',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser krunoslav = ChatUser(
+  id: 5,
+  name: 'Krunoslav',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+ChatUser stefan = ChatUser(
+  id: 6,
+  name: 'Stefan',
+  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+);
+
+List<ChatUser> favorites = [jelena, luka, marija, pera, krunoslav, stefan];
+DateTime now = DateTime.now();
+String formattedDate = DateFormat('kk:mm').format(now);
+
+List<Message> chats = [
+  Message(sender: jelena, time: formattedDate, text: 'Hey', unread: true),
+  Message(sender: luka, time: formattedDate, text: 'Parsiraj', unread: false),
+  Message(
+      sender: marija,
+      time: formattedDate,
+      text: 'Aloeesaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      unread: true),
+  Message(sender: jelena, time: formattedDate, text: 'Desi', unread: false),
+  Message(sender: stefan, time: formattedDate, text: '...', unread: false),
+  Message(sender: krunoslav, time: formattedDate, text: 'stres', unread: true),
+  Message(sender: pera, time: formattedDate, text: 'zdera', unread: false),
+  Message(sender: jelena, time: formattedDate, text: 'Hey', unread: true),
+  Message(sender: luka, time: formattedDate, text: 'Parsiraj', unread: false),
+  Message(sender: marija, time: formattedDate, text: 'Aloee', unread: true),
+  Message(sender: jelena, time: formattedDate, text: 'Desi', unread: false),
+  Message(sender: stefan, time: formattedDate, text: '...', unread: false),
+  Message(sender: krunoslav, time: formattedDate, text: 'stres', unread: true),
+  Message(sender: pera, time: formattedDate, text: 'zdera', unread: false),
+];
