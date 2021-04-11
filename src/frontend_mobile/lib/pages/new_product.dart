@@ -35,26 +35,20 @@ class _NewProductState extends State<NewProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-            title: Text('Novi proizvod',
-                style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: Color(DARK_GREY))),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-            leading: IconButton(
-              icon: SvgPicture.asset(
-                'assets/icons/ArrowLeft.svg',
-                height: ICON_SIZE,
-                width: ICON_SIZE,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )),
+        appBar: AppBar(
+          title: Text(
+            "Novi proizvod",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
