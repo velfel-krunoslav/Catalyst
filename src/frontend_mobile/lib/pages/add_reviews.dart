@@ -12,10 +12,15 @@ import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class AddReviews extends StatelessWidget {
   //RateMyApp = _rateMyApp = RateMyApp(preferencesPrefix:'rateMyApp_',
   //);
+  // final int maximumRating;
+  //final Function(int) onRatingSelected;
+
+  //Rating(this.onRatingSelected)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,13 +67,29 @@ class AddReviews extends StatelessWidget {
         body: Stack(
           children: [
             Column(children: [
-              ButtonFill(
+              Text("upomooc")
+              /*ButtonFill(
                   text: 'Dodaj recenziju',
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => new Blank()));
-                  }),
+                  }),*/
             ]),
+            /* RatingBar.builder(
+              initialRating: 3,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+              },
+            )*/
           ],
         ));
   }
