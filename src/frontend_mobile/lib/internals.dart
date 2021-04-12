@@ -201,27 +201,27 @@ ChatUser currentUser = ChatUser(
 ChatUser jelena = ChatUser(
   id: 1,
   name: 'Jelena',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl: 'assets/avatars/avatar2.jpg',
 );
 ChatUser luka = ChatUser(
   id: 2,
   name: 'Luka',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl: 'assets/avatars/avatar1.jpg',
 );
 ChatUser marija = ChatUser(
   id: 3,
   name: 'Marija',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl: 'assets/avatars/avatar3.jpg',
 );
 ChatUser pera = ChatUser(
   id: 4,
-  name: 'Pera',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  name: 'Slobodanka',
+  photoUrl: 'assets/avatars/avatar4.jpg',
 );
 ChatUser krunoslav = ChatUser(
   id: 5,
   name: 'Krunoslav',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl: 'assets/avatars/avatar5.jpg',
 );
 ChatUser stefan = ChatUser(
   id: 6,
