@@ -24,7 +24,6 @@ class _UserInboxState extends State<Inbox> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-            //padding: EdgeInsets.all(0),
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
               Navigator.push(
@@ -52,9 +51,6 @@ class _UserInboxState extends State<Inbox> {
             child: Container(
               decoration: BoxDecoration(
                 color: Color(LIGHT_GREY),
-                //borderRadius: BorderRadius.only(
-                //topLeft: Radius.circular((30.0)),
-                //topRight: Radius.circular((30.0)))
               ),
               child: Column(
                 children: <Widget>[

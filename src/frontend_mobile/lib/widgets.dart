@@ -6,8 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/pages/chat_screen.dart';
+import 'package:frontend_mobile/pages/inbox.dart';
+import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:frontend_mobile/pages/settings.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -698,14 +701,8 @@ class _ChatsState extends State<Chats> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          //borderRadius: BorderRadius.only(
-          // topLeft: Radius.circular((30.0)),
-          //topRight: Radius.circular((30.0)))
         ),
         child: ClipRRect(
-          // borderRadius: BorderRadius.only(
-          // topLeft: Radius.circular((30.0)),
-          //topRight: Radius.circular((30.0))),
           child: ListView.builder(
               itemCount: chats.length,
               itemBuilder: (BuildContext context, int index) {
@@ -815,4 +812,94 @@ class _ChatsState extends State<Chats> {
       ),
     );
   }
+}
+
+Widget HomeDrawer(BuildContext context, User user) {
+  return Container(
+    width: 255,
+    child: new Drawer(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+        color: Color(LIGHT_BLACK),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(user.photoUrl),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  user.forename + " " + user.surname,
+                  style: TextStyle(
+                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
+                )
+              ],
+            ),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Moj nalog",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAccount(user: user)));
+                },
+                iconUrl: "assets/icons/User.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Dodaj proizvod",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewProduct()),
+                  );
+                },
+                iconUrl: "assets/icons/PlusCircle.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Poruke",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Inbox()),
+                  );
+                },
+                iconUrl: "assets/icons/Envelope.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Istorija narudžbi",
+                onPressed: () {},
+                iconUrl: "assets/icons/Newspaper.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Pomoć i podrška",
+                onPressed: () {},
+                iconUrl: "assets/icons/Handshake.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Podešavanja",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Settings()),
+                  );
+                },
+                iconUrl: "assets/icons/Gear.svg"),
+            SizedBox(height: 45),
+            DrawerOption(
+                text: "Odjavi se",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                iconUrl: "assets/icons/SignOut.svg"),
+          ],
+        ),
+      ),
+    ),
+  );
 }
