@@ -623,13 +623,12 @@ class ReviewWidget extends StatelessWidget {
 class Contacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text("Kontakti:",
                   style: TextStyle(
@@ -643,66 +642,90 @@ class Contacts extends StatelessWidget {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () => Navigator.push(
-              context, MaterialPageRoute(builder: (_) => ChatScreen())),
-          child: Container(
-            height: 95.0,
-            child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: favorites.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
+        Container(
+          height: 90.0,
+          child: ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              scrollDirection: Axis.horizontal,
+              itemCount: contacts.length,
+              itemBuilder: (BuildContext context, int index) {
+                Message chat = chats[index];
+                return GestureDetector(
+                  onTap: () {
+                    if (chat.unread == true) {
+                      chat.unread = false;
+                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ChatScreen(
+                                  user: contacts[index], //////////////ID
+                                )));
+                  },
+                  child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Column(
                       children: [
                         CircleAvatar(
                           radius: 25.0,
-                          backgroundImage:
-                              AssetImage(favorites[index].photoUrl),
+                          backgroundImage: AssetImage(contacts[index].photoUrl),
                         ),
                         Text(
-                          favorites[index].name,
+                          contacts[index].name,
                           style: TextStyle(
                               fontSize: 16.0, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
-                  );
-                }),
-          ),
+                  ),
+                );
+              }),
         )
       ],
     );
   }
 }
 
-class Chats extends StatelessWidget {
+class Chats extends StatefulWidget {
+  @override
+  _ChatsState createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular((30.0)),
-                topRight: Radius.circular((30.0)))),
+          color: Colors.white,
+          //borderRadius: BorderRadius.only(
+          // topLeft: Radius.circular((30.0)),
+          //topRight: Radius.circular((30.0)))
+        ),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular((30.0)),
-              topRight: Radius.circular((30.0))),
+          // borderRadius: BorderRadius.only(
+          // topLeft: Radius.circular((30.0)),
+          //topRight: Radius.circular((30.0))),
           child: ListView.builder(
               itemCount: chats.length,
               itemBuilder: (BuildContext context, int index) {
-                final Message chat = chats[index];
+                Message chat = chats[index];
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => ChatScreen())),
+                  onTap: () {
+                    if (chat.unread == true) {
+                      chat.unread = false;
+                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ChatScreen(
+                                  user: chat.sender, /////////////////// ID
+                                )));
+                  },
                   child: Container(
                     margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                     decoration: BoxDecoration(
-                      color: chat.unread ? Color(DARK_GREY) : Color(LIGHT_GREY),
+                      color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(20.0),
                         bottomRight: Radius.circular(20.0),
@@ -755,7 +778,9 @@ class Chats extends StatelessWidget {
                               Text(
                                 chat.time,
                                 style: TextStyle(
-                                    color: Colors.grey,
+                                    color: chat.unread
+                                        ? Color(LIGHT_GREY)
+                                        : Colors.black,
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.bold),
                               ),

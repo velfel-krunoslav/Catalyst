@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/productsModel.dart';
+import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:provider/provider.dart';
 
 class Inbox extends StatefulWidget {
   @override
@@ -24,7 +27,13 @@ class _UserInboxState extends State<Inbox> {
             //padding: EdgeInsets.all(0),
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new ChangeNotifierProvider(
+                        create: (context) => ProductsModel(),
+                        child: ConsumerHomePage())),
+              );
             }),
         title: Text('Poruke',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -42,10 +51,11 @@ class _UserInboxState extends State<Inbox> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                  color: Color(LIGHT_GREY),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular((30.0)),
-                      topRight: Radius.circular((30.0)))),
+                color: Color(LIGHT_GREY),
+                //borderRadius: BorderRadius.only(
+                //topLeft: Radius.circular((30.0)),
+                //topRight: Radius.circular((30.0)))
+              ),
               child: Column(
                 children: <Widget>[
                   Contacts(),
