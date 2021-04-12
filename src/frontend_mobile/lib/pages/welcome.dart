@@ -7,6 +7,8 @@ import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/login.dart';
 import 'package:frontend_mobile/pages/sign_up.dart';
 
+import 'package:frontend_mobile/internals.dart';
+
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

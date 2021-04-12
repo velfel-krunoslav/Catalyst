@@ -11,7 +11,9 @@ import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:web3dart/web3dart.dart';
 import '../internals.dart';
 import 'new_product.dart';
 import '../models/productsModel.dart';
@@ -26,7 +28,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cardItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
-  //int category = -1;
+
   User user = new User(
       forename: "Petar",
       surname: "Nikolić",
@@ -76,8 +78,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 })),
                         Spacer(),
                         IconButton(
-                          icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
-                              width: 36, height: 36),
+                          icon: SvgPicture.asset(
+                              'assets/icons/ShoppingCart.svg',
+                              width: 36,
+                              height: 36),
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -100,7 +104,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           width: 36,
                           decoration: BoxDecoration(
                               color: Color(LIGHT_GREY),
-                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
                         )
                       ],
                     ),
@@ -340,15 +345,14 @@ Widget HomeDrawer(BuildContext context, User user) {
                 iconUrl: "assets/icons/User.svg"),
             SizedBox(height: 45),
             DrawerOption(
-              text: "Dodaj proizvod",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewProduct()),
-                );
-              },
-              iconUrl: "assets/icons/PlusCircle.svg"
-            ),
+                text: "Dodaj proizvod",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewProduct()),
+                  );
+                },
+                iconUrl: "assets/icons/PlusCircle.svg"),
             SizedBox(height: 45),
             DrawerOption(
                 text: "Poruke",

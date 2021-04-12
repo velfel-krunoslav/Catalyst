@@ -1,4 +1,84 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:frontend_mobile/config.dart';
+import 'package:http/http.dart';
+import 'package:web3dart/web3dart.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+void performPayment(String accountAddress, int eth) async {
+  final client =
+      Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
+  final credentials = await client.credentialsFromPrivateKey(PRIVATE_KEY);
+
+  await client.sendTransaction(
+    credentials,
+    Transaction(
+      to: EthereumAddress.fromHex(accountAddress),
+      gasPrice: EtherAmount.inWei(BigInt.one),
+      maxGas: 100000,
+      value: EtherAmount.fromUnitAndValue(EtherUnit.ether, eth),
+    ),
+    fetchChainIdFromNetworkId: false,
+  );
+
+  await client.dispose();
+}
+
+class Prefs {
+  Prefs._privateConstructor();
+
+  static final Prefs instance = Prefs._privateConstructor();
+
+  setStringValue(String key, String value) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    myPrefs.setString(key, value);
+  }
+
+  Future<String> getStringValue(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.getString(key) ?? "";
+  }
+
+  setIntegerValue(String key, int value) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    myPrefs.setInt(key, value);
+  }
+
+  Future<int> getIntegerValue(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.getInt(key) ?? 0;
+  }
+
+  setBooleanValue(String key, bool value) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    myPrefs.setBool(key, value);
+  }
+
+  Future<bool> getBooleanValue(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.getBool(key) ?? false;
+  }
+
+  Future<bool> containsKey(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.containsKey(key);
+  }
+
+  removeValue(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.remove(key);
+  }
+
+  removeAll() async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.clear();
+  }
+}
 
 enum Classification { Single, Weight, Volume }
 

@@ -7,7 +7,6 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 
-
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
       : super(
@@ -182,7 +181,7 @@ class _DatePickerState extends State<DatePickerPopup> {
         readOnly: true,
         decoration: InputDecoration(
           hintText: (_date == null)
-              ? ''
+              ? 'Datum rođenja'
               : _date.day.toString() +
                   '.' +
                   _date.month.toString() +
@@ -516,14 +515,12 @@ class SettingsOption extends StatelessWidget {
 }
 
 class ReviewWidget extends StatelessWidget {
-
   Review review;
 
   ReviewWidget({this.review});
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Row(
@@ -547,9 +544,7 @@ class ReviewWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                    padding:
-                    EdgeInsets.only(left: 0, right: 16, top: 0)),
+                Padding(padding: EdgeInsets.only(left: 0, right: 16, top: 0)),
                 Text("Petar Nikolić",
                     style: TextStyle(
                         fontSize: 14,
@@ -560,12 +555,12 @@ class ReviewWidget extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-
                   child: Container(
-                    width: 200,
+                      width: 200,
                       child: Text(
-                        review.desc.length > 100 ? review.desc.substring(0, 100)+"...":
-                        review.desc,
+                        review.desc.length > 100
+                            ? review.desc.substring(0, 100) + "..."
+                            : review.desc,
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -575,8 +570,8 @@ class ReviewWidget extends StatelessWidget {
               ],
             ),
             SizedBox(
-              //height: 100,
-            ),
+                //height: 100,
+                ),
             Spacer(),
             Column(
               children: [
@@ -585,18 +580,26 @@ class ReviewWidget extends StatelessWidget {
                   children: [
                     Wrap(
                       children: List.generate(review.rating, (index) {
-                        return SvgPicture.asset("assets/icons/StarFilled.svg",);
+                        return SvgPicture.asset(
+                          "assets/icons/StarFilled.svg",
+                        );
                       }),
                     ),
                     Wrap(
-                      children: List.generate(5 - review.rating.round(), (index) {
-                        return SvgPicture.asset("assets/icons/StarOutline.svg", color: Color(LIGHT_GREY));
+                      children:
+                          List.generate(5 - review.rating.round(), (index) {
+                        return SvgPicture.asset("assets/icons/StarOutline.svg",
+                            color: Color(LIGHT_GREY));
                       }),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                   ],
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text("Pre 1 dan",
                     style: TextStyle(
                         fontSize: 14,
@@ -605,12 +608,11 @@ class ReviewWidget extends StatelessWidget {
                         color: Color(DARK_GREY))),
               ],
             ),
-
           ],
-
         ),
-
-         SizedBox(height: 20,)
+        SizedBox(
+          height: 20,
+        )
       ],
     );
   }
