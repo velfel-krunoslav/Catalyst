@@ -83,7 +83,7 @@ class ProductsModel extends ChangeNotifier{
     productsCount = totalProducts.toInt();
     products.clear();
 
-    for(int i=0; i < totalProducts.toInt(); i++){
+    for(int i = productsCount - 1; i >= 0; i--){
       var temp = await _client.call(contract: _contract, function: _products, params: [BigInt.from(i)]);
 
       //print(temp);
@@ -117,23 +117,38 @@ class ProductsModel extends ChangeNotifier{
       return Classification.Volume;
     }
   }
-  addProduct(String name, double price, String assetUrl, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
+  addProduct(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
     isLoading = true;
-    notifyListeners();
     price = double.parse(price.toStringAsFixed(2));
     Fraction frac1 = price.toFraction();
     int numinator = frac1.numerator;
     int denuminator = frac1.denominator;
-
-    await _client.sendTransaction(
-        _credentials,
-        Transaction.callContract(
-            maxGas: 6721925,
-            contract: _contract,
-            function: _createProduct,
-            parameters: [name, BigInt.from(numinator), BigInt.from(denuminator),  assetUrl, BigInt.from(classification),BigInt.from(quantifier), desc, BigInt.from(sellerId),BigInt.from(categoryId)],
-            gasPrice: EtherAmount.inWei(BigInt.one)));
-    getProducts();
+    String assets = "";
+    for (int i = 0 ; i < assetUrls.length; i++){
+      assets+= assetUrls[i];
+      if (i != assetUrls.length - 1)
+        assets+= ",";
+    }
+    if (name != null && price != null && assets != "" && classification != null && desc != null && sellerId != null && categoryId != null) {
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _createProduct,
+              parameters: [name, BigInt.from(numinator),
+                BigInt.from(denuminator),
+                assets, BigInt.from(classification),
+                BigInt.from(quantifier), desc,
+                BigInt.from(sellerId),
+                BigInt.from(categoryId)],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      print("proizvod dodat");
+      getProducts();
+    }
+    else{
+      isLoading = false;
+    }
   }
 
   getProductsForCategory(int c) async {
@@ -148,7 +163,7 @@ class ProductsModel extends ChangeNotifier{
           contract: _contract,
           function: _getProductsForCategory,
           params: [BigInt.from(c), totalProducts]);
-      for (int i = 0; i < productsCount; i++) {
+      for (int i = productsCount - 1; i >= 0; i--) {
         var t = temp[0][i];
         //print(t);
         productsForCategory.add(ProductEntry(id: t[0].toInt(),
@@ -160,8 +175,8 @@ class ProductsModel extends ChangeNotifier{
             desc: t[7],
             sellerId: t[8].toInt()));
       }
-
-      //notifyListeners();
+      isLoading = false;
+      notifyListeners();
     }
   }
 }

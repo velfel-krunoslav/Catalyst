@@ -45,6 +45,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List<ProductEntry> products = [];
   var productsModel;
   var categoriesModel;
+
+  void addProductCallback(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId){
+    productsModel.addProduct(name, price, assetUrls, classification, quantifier, desc, sellerId, categoryId);
+  }
+
   void callback(int cat) {
     setState(() {
       this.category = cat;
@@ -59,7 +64,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user), //TODO context
+          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
           appBar: AppBar(
             toolbarHeight: 160,
             flexibleSpace: Container(

@@ -783,7 +783,7 @@ class CategoryEntry extends StatelessWidget {
   }
 }
 
-Widget HomeDrawer(BuildContext context, User user) {
+Widget HomeDrawer(BuildContext context, User user, void Function(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId) addProductCallback) {
 
   return Container(
     width: 255,
@@ -826,7 +826,7 @@ Widget HomeDrawer(BuildContext context, User user) {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NewProduct()),
+                    MaterialPageRoute(builder: (context) => NewProduct(addProductCallback)),
                   );
                 },
                 iconUrl: "assets/icons/PlusCircle.svg"
