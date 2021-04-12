@@ -62,6 +62,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
+    //TODO  ProductEntry p = productsModel.getProductById(0);
+    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,

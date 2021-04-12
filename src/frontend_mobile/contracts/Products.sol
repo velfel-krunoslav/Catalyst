@@ -76,5 +76,15 @@ contract Products{
         }
         return productsForCategoryCount;
     }
-    //TODO get product for sellerId
+    //TODO get products for sellerId
+    function getProductById(uint id) public returns (Product memory){
+        Product memory product;
+        for (uint i= 0; i < productsCount; i++) {
+            if (products[i].id == id){
+                product = products[i];
+                break;
+            }
+        }
+        return product;
+    }
 }

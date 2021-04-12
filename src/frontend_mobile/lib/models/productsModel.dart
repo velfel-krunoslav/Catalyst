@@ -36,6 +36,7 @@ class ProductsModel extends ChangeNotifier{
   ContractEvent _productCreatedEvent;
   ContractFunction _getProductsForCategoryCount;
   ContractFunction _getProductsForCategory;
+  ContractFunction _getProductById;
 
   ProductsModel([int c = -1]){
     this.category = c;
@@ -73,6 +74,8 @@ class ProductsModel extends ChangeNotifier{
     _productCreatedEvent = _contract.event("ProductCreated");
     _getProductsForCategoryCount = _contract.function("getProductsForCategoryCount");
     _getProductsForCategory = _contract.function("getProductsForCategory");
+    _getProductById = _contract.function("getProductById");
+
     getProducts();
     getProductsForCategory(category);
   }
@@ -179,4 +182,23 @@ class ProductsModel extends ChangeNotifier{
       notifyListeners();
     }
   }
+
+  getProductById(int id) async {
+    isLoading = true;
+    var temp = await _client.call(contract: _contract, function: _getProductById, params: [BigInt.from(id)]);
+    temp = temp[0];
+    ProductEntry product = ProductEntry(
+        id: temp[0].toInt(),
+        name: temp[1],
+        price: temp[2].toInt() / temp[3].toInt(),
+        assetUrls: temp[4].split(",").toList(),
+        classification: getClassification(temp[5].toInt()),
+        quantifier: temp[6].toInt(),
+        desc: temp[7],
+        sellerId: temp[8].toInt()
+    );
+    isLoading = false;
+    return product;
+  }
+
 }
