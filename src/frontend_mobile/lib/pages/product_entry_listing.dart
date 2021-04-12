@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:frontend_mobile/widgets.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
@@ -142,41 +143,46 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               fontWeight: FontWeight.normal),
                         ),
                         SizedBox(height: 10),
-                        reviewsModel.isLoading? Row(
-                          children: [
-                            JumpingDotsProgressIndicator(fontSize: 20.0,),
-                          ],
-                        ) :
-                        Row(
-                          children: [
-                            Row(
-                              children: List<int>.generate(
-                                      _data.averageReviewScore.round(), (i) => i + 1)
-                                  .map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarFilled.svg');
-                              }).toList(),
-                            ),
-                            Row(
-                              children: List<int>.generate(
-                                  5 - _data.averageReviewScore.round(),
-                                  (i) => i + 1).map((e) {
-                                return SvgPicture.asset(
-                                    'assets/icons/StarOutline.svg');
-                              }).toList(),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '(' + _data.numberOfReviews.toString() + ')',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )
-                          ].toList(),
-                        ),
+                        reviewsModel.isLoading
+                            ? Row(
+                                children: [
+                                  JumpingDotsProgressIndicator(
+                                    fontSize: 20.0,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Row(
+                                    children: List<int>.generate(
+                                        _data.averageReviewScore.round(),
+                                        (i) => i + 1).map((e) {
+                                      return SvgPicture.asset(
+                                          'assets/icons/StarFilled.svg');
+                                    }).toList(),
+                                  ),
+                                  Row(
+                                    children: List<int>.generate(
+                                        5 - _data.averageReviewScore.round(),
+                                        (i) => i + 1).map((e) {
+                                      return SvgPicture.asset(
+                                          'assets/icons/StarOutline.svg');
+                                    }).toList(),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '(' +
+                                        _data.numberOfReviews.toString() +
+                                        ')',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black,
+                                        fontSize: 14),
+                                  )
+                                ].toList(),
+                              ),
                         SizedBox(
                           height: 5,
                         ),
@@ -186,10 +192,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => new ChangeNotifierProvider(
-                                        create: (context) => ReviewsModel(_data.id),
-                                        child: ProductReviews()
-                                    )),
+                                    builder: (context) =>
+                                        new ChangeNotifierProvider(
+                                            create: (context) =>
+                                                ReviewsModel(_data.id),
+                                            child: ProductReviews())),
                               );
                             },
                             child: Text(
@@ -323,50 +330,10 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             SizedBox(
                               height: 20,
                             ),
-                            TextButton(
-                                onPressed: () => {},
-                                style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0),
-                                    minimumSize: Size(double.infinity, 60)),
-                                child: Ink(
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          const Color(MINT),
-                                          const Color(TEAL),
-                                        ],
-                                        stops: [0.0, 1.0],
-                                        tileMode: TileMode.clamp,
-                                      ),
-                                      shape: BoxShape.rectangle,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: Container(
-                                    margin: EdgeInsets.zero,
-                                    child: Row(
-                                      children: [
-                                        Spacer(),
-                                        SvgPicture.asset(
-                                          'assets/icons/ShoppingBag.svg',
-                                          color: Colors.white,
-                                          width: 36,
-                                          height: 36,
-                                        ),
-                                        SizedBox(
-                                          width: 6,
-                                          height: 60,
-                                        ),
-                                        Text('Dodaj u korpu',
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
-                                                color: Colors.white)),
-                                        Spacer()
-                                      ],
-                                    ),
-                                  ),
-                                )),
+                            ButtonFill(
+                                iconPath: 'assets/icons/ShoppingBag.svg',
+                                text: 'Dodaj u korpu',
+                                onPressed: () {}),
                           ],
                         )),
                   ],

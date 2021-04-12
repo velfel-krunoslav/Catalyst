@@ -203,9 +203,10 @@ class CartProduct {
   List<String> photoUrl;
   String name;
   double price;
-  int cartQuantity;
+  int cartQuantity, id;
 
-  CartProduct({this.photoUrl, this.name, this.price, this.cartQuantity});
+  CartProduct(
+      {this.id, this.photoUrl, this.name, this.price, this.cartQuantity});
 }
 
 class UserReview extends User {
