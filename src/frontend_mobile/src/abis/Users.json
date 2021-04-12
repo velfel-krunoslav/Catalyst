@@ -4,22 +4,22 @@
   "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x22ca11e4973205eecf27f10ffceb84c4d9abdd4e367354fe4582705da7bf65ff\",\"urls\":[\"bzz-raw://b2b403f315797b9dcbde0053bf1b1cec2d6c82cce5f1fcb56f84109940f72b93\",\"dweb:/ipfs/QmbRWoRgERg6dZ4tuetik5wtYsQudaKhJv6TR8EG94cF6b\"]}},\"version\":1}",
   "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a7231582086a7ac7b3134fd65bb19a38bff8a4e603b4eddcfafec368d85913984b0e99ab864736f6c63430005100032",
   "deployedBytecode": "0x6080604052600080fdfea265627a7a7231582086a7ac7b3134fd65bb19a38bff8a4e603b4eddcfafec368d85913984b0e99ab864736f6c63430005100032",
-  "sourceMap": "36:25:4:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;36:25:4;;;;;;;",
-  "deployedSourceMap": "36:25:4:-;;;;;",
+  "sourceMap": "36:25:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;36:25:2;;;;;;;",
+  "deployedSourceMap": "36:25:2:-;;;;;",
   "source": "pragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract Users {\r\n\r\n\r\n\r\n}\r\n",
   "sourcePath": "C:/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
   "ast": {
     "absolutePath": "/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
     "exportedSymbols": {
       "Users": [
-        720
+        592
       ]
     },
-    "id": 721,
+    "id": 593,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 719,
+        "id": 591,
         "literals": [
           "solidity",
           ">=",
@@ -30,7 +30,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:32:4"
+        "src": "0:32:2"
       },
       {
         "baseContracts": [],
@@ -38,25 +38,25 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 720,
+        "id": 592,
         "linearizedBaseContracts": [
-          720
+          592
         ],
         "name": "Users",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 721,
-        "src": "36:25:4"
+        "scope": 593,
+        "src": "36:25:2"
       }
     ],
-    "src": "0:63:4"
+    "src": "0:63:2"
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "/C/Users/Korisnik/Desktop/dev/Catalyst/src/frontend_mobile/contracts/Users.sol",
       "exportedSymbols": {
         "Users": [
-          720
+          592
         ]
       }
     },
@@ -73,9 +73,9 @@
             ".0"
           ]
         },
-        "id": 719,
+        "id": 591,
         "name": "PragmaDirective",
-        "src": "0:32:4"
+        "src": "0:32:2"
       },
       {
         "attributes": {
@@ -89,22 +89,22 @@
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            720
+            592
           ],
           "name": "Users",
           "nodes": [
             null
           ],
-          "scope": 721
+          "scope": 593
         },
-        "id": 720,
+        "id": 592,
         "name": "ContractDefinition",
-        "src": "36:25:4"
+        "src": "36:25:2"
       }
     ],
-    "id": 721,
+    "id": 593,
     "name": "SourceUnit",
-    "src": "0:63:4"
+    "src": "0:63:2"
   },
   "compiler": {
     "name": "solc",
@@ -112,7 +112,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-10T17:59:58.409Z",
+  "updatedAt": "2021-04-12T17:49:04.649Z",
   "devdoc": {
     "methods": {}
   },

@@ -473,7 +473,8 @@ class DrawerOption extends StatelessWidget {
             this.text,
             style: TextStyle(
                 fontFamily: 'Inter', color: Colors.white, fontSize: 16),
-          )
+          ),
+          SizedBox(height: 65,)
         ],
       ),
     );
@@ -810,7 +811,7 @@ Widget HomeDrawer(BuildContext context, User user, void Function(String name, do
                 )
               ],
             ),
-            SizedBox(height: 45),
+            SizedBox(height: 30),
             DrawerOption(
                 text: "Moj nalog",
                 onPressed: () {
@@ -820,7 +821,7 @@ Widget HomeDrawer(BuildContext context, User user, void Function(String name, do
                           builder: (context) => MyAccount(user: user)));
                 },
                 iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Dodaj proizvod",
                 onPressed: () {
@@ -831,22 +832,22 @@ Widget HomeDrawer(BuildContext context, User user, void Function(String name, do
                 },
                 iconUrl: "assets/icons/PlusCircle.svg"
             ),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Poruke",
                 onPressed: () {},
                 iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Istorija narudžbi",
                 onPressed: () {},
                 iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Pomoć i podrška",
                 onPressed: () {},
                 iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Podešavanja",
                 onPressed: () {
@@ -856,7 +857,7 @@ Widget HomeDrawer(BuildContext context, User user, void Function(String name, do
                   );
                 },
                 iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 45),
+
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {

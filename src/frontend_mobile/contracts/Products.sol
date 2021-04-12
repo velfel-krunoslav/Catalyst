@@ -76,5 +76,5 @@ contract Products{
         }
         return productsForCategoryCount;
     }
-
+    //TODO get product for sellerId
 }

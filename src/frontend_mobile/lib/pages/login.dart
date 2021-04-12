@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -100,6 +101,7 @@ class Login extends StatelessWidget {
                             providers: [
                               ChangeNotifierProvider<ProductsModel>(create: (_) => ProductsModel()),
                               ChangeNotifierProvider<CategoriesModel>(create: (_) => CategoriesModel()),
+                              ChangeNotifierProvider<OrdersModel>(create: (_) => OrdersModel()),
                             ],
                             child: ConsumerHomePage()
                         )),

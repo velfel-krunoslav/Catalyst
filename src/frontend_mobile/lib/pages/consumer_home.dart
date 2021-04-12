@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -45,6 +46,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List<ProductEntry> products = [];
   var productsModel;
   var categoriesModel;
+  var ordersModel;
 
   void addProductCallback(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId){
     productsModel.addProduct(name, price, assetUrls, classification, quantifier, desc, sellerId, categoryId);
@@ -59,7 +61,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
-
+    ordersModel = Provider.of<OrdersModel>(context);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
