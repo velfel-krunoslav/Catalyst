@@ -1,16 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
-import 'dart:io';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
-void performPayment(String accountAddress, int eth) async {
+void performPayment(String targetAccountAddress, int eth) async {
   final client =
       Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
   final credentials = await client.credentialsFromPrivateKey(PRIVATE_KEY);
@@ -18,7 +11,7 @@ void performPayment(String accountAddress, int eth) async {
   await client.sendTransaction(
     credentials,
     Transaction(
-      to: EthereumAddress.fromHex(accountAddress),
+      to: EthereumAddress.fromHex(targetAccountAddress),
       gasPrice: EtherAmount.inWei(BigInt.one),
       maxGas: 100000,
       value: EtherAmount.fromUnitAndValue(EtherUnit.ether, eth),
