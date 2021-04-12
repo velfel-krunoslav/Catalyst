@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/pages/welcome.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
@@ -382,7 +383,12 @@ Widget HomeDrawer(BuildContext context, User user) {
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {
-                  Navigator.pop(context);
+                  Prefs.instance.removeAll();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Welcome()),
+                  );
                 },
                 iconUrl: "assets/icons/SignOut.svg"),
           ],
