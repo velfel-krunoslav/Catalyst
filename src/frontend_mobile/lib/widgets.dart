@@ -720,12 +720,12 @@ class _ChatsState extends State<Chats> {
                                 )));
                   },
                   child: Container(
-                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
                     decoration: BoxDecoration(
                       color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
+                        topRight: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
                       ),
                     ),
                     child: Row(

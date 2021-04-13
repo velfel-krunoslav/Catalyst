@@ -9,4 +9,3 @@ import 'pages/product_entry_listing.dart';
 void main() {
   runApp(MaterialApp(home: Welcome()));
 }
-

@@ -27,12 +27,12 @@ class _ChatScreenState extends State<ChatScreen> {
         color: isMe ? Colors.white : Color(TEAL),
         borderRadius: isMe
             ? BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0),
+                topLeft: Radius.circular(5.0),
+                bottomLeft: Radius.circular(5.0),
               )
             : BorderRadius.only(
-                topRight: Radius.circular(15.0),
-                bottomRight: Radius.circular(15.0),
+                topRight: Radius.circular(5.0),
+                bottomRight: Radius.circular(5.0),
               ),
       ),
       child: Column(
@@ -99,6 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         toolbarHeight: 95,
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -111,25 +112,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 );
               }
             }),
-        title: Padding(
-          padding: EdgeInsets.only(left: 100, top: 5),
-          child: Container(
-            height: 85,
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: AssetImage(widget.user.photoUrl),
-                ),
-                Text(
-                  widget.user.name,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+        title: Container(
+          height: 85,
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 30.0,
+                backgroundImage: AssetImage(widget.user.photoUrl),
+              ),
+              Text(
+                widget.user.name,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
         elevation: 0.0,
