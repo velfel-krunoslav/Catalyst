@@ -258,7 +258,7 @@ class _NewProductState extends State<NewProduct> {
                       Row(children: [
                         Expanded(
                           flex: 1,
-                          child: Text('Cena:',
+                          child: Text('Cena: ',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 14,
