@@ -50,13 +50,6 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                 child: Stack(
                   children: [
                     GestureDetector(
-                        /* onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      new FullscreenSlider()));
-                        },*/
                         child: CarouselSlider(
                       options: CarouselOptions(
                           autoPlay: false,
@@ -435,6 +428,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
 }
 
 class FullscreenSlider extends StatelessWidget {
+  int _current = 0;
   ProductEntryListingPage _data;
 
   FullscreenSlider(ProductEntryListingPage _data) {
@@ -443,29 +437,62 @@ class FullscreenSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (context) {
-          final double height = MediaQuery.of(context).size.height;
-          return CarouselSlider(
-            options: CarouselOptions(
-              height: height,
-              viewportFraction: 1.0,
-              enlargeCenterPage: false,
-              // autoPlay: false,
-            ),
-            items: _data.assetUrls
-                .map((item) => Container(
-                      child: Center(
-                          child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Builder(
+                  builder: (context) {
+                    final double height = MediaQuery.of(context).size.height;
+                    return CarouselSlider(
+                      options: CarouselOptions(
                         height: height,
-                      )),
-                    ))
-                .toList(),
-          );
-        },
-      ),
-    );
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        // autoPlay: false,
+                      ),
+                      items: _data.assetUrls
+                          .map((item) => Container(
+                                child: Center(
+                                    child: Image.asset(
+                                  item,
+                                  fit: BoxFit.cover,
+                                  //height: height,
+                                )),
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                            color: Colors.black),
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            minimumSize: Size(36, 36)))
+                  ],
+                )
+              ],
+            )
+          ],
+        ));
   }
 }
