@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class ProductEntryListing extends StatefulWidget {
 
 class _ProductEntryListing extends State<ProductEntryListing> {
   int _current = 0;
+  bool _stateChange = false;
   ProductEntryListingPage _data;
   var reviewsModel;
   _ProductEntryListing(ProductEntryListingPage _data) {
@@ -47,8 +49,10 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    CarouselSlider(
+                    GestureDetector(
+                        child: CarouselSlider(
                       options: CarouselOptions(
+                          autoPlay: false,
                           height: 240,
                           viewportFraction: 1,
                           onPageChanged: (index, reason) {
@@ -59,15 +63,25 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       items: _data.assetUrls.map((i) {
                         return Builder(
                           builder: (BuildContext context) {
-                            return Image.asset(
-                              '$i',
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                            return GestureDetector(
+                              child: Image.asset(
+                                '$i',
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new FullscreenSlider(
+                                                widget._data)));
+                              },
                             );
                           },
                         );
                       }).toList(),
-                    ),
+                    )),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -400,5 +414,75 @@ class _ProductEntryListing extends State<ProductEntryListing> {
         ),
       ],
     )));
+  }
+}
+
+class FullscreenSlider extends StatelessWidget {
+  int _current = 0;
+  ProductEntryListingPage _data;
+
+  FullscreenSlider(ProductEntryListingPage _data) {
+    this._data = _data;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Builder(
+                  builder: (context) {
+                    final double height = MediaQuery.of(context).size.height;
+                    return CarouselSlider(
+                      options: CarouselOptions(
+                        height: height,
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        // autoPlay: false,
+                      ),
+                      items: _data.assetUrls
+                          .map((item) => Container(
+                                child: Center(
+                                    child: Image.asset(
+                                  item,
+                                  fit: BoxFit.cover,
+                                  //height: height,
+                                )),
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                            color: Colors.black),
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            minimumSize: Size(36, 36)))
+                  ],
+                )
+              ],
+            )
+          ],
+        ));
   }
 }

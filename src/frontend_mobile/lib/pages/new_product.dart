@@ -264,6 +264,7 @@ class _NewProductState extends State<NewProduct> {
                                 child: TextField(
                                     controller: amountController,
                                     enabled: textFld,
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Color(LIGHT_GREY),
@@ -276,14 +277,40 @@ class _NewProductState extends State<NewProduct> {
                       ]),
                       SizedBox(height: 20),
                       Row(children: [
-                        Text('Fotografije: (max. 5)',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                color: Color(DARK_GREY)))
+                        Expanded(
+                          flex: 1,
+                          child: Text('Cena: ',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  color: Color(DARK_GREY))),
+                        ),
+                        Expanded(
+                            flex: 1,
+                            child: Text('Fotografije: (max. 5)',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    color: Color(DARK_GREY))))
                       ]),
                       SizedBox(height: 10),
                       Row(children: [
+                        Expanded(
+                            flex: 9,
+                            child: SizedBox(
+                                child: TextField(
+                                    enabled: textFld,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(LIGHT_GREY),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)))),
+                                height: 44,
+                                width: 142)),
+                        Expanded(flex: 1, child: SizedBox(width: 5)),
                         InkWell(
                             //borderRadius: BorderRadius.circular(5.0),
                             child: Container(
@@ -305,27 +332,33 @@ class _NewProductState extends State<NewProduct> {
                                       ));
                             }),
                         SizedBox(width: 10),
-                        Wrap(
-                          children: List.generate(images.length, (index) {
-                            return InkWell(
-                                child: SizedBox(
-                                  child: Image.asset(
-                                    images[index],
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              new Blank() // TODO - SELECT PICTURE TO ADD
-                                          ));
-                                });
-                          }),
-                        ),
+                        InkWell(
+                            child: Image.asset(
+                                'assets/product_listings/rakija_silverije_cc_by_sa.jpg',
+                                height: 80,
+                                width: 80),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          new Blank() // TODO - SELECT PICTURE TO ADD
+                                      ));
+                            }),
+                        //SizedBox(width: 20),
+                        InkWell(
+                            child: Image.asset(
+                                'assets/product_listings/salami_pbkwee_by_sa.jpg',
+                                height: 80,
+                                width: 80),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          new Blank() // TODO - SELECT PICTURE TO ADD
+                                      ));
+                            })
                       ]),
                       SizedBox(height: 20),
                       SizedBox(
