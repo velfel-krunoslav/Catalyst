@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/widgets.dart';
 
 List<ChatMessage> messages = [
   ChatMessage(messageContent: "Zdravo, Petre", messageType: "receiver"),

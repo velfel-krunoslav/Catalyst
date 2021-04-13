@@ -104,7 +104,6 @@ class Login extends StatelessWidget {
                 text: 'Prijavi se',
                 onPressed: () {
                   Prefs.instance.setStringValue('privateKey', privateKey);
-
                   Prefs.instance
                       .setStringValue('accountAddress', accountAddress);
 

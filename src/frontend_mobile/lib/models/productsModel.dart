@@ -27,7 +27,6 @@ class ProductsModel extends ChangeNotifier {
   EthereumAddress _contractAddress;
   EthereumAddress _ownAddress;
   DeployedContract _contract;
-
   ContractFunction _productsCount;
   ContractFunction _products;
   ContractFunction _createProduct;

@@ -8,12 +8,10 @@ import 'package:web_socket_channel/io.dart';
 
 import '../internals.dart';
 
-
-
-class CategoriesModel extends ChangeNotifier{
+class CategoriesModel extends ChangeNotifier {
   List<Category> categories = [];
-  final String _rpcUrl = "HTTP://"+HOST;
-  final String _wsUrl = "ws://"+HOST;
+  final String _rpcUrl = "HTTP://" + HOST;
+  final String _wsUrl = "ws://" + HOST;
 
   final String _privateKey = PRIVATE_KEY;
   int categoriesCount = 0;
@@ -29,13 +27,12 @@ class CategoriesModel extends ChangeNotifier{
   ContractFunction _categoriesCount;
   ContractFunction _categories;
 
-
-  CategoriesModel(){
+  CategoriesModel() {
     initiateSetup();
   }
 
   Future<void> initiateSetup() async {
-    _client = Web3Client(_rpcUrl, Client(), socketConnector: (){
+    _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
     });
     await getAbi();
@@ -44,46 +41,46 @@ class CategoriesModel extends ChangeNotifier{
   }
 
   Future<void> getAbi() async {
-    String abiStringFile = await rootBundle.loadString("src/abis/Categories.json");
+    String abiStringFile =
+        await rootBundle.loadString("src/abis/Categories.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress = EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
-
+    _contractAddress =
+        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
   }
 
-  Future<void> getCredentials() async{
+  Future<void> getCredentials() async {
     _credentials = await _client.credentialsFromPrivateKey(_privateKey);
     _ownAddress = await _credentials.extractAddress();
   }
 
-  Future<void> getDeployedContract() async{
-    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "Products"), _contractAddress);
+  Future<void> getDeployedContract() async {
+    _contract = DeployedContract(
+        ContractAbi.fromJson(_abiCode, "Products"), _contractAddress);
 
     _categoriesCount = _contract.function("categoriesCount");
     _categories = _contract.function("categories");
     getCategories();
   }
 
-  getCategories() async{
-    List totalCategoriesList = await _client.call(contract: _contract, function: _categoriesCount, params: []);
+  getCategories() async {
+    List totalCategoriesList = await _client
+        .call(contract: _contract, function: _categoriesCount, params: []);
     BigInt totalCategories = totalCategoriesList[0];
     categoriesCount = totalCategories.toInt();
     categories.clear();
 
-    for(int i=0; i < totalCategories.toInt(); i++){
-      var temp = await _client.call(contract: _contract, function: _categories, params: [BigInt.from(i)]);
+    for (int i = 0; i < totalCategories.toInt(); i++) {
+      var temp = await _client.call(
+          contract: _contract, function: _categories, params: [BigInt.from(i)]);
 
       //print(temp);
 
-      categories.add(Category(id: temp[0].toInt(),
-          name: temp[1],
-          assetUrl: temp[2]));
+      categories
+          .add(Category(id: temp[0].toInt(), name: temp[1], assetUrl: temp[2]));
     }
 
     isLoading = false;
     notifyListeners();
   }
-
-
-
 }

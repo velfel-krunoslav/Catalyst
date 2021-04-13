@@ -5,14 +5,15 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
+
 import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:frontend_mobile/pages/welcome.dart';
+
 import 'package:provider/provider.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   Prefs.instance.containsKey('privateKey').then((value) {
     runApp(MaterialApp(
       home: MyApp(value),

@@ -18,7 +18,6 @@ class ProductEntryListing extends StatefulWidget {
   ProductEntryListing(ProductEntryListingPage productData) {
     this._data = productData;
   }
-
   @override
   State<StatefulWidget> createState() {
     return _ProductEntryListing(this._data);

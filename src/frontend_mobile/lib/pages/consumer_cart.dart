@@ -26,9 +26,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   double shipping = 5.0;
   double subtotal;
   double total;
-
   var productsModel;
-
   List<CartProduct> products = [];
 
   @override

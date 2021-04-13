@@ -24,7 +24,5 @@ contract Categories {
         categories[8] = Category(8, "Zimnice",'assets/product_categories/preserved_food_dennis_yang_cc_by.jpg');
         categories[9] = Category(9, "Ostali proizvodi",'assets/product_categories/animal_produce_john_morgan_cc_by.jpg');
         categoriesCount = 10;
-
-
     }
 }

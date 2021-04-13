@@ -8,10 +8,6 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/widgets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:sticky_headers/sticky_headers.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../internals.dart';
 
 /*TODO alignments,paddings and dropdownmenu items*/

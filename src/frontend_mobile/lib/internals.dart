@@ -18,7 +18,6 @@ void performPayment(String targetAccountAddress, int eth) async {
     ),
     fetchChainIdFromNetworkId: false,
   );
-
   await client.dispose();
 }
 
@@ -244,7 +243,6 @@ class ReviewPage {
   int reviewsCount;
   List<int> stars;
   List<UserReview> reviews;
-
   ReviewPage({this.average, this.reviews, this.reviewsCount, this.stars});
 }
 
