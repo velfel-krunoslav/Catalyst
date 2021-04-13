@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
 import '../internals.dart';
 import '../config.dart';
+import 'inbox.dart';
 
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
@@ -319,7 +320,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                 Spacer(),
                                 TextButton(
                                     onPressed: () => {
-                                          Navigator.push(
+                                          /*Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => Inbox(
@@ -328,7 +329,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                               .fullName,
                                                           imageURL: _data
                                                               .userInfo
-                                                              .profilePictureAssetUrl))))
+                                                              .profilePictureAssetUrl))))*/
                                         },
                                     child: SvgPicture.asset(
                                         'assets/icons/Envelope.svg',

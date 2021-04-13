@@ -5,12 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/widgets.dart';
 import '../internals.dart';
-
-/*TODO alignments,paddings and dropdownmenu items*/
 
 class SearchPage extends StatefulWidget {
   @override
@@ -108,14 +104,6 @@ class _SearchPageState extends State<SearchPage> {
     _ScrollController.addListener(_scrollListener);
     _PageController = PageController(initialPage: 0);
   }
-
-  // boolean _value = false;
-  // onSwitchValueChanged(bool value) {
-  //   setState(() {
-  //     _value = value;
-  //   });
-  // }
-
   /*TODO categories dropdown menu items*/
 
   // ignore: unused_field
@@ -423,13 +411,30 @@ class _SearchPageState extends State<SearchPage> {
         });
   }
 
+  User user = new User(
+      forename: "Petar",
+      surname: "Nikolić",
+      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
+      phoneNumber: "+49 76 859 69 58",
+      address: "4070 Jehovah Drive",
+      city: "Roanoke",
+      mail: "jay.ritter@gmail.com",
+      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+          " sed do eiusmod tempor incididunt ut labore et dolore magna "
+          "aliqua.",
+      rating: 4.5,
+      reviewsCount: 67);
+
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
+          key: _scaffoldKey,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 161,
             flexibleSpace: SafeArea(
                 child: Padding(
@@ -443,12 +448,15 @@ class _SearchPageState extends State<SearchPage> {
                             padding: EdgeInsets.all(0),
                             width: 36,
                             child: IconButton(
-                                padding: EdgeInsets.all(0),
-                                icon: SvgPicture.asset(
-                                    'assets/icons/DotsNine.svg',
-                                    width: 36,
-                                    height: 36),
-                                onPressed: () {} /* TODO DOTS NINE PRESSED */)),
+                              padding: EdgeInsets.all(0),
+                              icon: SvgPicture.asset(
+                                  'assets/icons/DotsNine.svg',
+                                  width: 36,
+                                  height: 36),
+                              onPressed: () =>
+                                  // Scaffold.of(context).openDrawer(),
+                                  _scaffoldKey.currentState.openDrawer(),
+                            )),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(

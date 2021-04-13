@@ -8,18 +8,14 @@ import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/pages/welcome.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
-import 'package:frontend_mobile/pages/settings.dart';
-import 'package:frontend_mobile/pages/my_account.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import 'package:web3dart/web3dart.dart';
 import '../internals.dart';
 import 'new_product.dart';
+import '../models/productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -75,12 +71,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user), //TODO context
+          key: _scaffoldKey,
+          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 160,
             flexibleSpace: Container(
               child: SafeArea(
@@ -94,14 +93,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             padding: EdgeInsets.all(0),
                             width: 36,
                             child: IconButton(
-                                padding: EdgeInsets.all(0),
-                                icon: SvgPicture.asset(
-                                    'assets/icons/DotsNine.svg',
-                                    width: 36,
-                                    height: 36),
-                                onPressed: () {
-                                  Scaffold.of(context).openDrawer();
-                                })),
+                              padding: EdgeInsets.all(0),
+                              icon: SvgPicture.asset(
+                                  'assets/icons/DotsNine.svg',
+                                  width: 36,
+                                  height: 36),
+                              onPressed: () =>
+                                  _scaffoldKey.currentState.openDrawer(),
+                            )),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -358,96 +357,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
-
-Widget HomeDrawer(BuildContext context, User user) {
-  return Container(
-    width: 255,
-    child: new Drawer(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
-            ),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Dodaj proizvod",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NewProduct(null)),
-                  );
-                },
-                iconUrl: "assets/icons/PlusCircle.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {},
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {},
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {},
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 45),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Prefs.instance.removeAll();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Welcome()),
-                  );
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 class Categories extends StatefulWidget {

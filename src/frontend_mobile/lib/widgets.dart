@@ -8,12 +8,12 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
-
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:provider/provider.dart';
-
 import 'models/productsModel.dart';
 import 'models/reviewsModel.dart';
+import 'package:frontend_mobile/pages/chat_screen.dart';
+import 'package:frontend_mobile/pages/inbox.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -754,6 +754,70 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
   }
 }
 
+class Contacts extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text("Kontakti:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                )),
+            SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        height: 90.0,
+        child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            scrollDirection: Axis.horizontal,
+            itemCount: contacts.length,
+            itemBuilder: (BuildContext context, int index) {
+              Message chat = chats[index];
+              return GestureDetector(
+                onTap: () {
+                  if (chat.unread == true) {
+                    chat.unread = false;
+                  }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ChatScreen(
+                                user: contacts[index], //////////////ID
+                              )));
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: AssetImage(contacts[index].photoUrl),
+                      ),
+                      Text(
+                        contacts[index].name,
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+      )
+    ]);
+  }
+}
+
 class CategoryEntry extends StatelessWidget {
   final String assetImagePath;
   final String categoryName;
@@ -789,6 +853,131 @@ class CategoryEntry extends StatelessWidget {
                   ])),
         ),
       ],
+    );
+  }
+}
+
+class Chats extends StatefulWidget {
+  @override
+  _ChatsState createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: ClipRRect(
+          child: ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (BuildContext context, int index) {
+                Message chat = chats[index];
+                return GestureDetector(
+                  onTap: () {
+                    if (chat.unread == true) {
+                      chat.unread = false;
+                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ChatScreen(
+                                  user: chat.sender, /////////////////// ID
+                                )));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
+                    decoration: BoxDecoration(
+                      color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 25.0,
+                              backgroundImage: AssetImage(chat.sender.photoUrl),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  chat.sender.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  child: Text(
+                                    chat.text,
+                                    style: TextStyle(
+                                        color: chat.unread
+                                            ? Color(LIGHT_GREY)
+                                            : Color(DARK_GREY),
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                chat.time,
+                                style: TextStyle(
+                                    color: chat.unread
+                                        ? Color(LIGHT_GREY)
+                                        : Colors.black,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 5.0),
+                              chat.unread
+                                  ? Container(
+                                      width: 40.0,
+                                      height: 20.0,
+                                      decoration: BoxDecoration(
+                                          color: Color(LIGHT_GREY),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'NEW',
+                                        style: TextStyle(
+                                            color: Color(DARK_GREY),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
     );
   }
 }
@@ -831,7 +1020,7 @@ Widget HomeDrawer(
                 )
               ],
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Moj nalog",
                 onPressed: () {
@@ -841,6 +1030,7 @@ Widget HomeDrawer(
                           builder: (context) => MyAccount(user: user)));
                 },
                 iconUrl: "assets/icons/User.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Dodaj proizvod",
                 onPressed: () {
@@ -851,18 +1041,27 @@ Widget HomeDrawer(
                   );
                 },
                 iconUrl: "assets/icons/PlusCircle.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Poruke",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Inbox()),
+                  );
+                },
                 iconUrl: "assets/icons/Envelope.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Istorija narudžbi",
                 onPressed: () {},
                 iconUrl: "assets/icons/Newspaper.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Pomoć i podrška",
                 onPressed: () {},
                 iconUrl: "assets/icons/Handshake.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Podešavanja",
                 onPressed: () {
@@ -872,6 +1071,7 @@ Widget HomeDrawer(
                   );
                 },
                 iconUrl: "assets/icons/Gear.svg"),
+            SizedBox(height: 45),
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {

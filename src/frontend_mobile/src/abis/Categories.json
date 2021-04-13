@@ -1983,11 +1983,7 @@
   },
   "legacyAST": {
     "attributes": {
-<<<<<<< HEAD
       "absolutePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Categories.sol",
-=======
-      "absolutePath": "/E/Catalyst/src/frontend_mobile/contracts/Categories.sol",
->>>>>>> m-lukic
       "exportedSymbols": {
         "Categories": [
           123
