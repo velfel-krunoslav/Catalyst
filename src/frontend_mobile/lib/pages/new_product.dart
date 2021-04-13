@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/productsModel.dart';
+import 'package:provider/provider.dart';
 
 import '../internals.dart';
 import '../widgets.dart';
@@ -10,28 +12,45 @@ import 'blank_page.dart';
 import 'consumer_home.dart';
 
 class NewProduct extends StatefulWidget {
+  Function addProductCallback;
+  NewProduct(this.addProductCallback);
+
   @override
-  _NewProductState createState() => _NewProductState();
+  _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
+
 
 String chosenValue;
 int selected;
 bool textFld = false;
 
-List<String> categories = [
-  'Peciva',
-  'Suhomesnato',
-  'Mlečni proizvodi',
-  'Voće i povrće',
-  'Bezalkoholna pića',
-  'Alkohol',
-  'Žita',
-  'Živina',
-  'Zimnice',
-  'Ostali proizvodi'
-];
+TextEditingController nameController = new TextEditingController();
+TextEditingController descriptionController = new TextEditingController();
+TextEditingController inStockController = new TextEditingController();
+int measure = 0;
+TextEditingController amountController = new TextEditingController();
 
+
+
+List<Category> categories = [
+  Category(id: 0, name: "Peciva", assetUrl: ""),
+  Category(id: 1, name: "Suhomesnato", assetUrl: ""),
+  Category(id: 2, name: "Mlečni proizvodi", assetUrl: ""),
+  Category(id: 3, name: "Voće i povrće", assetUrl: ""),
+  Category(id: 4, name: "Bezalkoholna pića", assetUrl: ""),
+  Category(id: 5, name: "Alkohol", assetUrl: ""),
+  Category(id: 6, name: "Žita", assetUrl: ""),
+  Category(id: 7, name: "Živina", assetUrl: ""),
+  Category(id: 8, name: "Zimnice", assetUrl: ""),
+  Category(id: 9, name: "Ostali proizvodi", assetUrl: "")
+];
+Category selectedCategory;
+double price;
+List<String> images = ["assets/product_listings/rakija_silverije_cc_by_sa.jpg","assets/product_listings/salami_pbkwee_by_sa.jpg"];
 class _NewProductState extends State<NewProduct> {
+  Function addProductCallback;
+  _NewProductState(this.addProductCallback);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +92,7 @@ class _NewProductState extends State<NewProduct> {
                 SizedBox(height: 10),
                 SizedBox(
                   child: TextField(
+                    controller: nameController,
                     decoration: InputDecoration(
                     filled: true,
                     fillColor: Color(LIGHT_GREY),
@@ -99,6 +119,7 @@ class _NewProductState extends State<NewProduct> {
                 SizedBox(height: 10),
                 SizedBox(
                   child: TextField(
+                    controller: descriptionController,
                     maxLines: 2,
                     decoration: InputDecoration(
                       filled: true,
@@ -150,20 +171,20 @@ class _NewProductState extends State<NewProduct> {
                               color: Color(LIGHT_GREY),
                               borderRadius: BorderRadius.circular(5)
                           ),
-                          child: DropdownButton(
+                          child: new DropdownButton<Category>(
                             underline: Container(color: Colors.transparent),
                             icon: SvgPicture.asset('assets/icons/ArrowDown.svg', color: Color(DARK_GREY)),
                             isExpanded: true,
-                            value: chosenValue,
-                            onChanged: (newValue) {
+                            value: selectedCategory,
+                            onChanged: (Category newValue) {
                               setState(() {
-                                chosenValue = newValue;
+                                selectedCategory = newValue;
                               });
                             },
-                            items: categories.map((valueItem) {
-                              return DropdownMenuItem(
-                                child: Text(valueItem, style: TextStyle(color: Color(DARK_GREY), fontSize: 14, fontFamily: 'Inter')),
-                                value: valueItem);
+                            items: categories.map((Category c) {
+                              return DropdownMenuItem<Category>(
+                                child: Text(c.name, style: TextStyle(color: Color(DARK_GREY), fontSize: 14, fontFamily: 'Inter')),
+                                value: c);
                             }).toList()
                           ),
                         )
@@ -176,6 +197,7 @@ class _NewProductState extends State<NewProduct> {
                         flex: 9,
                         child: SizedBox(
                           child: TextField(
+                            controller: inStockController,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
@@ -246,7 +268,7 @@ class _NewProductState extends State<NewProduct> {
                                   fontFamily: 'Inter'
                                 )
                               ),
-                              value: 1,
+                              value: 0,
                             ),
                             DropdownMenuItem(
                               child: Text(
@@ -257,7 +279,7 @@ class _NewProductState extends State<NewProduct> {
                                   fontFamily: 'Inter'
                                 )
                               ),
-                              value: 2,
+                              value: 1,
                             ),
                             DropdownMenuItem(
                               child: Text(
@@ -268,7 +290,7 @@ class _NewProductState extends State<NewProduct> {
                                   fontFamily: 'Inter'
                                 )
                               ),
-                              value: 3
+                              value: 2
                             )
                           ],
                           onChanged: (value) {
@@ -287,6 +309,7 @@ class _NewProductState extends State<NewProduct> {
                       flex: 9,
                       child: SizedBox(
                         child: TextField(
+                          controller: amountController,
                           enabled: textFld,
                           decoration: InputDecoration(
                             filled: true,
@@ -337,37 +360,29 @@ class _NewProductState extends State<NewProduct> {
                       }
                     ),
                     SizedBox(width: 10),
-                    InkWell(
-                      child: Image.asset(
-                        'assets/product_listings/rakija_silverije_cc_by_sa.jpg',
-                        height: 80,
-                        width: 80
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => new Blank() // TODO - SELECT PICTURE TO ADD
-                          )
+                    Wrap(
+                      children: List.generate(images.length, (index) {
+                        return InkWell(
+                            child: SizedBox(
+                              child: Image.asset(
+                                  images[index],
+                                  height: 80,
+                                  width: 80,
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => new Blank() // TODO - SELECT PICTURE TO ADD
+                                  )
+                              );
+                            }
                         );
                       }
+                      ),
                     ),
-                    //SizedBox(width: 20),
-                    InkWell(
-                      child: Image.asset(
-                        'assets/product_listings/salami_pbkwee_by_sa.jpg',
-                        height: 80,
-                        width: 80
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => new Blank() // TODO - SELECT PICTURE TO ADD
-                          )
-                        );
-                      }
-                    )
                   ]
                 ),
                 SizedBox(height: 20),
@@ -376,9 +391,23 @@ class _NewProductState extends State<NewProduct> {
                   height: 60,
                   child: ButtonFill(
                     text: 'Dodaj proizvod',
-                    onPressed: () {
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Scaffold(body: Center(child: Text('Uspesno dodat proizvod!')))));
+                    onPressed: ()  {
+                      price = 2.33;
+                      if (nameController.text != null && images.length != 0 && selected != null && amountController.text != null && descriptionController.text != null && selectedCategory != null) {
+                        addProductCallback(
+                            nameController.text,
+                            price,
+                            images,
+                            selected,
+                            int.parse(amountController.text),
+                            descriptionController.text,
+                            0,
+                            selectedCategory.id);
+                        Navigator.pop(context);
+                      }
+                      else{
+                          //TODO istampati poruku da se popune sva polja
+                      }
                     }
                   ),
                 )

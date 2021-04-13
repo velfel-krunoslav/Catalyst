@@ -13,6 +13,9 @@ import '../internals.dart';
 
 class ProductsModel extends ChangeNotifier{
   List<ProductEntry> products = [];
+  List<ProductEntry> productsForCategory = [];
+  int category = -1;
+
   final String _rpcUrl = "HTTP://"+HOST;
   final String _wsUrl = "ws://"+HOST;
 
@@ -31,12 +34,15 @@ class ProductsModel extends ChangeNotifier{
   ContractFunction _products;
   ContractFunction _createProduct;
   ContractEvent _productCreatedEvent;
+  ContractFunction _getProductsForCategoryCount;
+  ContractFunction _getProductsForCategory;
+  ContractFunction _getProductById;
 
-
-  ProductsModel(){
+  ProductsModel([int c = -1]){
+    this.category = c;
     initiateSetup();
   }
-
+  //ProductsModel(int c){this.category = c;}
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: (){
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -66,8 +72,12 @@ class ProductsModel extends ChangeNotifier{
     _createProduct = _contract.function("createProduct");
     _products = _contract.function("products");
     _productCreatedEvent = _contract.event("ProductCreated");
+    _getProductsForCategoryCount = _contract.function("getProductsForCategoryCount");
+    _getProductsForCategory = _contract.function("getProductsForCategory");
+    _getProductById = _contract.function("getProductById");
 
     getProducts();
+    getProductsForCategory(category);
   }
 
   getProducts() async{
@@ -76,24 +86,16 @@ class ProductsModel extends ChangeNotifier{
     productsCount = totalProducts.toInt();
     products.clear();
 
-    for(int i=0; i < totalProducts.toInt(); i++){
+    for(int i = productsCount - 1; i >= 0; i--){
       var temp = await _client.call(contract: _contract, function: _products, params: [BigInt.from(i)]);
 
-      print(temp);
+      //print(temp);
       double price = temp[2].toInt() / temp[3].toInt();
       String assets = temp[4];
       var list = temp[4].split(",").toList();
 
-      Classification classif;
-      if (temp[5] == 0){
-        classif = Classification.Single;
-      }
-      else if (temp[5] == 1){
-        classif = Classification.Weight;
-      }
-      else{
-        classif = Classification.Volume;
-      }
+      Classification classif = getClassification(temp[5].toInt());
+
       products.add(ProductEntry(id: temp[0].toInt(),
                                 name: temp[1],
                                 price: price,
@@ -107,25 +109,96 @@ class ProductsModel extends ChangeNotifier{
     isLoading = false;
     notifyListeners();
   }
-
-  addProduct(String name, double price, String assetUrl, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
+  getClassification(int num){
+    if (num == 0){
+      return Classification.Single;
+    }
+    else if (num == 1){
+      return Classification.Weight;
+    }
+    else{
+      return Classification.Volume;
+    }
+  }
+  addProduct(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId) async{
     isLoading = true;
-    notifyListeners();
     price = double.parse(price.toStringAsFixed(2));
     Fraction frac1 = price.toFraction();
     int numinator = frac1.numerator;
     int denuminator = frac1.denominator;
-
-    await _client.sendTransaction(
-        _credentials,
-        Transaction.callContract(
-            maxGas: 6721925,
-            contract: _contract,
-            function: _createProduct,
-            parameters: [name, BigInt.from(numinator), BigInt.from(denuminator),  assetUrl, BigInt.from(classification),BigInt.from(quantifier), desc, BigInt.from(sellerId),BigInt.from(categoryId)],
-            gasPrice: EtherAmount.inWei(BigInt.one)));
-    getProducts();
+    String assets = "";
+    for (int i = 0 ; i < assetUrls.length; i++){
+      assets+= assetUrls[i];
+      if (i != assetUrls.length - 1)
+        assets+= ",";
+    }
+    if (name != null && price != null && assets != "" && classification != null && desc != null && sellerId != null && categoryId != null) {
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _createProduct,
+              parameters: [name, BigInt.from(numinator),
+                BigInt.from(denuminator),
+                assets, BigInt.from(classification),
+                BigInt.from(quantifier), desc,
+                BigInt.from(sellerId),
+                BigInt.from(categoryId)],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      print("proizvod dodat");
+      getProducts();
+    }
+    else{
+      isLoading = false;
+    }
   }
 
+  getProductsForCategory(int c) async {
+    if (c != -1) {
+      List totalProductsList = await _client.call(
+          contract: _contract,
+          function: _getProductsForCategoryCount,
+          params: [BigInt.from(c)]);
+      BigInt totalProducts = totalProductsList[0];
+      productsCount = totalProducts.toInt();
+      var temp = await _client.call(
+          contract: _contract,
+          function: _getProductsForCategory,
+          params: [BigInt.from(c), totalProducts]);
+      for (int i = productsCount - 1; i >= 0; i--) {
+        var t = temp[0][i];
+        //print(t);
+        productsForCategory.add(ProductEntry(id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[4].split(",").toList(),
+            classification: getClassification(t[5].toInt()),
+            quantifier: t[6].toInt(),
+            desc: t[7],
+            sellerId: t[8].toInt()));
+      }
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  getProductById(int id) async {
+    isLoading = true;
+    var temp = await _client.call(contract: _contract, function: _getProductById, params: [BigInt.from(id)]);
+    temp = temp[0];
+    ProductEntry product = ProductEntry(
+        id: temp[0].toInt(),
+        name: temp[1],
+        price: temp[2].toInt() / temp[3].toInt(),
+        assetUrls: temp[4].split(",").toList(),
+        classification: getClassification(temp[5].toInt()),
+        quantifier: temp[6].toInt(),
+        desc: temp[7],
+        sellerId: temp[8].toInt()
+    );
+    isLoading = false;
+    return product;
+  }
 
 }

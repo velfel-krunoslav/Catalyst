@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/welcome.dart';
 import 'package:frontend_mobile/widgets.dart';
@@ -45,16 +47,31 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       reviewsCount: 67);
   List<ProductEntry> recently;
   List<ProductEntry> products = [];
-  var listModel;
+  var productsModel;
+  var categoriesModel;
+  var ordersModel;
+
+  void addProductCallback(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId){
+    productsModel.addProduct(name, price, assetUrls, classification, quantifier, desc, sellerId, categoryId);
+  }
+
+  void callback(int cat) {
+    setState(() {
+      this.category = cat;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    listModel = Provider.of<ProductsModel>(context);
-
+    productsModel = Provider.of<ProductsModel>(context);
+    categoriesModel = Provider.of<CategoriesModel>(context);
+    ordersModel = Provider.of<OrdersModel>(context);
+    //TODO  ProductEntry p = productsModel.getProductById(0);
+    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user), //TODO context
+          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
           appBar: AppBar(
             toolbarHeight: 160,
             flexibleSpace: Container(
@@ -160,7 +177,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               TabBarView(
                 children: [
                   SingleChildScrollView(
-                      child: listModel.isLoading
+                      child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
                                 backgroundColor: Colors.grey,
@@ -168,9 +185,22 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             )
                           : HomeContent()),
                   SingleChildScrollView(
-                      child: category == -1 ? Categories() : Container()),
+                      child: category == -1 ? (categoriesModel.isLoading ?
+                      Center(
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.grey,
+                        ),
+                      ) : Categories(categoriesModel.categories)
+                      )
+                          :
+                      ChangeNotifierProvider(
+                              create: (context) =>
+                                  ProductsModel(category),
+                              child: ProductsForCategory(category: category, categoryName: categoriesModel.categories[category].name, callback: this.callback) )
+                  )
+                  ,
                   SingleChildScrollView(
-                      child: listModel.isLoading
+                      child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
                                 backgroundColor: Colors.grey,
@@ -184,7 +214,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         ),
       ),
     );
+
   }
+
 
   Widget HomeContent() {
     var size = MediaQuery.of(context).size;
@@ -208,7 +240,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(listModel.products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -218,9 +250,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: listModel.products[index],
+                          product: productsModel.products[index],
                           onPressed: () {
-                            ProductEntry product = listModel.products[index];
+                            ProductEntry product = productsModel.products[index];
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -279,7 +311,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(listModel.products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -290,13 +322,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: listModel.products[index].assetUrls,
-                              name: listModel.products[index].name,
-                              price: listModel.products[index].price,
-                              prevPrice: listModel.products[index].price * 2,
+                              assetUrls: productsModel.products[index].assetUrls,
+                              name: productsModel.products[index].name,
+                              price: productsModel.products[index].price,
+                              prevPrice: productsModel.products[index].price * 2,
                               classification:
-                                  listModel.products[index].classification,
-                              quantifier: listModel.products[index].quantifier),
+                              productsModel.products[index].classification,
+                              quantifier: productsModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
@@ -306,7 +338,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
+  Widget Categories(List<Category> categories){
 
 Widget HomeDrawer(BuildContext context, User user) {
   return Container(
@@ -410,91 +442,21 @@ class _CategoriesState extends State<Categories> {
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return InkWell(
-            onTap: () {
-              setState(() {});
-            },
-            child: CategoryEntry(
-                categories[index].assetUrl, categories[index].name),
-          );
-        })));
-  }
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    category = index;
+                  });
+                },
+                child: CategoryEntry(
+                    categories[index].assetUrl, categories[index].name),
+              );
+            })));
 
-  List<Category> categories = [
-    Category(
-        name: 'Peciva',
-        assetUrl: 'assets/product_categories/baked_goods_benediktv_cc_by.jpg'),
-    Category(
-        name: 'Suhomesnato',
-        assetUrl:
-            'assets/product_categories/cured_meats_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Mlečni proizvodi',
-        assetUrl: 'assets/product_categories/dairy_benjamin_horn_cc_by.jpg'),
-    Category(
-        name: 'Voće i povrće',
-        assetUrl:
-            'assets/product_categories/fruits_and_veg_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Bezalkoholna pića',
-        assetUrl: 'assets/product_categories/juice_caitlin_regan_cc_by.jpg'),
-    Category(
-        name: 'Alkohol',
-        assetUrl:
-            'assets/product_categories/alcohol_shunichi_kouroki_cc_by.jpg'),
-    Category(
-        name: 'Žita',
-        assetUrl:
-            'assets/product_categories/grains_christian_schnettelker_cc_by.jpg'),
-    Category(
-        name: 'Živina',
-        assetUrl: 'assets/product_categories/livestock_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Zimnice',
-        assetUrl:
-            'assets/product_categories/preserved_food_dennis_yang_cc_by.jpg'),
-    Category(
-        name: 'Ostali proizvodi',
-        assetUrl:
-            'assets/product_categories/animal_produce_john_morgan_cc_by.jpg')
-  ];
-}
 
-class CategoryEntry extends StatelessWidget {
-  final String assetImagePath;
-  final String categoryName;
-
-  const CategoryEntry(this.assetImagePath, this.categoryName);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(10),
-          width: double.infinity,
-          height: 125.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-        ),
-        Positioned(
-          left: 35.0,
-          child: Text(categoryName,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  color: Color(LIGHT_GREY),
-                  shadows: <Shadow>[
-                    Shadow(blurRadius: 5, color: Colors.black)
-                  ])),
-        ),
-      ],
-    );
   }
 }
+
+
+
+

@@ -109,9 +109,14 @@ class Login extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => new ChangeNotifierProvider(
-                            create: (context) => ProductsModel(),
-                            child: ConsumerHomePage())),
+                        builder: (context) => new MultiProvider(providers: [
+                              ChangeNotifierProvider<ProductsModel>(
+                                  create: (_) => ProductsModel()),
+                              ChangeNotifierProvider<CategoriesModel>(
+                                  create: (_) => CategoriesModel()),
+                              ChangeNotifierProvider<OrdersModel>(
+                                  create: (_) => OrdersModel()),
+                            ], child: ConsumerHomePage())),
                   );
                 },
               ),

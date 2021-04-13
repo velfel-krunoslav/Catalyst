@@ -261,3 +261,19 @@ class ChatMessage {
   String messageType;
   ChatMessage({this.messageContent, this.messageType});
 }
+
+class Order {
+  int id;
+  List<int> productIds;
+  double price;
+  DateTime date;
+  int status; //  confirmed, delivered, refunded, rejected
+  int buyerId;
+  Order(
+      {this.id,
+      this.productIds,
+      this.status,
+      this.buyerId,
+      this.price,
+      this.date});
+}
