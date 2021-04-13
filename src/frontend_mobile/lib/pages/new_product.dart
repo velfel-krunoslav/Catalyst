@@ -256,14 +256,40 @@ class _NewProductState extends State<NewProduct> {
                       ]),
                       SizedBox(height: 20),
                       Row(children: [
-                        Text('Fotografije: (max. 5)',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                color: Color(DARK_GREY)))
+                        Expanded(
+                          flex: 1,
+                          child: Text('Cena:',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  color: Color(DARK_GREY))),
+                        ),
+                        Expanded(
+                            flex: 1,
+                            child: Text('Fotografije: (max. 5)',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    color: Color(DARK_GREY))))
                       ]),
                       SizedBox(height: 10),
                       Row(children: [
+                        Expanded(
+                            flex: 9,
+                            child: SizedBox(
+                                child: TextField(
+                                    enabled: textFld,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(LIGHT_GREY),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)))),
+                                height: 44,
+                                width: 142)),
+                        Expanded(flex: 1, child: SizedBox(width: 5)),
                         InkWell(
                             //borderRadius: BorderRadius.circular(5.0),
                             child: Container(
