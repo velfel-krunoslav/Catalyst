@@ -7,6 +7,7 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/pages/welcome.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -19,7 +20,6 @@ import 'package:provider/provider.dart';
 import 'package:web3dart/web3dart.dart';
 import '../internals.dart';
 import 'new_product.dart';
-import '../models/productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -51,8 +51,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   var categoriesModel;
   var ordersModel;
 
-  void addProductCallback(String name, double price, List<String> assetUrls, int classification, int quantifier, String desc, int sellerId, int categoryId){
-    productsModel.addProduct(name, price, assetUrls, classification, quantifier, desc, sellerId, categoryId);
+  void addProductCallback(
+      String name,
+      double price,
+      List<String> assetUrls,
+      int classification,
+      int quantifier,
+      String desc,
+      int sellerId,
+      int categoryId) {
+    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
+        desc, sellerId, categoryId);
   }
 
   void callback(int cat) {
@@ -60,6 +69,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       this.category = cat;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
@@ -71,7 +81,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
+          drawer: HomeDrawer(context, user), //TODO context
           appBar: AppBar(
             toolbarHeight: 160,
             flexibleSpace: Container(
@@ -104,7 +114,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ConsumerCart()));
+                                    builder: (context) =>
+                                        new MultiProvider(providers: [
+                                          ChangeNotifierProvider<ProductsModel>(
+                                              create: (_) => ProductsModel()),
+                                          ChangeNotifierProvider<
+                                                  CategoriesModel>(
+                                              create: (_) => CategoriesModel()),
+                                          ChangeNotifierProvider<OrdersModel>(
+                                              create: (_) => OrdersModel()),
+                                        ], child: ConsumerCart())));
                           },
                         ),
                         Container(
@@ -185,20 +204,21 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             )
                           : HomeContent()),
                   SingleChildScrollView(
-                      child: category == -1 ? (categoriesModel.isLoading ?
-                      Center(
-                        child: LinearProgressIndicator(
-                          backgroundColor: Colors.grey,
-                        ),
-                      ) : Categories(categoriesModel.categories)
-                      )
-                          :
-                      ChangeNotifierProvider(
-                              create: (context) =>
-                                  ProductsModel(category),
-                              child: ProductsForCategory(category: category, categoryName: categoriesModel.categories[category].name, callback: this.callback) )
-                  )
-                  ,
+                      child: category == -1
+                          ? (categoriesModel.isLoading
+                              ? Center(
+                                  child: LinearProgressIndicator(
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                )
+                              : Categories())
+                          : ChangeNotifierProvider(
+                              create: (context) => ProductsModel(category),
+                              child: ProductsForCategory(
+                                  category: category,
+                                  categoryName:
+                                      categoriesModel.categories[category].name,
+                                  callback: this.callback))),
                   SingleChildScrollView(
                       child: productsModel.isLoading
                           ? Center(
@@ -214,9 +234,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         ),
       ),
     );
-
   }
-
 
   Widget HomeContent() {
     var size = MediaQuery.of(context).size;
@@ -252,7 +270,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       child: ProductEntryCard(
                           product: productsModel.products[index],
                           onPressed: () {
-                            ProductEntry product = productsModel.products[index];
+                            ProductEntry product =
+                                productsModel.products[index];
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -322,13 +341,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: productsModel.products[index].assetUrls,
+                              assetUrls:
+                                  productsModel.products[index].assetUrls,
                               name: productsModel.products[index].name,
                               price: productsModel.products[index].price,
-                              prevPrice: productsModel.products[index].price * 2,
+                              prevPrice:
+                                  productsModel.products[index].price * 2,
                               classification:
-                              productsModel.products[index].classification,
-                              quantifier: productsModel.products[index].quantifier),
+                                  productsModel.products[index].classification,
+                              quantifier:
+                                  productsModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
@@ -338,7 +360,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-  Widget Categories(List<Category> categories){
+}
 
 Widget HomeDrawer(BuildContext context, User user) {
   return Container(
@@ -382,7 +404,7 @@ Widget HomeDrawer(BuildContext context, User user) {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NewProduct()),
+                    MaterialPageRoute(builder: (context) => NewProduct(null)),
                   );
                 },
                 iconUrl: "assets/icons/PlusCircle.svg"),
@@ -442,21 +464,15 @@ class _CategoriesState extends State<Categories> {
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-              return InkWell(
-                onTap: () {
-                  setState(() {
-                    category = index;
-                  });
-                },
-                child: CategoryEntry(
-                    categories[index].assetUrl, categories[index].name),
-              );
-            })));
-
-
+          return InkWell(
+            onTap: () {
+              setState(() {
+                //category = index;
+              });
+            },
+            child: CategoryEntry(
+                categories[index].assetUrl, categories[index].name),
+          );
+        })));
   }
 }
-
-
-
-

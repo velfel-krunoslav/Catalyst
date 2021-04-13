@@ -333,7 +333,37 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             ButtonFill(
                                 iconPath: 'assets/icons/ShoppingBag.svg',
                                 text: 'Dodaj u korpu',
-                                onPressed: () {}),
+                                onPressed: () {
+                                  Prefs.instance
+                                      .containsKey('cartProducts')
+                                      .then((exists) {
+                                    if (exists == true) {
+                                      Prefs.instance
+                                          .getStringValue('cartProducts')
+                                          .then((value) {
+                                        List<String> tmp = value.split(';');
+                                        bool existsInCart = false;
+
+                                        tmp.forEach((e) {
+                                          existsInCart =
+                                              (int.parse(e.split(',')[0]) ==
+                                                  _data.id);
+                                        });
+
+                                        if (!existsInCart) {
+                                          Prefs.instance.setStringValue(
+                                              'cartProducts',
+                                              '$value;${_data.id},1');
+                                        } else {
+                                          //TODO THROW NOTIFICATION
+                                        }
+                                      });
+                                    } else {
+                                      Prefs.instance.setStringValue(
+                                          'cartProducts', '${_data.id},1');
+                                    }
+                                  });
+                                }),
                           ],
                         )),
                   ],

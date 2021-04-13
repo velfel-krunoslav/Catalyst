@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
 import 'package:frontend_mobile/pages/welcome.dart';
@@ -50,9 +52,14 @@ class _SkipState extends State<Skip> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => new ChangeNotifierProvider(
-                create: (context) => ProductsModel(),
-                child: ConsumerHomePage())),
+            builder: (context) => new MultiProvider(providers: [
+                  ChangeNotifierProvider<ProductsModel>(
+                      create: (_) => ProductsModel()),
+                  ChangeNotifierProvider<CategoriesModel>(
+                      create: (_) => CategoriesModel()),
+                  ChangeNotifierProvider<OrdersModel>(
+                      create: (_) => OrdersModel()),
+                ], child: ConsumerHomePage())),
       );
     });
   }
