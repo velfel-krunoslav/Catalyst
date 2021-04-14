@@ -96,7 +96,7 @@ class MyAccount extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 65, right: 65),
-            child: ButtonFill(
+            child: ButtonOutline(
               onPressed: () {},
               text: "Moje ponude",
             ),
