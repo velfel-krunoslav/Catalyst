@@ -5,10 +5,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/main.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/settings.dart';
+import 'package:frontend_mobile/pages/welcome.dart';
 import 'package:provider/provider.dart';
 import 'models/productsModel.dart';
 import 'models/reviewsModel.dart';
@@ -1075,7 +1077,9 @@ Widget HomeDrawer(
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {
-                  Navigator.pop(context);
+                  Prefs.instance.removeAll();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => new Welcome()));
                 },
                 iconUrl: "assets/icons/SignOut.svg"),
           ],

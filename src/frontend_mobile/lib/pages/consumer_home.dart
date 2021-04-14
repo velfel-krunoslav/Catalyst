@@ -23,7 +23,7 @@ class ConsumerHomePage extends StatefulWidget {
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int category = -1;
   int activeMenu = 0;
-  int cardItemsCount = 0;
+  int cartItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
 
   User user = new User(
@@ -70,6 +70,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(cartItemsCount);
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
@@ -123,7 +124,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         Container(
                           child: Center(
                             child: Text(
-                              cardItemsCount.toString(),
+                              cartItemsCount.toString(),
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
