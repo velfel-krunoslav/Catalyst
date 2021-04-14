@@ -351,18 +351,19 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                   Prefs.instance
                                       .containsKey('cartProducts')
                                       .then((exists) {
-                                    if (exists == true) {
-                                      Prefs.instance
-                                          .getStringValue('cartProducts')
-                                          .then((value) {
+                                    Prefs.instance
+                                        .getStringValue('cartProducts')
+                                        .then((value) {
+                                      if (exists == true &&
+                                          (value.compareTo('') != 0)) {
                                         List<String> tmp = value.split(';');
                                         bool existsInCart = false;
 
-                                        tmp.forEach((e) {
+                                        for (var e in tmp) {
                                           existsInCart =
                                               (int.parse(e.split(',')[0]) ==
                                                   _data.id);
-                                        });
+                                        }
 
                                         if (!existsInCart) {
                                           Prefs.instance.setStringValue(
@@ -371,11 +372,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         } else {
                                           //TODO THROW NOTIFICATION
                                         }
-                                      });
-                                    } else {
-                                      Prefs.instance.setStringValue(
-                                          'cartProducts', '${_data.id},1');
-                                    }
+                                      } else {
+                                        Prefs.instance.setStringValue(
+                                            'cartProducts', '${_data.id},1');
+                                      }
+                                    });
                                   });
                                 }),
                           ],
