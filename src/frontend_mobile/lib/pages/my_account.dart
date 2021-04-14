@@ -9,7 +9,6 @@ class MyAccount extends StatelessWidget {
   User user;
 
   MyAccount({this.user});
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -17,7 +16,7 @@ class MyAccount extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Moj nalog",
+          "My account",
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -56,27 +55,23 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Wrap(
-                children: List.generate(user.rating.round(), (index) {
-                  return SvgPicture.asset("assets/icons/StarFilled.svg",
-                      color: Colors.yellow[700]);
-                }),
-              ),
-              Wrap(
-                children: List.generate(5 - user.rating.round(), (index) {
-                  return SvgPicture.asset("assets/icons/StarOutline.svg",
-                      color: Colors.yellow[700]);
-                }),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("(" + user.reviewsCount.toString() + ")")
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Wrap(
+          //       children: List.generate(user.rating.round(), (index) {
+          //       return SvgPicture.asset("assets/icons/StarFilled.svg", color: Colors.yellow[700]);
+          //     }),
+          //     ),
+          //     Wrap(
+          //       children: List.generate(5 - user.rating.round(), (index) {
+          //         return SvgPicture.asset("assets/icons/StarOutline.svg", color: Colors.yellow[700]);
+          //       }),
+          //     ),
+          //     SizedBox(width: 10,),
+          //     Text("("+user.reviewsCount.toString()+")")
+          //   ],
+          // ),
           SizedBox(
             height: 10,
           ),
@@ -97,7 +92,7 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 80,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 65, right: 65),
@@ -107,15 +102,15 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 30,
           ),
           Expanded(
             child: Container(
               width: width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(5),
-                      topLeft: Radius.circular(5)),
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20)),
                   color: Color(LIGHT_GREY)),
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 50),

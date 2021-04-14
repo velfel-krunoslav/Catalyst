@@ -1,8 +1,76 @@
-<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.1872 3.9375L2.81223 3.93751" stroke="#6D6D6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M7.3125 7.3125V11.8125" stroke="#6D6D6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M10.6875 7.3125V11.8125" stroke="#6D6D6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M14.0625 3.9375V14.625C14.0625 14.7742 14.0032 14.9173 13.8977 15.0227C13.7923 15.1282 13.6492 15.1875 13.5 15.1875H4.5C4.35082 15.1875 4.20774 15.1282 4.10225 15.0227C3.99676 14.9173 3.9375 14.7742 3.9375 14.625V3.9375" stroke="#6D6D6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M11.8125 3.9375V2.8125C11.8125 2.51413 11.694 2.22798 11.483 2.017C11.272 1.80603 10.9859 1.6875 10.6875 1.6875H7.3125C7.01413 1.6875 6.72798 1.80603 6.51701 2.017C6.30603 2.22798 6.1875 2.51413 6.1875 2.8125V3.9375" stroke="#6D6D6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   fill="none"
+   version="1.1"
+   id="svg14"
+   sodipodi:docname="Trash.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview16"
+     showgrid="false"
+     inkscape:zoom="7.375"
+     inkscape:cx="16"
+     inkscape:cy="16"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg14" />
+  <path
+     d="M 26.77363,7.6019068 H 5.2258004"
+     id="path4"
+     inkscape:connector-curvature="0"
+     style="stroke:#6d6d6d;stroke-width:2.61186433;stroke-linecap:round;stroke-linejoin:round" />
+  <path
+     d="m 13.061864,13.478602 v 7.835593"
+     id="path6"
+     inkscape:connector-curvature="0"
+     style="stroke:#6d6d6d;stroke-width:2.61186433;stroke-linecap:round;stroke-linejoin:round" />
+  <path
+     d="m 18.938559,13.478602 v 7.835593"
+     id="path8"
+     inkscape:connector-curvature="0"
+     style="stroke:#6d6d6d;stroke-width:2.61186433;stroke-linecap:round;stroke-linejoin:round" />
+  <path
+     d="M 24.815254,7.6019068 V 26.211441 c 0,0.259793 -0.103256,0.508965 -0.286957,0.692492 -0.183527,0.183701 -0.432699,0.286957 -0.692493,0.286957 H 8.164618 c -0.2597934,0 -0.5089653,-0.103256 -0.6924923,-0.286957 C 7.2884246,26.720406 7.1851689,26.471234 7.1851689,26.211441 V 7.6019068"
+     id="path10"
+     inkscape:connector-curvature="0"
+     style="stroke:#6d6d6d;stroke-width:2.61186433;stroke-linecap:round;stroke-linejoin:round" />
+  <path
+     d="M 20.897457,7.6019068 V 5.6430085 c 0,-0.5195347 -0.206337,-1.0177913 -0.57374,-1.3851588 -0.367402,-0.36735 -0.865571,-0.5737395 -1.385158,-0.5737395 h -5.876695 c -0.519587,0 -1.017757,0.2063895 -1.385159,0.5737395 -0.367402,0.3673675 -0.57374,0.8656241 -0.57374,1.3851588 v 1.9588983"
+     id="path12"
+     inkscape:connector-curvature="0"
+     style="stroke:#6d6d6d;stroke-width:2.61186433;stroke-linecap:round;stroke-linejoin:round" />
 </svg>
-

@@ -18,3 +18,8 @@ const double BUTTON_HEIGHT = 60;
 const double PRODUCT_ENTRY_HEIGHT = 200;
 const double CATEGORY_HEIGHT = 126;
 const String CURRENCY = '€';
+
+/* GLOBALS: */
+const PRIVATE_KEY =
+    "147f3dd32b5609c3e9b63f9ea1b01735c9a913e35fefbe794fb4b53e40fac2c3";
+const HOST = "192.168.1.8:7545";

@@ -30,10 +30,6 @@ class Welcome extends StatelessWidget {
                     },
                     blendMode: BlendMode.srcATop,
                   ),
-
-                  /*child: SvgPicture.asset(
-                  'assets/icons/KotaricaLogomark.svg',
-                ),*/
                 ),
               ), //end logo
               SizedBox(
