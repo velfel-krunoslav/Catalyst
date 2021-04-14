@@ -44,4 +44,3 @@ The build process remains similar regardless of your operating system.
       Also, modify the `HOST` constant in the same file, by using the values from step 6 (e.g. `"192.168.1.7:7545"`).
    9. Lastly, modify the `src/frontend_mobile/truffle-config.js` file, replacing the `host` and `port` properties with appropriate values.
    10. Run `build.sh`. **This may take a while**.
-   

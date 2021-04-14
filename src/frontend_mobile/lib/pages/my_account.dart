@@ -9,10 +9,6 @@ class MyAccount extends StatelessWidget {
   User user;
 
   MyAccount({this.user});
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -20,11 +16,7 @@ class MyAccount extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-<<<<<<< HEAD
           "Moj nalog",
-=======
-          "My account",
->>>>>>> dev
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -63,7 +55,6 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-<<<<<<< HEAD
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -87,9 +78,7 @@ class MyAccount extends StatelessWidget {
           ),
           SizedBox(
             height: 10,
-          ),
-=======
-          // Row(
+          ), // Row(
           //   mainAxisAlignment: MainAxisAlignment.center,
           //   children: [
           //     Wrap(
@@ -109,7 +98,6 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
->>>>>>> dev
           Center(
               child: Text(
             user.forename + " " + user.surname,
@@ -127,11 +115,8 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           SizedBox(
-<<<<<<< HEAD
             height: 80,
-=======
             height: 20,
->>>>>>> dev
           ),
           Padding(
             padding: const EdgeInsets.only(left: 65, right: 65),
@@ -141,24 +126,14 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           SizedBox(
-<<<<<<< HEAD
             height: 20,
-=======
-            height: 30,
->>>>>>> dev
           ),
           Expanded(
             child: Container(
               width: width,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-<<<<<<< HEAD
-                      topRight: Radius.circular(5),
-                      topLeft: Radius.circular(5)),
-=======
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
->>>>>>> dev
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(5)),
+                  topRight: Radius.circular(20),
                   color: Color(LIGHT_GREY)),
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 50),
