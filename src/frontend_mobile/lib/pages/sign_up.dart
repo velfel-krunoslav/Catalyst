@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../models/productsModel.dart';
 
 class SignUp extends StatelessWidget {
+  bool flg = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +120,7 @@ class SignUp extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5.0)))),
                       SizedBox(height: 15.0),
                       TextField(
+                        obscureText: flg,
                         style: TextStyle(
                             color: Color(DARK_GREY),
                             fontFamily: 'Inter',
@@ -132,7 +134,7 @@ class SignUp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5.0)),
                           suffixIcon: IconButton(
                             padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-                            onPressed: () => {},
+                            onPressed: () => {flg = !flg},
                             icon: SvgPicture.asset(
                               'assets/icons/EyeSlash.svg',
                               color: Color(DARK_GREY),

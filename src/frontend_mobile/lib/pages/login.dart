@@ -18,7 +18,7 @@ import '../models/productsModel.dart';
 class Login extends StatelessWidget {
   String privateKey = '';
   String accountAddress = '';
-
+  bool flg = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +75,7 @@ class Login extends StatelessWidget {
               ),
               SizedBox(height: 20.0),
               TextField(
+                obscureText: flg,
                 style: TextStyle(
                     color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
                 decoration: InputDecoration(
@@ -86,7 +87,7 @@ class Login extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0)),
                   suffixIcon: IconButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-                    onPressed: () => {},
+                    onPressed: () => {flg = !flg},
                     icon: SvgPicture.asset(
                       'assets/icons/EyeSlash.svg',
                       color: Color(DARK_GREY),
