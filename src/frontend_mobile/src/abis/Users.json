@@ -1,0 +1,122 @@
+{
+  "contractName": "Users",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol\":\"Users\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol\":{\"keccak256\":\"0x5c4701602a9a751b6d27f193c3c12ce8ce3c06f91a0bb47977b7ab57d2d582a3\",\"urls\":[\"bzz-raw://2557354ce2fcf327156176b642fb5e9099eb742b5f0d60244f1526b27040e296\",\"dweb:/ipfs/QmaT82nHu27WRpzuDd9NjcXi9BBmSvAztTHozJcPh4coUR\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820d17eeefe0b6bbcc8ecd3a47f184eee300d4035f2994463ca1ecad3dc4de1c0ef64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820d17eeefe0b6bbcc8ecd3a47f184eee300d4035f2994463ca1ecad3dc4de1c0ef64736f6c63430005100032",
+  "sourceMap": "34:21:5:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:21:5;;;;;;;",
+  "deployedSourceMap": "34:21:5:-;;;;;",
+  "source": "pragma solidity >=0.4.22 <0.9.0;\n\ncontract Users {\n\n\n\n}\n",
+  "sourcePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol",
+  "ast": {
+    "absolutePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol",
+    "exportedSymbols": {
+      "Users": [
+        1130
+      ]
+    },
+    "id": 1131,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1129,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:5"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1130,
+        "linearizedBaseContracts": [
+          1130
+        ],
+        "name": "Users",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 1131,
+        "src": "34:21:5"
+      }
+    ],
+    "src": "0:56:5"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol",
+      "exportedSymbols": {
+        "Users": [
+          1130
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".22",
+            "<",
+            "0.9",
+            ".0"
+          ]
+        },
+        "id": 1129,
+        "name": "PragmaDirective",
+        "src": "0:32:5"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            1130
+          ],
+          "name": "Users",
+          "nodes": [
+            null
+          ],
+          "scope": 1131
+        },
+        "id": 1130,
+        "name": "ContractDefinition",
+        "src": "34:21:5"
+      }
+    ],
+    "id": 1131,
+    "name": "SourceUnit",
+    "src": "0:56:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-04-14T06:05:56.788Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

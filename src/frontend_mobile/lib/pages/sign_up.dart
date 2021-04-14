@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/widgets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/pages/login.dart';
 import 'package:frontend_mobile/pages/consumer_home.dart';
+import 'package:provider/provider.dart';
+
+import '../models/productsModel.dart';
 
 class SignUp extends StatelessWidget {
+  bool flg = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,18 +23,15 @@ class SignUp extends StatelessWidget {
                     width: MediaQuery.of(context).size.width - 40,
                     child: Column(children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.fromLTRB(50.0, 50.0, 50.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
                       ),
-                      SvgPicture.asset('assets/icons/KotaricaLogomark.svg',
-                          color: Color(TEAL), height: 40.0, width: 40.0),
-                      Row(children: <Widget>[
-                        Text('Ime:',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                color: Color(DARK_GREY),
-                                fontSize: 16)),
-                      ]),
-                      SizedBox(height: 5.0),
+                      Text('Registrujte se',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: Color(DARK_GREY))),
+                      SizedBox(height: 20),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -38,22 +40,16 @@ class SignUp extends StatelessWidget {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(LIGHT_GREY),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0))),
+                            hintText: 'Ime',
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
                         ),
                       ),
                       SizedBox(height: 15.0),
-                      Row(children: <Widget>[
-                        Text('Prezime:',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                color: Color(DARK_GREY),
-                                fontSize: 16)),
-                      ]),
-                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -62,34 +58,18 @@ class SignUp extends StatelessWidget {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(LIGHT_GREY),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0))),
+                            hintText: 'Prezime',
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
                         ),
                       ),
                       SizedBox(height: 15.0),
-                      Row(
-                        children: [
-                          Text('Datum rođenja:',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color(DARK_GREY),
-                                  fontSize: 16)),
-                        ],
-                      ),
-                      SizedBox(height: 5.0),
                       DatePickerPopup(),
                       SizedBox(height: 15.0),
-                      Row(children: <Widget>[
-                        Text('Broj telefona:',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                color: Color(DARK_GREY),
-                                fontSize: 16)),
-                      ]),
-                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -98,22 +78,16 @@ class SignUp extends StatelessWidget {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(LIGHT_GREY),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0))),
+                            hintText: 'Broj telefona',
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
                         ),
                       ),
                       SizedBox(height: 15.0),
-                      Row(children: <Widget>[
-                        Text('Email:',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                color: Color(DARK_GREY),
-                                fontSize: 16)),
-                      ]),
-                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -122,20 +96,70 @@ class SignUp extends StatelessWidget {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
+                            hintText: 'E-mail',
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
+                      TextField(
+                          style: TextStyle(
+                              color: Color(DARK_GREY),
+                              fontFamily: 'Inter',
+                              fontSize: 16),
+                          decoration: InputDecoration(
+                              hintText: 'MetaMask adresa',
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0))),
+                                  borderRadius: BorderRadius.circular(5.0)))),
+                      SizedBox(height: 15.0),
+                      TextField(
+                        obscureText: flg,
+                        style: TextStyle(
+                            color: Color(DARK_GREY),
+                            fontFamily: 'Inter',
+                            fontSize: 16),
+                        decoration: InputDecoration(
+                          hintText: 'Privatni ključ',
+                          filled: true,
+                          fillColor: Color(LIGHT_GREY),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          suffixIcon: IconButton(
+                            padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+                            onPressed: () => {flg = !flg},
+                            icon: SvgPicture.asset(
+                              'assets/icons/EyeSlash.svg',
+                              color: Color(DARK_GREY),
+                              width: 24,
+                              height: 24,
+                            ),
+                          ),
                         ),
                       ),
+                      SizedBox(height: 20.0),
                       ButtonFill(
                         text: 'Registruj se',
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new ConsumerHomePage()),
+                                builder: (context) =>
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<ProductsModel>(
+                                          create: (_) => ProductsModel()),
+                                      ChangeNotifierProvider<CategoriesModel>(
+                                          create: (_) => CategoriesModel()),
+                                      ChangeNotifierProvider<OrdersModel>(
+                                          create: (_) => OrdersModel()),
+                                    ], child: ConsumerHomePage())),
                           );
                         },
                       ),
@@ -163,9 +187,6 @@ class SignUp extends StatelessWidget {
                                   color: Color(DARK_GREY),
                                   fontSize: 16))
                         ],
-                      ),
-                      SizedBox(
-                        height: 40,
                       )
                     ])))));
   }

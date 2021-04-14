@@ -4,13 +4,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
-import 'package:frontend_mobile/pages/settings.dart';
-import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
+import '../models/productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -18,9 +21,11 @@ class ConsumerHomePage extends StatefulWidget {
 }
 
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
+  int category = -1;
   int activeMenu = 0;
-  int cardItemsCount = 0;
+  int cartItemsCount = 0;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
+
   User user = new User(
       forename: "Petar",
       surname: "Nikolić",
@@ -34,147 +39,138 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           "aliqua.",
       rating: 4.5,
       reviewsCount: 67);
-  List<ProductEntry> products = [
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-        ],
-        name: 'Domaći med',
-        price: 13.90,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
-        name: 'Pasirani paradajz',
-        price: 2.40,
-        classification: Classification.Weight,
-        quantifier: 500),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/olive_oil_catalina_alejandra_acevedo_by_sa.jpg'
-        ],
-        name: 'Maslinovo ulje',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/prosciutto_46137_by.jpg'],
-        name: 'Pršut',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/rakija_silverije_cc_by_sa.jpg'
-        ],
-        name: 'Rakija',
-        price: 12.40,
-        classification: Classification.Volume,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>['assets/product_listings/salami_pbkwee_by_sa.jpg'],
-        name: 'Kobasica',
-        price: 16.70,
-        classification: Classification.Weight,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg'
-        ],
-        name: 'Kamamber',
-        price: 29.90,
-        classification: Classification.Weight,
-        quantifier: 500),
-  ];
   List<ProductEntry> recently;
+  List<ProductEntry> products = [];
+  ProductsModel productsModel;
+  var categoriesModel;
+  var ordersModel;
+
+  Future<ProductEntry> getProductByIdCallback(int id) async {
+    return await productsModel.getProductById(id);
+  }
+
+  void addProductCallback(
+      String name,
+      double price,
+      List<String> assetUrls,
+      int classification,
+      int quantifier,
+      String desc,
+      int sellerId,
+      int categoryId) {
+    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
+        desc, sellerId, categoryId);
+  }
+
+  void callback(int cat) {
+    setState(() {
+      this.category = cat;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(cartItemsCount);
+    productsModel = Provider.of<ProductsModel>(context);
+    categoriesModel = Provider.of<CategoriesModel>(context);
+    ordersModel = Provider.of<OrdersModel>(context);
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    //TODO  ProductEntry p = productsModel.getProductById(0);
+    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
-          drawer: HomeDrawer(context, user),
+          key: _scaffoldKey,
+          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 160,
-            flexibleSpace: SafeArea(
-                child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(0),
-                          width: 36,
-                          child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () {
-                                Scaffold.of(context).openDrawer();
-                              })),
-                      Spacer(),
-                      IconButton(
-                        icon: SvgPicture.asset('assets/icons/ShoppingCart.svg',
-                            width: 36, height: 36),
-                        onPressed: () {
-                          Navigator.push(
+            flexibleSpace: Container(
+              child: SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(0),
+                            width: 36,
+                            child: IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/DotsNine.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {
+                                  _scaffoldKey.currentState.openDrawer();
+                                })),
+                        Spacer(),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                              'assets/icons/ShoppingCart.svg',
+                              width: 36,
+                              height: 36),
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConsumerCart()));
-                        },
-                      ),
-                      Container(
-                        child: Center(
-                          child: Text(
-                            cardItemsCount.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Color(DARK_GREY)),
-                          ),
+                                  builder: (context) =>
+                                      ConsumerCart(getProductByIdCallback)),
+                            );
+                          },
                         ),
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                            color: Color(LIGHT_GREY),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                      )
-                    ],
-                  ),
-                  TextField(
-                    onChanged: (text) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 36),
-                      fillColor: Color(LIGHT_GREY),
-                      filled: true,
-                      hintText: 'Pretraga',
-                      hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(left: 15, right: 10),
-                        child: SvgPicture.asset(
-                            'assets/icons/MagnifyingGlass.svg'),
-                      ),
-                      border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(5.0),
+                        Container(
+                          child: Center(
+                            child: Text(
+                              cartItemsCount.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)),
+                            ),
                           ),
-                          borderSide: BorderSide.none),
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        )
+                      ],
                     ),
-                    onEditingComplete: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPage()));
-                    },
-                  ),
-                ],
-              ),
-            )),
+                    TextField(
+                      onChanged: (text) {},
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(top: 36),
+                        fillColor: Color(LIGHT_GREY),
+                        filled: true,
+                        hintText: 'Pretraga',
+                        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(left: 15, right: 10),
+                          child: SvgPicture.asset(
+                              'assets/icons/MagnifyingGlass.svg'),
+                        ),
+                        border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(5.0),
+                            ),
+                            borderSide: BorderSide.none),
+                      ),
+                      onEditingComplete: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchPage()));
+                      },
+                    ),
+                  ],
+                ),
+              )),
+            ),
             bottom: TabBar(
                 indicatorColor: Colors.black,
                 labelPadding: EdgeInsets.all(8),
@@ -194,40 +190,40 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             children: [
               TabBarView(
                 children: [
-                  SingleChildScrollView(child: HomeContent()),
-                  SingleChildScrollView(child: Categories()),
-                  SingleChildScrollView(child: BestDeals())
+                  SingleChildScrollView(
+                      child: productsModel.isLoading
+                          ? Center(
+                              child: LinearProgressIndicator(
+                                backgroundColor: Colors.grey,
+                              ),
+                            )
+                          : HomeContent()),
+                  SingleChildScrollView(
+                      child: category == -1
+                          ? (categoriesModel.isLoading
+                              ? Center(
+                                  child: LinearProgressIndicator(
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                )
+                              : Categories(categoriesModel.categories))
+                          : ChangeNotifierProvider(
+                              create: (context) => ProductsModel(category),
+                              child: ProductsForCategory(
+                                  category: category,
+                                  categoryName:
+                                      categoriesModel.categories[category].name,
+                                  callback: this.callback))),
+                  SingleChildScrollView(
+                      child: productsModel.isLoading
+                          ? Center(
+                              child: LinearProgressIndicator(
+                                backgroundColor: Colors.grey,
+                              ),
+                            )
+                          : BestDeals())
                 ],
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ProductEntryListing(ProductEntryListingPage(
-                                  assetUrls: <String>[
-                                    'assets/product_listings/washed_rind_cheese_paul_asman_jill_lenoble_by.jpg',
-                                    'assets/product_listings/martin_cathrae_by_sa.jpg',
-                                    'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'
-                                  ],
-                                  name: 'Kamamber',
-                                  price: 29.90,
-                                  classification: Classification.Weight,
-                                  quantifier: 500,
-                                  description:
-                                      'Meki sir od kravljeg mleka obložen belom plesni specifičnog ukusa. Specifične je arome i mekane do pastozne konzistencije, s tvrdom koricom spolja. Njegovo zrenje traje od jednog do dva meseca. Priprema se od punomasnog kravljeg mleka.',
-                                  averageReviewScore: 4,
-                                  numberOfReviews: 17,
-                                  userInfo: new UserInfo(
-                                    profilePictureAssetUrl:
-                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                    fullName: 'Petar Nikolić',
-                                    reputationNegative: 7,
-                                    reputationPositive: 240,
-                                  )))));
-                },
-              )
             ],
           ),
         ),
@@ -257,7 +253,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -267,7 +263,37 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: products[index], onPressed: () {})),
+                          product: productsModel.products[index],
+                          onPressed: () {
+                            ProductEntry product =
+                                productsModel.products[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      new ChangeNotifierProvider(
+                                          create: (context) =>
+                                              ReviewsModel(product.id),
+                                          child: ProductEntryListing(
+                                              ProductEntryListingPage(
+                                                  assetUrls: product.assetUrls,
+                                                  name: product.name,
+                                                  price: product.price,
+                                                  classification:
+                                                      product.classification,
+                                                  quantifier:
+                                                      product.quantifier,
+                                                  description: product.desc,
+                                                  id: product.id,
+                                                  userInfo: new UserInfo(
+                                                    profilePictureAssetUrl:
+                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                    fullName: 'Petar Nikolić',
+                                                    reputationNegative: 7,
+                                                    reputationPositive: 240,
+                                                  ))))),
+                            );
+                          })),
                 ),
               );
             }),
@@ -299,7 +325,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(products.length, (index) {
+            children: List.generate(productsModel.products.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -310,12 +336,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       width: (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls: products[index].assetUrls,
-                              name: products[index].name,
-                              price: products[index].price,
-                              prevPrice: products[index].price * 0.8,
-                              classification: products[index].classification,
-                              quantifier: products[index].quantifier),
+                              assetUrls:
+                                  productsModel.products[index].assetUrls,
+                              name: productsModel.products[index].name,
+                              price: productsModel.products[index].price,
+                              prevPrice:
+                                  productsModel.products[index].price * 2,
+                              classification:
+                                  productsModel.products[index].classification,
+                              quantifier:
+                                  productsModel.products[index].quantifier),
                           onPressed: () {})),
                 ),
               );
@@ -325,178 +355,21 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
 
-Widget HomeDrawer(BuildContext context, User user) {
-  return Container(
-    width: 255,
-    child: new Drawer(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
-            ),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {},
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {},
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {},
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 50),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class Categories extends StatefulWidget {
-  @override
-  _CategoriesState createState() => _CategoriesState();
-}
-
-class _CategoriesState extends State<Categories> {
-  @override
-  Widget build(BuildContext context) {
+  Widget Categories(List<Category> categories) {
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
             children: List.generate(categories.length, (index) {
-          return CategoryEntry(
-              categories[index].assetUrl, categories[index].name);
+          return InkWell(
+            onTap: () {
+              setState(() {
+                category = index;
+              });
+            },
+            child: CategoryEntry(
+                categories[index].assetUrl, categories[index].name),
+          );
         })));
-  }
-
-  List<Category> categories = [
-    Category(
-        name: 'Peciva',
-        assetUrl: 'assets/product_categories/baked_goods_benediktv_cc_by.jpg'),
-    Category(
-        name: 'Suhomesnato',
-        assetUrl:
-            'assets/product_categories/cured_meats_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Mlečni proizvodi',
-        assetUrl: 'assets/product_categories/dairy_benjamin_horn_cc_by.jpg'),
-    Category(
-        name: 'Voće i povrće',
-        assetUrl:
-            'assets/product_categories/fruits_and_veg_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Bezalkoholna pića',
-        assetUrl: 'assets/product_categories/juice_caitlin_regan_cc_by.jpg'),
-    Category(
-        name: 'Alkohol',
-        assetUrl:
-            'assets/product_categories/alcohol_shunichi_kouroki_cc_by.jpg'),
-    Category(
-        name: 'Žita',
-        assetUrl:
-            'assets/product_categories/grains_christian_schnettelker_cc_by.jpg'),
-    Category(
-        name: 'Živina',
-        assetUrl: 'assets/product_categories/livestock_marco_verch_cc_by.jpg'),
-    Category(
-        name: 'Zimnice',
-        assetUrl:
-            'assets/product_categories/preserved_food_dennis_yang_cc_by.jpg'),
-    Category(
-        name: 'Ostali proizvodi',
-        assetUrl:
-            'assets/product_categories/animal_produce_john_morgan_cc_by.jpg')
-  ];
-}
-
-class CategoryEntry extends StatelessWidget {
-  final String assetImagePath;
-  final String categoryName;
-
-  const CategoryEntry(this.assetImagePath, this.categoryName);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return InkWell(
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 125.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-          ),
-          Positioned(
-            left: 35.0,
-            child: Text(categoryName,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                    color: Color(LIGHT_GREY),
-                    shadows: <Shadow>[
-                      Shadow(blurRadius: 5, color: Colors.black)
-                    ])),
-          ),
-        ],
-      ),
-      onTap: () {} /* TODO ON CATEGORY CLICKED */,
-    );
   }
 }

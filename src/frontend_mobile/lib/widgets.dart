@@ -5,6 +5,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/main.dart';
+import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:frontend_mobile/pages/new_product.dart';
+import 'package:frontend_mobile/pages/product_entry_listing.dart';
+import 'package:frontend_mobile/pages/settings.dart';
+import 'package:frontend_mobile/pages/welcome.dart';
+import 'package:provider/provider.dart';
+import 'models/productsModel.dart';
+import 'models/reviewsModel.dart';
+import 'package:frontend_mobile/pages/chat_screen.dart';
+import 'package:frontend_mobile/pages/inbox.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -180,7 +191,7 @@ class _DatePickerState extends State<DatePickerPopup> {
         readOnly: true,
         decoration: InputDecoration(
           hintText: (_date == null)
-              ? ''
+              ? 'Datum rođenja'
               : _date.day.toString() +
                   '.' +
                   _date.month.toString() +
@@ -302,7 +313,7 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toString() +
+                            product.price.toStringAsFixed(2) +
                                 ' €' +
                                 ' (' +
                                 product.quantifier.toString() +
@@ -366,7 +377,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2),
+                            product.prevPrice.toStringAsFixed(2),
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -380,7 +391,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      product.prevPrice.toStringAsFixed(2) +
+                      product.price.toStringAsFixed(2) +
                           ' €' +
                           ' (' +
                           product.quantifier.toString() +
@@ -463,6 +474,9 @@ class DrawerOption extends StatelessWidget {
             this.text,
             style: TextStyle(
                 fontFamily: 'Inter', color: Colors.white, fontSize: 16),
+          ),
+          SizedBox(
+            height: 65,
           )
         ],
       ),
@@ -511,4 +525,566 @@ class SettingsOption extends StatelessWidget {
       ),
     );
   }
+}
+
+class ReviewWidget extends StatelessWidget {
+  Review review;
+
+  ReviewWidget({this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(TEAL),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage(
+                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
+                  )),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(padding: EdgeInsets.only(left: 0, right: 16, top: 0)),
+                Text("Petar Nikolić",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black)),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  child: Container(
+                      width: 200,
+                      child: Text(
+                        review.desc.length > 100
+                            ? review.desc.substring(0, 100) + "..."
+                            : review.desc,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                        ),
+                      )),
+                ),
+              ],
+            ),
+            SizedBox(
+                //height: 100,
+                ),
+            Spacer(),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      children: List.generate(review.rating, (index) {
+                        return SvgPicture.asset(
+                          "assets/icons/StarFilled.svg",
+                        );
+                      }),
+                    ),
+                    Wrap(
+                      children:
+                          List.generate(5 - review.rating.round(), (index) {
+                        return SvgPicture.asset("assets/icons/StarOutline.svg",
+                            color: Color(LIGHT_GREY));
+                      }),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text("Pre 1 dan",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w800,
+                        color: Color(DARK_GREY))),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
+    );
+  }
+}
+
+class ProductsForCategory extends StatefulWidget {
+  ProductsForCategory({this.category, this.categoryName, this.callback});
+  int category;
+  Function callback;
+  String categoryName;
+  @override
+  _ProductsForCategoryState createState() => _ProductsForCategoryState(
+      category: category, categoryName: categoryName, callback: callback);
+}
+
+class _ProductsForCategoryState extends State<ProductsForCategory> {
+  _ProductsForCategoryState({this.category, this.categoryName, this.callback});
+  List<ProductEntry> products;
+  int category;
+  Function callback;
+  String categoryName;
+  var productsModel;
+  var size;
+
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
+    products = productsModel.productsForCategory;
+
+    return productsModel.isLoading
+        ? Center(
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.grey,
+            ),
+          )
+        : Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          'assets/icons/ArrowLeft.svg',
+                          height: ICON_SIZE,
+                          width: ICON_SIZE,
+                        ),
+                        onPressed: () {
+                          this.widget.callback(-1);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        categoryName,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 28,
+                            color: Color(DARK_GREY),
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Wrap(
+                    children: List.generate(products.length, (index) {
+                      return InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: (index + 1) % 2 == 0
+                              ? EdgeInsets.only(left: 10, bottom: 15)
+                              : EdgeInsets.only(right: 10, bottom: 15),
+                          child: SizedBox(
+                              width: (size.width - 60) / 2,
+                              child: ProductEntryCard(
+                                  product: products[index],
+                                  onPressed: () {
+                                    ProductEntry product = products[index];
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              new ChangeNotifierProvider(
+                                                  create: (context) =>
+                                                      ReviewsModel(product.id),
+                                                  child: ProductEntryListing(
+                                                      ProductEntryListingPage(
+                                                          assetUrls:
+                                                              product.assetUrls,
+                                                          name: product.name,
+                                                          price: product.price,
+                                                          classification: product
+                                                              .classification,
+                                                          quantifier: product
+                                                              .quantifier,
+                                                          description:
+                                                              product.desc,
+                                                          id: product.id,
+                                                          userInfo:
+                                                              new UserInfo(
+                                                            profilePictureAssetUrl:
+                                                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                            fullName:
+                                                                'Petar Nikolić',
+                                                            reputationNegative:
+                                                                7,
+                                                            reputationPositive:
+                                                                240,
+                                                          ))))),
+                                    );
+                                  })),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
+}
+
+class Contacts extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text("Kontakti:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                )),
+            SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        height: 90.0,
+        child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            scrollDirection: Axis.horizontal,
+            itemCount: contacts.length,
+            itemBuilder: (BuildContext context, int index) {
+              Message chat = chats[index];
+              return GestureDetector(
+                onTap: () {
+                  if (chat.unread == true) {
+                    chat.unread = false;
+                  }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ChatScreen(
+                                user: contacts[index], //////////////ID
+                              )));
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: AssetImage(contacts[index].photoUrl),
+                      ),
+                      Text(
+                        contacts[index].name,
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+      )
+    ]);
+  }
+}
+
+class CategoryEntry extends StatelessWidget {
+  final String assetImagePath;
+  final String categoryName;
+
+  const CategoryEntry(this.assetImagePath, this.categoryName);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
+        ),
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
+      ],
+    );
+  }
+}
+
+class Chats extends StatefulWidget {
+  @override
+  _ChatsState createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: ClipRRect(
+          child: ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (BuildContext context, int index) {
+                Message chat = chats[index];
+                return GestureDetector(
+                  onTap: () {
+                    if (chat.unread == true) {
+                      chat.unread = false;
+                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ChatScreen(
+                                  user: chat.sender, /////////////////// ID
+                                )));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
+                    decoration: BoxDecoration(
+                      color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 25.0,
+                              backgroundImage: AssetImage(chat.sender.photoUrl),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  chat.sender.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  child: Text(
+                                    chat.text,
+                                    style: TextStyle(
+                                        color: chat.unread
+                                            ? Color(LIGHT_GREY)
+                                            : Color(DARK_GREY),
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                chat.time,
+                                style: TextStyle(
+                                    color: chat.unread
+                                        ? Color(LIGHT_GREY)
+                                        : Colors.black,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 5.0),
+                              chat.unread
+                                  ? Container(
+                                      width: 40.0,
+                                      height: 20.0,
+                                      decoration: BoxDecoration(
+                                          color: Color(LIGHT_GREY),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'NEW',
+                                        style: TextStyle(
+                                            color: Color(DARK_GREY),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+}
+
+Widget HomeDrawer(
+    BuildContext context,
+    User user,
+    void Function(
+            String name,
+            double price,
+            List<String> assetUrls,
+            int classification,
+            int quantifier,
+            String desc,
+            int sellerId,
+            int categoryId)
+        addProductCallback) {
+  return Container(
+    width: 255,
+    child: new Drawer(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+        color: Color(LIGHT_BLACK),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(user.photoUrl),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  user.forename + " " + user.surname,
+                  style: TextStyle(
+                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Moj nalog",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAccount(user: user)));
+                },
+                iconUrl: "assets/icons/User.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Dodaj proizvod",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NewProduct(addProductCallback)),
+                  );
+                },
+                iconUrl: "assets/icons/PlusCircle.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Poruke",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Inbox()),
+                  );
+                },
+                iconUrl: "assets/icons/Envelope.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Istorija narudžbi",
+                onPressed: () {},
+                iconUrl: "assets/icons/Newspaper.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Pomoć i podrška",
+                onPressed: () {},
+                iconUrl: "assets/icons/Handshake.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Podešavanja",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Settings()),
+                  );
+                },
+                iconUrl: "assets/icons/Gear.svg"),
+            SizedBox(height: 10),
+            DrawerOption(
+                text: "Odjavi se",
+                onPressed: () {
+                  Prefs.instance.removeAll();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => new Welcome()));
+                },
+                iconUrl: "assets/icons/SignOut.svg"),
+          ],
+        ),
+      ),
+    ),
+  );
 }

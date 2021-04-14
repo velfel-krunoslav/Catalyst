@@ -1,0 +1,33 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "newVal",
+				"type": "int256"
+			}
+		],
+		"name": "writeValue",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "getValue",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
