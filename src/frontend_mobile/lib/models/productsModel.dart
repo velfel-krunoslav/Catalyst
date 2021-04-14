@@ -205,6 +205,7 @@ class ProductsModel extends ChangeNotifier {
   }
 
   getProductById(int id) async {
+    print('CALLED');
     isLoading = true;
     var temp = await _client.call(
         contract: _contract,

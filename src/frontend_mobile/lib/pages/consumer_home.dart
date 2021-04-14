@@ -7,14 +7,12 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
-import 'new_product.dart';
 import '../models/productsModel.dart';
 
 class ConsumerHomePage extends StatefulWidget {
@@ -43,9 +41,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       reviewsCount: 67);
   List<ProductEntry> recently;
   List<ProductEntry> products = [];
-  var productsModel;
+  ProductsModel productsModel;
   var categoriesModel;
   var ordersModel;
+
+  Future<ProductEntry> getProductByIdCallback(int id) async {
+    return await productsModel.getProductById(id);
+  }
 
   void addProductCallback(
       String name,
@@ -72,6 +74,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     categoriesModel = Provider.of<CategoriesModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    //TODO  ProductEntry p = productsModel.getProductById(0);
+    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
@@ -93,14 +97,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             padding: EdgeInsets.all(0),
                             width: 36,
                             child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () =>
-                                  _scaffoldKey.currentState.openDrawer(),
-                            )),
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/DotsNine.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {
+                                  _scaffoldKey.currentState.openDrawer();
+                                })),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -109,18 +113,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               height: 36),
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        new MultiProvider(providers: [
-                                          ChangeNotifierProvider<ProductsModel>(
-                                              create: (_) => ProductsModel()),
-                                          ChangeNotifierProvider<
-                                                  CategoriesModel>(
-                                              create: (_) => CategoriesModel()),
-                                          ChangeNotifierProvider<OrdersModel>(
-                                              create: (_) => OrdersModel()),
-                                        ], child: ConsumerCart())));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ConsumerCart(getProductByIdCallback)),
+                            );
                           },
                         ),
                         Container(
@@ -208,7 +205,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     backgroundColor: Colors.grey,
                                   ),
                                 )
-                              : Categories())
+                              : Categories(categoriesModel.categories))
                           : ChangeNotifierProvider(
                               create: (context) => ProductsModel(category),
                               child: ProductsForCategory(
@@ -357,16 +354,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       ],
     );
   }
-}
 
-class Categories extends StatefulWidget {
-  @override
-  _CategoriesState createState() => _CategoriesState();
-}
-
-class _CategoriesState extends State<Categories> {
-  @override
-  Widget build(BuildContext context) {
+  Widget Categories(List<Category> categories) {
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -374,7 +363,7 @@ class _CategoriesState extends State<Categories> {
           return InkWell(
             onTap: () {
               setState(() {
-                //category = index;
+                category = index;
               });
             },
             child: CategoryEntry(

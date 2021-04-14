@@ -1020,7 +1020,7 @@ Widget HomeDrawer(
                 )
               ],
             ),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Moj nalog",
                 onPressed: () {
@@ -1030,7 +1030,7 @@ Widget HomeDrawer(
                           builder: (context) => MyAccount(user: user)));
                 },
                 iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Dodaj proizvod",
                 onPressed: () {
@@ -1041,7 +1041,7 @@ Widget HomeDrawer(
                   );
                 },
                 iconUrl: "assets/icons/PlusCircle.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Poruke",
                 onPressed: () {
@@ -1051,17 +1051,17 @@ Widget HomeDrawer(
                   );
                 },
                 iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Istorija narudžbi",
                 onPressed: () {},
                 iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Pomoć i podrška",
                 onPressed: () {},
                 iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Podešavanja",
                 onPressed: () {
@@ -1071,7 +1071,7 @@ Widget HomeDrawer(
                   );
                 },
                 iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {

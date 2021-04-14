@@ -30,17 +30,13 @@ class _RatingPage extends State<RatingPage> {
         ),
         flexibleSpace: SafeArea(
           child: Center(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                      "assets/avatars/vendor_adrew_ballantyne_cc_by.jpg"),
-                ),
-                Text(
-                  "Petar Nikolic",
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                )
-              ],
+            child: Text(
+              'Nova recenzija',
+              style: TextStyle(
+                  color: Color(DARK_GREY),
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w800),
             ),
           ),
         ),
@@ -49,6 +45,21 @@ class _RatingPage extends State<RatingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(
+                      "assets/avatars/vendor_adrew_ballantyne_cc_by.jpg"),
+                ),
+                Text(
+                  "Petar Nikolic",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
             Rating((rating) {
               setState(() {
                 _rating = rating;
