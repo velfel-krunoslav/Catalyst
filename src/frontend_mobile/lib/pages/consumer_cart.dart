@@ -29,8 +29,8 @@ class ConsumerCart extends StatefulWidget {
 class _ConsumerCartState extends State<ConsumerCart> {
   bool isEmpty = true;
   double shipping = 5.0;
-  double subtotal;
-  double total;
+  double subtotal = 0;
+  double total = 0;
   ProductsModel productsModel;
 
   List<CartProduct> products = [];
@@ -74,20 +74,22 @@ class _ConsumerCartState extends State<ConsumerCart> {
                     cartQuantity: int.parse(ids[i][1]));
                 setState(() {
                   products.add(p);
-                });
-                quantities.add(int.parse(ids[i][1]));
-                subtotal = 0;
-                total = 0;
-                for (var e in products) {
-                  subtotal += e.price * e.cartQuantity;
-                }
-                total = subtotal + shipping;
+                });                                                
+
+                  quantities.add(int.parse(ids[i][1]));
+                  
+                  for (var e in products) {
+                    subtotal += e.price * e.cartQuantity;
+                  }
+                  total = subtotal + shipping;
+
               });
             }
           });
         });
       }
     });
+
   }
 
   @override
@@ -129,127 +131,140 @@ class _ConsumerCartState extends State<ConsumerCart> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            child: Column(
-                                children:
-                                    List.generate(products.length, (index) {
-                              return Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                  child: Row(children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: Image.asset(
-                                            products[index].photoUrl[0],
-                                            height: 90,
-                                            width: 90,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        )),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 8,
-                                      child: Column(children: [
-                                        Row(children: [
-                                          Text(products[index].name,
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color(BLACK)))
-                                        ]),
-                                        Row(children: [
-                                          Text(
-                                              '${products[index].price.toStringAsFixed(2)}$CURRENCY', // should not be hardcoded; solve in dot net
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter',
-                                                  fontSize: 16,
-                                                  color: Color(DARK_GREY)))
-                                        ]),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        Row(children: [
+                            height: 210,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                  top:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                                  bottom: BorderSide(
+                                      color: Colors.black, width: 1.0)),
+                              //borderRadius: BorderRadius.all(
+                              //    Radius.circular(5.0) //                 <--- border radius here
+                              //),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                  children:
+                                      List.generate(products.length, (index) {
+                                return Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                    child: Row(children: [
+                                      Expanded(
+                                          flex: 3,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: Image.asset(
+                                              products[index].photoUrl[0],
+                                              height: 90,
+                                              width: 90,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          )),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 8,
+                                        child: Column(children: [
+                                          Row(children: [
+                                            Text(products[index].name,
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Color(BLACK)))
+                                          ]),
+                                          Row(children: [
+                                            Text(
+                                                '${products[index].price.toStringAsFixed(2)}$CURRENCY', // should not be hardcoded; solve in dot net
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 16,
+                                                    color: Color(DARK_GREY)))
+                                          ]),
                                           SizedBox(
-                                            width: 36,
-                                            height: 36,
-                                            child: TextButton(
-                                                style: TextButton.styleFrom(
-                                                    backgroundColor:
-                                                        Color(LIGHT_GREY)),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (quantities[index] > 1) {
-                                                      quantities[index] -= 1;
-
-                                                      subtotal -=
-                                                          products[index].price;
-
-                                                      total =
-                                                          subtotal + shipping;
-                                                    }
-                                                  });
-                                                },
-                                                child: Text('-',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Inter',
-                                                        color: Color(BLACK)))),
+                                            height: 12,
                                           ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text('${quantities[index]}',
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter')),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          SizedBox(
-                                            width: 36,
-                                            height: 36,
-                                            child: TextButton(
-                                                style: TextButton.styleFrom(
-                                                    backgroundColor:
-                                                        Color(LIGHT_GREY)),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    quantities[index] += 1;
-                                                    subtotal +=
-                                                        products[index].price;
-                                                    total = subtotal + shipping;
-                                                  });
-                                                },
-                                                child: Text('+',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Inter',
-                                                        color: Color(BLACK)))),
-                                          ),
-                                          Spacer(),
-                                          SizedBox(
-                                              width: 42,
-                                              height: 42,
+                                          Row(children: [
+                                            SizedBox(
+                                              width: 36,
+                                              height: 36,
                                               child: TextButton(
                                                   style: TextButton.styleFrom(
                                                       backgroundColor:
-                                                          Colors.white,
-                                                      elevation: 3),
-                                                  child: SvgPicture.asset(
-                                                      'assets/icons/Trash.svg',
-                                                      height: INSET_ICON_SIZE),
+                                                          Color(LIGHT_GREY)),
                                                   onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Blank()),
-                                                    );
-                                                  })),
-                                        ])
-                                      ]),
-                                    )
-                                  ]));
-                            }).toList()),
+                                                    setState(() {
+                                                      if (quantities[index] > 1) {
+                                                        quantities[index] -= 1;
+
+                                                        subtotal -=
+                                                            products[index].price;
+
+                                                        total =
+                                                            subtotal + shipping;
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Text('-',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          color: Color(BLACK)))),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text('${quantities[index]}',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter')),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            SizedBox(
+                                              width: 36,
+                                              height: 36,
+                                              child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color(LIGHT_GREY)),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      quantities[index] += 1;
+                                                      subtotal +=
+                                                          products[index].price;
+                                                      total = subtotal + shipping;
+                                                    });
+                                                  },
+                                                  child: Text('+',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          color: Color(BLACK)))),
+                                            ),
+                                            Spacer(),
+                                            SizedBox(
+                                                width: 42,
+                                                height: 42,
+                                                child: TextButton(
+                                                    style: TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        elevation: 3),
+                                                    child: SvgPicture.asset(
+                                                        'assets/icons/Trash.svg',
+                                                        height: INSET_ICON_SIZE),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Blank()),
+                                                      );
+                                                    })),
+                                          ])
+                                        ]),
+                                      )
+                                    ]));
+                              }).toList()),
+                            ),
                           ),
                           SizedBox(height: 20),
                           Align(
