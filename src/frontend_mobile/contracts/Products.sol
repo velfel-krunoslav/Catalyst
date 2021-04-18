@@ -76,7 +76,7 @@ contract Products{
         }
         return productsForCategoryCount;
     }
-    //TODO get products for sellerId
+
     function getProductById(uint id) public returns (Product memory){
         Product memory product;
         for (uint i= 0; i < productsCount; i++) {
@@ -86,5 +86,35 @@ contract Products{
             }
         }
         return product;
+    }
+
+
+    function getSellerProductsCount(uint sellerId) public returns (uint count){
+        uint sellerProductsCount = 0;
+        for (uint i= 0; i < productsCount; i++) {
+            if (products[i].sellerId == sellerId){
+                sellerProductsCount++;
+            }
+        }
+        return sellerProductsCount;
+    }
+    function getSellerProducts(uint sellerId, uint totalProducts) public returns (Product[] memory){
+        uint count = 0;
+        Product[] memory y = new Product[](totalProducts);
+        for (uint i= 0; i < productsCount; i++) {
+            if (products[i].sellerId == sellerId){
+                y[count++] = Product(products[i].id,
+                    products[i].name,
+                    products[i].price_numerator,
+                    products[i].price_denominator,
+                    products[i].assetUrls,
+                    products[i].classification,
+                    products[i].quantifier,
+                    products[i].decs,
+                    products[i].sellerId,
+                    products[i].categoryId);
+            }
+        }
+        return y;
     }
 }

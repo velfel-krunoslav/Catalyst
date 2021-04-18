@@ -349,7 +349,7 @@ class _NewProductState extends State<NewProduct> {
                                     selected,
                                     int.parse(amountController.text),
                                     descriptionController.text,
-                                    0,
+                                    1,
                                     selectedCategory.id);
                                 Navigator.pop(context);
                               } else {

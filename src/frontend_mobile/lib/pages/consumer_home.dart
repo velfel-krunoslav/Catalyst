@@ -61,7 +61,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel.addProduct(name, price, assetUrls, classification, quantifier,
         desc, sellerId, categoryId);
   }
-
+  Future<List<ProductEntry>> sellersProductsCallback() async{
+    return await productsModel.getSellersProducts(1);    //one sellerId
+  }
   void callback(int cat) {
     setState(() {
       this.category = cat;
@@ -82,7 +84,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback), //TODO context
+          drawer: HomeDrawer(context, user, addProductCallback,sellersProductsCallback), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,

@@ -7,6 +7,7 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/main.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:frontend_mobile/pages/my_products.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/settings.dart';
@@ -996,7 +997,7 @@ Widget HomeDrawer(
             String desc,
             int sellerId,
             int categoryId)
-        addProductCallback) {
+        addProductCallback, Future<List<ProductEntry>> Function() sellersProductsCallback) {
   return Container(
     width: 255,
     child: new Drawer(
@@ -1034,15 +1035,15 @@ Widget HomeDrawer(
                 iconUrl: "assets/icons/User.svg"),
             SizedBox(height: 10),
             DrawerOption(
-                text: "Dodaj proizvod",
+                text: "Moji proizvodi",
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => NewProduct(addProductCallback)),
+                        builder: (context) => MyProducts(addProductCallback, sellersProductsCallback)),
                   );
                 },
-                iconUrl: "assets/icons/PlusCircle.svg"),
+                iconUrl: "assets/icons/Package.svg"),
             SizedBox(height: 10),
             DrawerOption(
                 text: "Poruke",

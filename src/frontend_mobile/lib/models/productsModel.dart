@@ -27,6 +27,7 @@ class ProductsModel extends ChangeNotifier {
   EthereumAddress _contractAddress;
   EthereumAddress _ownAddress;
   DeployedContract _contract;
+
   ContractFunction _productsCount;
   ContractFunction _products;
   ContractFunction _createProduct;
@@ -34,6 +35,8 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _getProductsForCategoryCount;
   ContractFunction _getProductsForCategory;
   ContractFunction _getProductById;
+  ContractFunction _getSellerProductsCount;
+  ContractFunction _getSellerProducts;
 
   ProductsModel([int c = -1]) {
     this.category = c;
@@ -75,6 +78,8 @@ class ProductsModel extends ChangeNotifier {
         _contract.function("getProductsForCategoryCount");
     _getProductsForCategory = _contract.function("getProductsForCategory");
     _getProductById = _contract.function("getProductById");
+    _getSellerProductsCount = _contract.function("getSellerProductsCount");
+    _getSellerProducts = _contract.function("getSellerProducts");
 
     getProducts();
     getProductsForCategory(category);
@@ -222,5 +227,38 @@ class ProductsModel extends ChangeNotifier {
         sellerId: temp[8].toInt());
     isLoading = false;
     return product;
+  }
+
+  getSellersProducts(int sellerId) async {
+
+    List<ProductEntry> sellersProducts = [];
+      List totalProductsList = await _client.call(
+          contract: _contract,
+          function: _getSellerProductsCount,
+          params: [BigInt.from(sellerId)]);
+      BigInt totalProducts = totalProductsList[0];
+      productsCount = totalProducts.toInt();
+      var temp = await _client.call(
+          contract: _contract,
+          function: _getSellerProducts,
+          params: [BigInt.from(sellerId), totalProducts]);
+      for (int i = productsCount - 1; i >= 0; i--) {
+        var t = temp[0][i];
+        //print(t);
+        sellersProducts.add(ProductEntry(
+            id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[4].split(",").toList(),
+            classification: getClassification(t[5].toInt()),
+            quantifier: t[6].toInt(),
+            desc: t[7],
+            sellerId: t[8].toInt()));
+      }
+      // isLoading = false;
+      // notifyListeners();
+      return sellersProducts;
+
+
   }
 }

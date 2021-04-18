@@ -16,7 +16,7 @@ class MyAccount extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "My account",
+          "Moj nalog",
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -55,23 +55,7 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Wrap(
-          //       children: List.generate(user.rating.round(), (index) {
-          //       return SvgPicture.asset("assets/icons/StarFilled.svg", color: Colors.yellow[700]);
-          //     }),
-          //     ),
-          //     Wrap(
-          //       children: List.generate(5 - user.rating.round(), (index) {
-          //         return SvgPicture.asset("assets/icons/StarOutline.svg", color: Colors.yellow[700]);
-          //       }),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Text("("+user.reviewsCount.toString()+")")
-          //   ],
-          // ),
+
           SizedBox(
             height: 10,
           ),
@@ -94,13 +78,7 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 65, right: 65),
-            child: ButtonOutline(
-              onPressed: () {},
-              text: "Moje ponude",
-            ),
-          ),
+
           SizedBox(
             height: 30,
           ),
