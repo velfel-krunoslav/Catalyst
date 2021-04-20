@@ -14,6 +14,16 @@ class HelpSupport extends StatefulWidget {
   _HelpSupportState createState() => _HelpSupportState();
 }
 
+String chosenValue;
+
+List<String> problems = [
+  'Prijavom',
+  'Zaboravio/la sam svoj privatni kljuc',
+  'Isporukom proizvoda',
+  'Sa slanjem proizvoda',
+  'Sa isplatom sredstava'
+];
+
 class _HelpSupportState extends State<HelpSupport> {
   @override
   Widget build(BuildContext context) {
@@ -38,6 +48,93 @@ class _HelpSupportState extends State<HelpSupport> {
               Navigator.pop(context);
             },
           )),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width - 40,
+            child: Column(
+              children: [
+                Row(children: [
+                  Text('Imam problem sa:',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Color(DARK_GREY)))
+                ]),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 8,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          height: 44,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: DropdownButton(
+                              underline: Container(color: Colors.transparent),
+                              icon: SvgPicture.asset(
+                                  'assets/icons/ArrowDown.svg',
+                                  color: Color(DARK_GREY)),
+                              isExpanded: true,
+                              value: chosenValue,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  chosenValue = newValue;
+                                });
+                              },
+                              items: problems.map((valueItem) {
+                                return DropdownMenuItem(
+                                    child: Text(valueItem,
+                                        style: TextStyle(
+                                            color: Color(DARK_GREY),
+                                            fontSize: 14,
+                                            fontFamily: 'Inter')),
+                                    value: valueItem);
+                              }).toList()),
+                        )),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(children: [
+                  Text('Opis problema:',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Color(DARK_GREY)))
+                ]),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "Problem...",
+                      labelStyle: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Inter',
+                          color: Color(BLACK)),
+                      border: InputBorder.none,
+                      //border: OutlineInputBorder(),
+                      fillColor: Color(LIGHT_GREY),
+                      filled: true),
+                  // obscureText: false,
+                  maxLength: 250,
+                  maxLines: 9,
+                ),
+                SizedBox(height: 25),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 40,
+                  height: 60,
+                  child: ButtonFill(
+                      text: 'Posaljite upit',
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Blank()));
+                      }),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
