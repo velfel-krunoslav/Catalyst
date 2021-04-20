@@ -106,10 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
               {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Inbox()),
-                );
+                Navigator.pop(context);
               }
             }),
         title: Container(
