@@ -29,7 +29,7 @@ class _HelpSupportState extends State<HelpSupport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Pomoc i podrska',
+          title: Text('Pomoć i podrška',
               style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 24,
@@ -124,7 +124,7 @@ class _HelpSupportState extends State<HelpSupport> {
                   width: MediaQuery.of(context).size.width - 40,
                   height: 60,
                   child: ButtonFill(
-                      text: 'Posaljite upit',
+                      text: 'Pošaljite upit',
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Blank()));
