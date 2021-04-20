@@ -18,7 +18,7 @@ String chosenValue;
 
 List<String> problems = [
   'Prijavom',
-  'Zaboravio/la sam svoj privatni kljuc',
+  'Zaboravio/la sam svoj privatni ključ',
   'Isporukom proizvoda',
   'Sa slanjem proizvoda',
   'Sa isplatom sredstava'
