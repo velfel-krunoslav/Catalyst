@@ -126,8 +126,29 @@ class _HelpSupportState extends State<HelpSupport> {
                   child: ButtonFill(
                       text: 'Pošaljite upit',
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Blank()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                        backgroundColor: Colors.white,
+                                        elevation: 0.0,
+                                        leading: IconButton(
+                                          icon: SvgPicture.asset(
+                                            'assets/icons/ArrowLeft.svg',
+                                            height: ICON_SIZE,
+                                            width: ICON_SIZE,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        )),
+                                    body: Center(
+                                        child: Text('Uspešno ste poslali upit!',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: 'Inter',
+                                                color: Color(BLACK)))))));
                       }),
                 )
               ],
