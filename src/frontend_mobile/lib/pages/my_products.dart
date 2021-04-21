@@ -53,21 +53,20 @@ class _MyProductsState extends State<MyProducts> {
         },
         ),
     ),
-    body: ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: ButtonOutline(
-            text: "Dodaj proizvod",
-            iconPath: "assets/icons/PlusCircle.svg",
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => NewProduct(addProductCallback)),
             );
-          }
-          ),
+          },
+          icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
+          label: Text("Dodaj proizvod",),
+          backgroundColor: Colors.green,
         ),
+    body: ListView(
+      children: [
+        SizedBox(height: 20,),
         SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
