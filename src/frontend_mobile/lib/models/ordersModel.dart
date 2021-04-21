@@ -91,39 +91,32 @@ class OrdersModel extends ChangeNotifier {
     for (int i = ordersCount - 1; i >= 0; i--) {
       var t = temp[0][i];
 
-      double price = t[2].toInt() / t[3].toInt();
-      List<String> dateParts = t[4].split("-");
+      List<String> dateParts = t[3].split("-");
       DateTime date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
           int.parse(dateParts[2].substring(0, 2)));
-      print(t);
+      //print(t);
       Order o = Order(
           id: t[0].toInt(),
           productId: t[1].toInt(),
-          buyerId: t[3].toInt(),
-          status: t[2].toInt(),
-          date: date,
-          price: price);
+          amount: t[2].toInt(),
+          buyerId: t[5].toInt(),
+          sellerId: t[6].toInt(),
+          status: t[4].toInt(),
+          date: date,);
       orders.add(o);
     }
     notifyListeners();
   }
 
-  addOrder(int _productId, double _price,
+  addOrder(int _productId, int _amount,
       DateTime _date, int _buyerId, int _sellerId) async {
     isLoading = true;
     notifyListeners();
-
-    _price = double.parse(_price.toStringAsFixed(2));
-    Fraction frac1 = _price.toFraction();
-    int numinator = frac1.numerator;
-    int denuminator = frac1.denominator;
 
     String dateStr = _date.toString();
     if (_productId != null &&
         _buyerId != null &&
         _sellerId != null &&
-        numinator != null &&
-        denuminator != null &&
         dateStr != null) {
       await _client.sendTransaction(
           _credentials,
@@ -133,8 +126,7 @@ class OrdersModel extends ChangeNotifier {
               function: _createOrder,
               parameters: [
                 BigInt.from(_productId),
-                BigInt.from(numinator),
-                BigInt.from(denuminator),
+                BigInt.from(_amount),
                 dateStr,
                 BigInt.from(_buyerId),
                 BigInt.from(_sellerId)
@@ -161,6 +153,8 @@ class OrdersModel extends ChangeNotifier {
         dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
       }
     }
+    isLoading = false;
+    notifyListeners();
   }
 }
 class DateOrder {

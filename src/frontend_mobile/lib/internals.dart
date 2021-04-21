@@ -275,7 +275,7 @@ class ChatMessage {
 class Order {
   int id;
   int productId;
-  double price;
+  int amount;
   DateTime date;
   int status; //  confirmed, delivered, refunded, rejected
   int buyerId;
@@ -283,9 +283,9 @@ class Order {
   Order(
       {this.id,
       this.productId,
+        this.amount,
       this.status,
       this.buyerId,
-      this.price,
       this.date,
       this.sellerId});
 }

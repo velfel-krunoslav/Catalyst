@@ -43,7 +43,11 @@ class _OrdersHistoryState extends State<OrdersHistory> {
           },
         ),
       ),
-      body: Padding(
+      body: ordersModel.isLoading == true ?
+      LinearProgressIndicator(
+        backgroundColor: Colors.grey,
+      ) :
+      Padding(
         padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
         child: ListView(
           children: [
