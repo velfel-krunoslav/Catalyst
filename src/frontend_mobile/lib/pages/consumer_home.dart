@@ -43,7 +43,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List<ProductEntry> products = [];
   ProductsModel productsModel;
   var categoriesModel;
-  var ordersModel;
+
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
     return await productsModel.getProductById(id);
@@ -75,7 +75,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     print(cartItemsCount);
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
-    ordersModel = Provider.of<OrdersModel>(context);
+
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     //TODO  ProductEntry p = productsModel.getProductById(0);
     //     print(p.name);
@@ -84,7 +84,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback,sellersProductsCallback), //TODO context
+          drawer: HomeDrawer(context, user, addProductCallback,sellersProductsCallback, getProductByIdCallback), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,

@@ -116,8 +116,8 @@ class Login extends StatelessWidget {
                                   create: (_) => ProductsModel()),
                               ChangeNotifierProvider<CategoriesModel>(
                                   create: (_) => CategoriesModel()),
-                              ChangeNotifierProvider<OrdersModel>(
-                                  create: (_) => OrdersModel()),
+                              // ChangeNotifierProvider<OrdersModel>(
+                              //     create: (_) => OrdersModel()),
                             ], child: ConsumerHomePage())),
                   );
                 },

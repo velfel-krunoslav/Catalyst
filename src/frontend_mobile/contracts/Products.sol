@@ -14,6 +14,7 @@ contract Products{
         string decs;
         uint sellerId;
         uint categoryId;
+
     }
 
     mapping (uint => Product) public products;

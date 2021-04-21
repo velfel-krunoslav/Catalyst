@@ -23,30 +23,16 @@ class _MyProductsState extends State<MyProducts> {
   Function sellersProductsCallback;
   _MyProductsState(this.addProductCallback, this.sellersProductsCallback);
   List<ProductEntry> products = [];
-  ProductEntry p = null;
+  
   @override
   void initState() {
     sellersProductsCallback().then((t){
       for(int i = 0; i < t.length; i++){
-        // setState(() {
-        //   p = ProductEntry(
-        //       id: t.id,
-        //       name: t.name,
-        //       quantifier: t.quantifier,
-        //       classification: t.classification,
-        //       categoryId: t.categoryId,
-        //       assetUrls: t.assetUrls,
-        //       price: t.price,
-        //       sellerId: t.sellerId,
-        //       desc: t.desc
-        //   );
-        // });
         setState(() {
           products.add(t[i]);
         });
       }
     });
-
   }
 
   @override

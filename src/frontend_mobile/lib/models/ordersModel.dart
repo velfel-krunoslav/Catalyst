@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,7 @@ import '../internals.dart';
 class OrdersModel extends ChangeNotifier {
   int buyerId = 0;
   List<Order> orders = [];
+  List<DateOrder> dateOrders = [];
 
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
@@ -71,6 +73,7 @@ class OrdersModel extends ChangeNotifier {
     _getOrders = _contract.function("getOrders");
     _getOrdersCount = _contract.function("getOrdersCount");
     await getOrders(buyerId);
+    setDateOrders();
   }
 
   getOrders(int buyerId) async {
@@ -87,30 +90,26 @@ class OrdersModel extends ChangeNotifier {
 
     for (int i = ordersCount - 1; i >= 0; i--) {
       var t = temp[0][i];
-      var idsTemp = t[1].split(",").toList();
-      List<int> ids = [];
-      for (int i = 0; i < idsTemp.length; i++) {
-        ids.add(int.parse(idsTemp[i]));
-      }
+
       double price = t[2].toInt() / t[3].toInt();
       List<String> dateParts = t[4].split("-");
       DateTime date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
           int.parse(dateParts[2].substring(0, 2)));
-      //print(t);
-      orders.add(Order(
+      print(t);
+      Order o = Order(
           id: t[0].toInt(),
-          productIds: ids,
+          productId: t[1].toInt(),
           buyerId: t[3].toInt(),
           status: t[2].toInt(),
           date: date,
-          price: price));
+          price: price);
+      orders.add(o);
     }
-
     notifyListeners();
   }
 
-  addOrder(List<int> _productIds, int _buyerId, double _price,
-      DateTime _date) async {
+  addOrder(int _productId, double _price,
+      DateTime _date, int _buyerId, int _sellerId) async {
     isLoading = true;
     notifyListeners();
 
@@ -118,14 +117,11 @@ class OrdersModel extends ChangeNotifier {
     Fraction frac1 = _price.toFraction();
     int numinator = frac1.numerator;
     int denuminator = frac1.denominator;
-    String ids = "";
-    for (int i = 0; i < _productIds.length; i++) {
-      ids += _productIds[i].toString();
-      if (i != ids.length - 1) ids += ",";
-    }
+
     String dateStr = _date.toString();
-    if (ids != null &&
+    if (_productId != null &&
         _buyerId != null &&
+        _sellerId != null &&
         numinator != null &&
         denuminator != null &&
         dateStr != null) {
@@ -136,11 +132,12 @@ class OrdersModel extends ChangeNotifier {
               contract: _contract,
               function: _createOrder,
               parameters: [
-                ids,
-                BigInt.from(_buyerId),
+                BigInt.from(_productId),
                 BigInt.from(numinator),
                 BigInt.from(denuminator),
-                dateStr
+                dateStr,
+                BigInt.from(_buyerId),
+                BigInt.from(_sellerId)
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
       print("order dodat");
@@ -149,4 +146,26 @@ class OrdersModel extends ChangeNotifier {
       isLoading = false;
     }
   }
+
+  setDateOrders() {
+    for(int i = 0; i < orders.length; i++){
+      DateTime d = orders[i].date;
+      int flag = 0;
+      for(int j = 0; j < dateOrders.length; j++){
+        if (dateOrders[j].date.toString() == d.toString()){
+          dateOrders[j].orders.add(orders[i]);
+          flag = 1;
+        }
+      }
+      if (flag == 0){
+        dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
+      }
+    }
+  }
+}
+class DateOrder {
+  DateTime date;
+  List<Order> orders;
+  DateOrder(
+      {this.date, this.orders});
 }

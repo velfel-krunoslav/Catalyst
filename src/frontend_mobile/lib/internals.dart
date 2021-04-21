@@ -274,18 +274,20 @@ class ChatMessage {
 
 class Order {
   int id;
-  List<int> productIds;
+  int productId;
   double price;
   DateTime date;
   int status; //  confirmed, delivered, refunded, rejected
   int buyerId;
+  int sellerId;
   Order(
       {this.id,
-      this.productIds,
+      this.productId,
       this.status,
       this.buyerId,
       this.price,
-      this.date});
+      this.date,
+      this.sellerId});
 }
 
 ChatUser currentUser = ChatUser(

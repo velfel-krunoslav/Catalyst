@@ -6,9 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/main.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/my_products.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
+import 'package:frontend_mobile/pages/orders_history.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/settings.dart';
 import 'package:frontend_mobile/pages/welcome.dart';
@@ -499,7 +501,7 @@ class SettingsOption extends StatelessWidget {
       child: Container(
         height: 45,
         decoration: BoxDecoration(
-            border: Border.all(color: Color(DARK_GREY)),
+            //border: Border.all(color: Color(DARK_GREY)),
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Colors.white),
         child: Row(
@@ -997,7 +999,7 @@ Widget HomeDrawer(
             String desc,
             int sellerId,
             int categoryId)
-        addProductCallback, Future<List<ProductEntry>> Function() sellersProductsCallback) {
+        addProductCallback, Future<List<ProductEntry>> Function() sellersProductsCallback, Future<ProductEntry> Function(int id) getProductByIdCallback) {
   return Container(
     width: 255,
     child: new Drawer(
@@ -1057,7 +1059,16 @@ Widget HomeDrawer(
             SizedBox(height: 10),
             DrawerOption(
                 text: "Istorija narudžbi",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>
+                      new ChangeNotifierProvider(
+                          create: (context) => OrdersModel(0),
+                          child: OrdersHistory(getProductByIdCallback))
+                    ),
+                  );
+                },
                 iconUrl: "assets/icons/Newspaper.svg"),
             SizedBox(height: 10),
             DrawerOption(
