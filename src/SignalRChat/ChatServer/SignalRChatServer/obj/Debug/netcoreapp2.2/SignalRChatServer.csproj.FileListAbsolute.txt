@@ -1,0 +1,15 @@
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\bin\Debug\netcoreapp2.2\SignalRChatServer.deps.json
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\bin\Debug\netcoreapp2.2\SignalRChatServer.runtimeconfig.json
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\bin\Debug\netcoreapp2.2\SignalRChatServer.runtimeconfig.dev.json
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\bin\Debug\netcoreapp2.2\SignalRChatServer.dll
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\bin\Debug\netcoreapp2.2\SignalRChatServer.pdb
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.csprojAssemblyReference.cache
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.AssemblyInfoInputs.cache
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.AssemblyInfo.cs
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.csproj.CoreCompileInputs.cache
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.RazorAssemblyInfo.cache
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.RazorAssemblyInfo.cs
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.RazorTargetAssemblyInfo.cache
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.dll
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.pdb
+C:\Users\97ste\Desktop\signalr_client-master\example\ChatServer\SignalRChatServer\obj\Debug\netcoreapp2.2\SignalRChatServer.genruntimeconfig.cache
