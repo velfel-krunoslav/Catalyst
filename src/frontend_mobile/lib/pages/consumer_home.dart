@@ -39,11 +39,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           "aliqua.",
       rating: 4.5,
       reviewsCount: 67);
-  List<ProductEntry> recently;
+  List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
   ProductsModel productsModel;
   var categoriesModel;
-
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
     return await productsModel.getProductById(id);
@@ -61,9 +60,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel.addProduct(name, price, assetUrls, classification, quantifier,
         desc, sellerId, categoryId);
   }
-  Future<List<ProductEntry>> sellersProductsCallback() async{
-    return await productsModel.getSellersProducts(1);    //one sellerId
+
+  Future<List<ProductEntry>> sellersProductsCallback() async {
+    return await productsModel.getSellersProducts(1); //one sellerId
   }
+
   void callback(int cat) {
     setState(() {
       this.category = cat;
@@ -84,7 +85,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback,sellersProductsCallback, getProductByIdCallback), //TODO context
+          drawer: HomeDrawer(context, user, addProductCallback,
+              sellersProductsCallback, getProductByIdCallback), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -269,6 +271,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           onPressed: () {
                             ProductEntry product =
                                 productsModel.products[index];
+                            setState(() {
+                              recently.add(product);
+                            });
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -301,18 +306,69 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             }),
           ),
         ),
-        recently != null
+        (recently != null || recently.length == 0)
             ? Padding(
                 padding: const EdgeInsets.only(left: 20, top: 30, bottom: 20),
-                child: Text(
-                  'Nedavno ste pogledali',
-                  style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 28,
-                      color: Color(DARK_GREY),
-                      fontWeight: FontWeight.w700),
-                ),
-              )
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Nedavno ste pogledali',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 28,
+                              color: Color(DARK_GREY),
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                    Row(
+                        children: List.generate(
+                            (recently.length < 3) ? recently.length : 3,
+                            (index) {
+                      if (index >= 2) {
+                        return Expanded(
+                          child: SizedBox(
+                            height: 90,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Color(LIGHT_GREY)),
+                              child: Text(
+                                '+' + (recently.length - 2).toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 24,
+                                    color: Color(DARK_GREY)),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () {},
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.asset(
+                                    recently[index].assetUrls[0],
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.fill,
+                                  ),
+                                )),
+                            SizedBox(
+                              width: 10,
+                            )
+                          ],
+                        );
+                      }
+                    }).toList())
+                  ],
+                ))
             : Container()
       ],
     );
