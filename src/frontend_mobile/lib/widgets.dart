@@ -5,12 +5,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/main.dart';
+import 'package:frontend_mobile/pages/my_account.dart';
+import 'package:frontend_mobile/pages/my_products.dart';
+import 'package:frontend_mobile/pages/new_product.dart';
+import 'package:frontend_mobile/pages/product_entry_listing.dart';
+import 'package:frontend_mobile/pages/settings.dart';
+import 'package:frontend_mobile/pages/welcome.dart';
+import 'package:provider/provider.dart';
+import 'models/productsModel.dart';
+import 'models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/chat_screen.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
-import 'package:frontend_mobile/pages/my_account.dart';
-import 'package:frontend_mobile/pages/new_product.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
-import 'package:frontend_mobile/pages/settings.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -186,7 +192,7 @@ class _DatePickerState extends State<DatePickerPopup> {
         readOnly: true,
         decoration: InputDecoration(
           hintText: (_date == null)
-              ? ''
+              ? 'Datum rođenja'
               : _date.day.toString() +
                   '.' +
                   _date.month.toString() +
@@ -469,6 +475,9 @@ class DrawerOption extends StatelessWidget {
             this.text,
             style: TextStyle(
                 fontFamily: 'Inter', color: Colors.white, fontSize: 16),
+          ),
+          SizedBox(
+            height: 65,
           )
         ],
       ),
@@ -623,67 +632,229 @@ class ReviewWidget extends StatelessWidget {
   }
 }
 
+class ProductsForCategory extends StatefulWidget {
+  ProductsForCategory({this.category, this.categoryName, this.callback});
+  int category;
+  Function callback;
+  String categoryName;
+  @override
+  _ProductsForCategoryState createState() => _ProductsForCategoryState(
+      category: category, categoryName: categoryName, callback: callback);
+}
+
+class _ProductsForCategoryState extends State<ProductsForCategory> {
+  _ProductsForCategoryState({this.category, this.categoryName, this.callback});
+  List<ProductEntry> products;
+  int category;
+  Function callback;
+  String categoryName;
+  var productsModel;
+  var size;
+
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
+    products = productsModel.productsForCategory;
+
+    return productsModel.isLoading
+        ? Center(
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.grey,
+            ),
+          )
+        : Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          'assets/icons/ArrowLeft.svg',
+                          height: ICON_SIZE,
+                          width: ICON_SIZE,
+                        ),
+                        onPressed: () {
+                          this.widget.callback(-1);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        categoryName,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 28,
+                            color: Color(DARK_GREY),
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Wrap(
+                    children: List.generate(products.length, (index) {
+                      return InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: (index + 1) % 2 == 0
+                              ? EdgeInsets.only(left: 10, bottom: 15)
+                              : EdgeInsets.only(right: 10, bottom: 15),
+                          child: SizedBox(
+                              width: (size.width - 60) / 2,
+                              child: ProductEntryCard(
+                                  product: products[index],
+                                  onPressed: () {
+                                    ProductEntry product = products[index];
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              new ChangeNotifierProvider(
+                                                  create: (context) =>
+                                                      ReviewsModel(product.id),
+                                                  child: ProductEntryListing(
+                                                      ProductEntryListingPage(
+                                                          assetUrls:
+                                                              product.assetUrls,
+                                                          name: product.name,
+                                                          price: product.price,
+                                                          classification: product
+                                                              .classification,
+                                                          quantifier: product
+                                                              .quantifier,
+                                                          description:
+                                                              product.desc,
+                                                          id: product.id,
+                                                          userInfo:
+                                                              new UserInfo(
+                                                            profilePictureAssetUrl:
+                                                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                            fullName:
+                                                                'Petar Nikolić',
+                                                            reputationNegative:
+                                                                7,
+                                                            reputationPositive:
+                                                                240,
+                                                          ))))),
+                                    );
+                                  })),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
+}
+
 class Contacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Column(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text("Kontakti:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                )),
+            SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        height: 90.0,
+        child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            scrollDirection: Axis.horizontal,
+            itemCount: contacts.length,
+            itemBuilder: (BuildContext context, int index) {
+              Message chat = chats[index];
+              return GestureDetector(
+                onTap: () {
+                  if (chat.unread == true) {
+                    chat.unread = false;
+                  }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ChatScreen(
+                                user: contacts[index], //////////////ID
+                              )));
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: AssetImage(contacts[index].photoUrl),
+                      ),
+                      Text(
+                        contacts[index].name,
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+      )
+    ]);
+  }
+}
+
+class CategoryEntry extends StatelessWidget {
+  final String assetImagePath;
+  final String categoryName;
+
+  const CategoryEntry(this.assetImagePath, this.categoryName);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Stack(
+      alignment: Alignment.center,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text("Kontakti:",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  )),
-              SizedBox(
-                height: 30,
-              ),
-            ],
+        Container(
+          margin: EdgeInsets.all(10),
+          width: double.infinity,
+          height: 125.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
         ),
-        Container(
-          height: 90.0,
-          child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              scrollDirection: Axis.horizontal,
-              itemCount: contacts.length,
-              itemBuilder: (BuildContext context, int index) {
-                Message chat = chats[index];
-                return GestureDetector(
-                  onTap: () {
-                    if (chat.unread == true) {
-                      chat.unread = false;
-                    }
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => ChatScreen(
-                                  user: contacts[index], //////////////ID
-                                )));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 25.0,
-                          backgroundImage: AssetImage(contacts[index].photoUrl),
-                        ),
-                        Text(
-                          contacts[index].name,
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-        )
+        Positioned(
+          left: 35.0,
+          child: Text(categoryName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Color(LIGHT_GREY),
+                  shadows: <Shadow>[
+                    Shadow(blurRadius: 5, color: Colors.black)
+                  ])),
+        ),
       ],
     );
   }
@@ -814,7 +985,19 @@ class _ChatsState extends State<Chats> {
   }
 }
 
-Widget HomeDrawer(BuildContext context, User user) {
+Widget HomeDrawer(
+    BuildContext context,
+    User user,
+    void Function(
+            String name,
+            double price,
+            List<String> assetUrls,
+            int classification,
+            int quantifier,
+            String desc,
+            int sellerId,
+            int categoryId)
+        addProductCallback, Future<List<ProductEntry>> Function() sellersProductsCallback) {
   return Container(
     width: 255,
     child: new Drawer(
@@ -840,7 +1023,7 @@ Widget HomeDrawer(BuildContext context, User user) {
                 )
               ],
             ),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Moj nalog",
                 onPressed: () {
@@ -850,17 +1033,18 @@ Widget HomeDrawer(BuildContext context, User user) {
                           builder: (context) => MyAccount(user: user)));
                 },
                 iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
-                text: "Dodaj proizvod",
+                text: "Moji proizvodi",
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NewProduct()),
+                    MaterialPageRoute(
+                        builder: (context) => MyProducts(addProductCallback, sellersProductsCallback)),
                   );
                 },
-                iconUrl: "assets/icons/PlusCircle.svg"),
-            SizedBox(height: 45),
+                iconUrl: "assets/icons/Package.svg"),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Poruke",
                 onPressed: () {
@@ -870,17 +1054,17 @@ Widget HomeDrawer(BuildContext context, User user) {
                   );
                 },
                 iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Istorija narudžbi",
                 onPressed: () {},
                 iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Pomoć i podrška",
                 onPressed: () {},
                 iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Podešavanja",
                 onPressed: () {
@@ -890,11 +1074,13 @@ Widget HomeDrawer(BuildContext context, User user) {
                   );
                 },
                 iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 45),
+            SizedBox(height: 10),
             DrawerOption(
                 text: "Odjavi se",
                 onPressed: () {
-                  Navigator.pop(context);
+                  Prefs.instance.removeAll();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => new Welcome()));
                 },
                 iconUrl: "assets/icons/SignOut.svg"),
           ],

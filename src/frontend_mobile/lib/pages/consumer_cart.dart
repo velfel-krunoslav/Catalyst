@@ -3,52 +3,91 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/widgets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:provider/provider.dart';
 import 'blank_page.dart';
-import 'consumer_home.dart';
+import '../models/productsModel.dart';
 
 String customerAddress = 'Kralja Aleksandra I Karađorđevića 36';
-String walletKey = '1BvBMSEYstWetqTFn5Au4m4G';
-
-int quantityFirst = 1;
-int quantitySecond = 1;
-
-double priceFirst = 2.40;
-double priceSecond = 13.90;
-
-double subtotal = quantityFirst * priceFirst + quantitySecond * priceSecond;
-double total = subtotal + 5;
-
+String desc = '1BvBMSEYstWetqTFn5Au4m4G';
 final _textController = new TextEditingController();
 
-List<CartProduct> products = [
-  new CartProduct(
-    photoUrl: <String>['assets/product_listings/honey_shawn_caza_cc_by_sa.jpg'],
-    name: 'Domaći med',
-    price: 13.9,
-    cartQuantity: 1
-  ),
-  new CartProduct(
-    photoUrl: <String>['assets/product_listings/martin_cathrae_by_sa.jpg'],
-    name: 'Pasirani paradajz',
-    price: 2.4,
-    cartQuantity: 1
-  )
-];
-
 class ConsumerCart extends StatefulWidget {
+  Future<ProductEntry> Function(int id) getProductByIdCallback;
+  ConsumerCart(this.getProductByIdCallback);
   @override
-  _ConsumerCartState createState() => _ConsumerCartState();
+  _ConsumerCartState createState() =>
+      _ConsumerCartState(getProductByIdCallback);
 }
 
 class _ConsumerCartState extends State<ConsumerCart> {
+  bool isEmpty = true;
+  double shipping = 5.0;
+  double subtotal = 0;
+  double total;
+  String method, paymentMethod;
+  ProductsModel productsModel;
+  List<CartProduct> products = [];
+  List<int> quantities = [];
+  List<int> indices = [];
+  List<List<String>> ids = [];
+  Future<ProductEntry> Function(int id) getProductByIdCallback;
+  _ConsumerCartState(this.getProductByIdCallback);
+  @override
+  void initState() {
+    super.initState();
+    Prefs.instance.containsKey('cartProducts').then((hasKey) {
+      Prefs.instance.getStringValue('cartProducts').then((value) {
+        if (hasKey == false || (hasKey == true && value.compareTo('') == 0)) {
+          isEmpty = true;
+        } else {
+          isEmpty = false;
+        }
+        if (!isEmpty) {
+          setState(() {
+            total = shipping;
+            List<String> tmp;
+            if (value.contains(';')) {
+              tmp = value.split(';');
+            } else {
+              tmp = [value];
+            }
+            for (int i = 0; i < tmp.length; i++) {
+              List<String> t = [tmp[i].split(',')[0], tmp[i].split(',')[1]];
+              ids.add(t);
+            }
+            setState(() {
+              indices = List<int>.generate(tmp.length, (index) {
+                return index;
+              });
+            });
+            for (int i = 0; i < ids.length; i++) {
+              getProductByIdCallback(int.parse(ids[i][0])).then((pr) {
+                CartProduct p = CartProduct(
+                    id: pr.id,
+                    name: pr.name,
+                    photoUrl: pr.assetUrls,
+                    price: pr.price,
+                    cartQuantity: int.parse(ids[i][1]));
+                setState(() {
+                  products.add(p);
+                  quantities.add(int.parse(ids[i][1]));
+                  subtotal += (p.price * p.cartQuantity);
+                  total += (p.price * p.cartQuantity);
+                });
+              });
+            }
+          });
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
             title: Text('Korpa',
                 style: TextStyle(
@@ -69,611 +108,643 @@ class _ConsumerCartState extends State<ConsumerCart> {
                 Navigator.pop(context);
               },
             )),
-        body: Center(
-          child: SingleChildScrollView(
-              child: Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  child: Column(children: [
-                    Row(children: [
-                      Expanded(
-                          flex: 3,
-                          child: Image.asset(
-                              'assets/product_listings/martin_cathrae_by_sa.jpg',
-                              height: 90,
-                              width: 90)),
-                      SizedBox(width: 10),
-                      Expanded(
-                        flex: 8,
-                        child: Column(children: [
-                          Row(children: [
-                            Text('Pasirani paradajz',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: Color(BLACK)))
-                          ]),
-                          Row(children: [
-                            Text(
-                                '$priceFirst$CURRENCY', // should not be hardcoded; solve in dot net
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16,
-                                    color: Color(DARK_GREY)))
-                          ]),
-                          Row(children: [
-                            Expanded(
-                                flex: 1,
-                                child: Align(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        quantityFirst -= 1;
-                                      });
-                                      setState(() {
-                                        subtotal -= priceFirst;
-                                      });
-                                      setState(() {
-                                        total = subtotal + 5;
-                                    });
-                                    },
-                                    child: Text(
-                                      ' - ',
-                                      style: TextStyle(
-                                        backgroundColor: Color(LIGHT_GREY),
-                                        fontFamily: 'Inter',
-                                        color: Color(BLACK)
-                                      )
-                                    )
-                                  ),
-                                  alignment: Alignment.centerLeft
-                                )
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                child: Text(
-                                  ' $quantityFirst ',
-                                  style: TextStyle(fontFamily: 'Inter')
-                                ),
-                                alignment: Alignment.centerLeft)
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      quantityFirst += 1;
-                                    });
-                                    setState(() {
-                                        subtotal += priceFirst;
-                                    });
-                                    setState(() {
-                                        total = subtotal + 5;
-                                    });
-                                  },
-                                  child: Text(
-                                    ' + ',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      backgroundColor: Color(LIGHT_GREY),
-                                      color: Color(BLACK)
-                                    )
-                                  )
-                                ),
-                                alignment: Alignment.centerLeft,
-                              )
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Column(
-                                children: [
-                                  Align(
-                                    child: IconButton(
-                                      icon: SvgPicture.asset(
-                                        'assets/icons/Trash.svg',
-                                        height: ICON_SIZE),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Blank()),
-                                          );
-                                        }),
-                                      alignment: Alignment.centerRight
-                                  )
-                                ],
-                              ),
-                            )
-                          ])
-                        ]),
-                      )
-                    ]),
-
-                    //SizedBox(height: 20),
-
-                    Row(children: [
-                      Expanded(
-                        flex: 3,
-                        child: Image.asset(
-                            'assets/product_listings/honey_shawn_caza_cc_by_sa.jpg',
-                            height: 90,
-                            width: 90),
+        body: (isEmpty == true)
+            ? Center(
+                child: Text('Korpa je prazna.',
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: Color(DARK_GREY))))
+            : SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    Container(
+                      height: 240,
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom:
+                                BorderSide(color: Colors.black, width: 1.0)),
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        flex: 8,
-                        child: Column(children: [
-                          Row(children: [
-                            Text('Domaći med',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: Color(BLACK)
-                              )
-                            )
-                          ]),
-                          Row(
-                            children: [
-                              Text(
-                                '$priceSecond$CURRENCY', // should not be hardcoded; solve in dot net
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 16,
-                                  color: Color(DARK_GREY)
+                      child: SingleChildScrollView(
+                          child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                        child: Column(
+                            children: List.generate(products.length, (index) {
+                          return Padding(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Row(children: [
+                                Expanded(
+                                    flex: 3,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Image.asset(
+                                        products[index].photoUrl[0],
+                                        height: 90,
+                                        width: 90,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  flex: 8,
+                                  child: Column(children: [
+                                    Row(children: [
+                                      Text(products[index].name,
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800,
+                                              color: Color(BLACK)))
+                                    ]),
+                                    Row(children: [
+                                      Text(
+                                          '${products[index].price.toStringAsFixed(2)}$CURRENCY', // should not be hardcoded; solve in dot net
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              color: Color(DARK_GREY)))
+                                    ]),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    Row(children: [
+                                      SizedBox(
+                                        width: 36,
+                                        height: 36,
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    Color(LIGHT_GREY)),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (quantities[index] > 1) {
+                                                  quantities[index] -= 1;
+                                                  subtotal -=
+                                                      products[index].price;
+                                                  total = subtotal + shipping;
+                                                }
+                                              });
+                                            },
+                                            child: Text('-',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Color(BLACK)))),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text('${quantities[index]}',
+                                          style:
+                                              TextStyle(fontFamily: 'Inter')),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        width: 36,
+                                        height: 36,
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    Color(LIGHT_GREY)),
+                                            onPressed: () {
+                                              setState(() {
+                                                quantities[index] += 1;
+                                                subtotal +=
+                                                    products[index].price;
+                                                total = subtotal + shipping;
+                                              });
+                                            },
+                                            child: Text('+',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Color(BLACK)))),
+                                      ),
+                                      Spacer(),
+                                      SizedBox(
+                                          width: 42,
+                                          height: 42,
+                                          child: new TextButton(
+                                              style: TextButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  elevation: 3),
+                                              child: SvgPicture.asset(
+                                                  'assets/icons/Trash.svg',
+                                                  height: INSET_ICON_SIZE),
+                                              onPressed: () {
+                                                setState(() {
+                                                  Prefs.instance
+                                                      .getStringValue(
+                                                          'cartProducts')
+                                                      .then((value) {
+                                                    String finalCart = '';
+                                                    for (var t in ids) {
+                                                      if (int.parse(t[0]) ==
+                                                          products[indices[
+                                                                  index]]
+                                                              .id) {
+                                                        products.removeAt(
+                                                            indices[index]);
+                                                        for (int i =
+                                                                indices[index];
+                                                            i < indices.length;
+                                                            i++) {
+                                                          indices[i] =
+                                                              indices[i] - 1;
+                                                        }
+                                                      } else {
+                                                        if (finalCart.compareTo(
+                                                                '') !=
+                                                            0) {
+                                                          finalCart += ';';
+                                                        }
+                                                        finalCart +=
+                                                            '${t[0]},${t[1]}';
+                                                      }
+                                                    }
+                                                    Prefs.instance
+                                                        .setStringValue(
+                                                            'cartProducts',
+                                                            finalCart);
+                                                  });
+                                                });
+                                              })),
+                                    ])
+                                  ]),
                                 )
-                              )
-                            ],
-                          ),
-                          Row(children: [
-                            Expanded(
-                                flex: 1,
-                                child: Align(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        quantitySecond -= 1;
-                                      });
-                                      setState(() {
-                                        subtotal -= priceSecond;
-                                      });
-                                      setState(() {
-                                        total = subtotal + 5;
-                                    });
-                                    },
-                                    child: Text(
-                                      ' - ',
-                                      style: TextStyle(
-                                        backgroundColor: Color(LIGHT_GREY),
-                                        fontFamily: 'Inter',
-                                        color: Color(BLACK)
-                                      )
-                                    )
-                                  ),
-                                  alignment: Alignment.centerLeft
-                                )
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                child: Text(
-                                  ' $quantitySecond ',
-                                  style: TextStyle(fontFamily: 'Inter')
-                                ),
-                                alignment: Alignment.centerLeft)
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      quantitySecond += 1;
-                                    });
-                                    setState(() {
-                                        subtotal += priceSecond;
-                                    });
-                                    setState(() {
-                                        total = subtotal + 5;
-                                    });
-                                  },
-                                  child: Text(
-                                    ' + ',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      backgroundColor: Color(LIGHT_GREY),
-                                      color: Color(BLACK)
-                                    )
-                                  )
-                                ),
+                              ]));
+                        }).toList()),
+                      )),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: Column(
+                          children: [
+                            Align(
                                 alignment: Alignment.centerLeft,
-                              )
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Column(
-                                children: [
-                                  Align(
-                                    child: IconButton(
+                                child: Text('Detalji porudžbine',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w800,
+                                        color: Color(DARK_GREY)))),
+                            SizedBox(height: 20),
+                            Row(children: [
+                              SvgPicture.asset('assets/icons/MapPin.svg'),
+                              SizedBox(width: 6),
+                              Expanded(
+                                  flex: 9,
+                                  child: Column(children: [
+                                    Row(children: [
+                                      Text(
+                                          (customerAddress.length > 32)
+                                              ? customerAddress.substring(
+                                                      0, 32) +
+                                                  '...'
+                                              : customerAddress,
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800,
+                                              color: Color(BLACK)))
+                                    ]),
+                                    Row(children: [
+                                      Text('Kragujevac, Srbija', // TODO
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              color: Color(DARK_GREY)))
+                                    ])
+                                  ])),
+                              Expanded(
+                                  flex: 1,
+                                  child: IconButton(
                                       icon: SvgPicture.asset(
-                                        'assets/icons/Trash.svg',
-                                        height: ICON_SIZE),
+                                          'assets/icons/ArrowRight.svg',
+                                          height: ICON_SIZE,
+                                          color: Color(DARK_GREY)),
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Blank()),
-                                        );
-                                      }),
-                                    alignment: Alignment.centerRight
-                                  )
-                                ]
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (context) {
+                                              return Container(
+                                                height: 250,
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              'Promena adrese za dostavu',
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      DARK_GREY),
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      18)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(15.0),
+                                                        child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: 280,
+                                                                  height: 36,
+                                                                  child: TextField(
+                                                                      controller: _textController,
+                                                                      onChanged: (String value) async {
+                                                                        setState(
+                                                                            () {
+                                                                          customerAddress =
+                                                                              _textController.text;
+                                                                        });
+                                                                      },
+                                                                      decoration: InputDecoration(
+                                                                          hintText: 'Izmeni adresu',
+                                                                          filled: true,
+                                                                          fillColor: Color(LIGHT_GREY),
+                                                                          border: new OutlineInputBorder(
+                                                                              borderRadius: const BorderRadius.all(
+                                                                                const Radius.circular(5.0),
+                                                                              ),
+                                                                              borderSide: BorderSide.none))))
+                                                            ])),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        SizedBox(),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(10.0),
+                                                          child: Container(
+                                                            width: 280,
+                                                            height: 36,
+                                                            child: Text(
+                                                                "Trenutna adresa za dostavu je $customerAddress",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        BLACK),
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    fontSize:
+                                                                        16)),
+                                                          ),
+                                                        ),
+                                                        SizedBox(),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 100,
+                                                          height: 50,
+                                                          child: FlatButton(
+                                                            color: Color(
+                                                                LIGHT_GREY),
+                                                            onPressed: () {},
+                                                            child: Text(
+                                                                'Primeni',
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        BLACK),
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    fontSize:
+                                                                        16)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            });
+                                      }))
+                            ]),
+                            SizedBox(height: 20),
+                            Row(children: [
+                              SvgPicture.asset('assets/icons/CreditCard.svg'),
+                              SizedBox(width: 6),
+                              Expanded(
+                                  flex: 9,
+                                  child: Column(children: [
+                                    Row(children: [
+                                      Text('Način plaćanja',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800,
+                                              color: Color(BLACK)))
+                                    ]),
+                                    Row(children: [
+                                      Text(
+                                          (desc.length > 24)
+                                              ? desc.substring(0, 24) + '...'
+                                              : desc,
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              color: Color(DARK_GREY)))
+                                    ])
+                                  ])),
+                              Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                      icon: SvgPicture.asset(
+                                          'assets/icons/ArrowRight.svg',
+                                          height: ICON_SIZE,
+                                          color: Color(DARK_GREY)),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (context) {
+                                              return Container(
+                                                  height: 250,
+                                                  child: Column(children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              'Odabir načina plaćanja',
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      DARK_GREY),
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      18)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(50.0),
+                                                        child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  SizedBox(
+                                                                      width:
+                                                                          280,
+                                                                      height:
+                                                                          36,
+                                                                      child: Text(
+                                                                          'Plaćanje pouzećem',
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Inter',
+                                                                              fontSize: 16,
+                                                                              color: Color(LIGHT_BLACK)))),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          36,
+                                                                      child: GestureDetector(
+                                                                          onTap: () {
+                                                                            setState(() {
+                                                                              paymentMethod = customerAddress;
+                                                                              desc = "Plaćanje pouzećem";
+                                                                            });
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK)))))
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 20,
+                                                                  width: 200),
+                                                              Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                        width:
+                                                                            280,
+                                                                        height:
+                                                                            36,
+                                                                        child: Text(
+                                                                            'Plaćanje putem e-novčanika',
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 16,
+                                                                                color: Color(LIGHT_BLACK)))),
+                                                                    SizedBox(
+                                                                        height:
+                                                                            36,
+                                                                        child: GestureDetector(
+                                                                            onTap: () {
+                                                                              showModalBottomSheet(
+                                                                                  isScrollControlled: true,
+                                                                                  context: context,
+                                                                                  builder: (context) {
+                                                                                    return Container(
+                                                                                        height: 250,
+                                                                                        child: Column(children: [
+                                                                                          Padding(
+                                                                                            padding: const EdgeInsets.all(8.0),
+                                                                                            child: Row(
+                                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text('Unos privatnog ključa', style: TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 18)),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                          Padding(
+                                                                                              padding: const EdgeInsets.all(15.0),
+                                                                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                                                                SizedBox(
+                                                                                                    width: 280,
+                                                                                                    height: 36,
+                                                                                                    child: TextField(
+                                                                                                        controller: _textController,
+                                                                                                        onChanged: (String value) async {
+                                                                                                          setState(() {
+                                                                                                            customerAddress = _textController.text;
+                                                                                                          });
+                                                                                                        },
+                                                                                                        decoration: InputDecoration(
+                                                                                                            hintText: 'Unesite privatni ključ',
+                                                                                                            filled: true,
+                                                                                                            fillColor: Color(LIGHT_GREY),
+                                                                                                            border: new OutlineInputBorder(
+                                                                                                                borderRadius: const BorderRadius.all(
+                                                                                                                  const Radius.circular(5.0),
+                                                                                                                ),
+                                                                                                                borderSide: BorderSide.none))))
+                                                                                              ])),
+                                                                                          Row(
+                                                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                            children: [
+                                                                                              SizedBox(),
+                                                                                              Padding(
+                                                                                                padding: const EdgeInsets.all(10.0),
+                                                                                                child: Container(
+                                                                                                  width: 280,
+                                                                                                  height: 36,
+                                                                                                  child: Text("Trenutni privatni ključ je $desc", textAlign: TextAlign.center, style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
+                                                                                                ),
+                                                                                              ),
+                                                                                              SizedBox(),
+                                                                                            ],
+                                                                                          ),
+                                                                                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                                                            SizedBox(
+                                                                                                width: 100,
+                                                                                                height: 50,
+                                                                                                child: FlatButton(
+                                                                                                  color: Color(LIGHT_GREY),
+                                                                                                  onPressed: () {
+                                                                                                    setState(() {
+                                                                                                      paymentMethod = desc;
+                                                                                                      method = "Plaćanje putem e-novčanika";
+                                                                                                    });
+                                                                                                    Navigator.pop(context);
+                                                                                                  },
+                                                                                                  child: Text('Potvrdi', style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
+                                                                                                ))
+                                                                                          ])
+                                                                                        ]));
+                                                                                  });
+                                                                              //Navigator.pop(context);
+                                                                            },
+                                                                            child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK)))))
+                                                                  ])
+                                                            ]))
+                                                  ]));
+                                            });
+                                      }))
+                            ]),
+                            SizedBox(height: 20),
+                            Row(children: [
+                              Expanded(
+                                flex: 7,
+                                child: Column(children: [
+                                  Align(
+                                      child: Text('Iznos',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              color: Color(DARK_GREY))),
+                                      alignment: Alignment.centerLeft),
+                                  Align(
+                                      child: Text('Dostava',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              color: Color(DARK_GREY))),
+                                      alignment: Alignment.centerLeft)
+                                ]),
+                              ),
+                              Expanded(
+                                flex: 4,
+                                child: Column(children: [
+                                  Align(
+                                      child: Text(
+                                          '${subtotal.toStringAsFixed(2)}$CURRENCY',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800)),
+                                      alignment: Alignment.centerRight),
+                                  Align(
+                                      child: Text(
+                                          '${shipping.toStringAsFixed(2)}$CURRENCY',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800)),
+                                      alignment: Alignment.centerRight)
+                                ]),
                               )
-                            )
-                          ])
-                        ])
-                      )
-                    ]),
-
-                    SizedBox(height: 20),
-
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Detalji porudžbine',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: Color(DARK_GREY)))),
-
-                    SizedBox(height: 20),
-
-                    Row(children: [
-                      Expanded(
-                          flex: 1,
-                          child: SvgPicture.asset('assets/icons/MapPin.svg')),
-                      Expanded(
-                          flex: 9,
-                          child: Column(children: [
-                            Row(children: [
-                              Text('$customerAddress',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(BLACK)))
                             ]),
+                            SizedBox(height: 20),
                             Row(children: [
-                              Text('Kragujevac, Srbija',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      color: Color(DARK_GREY)))
-                            ])
-                          ])),
-                      Expanded(
-                          flex: 1,
-                          child: IconButton(
-                              icon: SvgPicture.asset(
-                                  'assets/icons/ArrowRight.svg',
-                                  height: ICON_SIZE,
-                                  color: Color(DARK_GREY)),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return Container(
-                                      height: 250,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Text('Promena adrese za dostavu',
-                                                  style: TextStyle(
-                                                    color: Color(DARK_GREY),
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18)),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 280,
-                                                  height: 36,
-                                                  child: TextField(
-                                                    controller: _textController,
-                                                    onChanged: (String value) async {
-                                                      setState(() {
-                                                        customerAddress = _textController.text;
-                                                      });
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Izmeni adresu',
-                                                      filled: true,
-                                                      fillColor: Color(LIGHT_GREY),
-                                                      border: new OutlineInputBorder(
-                                                        borderRadius: const BorderRadius.all(
-                                                          const Radius.circular(5.0),
-                                                        ),
-                                                        borderSide: BorderSide.none)
-                                                    )
-                                                  )
-                                                )
-                                              ]
-                                            )
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              SizedBox(),
-                                              Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Container(
-                                                  width: 280,
-                                                  height: 36,
-                                                  child: Text(
-                                                      "Trenutna adresa za dostavu je $customerAddress",
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Color(BLACK),
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 16)),
-                                                ),
-                                              ),
-                                              SizedBox(),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 100,
-                                                height: 50,
-                                                child: FlatButton(
-                                                  color: Color(LIGHT_GREY),
-                                                  onPressed: () {},
-                                                  child: Text('Primeni',
-                                                      style: TextStyle(
-                                                          color: Color(BLACK),
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 16)),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                          })
-                      )
-                    ]
-                  ),
-
-                    SizedBox(height: 20),
-
-                    Row(children: [
-                      Expanded(
-                          flex: 1,
-                          child:
-                              SvgPicture.asset('assets/icons/CreditCard.svg')),
-                      Expanded(
-                          flex: 9,
-                          child: Column(children: [
-                            Row(children: [
-                              Text('Novčanik',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(BLACK)))
+                              Expanded(
+                                  flex: 8,
+                                  child: Column(children: [
+                                    Align(
+                                        child: Text('Ukupan iznos',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                fontSize: 18,
+                                                color: Color(DARK_GREY))),
+                                        alignment: Alignment.centerLeft)
+                                  ])),
+                              Expanded(
+                                  flex: 3,
+                                  child: Column(children: [
+                                    Align(
+                                        child: Text(
+                                            '${total.toStringAsFixed(2)}$CURRENCY', // this should show the total of selected items, should not be hardcoded; solve in dot net
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w800)),
+                                        alignment: Alignment.centerRight)
+                                  ]))
                             ]),
-                            Row(children: [
-                              Text('$walletKey',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      color: Color(DARK_GREY)))
-                            ])
-                          ])),
-                      Expanded(
-                          flex: 1,
-                          child: IconButton(
-                              icon: SvgPicture.asset(
-                                  'assets/icons/ArrowRight.svg',
-                                  height: ICON_SIZE,
-                                  color: Color(DARK_GREY)),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return Container(
-                                      height: 250,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Text('Promena javnog ključa novčanika',
-                                                  style: TextStyle(
-                                                    color: Color(DARK_GREY),
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18)),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 280,
-                                                  height: 36,
-                                                  child: TextField(
-                                                    controller: _textController,
-                                                    onChanged: (String value) async {
-                                                      setState(() {
-                                                        customerAddress = _textController.text;
-                                                      });
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Unesi nov ključ',
-                                                      filled: true,
-                                                      fillColor: Color(LIGHT_GREY),
-                                                      border: new OutlineInputBorder(
-                                                        borderRadius: const BorderRadius.all(
-                                                          const Radius.circular(5.0),
-                                                        ),
-                                                        borderSide: BorderSide.none)
-                                                    )
-                                                  )
-                                                )
-                                              ]
-                                            )
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              SizedBox(),
-                                              Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Container(
-                                                  width: 280,
-                                                  height: 36,
-                                                  child: Text(
-                                                      "Trenutni ključ je $walletKey",
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Color(BLACK),
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 16)),
-                                                ),
-                                              ),
-                                              SizedBox(),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 100,
-                                                height: 50,
-                                                child: FlatButton(
-                                                  color: Color(LIGHT_GREY),
-                                                  onPressed: () {},
-                                                  child: Text('Primeni',
-                                                      style: TextStyle(
-                                                          color: Color(BLACK),
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 16)),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                              }))
-                    ]),
-
-                    SizedBox(height: 20),
-
-                    Row(children: [
-                      Expanded(
-                        flex: 7,
-                        child: Column(children: [
-                          Align(
-                              child: Text('Iznos',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      color: Color(DARK_GREY))),
-                              alignment: Alignment.centerLeft),
-                          Align(
-                              child: Text('Dostava',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      color: Color(DARK_GREY))),
-                              alignment: Alignment.centerLeft)
-                        ]),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Column(children: [
-                          Align(
-                              child: Text('$subtotal$CURRENCY',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800)),
-                              alignment: Alignment.centerRight),
-                          Align(
-                              child: Text('5.00$CURRENCY',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800)),
-                              alignment: Alignment.centerRight)
-                        ]),
-                      )
-                    ]),
-
-                    SizedBox(height: 20),
-
-                    Row(children: [
-                      Expanded(
-                          flex: 8,
-                          child: Column(children: [
-                            Align(
-                                child: Text('Ukupan iznos',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 18,
-                                        color: Color(DARK_GREY))),
-                                alignment: Alignment.centerLeft)
-                          ])),
-                      Expanded(
-                          flex: 3,
-                          child: Column(children: [
-                            Align(
-                                child: Text(
-                                    '$total$CURRENCY', // this should show the total of selected items, should not be hardcoded; solve in dot net
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800)),
-                                alignment: Alignment.centerRight)
-                          ]))
-                    ]),
-
-                    SizedBox(height: 20),
-
-                    ButtonFill(
-                        text:
-                            'Potvrdi kupovinu ($total$CURRENCY)', // should be showing the purchase total saved in a variable, for example
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Blank()));
-                        })
-                  ]))),
-        ));
+                            SizedBox(height: 20),
+                            ButtonFill(
+                                text:
+                                    'Potvrdi kupovinu (${total.toStringAsFixed(2)}$CURRENCY)', // should be showing the purchase total saved in a variable, for example
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Blank()));
+                                })
+                          ],
+                        ))
+                  ])));
   }
 }

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -13,6 +16,9 @@ import 'package:provider/provider.dart';
 import '../models/productsModel.dart';
 
 class Login extends StatelessWidget {
+  String privateKey = '';
+  String accountAddress = '';
+  bool flg = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,23 +60,26 @@ class Login extends StatelessWidget {
               ),
               SizedBox(height: 50.0),
               TextField(
-                  style: TextStyle(
-                      color: Color(DARK_GREY),
-                      fontFamily: 'Inter',
-                      fontSize: 16),
-                  decoration: InputDecoration(
-                      hintText: 'Email',
-                      filled: true,
-                      fillColor: Color(LIGHT_GREY),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(5.0)))),
-              SizedBox(height: 20.0),
-              TextField(
                 style: TextStyle(
                     color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
                 decoration: InputDecoration(
-                  hintText: 'Lozinka',
+                    hintText: 'MetaMask adresa',
+                    filled: true,
+                    fillColor: Color(LIGHT_GREY),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(5.0))),
+                onChanged: (value) {
+                  accountAddress = value;
+                },
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                obscureText: flg,
+                style: TextStyle(
+                    color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
+                decoration: InputDecoration(
+                  hintText: 'Privatni ključ',
                   filled: true,
                   fillColor: Color(LIGHT_GREY),
                   border: OutlineInputBorder(
@@ -78,7 +87,7 @@ class Login extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0)),
                   suffixIcon: IconButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-                    onPressed: () => {},
+                    onPressed: () => {flg = !flg},
                     icon: SvgPicture.asset(
                       'assets/icons/EyeSlash.svg',
                       color: Color(DARK_GREY),
@@ -87,31 +96,33 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
+                onChanged: (value) {
+                  privateKey = value;
+                },
               ),
               SizedBox(height: 20.0),
               ButtonFill(
                 text: 'Prijavi se',
                 onPressed: () {
+                  Prefs.instance.setStringValue('privateKey', privateKey);
+                  Prefs.instance
+                      .setStringValue('accountAddress', accountAddress);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => new ChangeNotifierProvider(
-                          create: (context) => ProductsModel(),
-                          child: ConsumerHomePage()
-                        )),
+                        builder: (context) => new MultiProvider(providers: [
+                              ChangeNotifierProvider<ProductsModel>(
+                                  create: (_) => ProductsModel()),
+                              ChangeNotifierProvider<CategoriesModel>(
+                                  create: (_) => CategoriesModel()),
+                              ChangeNotifierProvider<OrdersModel>(
+                                  create: (_) => OrdersModel()),
+                            ], child: ConsumerHomePage())),
                   );
                 },
               ),
-              SizedBox(height: 20.0),
-              GestureDetector(
-                  onTap: () {}, // TODO
-                  child: Text(
-                    'Zaboravili ste lozinku?',
-                    style: TextStyle(
-                        color: Color(TEAL), fontFamily: 'Inter', fontSize: 16),
-                    textAlign: TextAlign.right,
-                  )),
-              SizedBox(height: 80.0),
+              SizedBox(height: 100.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:frontend_mobile/widgets.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
@@ -18,7 +20,6 @@ class ProductEntryListing extends StatefulWidget {
   ProductEntryListing(ProductEntryListingPage productData) {
     this._data = productData;
   }
-
   @override
   State<StatefulWidget> createState() {
     return _ProductEntryListing(this._data);
@@ -27,6 +28,7 @@ class ProductEntryListing extends StatefulWidget {
 
 class _ProductEntryListing extends State<ProductEntryListing> {
   int _current = 0;
+  bool _stateChange = false;
   ProductEntryListingPage _data;
   var reviewsModel;
   _ProductEntryListing(ProductEntryListingPage _data) {
@@ -48,8 +50,10 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    CarouselSlider(
+                    GestureDetector(
+                        child: CarouselSlider(
                       options: CarouselOptions(
+                          autoPlay: false,
                           height: 240,
                           viewportFraction: 1,
                           onPageChanged: (index, reason) {
@@ -60,15 +64,25 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       items: _data.assetUrls.map((i) {
                         return Builder(
                           builder: (BuildContext context) {
-                            return Image.asset(
-                              '$i',
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                            return GestureDetector(
+                              child: Image.asset(
+                                '$i',
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new FullscreenSlider(
+                                                widget._data)));
+                              },
                             );
                           },
                         );
                       }).toList(),
-                    ),
+                    )),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -330,50 +344,41 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             SizedBox(
                               height: 20,
                             ),
-                            TextButton(
-                                onPressed: () => {},
-                                style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0),
-                                    minimumSize: Size(double.infinity, 60)),
-                                child: Ink(
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          const Color(MINT),
-                                          const Color(TEAL),
-                                        ],
-                                        stops: [0.0, 1.0],
-                                        tileMode: TileMode.clamp,
-                                      ),
-                                      shape: BoxShape.rectangle,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: Container(
-                                    margin: EdgeInsets.zero,
-                                    child: Row(
-                                      children: [
-                                        Spacer(),
-                                        SvgPicture.asset(
-                                          'assets/icons/ShoppingBag.svg',
-                                          color: Colors.white,
-                                          width: 36,
-                                          height: 36,
-                                        ),
-                                        SizedBox(
-                                          width: 6,
-                                          height: 60,
-                                        ),
-                                        Text('Dodaj u korpu',
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
-                                                color: Colors.white)),
-                                        Spacer()
-                                      ],
-                                    ),
-                                  ),
-                                )),
+                            ButtonFill(
+                                iconPath: 'assets/icons/ShoppingBag.svg',
+                                text: 'Dodaj u korpu',
+                                onPressed: () {
+                                  Prefs.instance
+                                      .containsKey('cartProducts')
+                                      .then((exists) {
+                                    Prefs.instance
+                                        .getStringValue('cartProducts')
+                                        .then((value) {
+                                      if (exists == true &&
+                                          (value.compareTo('') != 0)) {
+                                        List<String> tmp = value.split(';');
+                                        bool existsInCart = false;
+
+                                        for (var e in tmp) {
+                                          existsInCart =
+                                              (int.parse(e.split(',')[0]) ==
+                                                  _data.id);
+                                        }
+
+                                        if (!existsInCart) {
+                                          Prefs.instance.setStringValue(
+                                              'cartProducts',
+                                              '$value;${_data.id},1');
+                                        } else {
+                                          //TODO THROW NOTIFICATION
+                                        }
+                                      } else {
+                                        Prefs.instance.setStringValue(
+                                            'cartProducts', '${_data.id},1');
+                                      }
+                                    });
+                                  });
+                                }),
                           ],
                         )),
                   ],
@@ -411,5 +416,75 @@ class _ProductEntryListing extends State<ProductEntryListing> {
         ),
       ],
     )));
+  }
+}
+
+class FullscreenSlider extends StatelessWidget {
+  int _current = 0;
+  ProductEntryListingPage _data;
+
+  FullscreenSlider(ProductEntryListingPage _data) {
+    this._data = _data;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Builder(
+                  builder: (context) {
+                    final double height = MediaQuery.of(context).size.height;
+                    return CarouselSlider(
+                      options: CarouselOptions(
+                        height: height,
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        // autoPlay: false,
+                      ),
+                      items: _data.assetUrls
+                          .map((item) => Container(
+                                child: Center(
+                                    child: Image.asset(
+                                  item,
+                                  fit: BoxFit.cover,
+                                  //height: height,
+                                )),
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                            color: Colors.black),
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            minimumSize: Size(36, 36)))
+                  ],
+                )
+              ],
+            )
+          ],
+        ));
   }
 }

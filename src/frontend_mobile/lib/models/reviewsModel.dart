@@ -9,17 +9,14 @@ import 'package:web_socket_channel/io.dart';
 import '../config.dart';
 import '../internals.dart';
 
-
-
-class ReviewsModel extends ChangeNotifier{
+class ReviewsModel extends ChangeNotifier {
   int productId;
   List<Review> reviews = [];
   double average = 0;
-  List<int> starsCount = [0,0,0,0,0];
+  List<int> starsCount = [0, 0, 0, 0, 0];
 
-  final String _rpcUrl = "HTTP://"+HOST;
-  final String _wsUrl = "ws://"+HOST;
-
+  final String _rpcUrl = "HTTP://" + HOST;
+  final String _wsUrl = "ws://" + HOST;
   final String _privateKey = PRIVATE_KEY;
   int reviewsCount = 0;
 
@@ -39,14 +36,13 @@ class ReviewsModel extends ChangeNotifier{
   ContractFunction _countStars;
   ContractFunction _getReviewsCount;
 
-
-  ReviewsModel(int productId){
+  ReviewsModel(int productId) {
     this.productId = productId;
     initiateSetup();
   }
 
   Future<void> initiateSetup() async {
-    _client = Web3Client(_rpcUrl, Client(), socketConnector: (){
+    _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
     });
     await getAbi();
@@ -58,17 +54,18 @@ class ReviewsModel extends ChangeNotifier{
     String abiStringFile = await rootBundle.loadString("src/abis/Reviews.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress = EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
-
+    _contractAddress =
+        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
   }
 
-  Future<void> getCredentials() async{
+  Future<void> getCredentials() async {
     _credentials = await _client.credentialsFromPrivateKey(_privateKey);
     _ownAddress = await _credentials.extractAddress();
   }
 
-  Future<void> getDeployedContract() async{
-    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "Reviews"), _contractAddress);
+  Future<void> getDeployedContract() async {
+    _contract = DeployedContract(
+        ContractAbi.fromJson(_abiCode, "Reviews"), _contractAddress);
 
     _reviewsCount = _contract.function("reviewsCount");
     _reviews = _contract.function("reviews");
@@ -81,23 +78,26 @@ class ReviewsModel extends ChangeNotifier{
     await getReviews(productId);
     await getAverage();
     await getStars();
-
   }
+
   getReviews(int productId) async {
     List totalReviewsList = await _client.call(
-        contract: _contract, function: _getReviewsCount, params: [BigInt.from(productId)]);
+        contract: _contract,
+        function: _getReviewsCount,
+        params: [BigInt.from(productId)]);
     BigInt totalReviews = totalReviewsList[0];
     reviewsCount = totalReviews.toInt();
 
-      var temp = await _client.call(
-          contract: _contract,
-          function: _getReviews,
-          params: [BigInt.from(productId),totalReviews]);
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getReviews,
+        params: [BigInt.from(productId), totalReviews]);
 
     for (int i = 0; i < reviewsCount; i++) {
       var t = temp[0][i];
       //print(t);
-      reviews.add(Review(id: t[0].toInt(),
+      reviews.add(Review(
+          id: t[0].toInt(),
           userId: t[4].toInt(),
           desc: t[3],
           productId: t[1].toInt(),
@@ -105,13 +105,11 @@ class ReviewsModel extends ChangeNotifier{
     }
 
     notifyListeners();
-    }
+  }
 
-
-  addReview(int productId, int rating, String desc, int userId) async{
+  addReview(int productId, int rating, String desc, int userId) async {
     isLoading = true;
     notifyListeners();
-
 
     await _client.sendTransaction(
         _credentials,
@@ -119,29 +117,33 @@ class ReviewsModel extends ChangeNotifier{
             maxGas: 6721925,
             contract: _contract,
             function: _createReview,
-            parameters: [BigInt.from(productId), BigInt.from(rating), desc, BigInt.from(userId)],
+            parameters: [
+              BigInt.from(productId),
+              BigInt.from(rating),
+              desc,
+              BigInt.from(userId)
+            ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
     getReviews(productId);
   }
 
-
-
-
-  getAverage() async{
+  getAverage() async {
     List sumList = await _client.call(
-        contract: _contract, function: _getSum, params: [BigInt.from(productId)]);
+        contract: _contract,
+        function: _getSum,
+        params: [BigInt.from(productId)]);
     BigInt sumTemp = sumList[0];
     int sum = sumTemp.toInt();
-    if (reviewsCount > 0)
-      average = sum/reviewsCount;
+    if (reviewsCount > 0) average = sum / reviewsCount;
     notifyListeners();
   }
 
   getStars() async {
-
-    for(int i = 0; i < 5; i++){
+    for (int i = 0; i < 5; i++) {
       List starC = await _client.call(
-          contract: _contract, function: _countStars, params: [BigInt.from(productId), BigInt.from(i+1)]);
+          contract: _contract,
+          function: _countStars,
+          params: [BigInt.from(productId), BigInt.from(i + 1)]);
       BigInt temp = starC[0];
       int starCount = temp.toInt();
       starsCount[i] = starCount;
