@@ -7,6 +7,7 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/main.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
+import 'package:frontend_mobile/pages/help_and_support.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/my_products.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
@@ -999,7 +1000,9 @@ Widget HomeDrawer(
             String desc,
             int sellerId,
             int categoryId)
-        addProductCallback, Future<List<ProductEntry>> Function() sellersProductsCallback, Future<ProductEntry> Function(int id) getProductByIdCallback) {
+        addProductCallback,
+    Future<List<ProductEntry>> Function() sellersProductsCallback,
+    Future<ProductEntry> Function(int id) getProductByIdCallback) {
   return Container(
     width: 255,
     child: new Drawer(
@@ -1042,7 +1045,8 @@ Widget HomeDrawer(
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MyProducts(addProductCallback, sellersProductsCallback)),
+                        builder: (context) => MyProducts(
+                            addProductCallback, sellersProductsCallback)),
                   );
                 },
                 iconUrl: "assets/icons/Package.svg"),
@@ -1062,18 +1066,22 @@ Widget HomeDrawer(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>
-                      new ChangeNotifierProvider(
-                          create: (context) => OrdersModel(0),
-                          child: OrdersHistory(getProductByIdCallback))
-                    ),
+                    MaterialPageRoute(
+                        builder: (context) => new ChangeNotifierProvider(
+                            create: (context) => OrdersModel(0),
+                            child: OrdersHistory(getProductByIdCallback))),
                   );
                 },
                 iconUrl: "assets/icons/Newspaper.svg"),
             SizedBox(height: 10),
             DrawerOption(
                 text: "Pomoć i podrška",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HelpSupport()),
+                  );
+                },
                 iconUrl: "assets/icons/Handshake.svg"),
             SizedBox(height: 10),
             DrawerOption(
