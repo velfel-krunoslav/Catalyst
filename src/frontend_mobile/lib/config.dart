@@ -21,5 +21,5 @@ const String CURRENCY = '€';
 
 /* GLOBALS: */
 const PRIVATE_KEY =
-    "147f3dd32b5609c3e9b63f9ea1b01735c9a913e35fefbe794fb4b53e40fac2c3";
-const HOST = "192.168.1.8:7545";
+    "7097e2fa2beaf3ff46c0edafb37ca4b1ad021c3d5e70ca5057bca3754a9aa3b9";
+const HOST = "147.91.204.116:11130";

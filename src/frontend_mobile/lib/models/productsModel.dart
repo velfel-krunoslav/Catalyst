@@ -57,8 +57,8 @@ class ProductsModel extends ChangeNotifier {
         await rootBundle.loadString("src/abis/Products.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonAbi["networks"]["1618970070724"]["address"]);
   }
 
   Future<void> getCredentials() async {
@@ -230,35 +230,32 @@ class ProductsModel extends ChangeNotifier {
   }
 
   getSellersProducts(int sellerId) async {
-
     List<ProductEntry> sellersProducts = [];
-      List totalProductsList = await _client.call(
-          contract: _contract,
-          function: _getSellerProductsCount,
-          params: [BigInt.from(sellerId)]);
-      BigInt totalProducts = totalProductsList[0];
-      productsCount = totalProducts.toInt();
-      var temp = await _client.call(
-          contract: _contract,
-          function: _getSellerProducts,
-          params: [BigInt.from(sellerId), totalProducts]);
-      for (int i = productsCount - 1; i >= 0; i--) {
-        var t = temp[0][i];
-        //print(t);
-        sellersProducts.add(ProductEntry(
-            id: t[0].toInt(),
-            name: t[1],
-            price: t[2].toInt() / t[3].toInt(),
-            assetUrls: t[4].split(",").toList(),
-            classification: getClassification(t[5].toInt()),
-            quantifier: t[6].toInt(),
-            desc: t[7],
-            sellerId: t[8].toInt()));
-      }
-      // isLoading = false;
-      // notifyListeners();
-      return sellersProducts;
-
-
+    List totalProductsList = await _client.call(
+        contract: _contract,
+        function: _getSellerProductsCount,
+        params: [BigInt.from(sellerId)]);
+    BigInt totalProducts = totalProductsList[0];
+    productsCount = totalProducts.toInt();
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getSellerProducts,
+        params: [BigInt.from(sellerId), totalProducts]);
+    for (int i = productsCount - 1; i >= 0; i--) {
+      var t = temp[0][i];
+      //print(t);
+      sellersProducts.add(ProductEntry(
+          id: t[0].toInt(),
+          name: t[1],
+          price: t[2].toInt() / t[3].toInt(),
+          assetUrls: t[4].split(",").toList(),
+          classification: getClassification(t[5].toInt()),
+          quantifier: t[6].toInt(),
+          desc: t[7],
+          sellerId: t[8].toInt()));
+    }
+    // isLoading = false;
+    // notifyListeners();
+    return sellersProducts;
   }
 }

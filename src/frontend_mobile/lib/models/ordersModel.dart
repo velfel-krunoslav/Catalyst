@@ -54,8 +54,8 @@ class OrdersModel extends ChangeNotifier {
     String abiStringFile = await rootBundle.loadString("src/abis/Orders.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonAbi["networks"]["1618970070724"]["address"]);
   }
 
   Future<void> getCredentials() async {
@@ -96,20 +96,21 @@ class OrdersModel extends ChangeNotifier {
           int.parse(dateParts[2].substring(0, 2)));
       //print(t);
       Order o = Order(
-          id: t[0].toInt(),
-          productId: t[1].toInt(),
-          amount: t[2].toInt(),
-          buyerId: t[5].toInt(),
-          sellerId: t[6].toInt(),
-          status: t[4].toInt(),
-          date: date,);
+        id: t[0].toInt(),
+        productId: t[1].toInt(),
+        amount: t[2].toInt(),
+        buyerId: t[5].toInt(),
+        sellerId: t[6].toInt(),
+        status: t[4].toInt(),
+        date: date,
+      );
       orders.add(o);
     }
     notifyListeners();
   }
 
-  addOrder(int _productId, int _amount,
-      DateTime _date, int _buyerId, int _sellerId) async {
+  addOrder(int _productId, int _amount, DateTime _date, int _buyerId,
+      int _sellerId) async {
     isLoading = true;
     notifyListeners();
 
@@ -140,16 +141,16 @@ class OrdersModel extends ChangeNotifier {
   }
 
   setDateOrders() {
-    for(int i = 0; i < orders.length; i++){
+    for (int i = 0; i < orders.length; i++) {
       DateTime d = orders[i].date;
       int flag = 0;
-      for(int j = 0; j < dateOrders.length; j++){
-        if (dateOrders[j].date.toString() == d.toString()){
+      for (int j = 0; j < dateOrders.length; j++) {
+        if (dateOrders[j].date.toString() == d.toString()) {
           dateOrders[j].orders.add(orders[i]);
           flag = 1;
         }
       }
-      if (flag == 0){
+      if (flag == 0) {
         dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
       }
     }
@@ -157,9 +158,9 @@ class OrdersModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
 class DateOrder {
   DateTime date;
   List<Order> orders;
-  DateOrder(
-      {this.date, this.orders});
+  DateOrder({this.date, this.orders});
 }

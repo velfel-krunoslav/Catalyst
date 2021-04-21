@@ -45,8 +45,8 @@ class CategoriesModel extends ChangeNotifier {
         await rootBundle.loadString("src/abis/Categories.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonAbi["networks"]["1618970070724"]["address"]);
   }
 
   Future<void> getCredentials() async {

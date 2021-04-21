@@ -54,8 +54,8 @@ class ReviewsModel extends ChangeNotifier {
     String abiStringFile = await rootBundle.loadString("src/abis/Reviews.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonAbi["networks"]["1618970070724"]["address"]);
   }
 
   Future<void> getCredentials() async {
