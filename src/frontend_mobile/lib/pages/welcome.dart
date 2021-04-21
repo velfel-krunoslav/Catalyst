@@ -20,17 +20,8 @@ class Welcome extends StatelessWidget {
               Center(
                 //logo
                 child: Container(
-                  child: ShaderMask(
                     child:
-                        SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                          colors: [Color(MINT), Color(TEAL)],
-                          stops: [0.2, 0.7]).createShader(bounds);
-                    },
-                    blendMode: BlendMode.srcATop,
-                  ),
-                ),
+                        SvgPicture.asset('assets/icons/KotaricaLogomark.svg')),
               ), //end logo
               SizedBox(
                 height: 10,

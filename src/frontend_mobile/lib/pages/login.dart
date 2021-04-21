@@ -31,15 +31,7 @@ class Login extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(padding: EdgeInsets.fromLTRB(50.0, 0, 50.0, 0)),
-              ShaderMask(
-                child: SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                      colors: [Color(MINT), Color(TEAL)],
-                      stops: [0.4, 0.6]).createShader(bounds);
-                },
-                blendMode: BlendMode.srcATop,
-              ),
+              SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),
               SizedBox(height: 20.0),
               Text('Kotarica',
                   style: TextStyle(

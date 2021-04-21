@@ -68,17 +68,8 @@ class _SkipState extends State<Skip> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ShaderMask(
-          child: SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),
-          shaderCallback: (Rect bounds) {
-            return LinearGradient(
-                colors: [Color(MINT), Color(TEAL)],
-                stops: [0.4, 0.6]).createShader(bounds);
-          },
-          blendMode: BlendMode.srcATop,
-        ),
-      ),
+      body:
+          Center(child: SvgPicture.asset('assets/icons/KotaricaLogomark.svg')),
     );
   }
 }
