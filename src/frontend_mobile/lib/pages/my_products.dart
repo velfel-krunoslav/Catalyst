@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -62,7 +63,7 @@ class _MyProductsState extends State<MyProducts> {
           },
           icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
           label: Text("Dodaj proizvod",),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(MINT),
         ),
     body: ListView(
       children: [

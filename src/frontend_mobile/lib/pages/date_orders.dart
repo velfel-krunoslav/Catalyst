@@ -110,52 +110,59 @@ class _DateOrdersState extends State<DateOrders> {
                                             ))))),
                           );
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20,20,20,10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Image.asset(
-                                  products[index].assetUrls[0],
-                                  height: 90,
-                                  width: 90,
-                                  fit: BoxFit.fill,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                                bottom:
+                                BorderSide(color: Colors.black, width: 1.0)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20,20,20,10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.asset(
+                                    products[index].assetUrls[0],
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 10,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      products[index].name,
-                                      style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(BLACK))
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Text(
-                                      products[index].price.toStringAsFixed(2) + " €",
-                                      style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          color: Color(DARK_GREY))
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              Text(
-                                  "x"+ dateOrder.orders[index].amount.toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 18,
-                                      color: Color(BLACK))
-                              )
-                            ],
-                          )
+                                SizedBox(width: 10,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        products[index].name,
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: Color(BLACK))
+                                    ),
+                                    SizedBox(height: 10,),
+                                    Text(
+                                        products[index].price.toStringAsFixed(2) + " €",
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            color: Color(DARK_GREY))
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                Text(
+                                    "x"+ dateOrder.orders[index].amount.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 18,
+                                        color: Color(BLACK))
+                                )
+                              ],
+                            )
+                          ),
                         ),
                       );
                     }),
