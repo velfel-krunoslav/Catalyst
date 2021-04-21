@@ -46,7 +46,7 @@ class CategoriesModel extends ChangeNotifier {
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
     _contractAddress = EthereumAddress.fromHex(
-        jsonAbi["networks"]["1618970070724"]["address"]);
+        jsonAbi["networks"][JSON_NETWORK_ATTR]["address"]);
   }
 
   Future<void> getCredentials() async {
