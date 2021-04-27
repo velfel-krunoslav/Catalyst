@@ -48,7 +48,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
         Stack(
           children: [
             Container(
-                height: (isCanvasKit) ? 480 : 240,
+                height: (isCanvasKit) ? 380 : 240,
                 width: double.infinity,
                 child: Stack(
                   children: [
@@ -56,7 +56,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         child: CarouselSlider(
                       options: CarouselOptions(
                           autoPlay: false,
-                          height: (isCanvasKit) ? 480 : 240,
+                          height: (isCanvasKit) ? 380 : 240,
                           viewportFraction: 1,
                           onPageChanged: (index, reason) {
                             setState(() {
@@ -109,7 +109,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                   ],
                 )),
             Card(
-                margin: EdgeInsets.fromLTRB(0, (isCanvasKit) ? 475 : 235, 0, 0),
+                margin: EdgeInsets.fromLTRB(0, (isCanvasKit) ? 375 : 235, 0, 0),
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Column(

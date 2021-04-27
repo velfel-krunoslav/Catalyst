@@ -683,7 +683,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                           width: ICON_SIZE,
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          this.widget.callback(-1);
                         },
                       ),
                     ),
