@@ -11,6 +11,8 @@ contract Orders{
         uint status;
         uint buyerId;   //  pending, confirmed, delivered, refunded
         uint sellerId;
+        //adresa
+        //nacin placanja
 
     }
 
