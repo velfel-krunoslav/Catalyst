@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Kotarica | Kupujte sveže, domaće proizvode</title>
+	<style>
+		/*
+		 * Author: http: //stuffandnonsense.co.uk/blog/about/hardboiled_css3_media_queries/
+		 */
+
+		/* Smartphones (portrait and landscape) ----------- */
+		/*@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {} */
+
+		#wrapper {
+			display: grid;
+			justify-content: center;
+			grid-template-columns: 100%;
+			grid-template-rows: 100vh;
+		}
+
+		.app-content {
+			border: none;
+			width: 100%;
+			height: 100vh;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			background-image: url('./kotarica_logo.svg');
+			background-repeat: repeat;
+		}
+
+		/* Desktops and laptops ----------- */
+		@media only screen and (min-width : 840px) {
+			#wrapper {
+				display: grid;
+				position: relative;
+				width: 100%;
+				height: 100%;
+				z-index: 0;
+			}
+
+			.app-content {
+				display: grid;
+				justify-self: center;
+				align-self: center;
+				border: none;
+				min-width: 820px;
+				width: 60%;
+				height: 90vh;
+
+				border-radius: 15px;
+				box-shadow: 0px 12px 27px 3px rgba(0, 0, 0, 0.20);
+			}
+		}
+
+		#spinner-center {
+			position: absolute;
+			z-index: 1;
+			justify-self: center;
+			align-self: center;
+			transition: opacity 1s;
+		}
+
+		.loader,
+		.loader:after {
+			border-radius: 50%;
+			width: 10em;
+			height: 10em;
+		}
+
+		.loader {
+			font-size: 10px;
+			position: relative;
+			text-indent: -9999em;
+			border-top: 1.1em solid rgba(27, 209, 76, 0.2);
+			border-right: 1.1em solid rgba(27, 209, 76, 0.2);
+			border-bottom: 1.1em solid rgba(27, 209, 76, 0.2);
+			border-left: 1.1em solid #1bd14c;
+			-webkit-transform: translateZ(0);
+			-ms-transform: translateZ(0);
+			transform: translateZ(0);
+			-webkit-animation: load8 1.1s infinite linear;
+			animation: load8 1.1s infinite linear;
+		}
+
+		@-webkit-keyframes load8 {
+			0% {
+				-webkit-transform: rotate(0deg);
+				transform: rotate(0deg);
+			}
+
+			100% {
+				-webkit-transform: rotate(360deg);
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes load8 {
+			0% {
+				-webkit-transform: rotate(0deg);
+				transform: rotate(0deg);
+			}
+
+			100% {
+				-webkit-transform: rotate(360deg);
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="spinner-center">
+			<div class="loader"></div>
+		</div>
+		<iframe style="background-color: white;" class="app-content"
+			onload="document.getElementById('spinner-center').style.opacity = 0;"
+			src="http://147.91.204.116:11131"></iframe>
+		<!-- <div class="loader">Loading...</div>
+		 -->
+		<!--  ./embedded.html -->
+	</div>
+</body>
+
+</html>

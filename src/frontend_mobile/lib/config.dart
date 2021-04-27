@@ -23,4 +23,4 @@ const String CURRENCY = '€';
 const PRIVATE_KEY =
     "7097e2fa2beaf3ff46c0edafb37ca4b1ad021c3d5e70ca5057bca3754a9aa3b9";
 const HOST = "147.91.204.116:11130";
-const JSON_NETWORK_ATTR = "";
+const JSON_NETWORK_ATTR = "1619103681996";
