@@ -283,7 +283,7 @@ class Order {
   Order(
       {this.id,
       this.productId,
-        this.amount,
+      this.amount,
       this.status,
       this.buyerId,
       this.date,

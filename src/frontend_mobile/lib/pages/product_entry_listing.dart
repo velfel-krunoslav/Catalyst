@@ -7,6 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import '../sizer_helper.dart'
+    if (dart.library.html) '../sizer_web.dart'
+    if (dart.library.io) '../sizer_io.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +17,6 @@ import 'package:frontend_mobile/pages/inbox.dart';
 import '../internals.dart';
 import '../config.dart';
 import 'inbox.dart';
-import 'dart:js' as js;
 
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
@@ -28,7 +30,7 @@ class ProductEntryListing extends StatefulWidget {
 }
 
 class _ProductEntryListing extends State<ProductEntryListing> {
-  final isCanvasKit = js.context['flutterCanvasKit'] != null;
+  final sizer = getSizer();
   int _current = 0;
   bool _stateChange = false;
   ProductEntryListingPage _data;
@@ -48,7 +50,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
         Stack(
           children: [
             Container(
-                height: (isCanvasKit) ? 380 : 240,
+                height: sizer.getImageHeight(),
                 width: double.infinity,
                 child: Stack(
                   children: [
@@ -56,7 +58,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         child: CarouselSlider(
                       options: CarouselOptions(
                           autoPlay: false,
-                          height: (isCanvasKit) ? 380 : 240,
+                          height: sizer.getImageHeight(),
                           viewportFraction: 1,
                           onPageChanged: (index, reason) {
                             setState(() {
@@ -109,7 +111,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                   ],
                 )),
             Card(
-                margin: EdgeInsets.fromLTRB(0, (isCanvasKit) ? 375 : 235, 0, 0),
+                margin:
+                    EdgeInsets.fromLTRB(0, sizer.getImageHeight() - 5, 0, 0),
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Column(
