@@ -8,23 +8,25 @@ import 'package:frontend_mobile/pages/ratingpage.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
 
-const BACKGROUNDCOLOR = 0xFFE5E5E5;
-const YELLOW = 0xFFE7A600; //added
-const GREY = 0xFFC8C8C8; //added
+
 
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
-
+  
   @override
   Widget build(BuildContext context) {
+    double width =  MediaQuery.of(context).size.width;
     reviewsModel = Provider.of<ReviewsModel>(context);
 
     return Scaffold(
         appBar: AppBar(
           title: Text(
             "Recenzije",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              color: Colors.black),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -111,7 +113,7 @@ class ProductReviews extends StatelessWidget {
                           [1, 'DC3535', reviewsModel.starsCount[0]]
                         ].map((e) {
                           return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
                                     children: <Widget>[
@@ -123,13 +125,14 @@ class ProductReviews extends StatelessWidget {
                                               width: 16,
                                               height: 16);
                                         }).toList()),
+                                        SizedBox(width: 20),
                                 SvgPicture.string('''
-                          <svg width="260" height="5" />
-                          <rect width="260" height="5" fill="#ECECEC">
+                          <svg width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" />
+                          <rect width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" fill="#ECECEC">
                           <rect width="''' +
                                     (reviewsModel.reviewsCount != 0
                                         ? ((e[2] / reviewsModel.reviewsCount) *
-                                                260)
+                                                width * REVIEW_BAR_WIDTH_PERCENT)
                                             .toString()
                                         : 0.toString()) +
                                     '''" height="5" fill="#''' +

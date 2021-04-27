@@ -24,11 +24,8 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
-              child: Container(
-        width: 300.0,
-        child: Column(
+              child: Padding(padding: EdgeInsets.all(20), child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(padding: EdgeInsets.fromLTRB(50.0, 0, 50.0, 0)),
               SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),

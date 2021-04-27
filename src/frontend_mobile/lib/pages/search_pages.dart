@@ -9,11 +9,17 @@ import 'package:frontend_mobile/widgets.dart';
 import '../internals.dart';
 
 class SearchPage extends StatefulWidget {
+  String query;
+  SearchPage({String this.query});
   @override
-  _SearchPageState createState() => _SearchPageState();
+  _SearchPageState createState() => _SearchPageState(this.query);
 }
 
 class _SearchPageState extends State<SearchPage> {
+  String query;
+  _SearchPageState(String query) {
+    this.query = query;
+  }
   bool _value = false;
   onSwitchValueChanged(bool value) {
     setState(() {
@@ -149,12 +155,12 @@ class _SearchPageState extends State<SearchPage> {
                                 color: Color(DARK_GREY),
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
-                                fontSize: 18)),
+                                fontSize: 24)),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -319,7 +325,7 @@ class _SearchPageState extends State<SearchPage> {
                               color: Color(DARK_GREY),
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
-                              fontSize: 18)),
+                              fontSize: 24)),
                     ],
                   ),
                 ),
@@ -375,7 +381,7 @@ class _SearchPageState extends State<SearchPage> {
                         width: 282,
                         height: 34,
                         child: Text(
-                            "Prikazati proizvode dobavljaca koji su udaljeni najvise $hintDistance km.",
+                            "Prikazati proizvode dobavljača koji su udaljeni najviše $hintDistance km.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color(BLACK),
@@ -500,7 +506,7 @@ class _SearchPageState extends State<SearchPage> {
                       contentPadding: EdgeInsets.only(top: 36),
                       fillColor: Color(LIGHT_GREY),
                       filled: true,
-                      hintText: 'Pretraga',
+                      hintText: this.query,
                       hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
                       prefixIcon: Padding(
                         padding: EdgeInsets.only(left: 15, right: 10),
@@ -531,7 +537,7 @@ class _SearchPageState extends State<SearchPage> {
                                   "Lokacija",
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       color: Color(BLACK)),
                                 )
                               ],
@@ -551,7 +557,7 @@ class _SearchPageState extends State<SearchPage> {
                                   "Filteri",
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       color: Color(BLACK)),
                                 )
                               ],
@@ -582,7 +588,7 @@ class _SearchPageState extends State<SearchPage> {
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
-            'Preporučeno',
+            this.query,
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 28,

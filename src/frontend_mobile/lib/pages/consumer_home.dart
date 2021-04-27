@@ -24,6 +24,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int category = -1;
   int activeMenu = 0;
   int cartItemsCount = 0;
+  String query;
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
 
   User user = new User(
@@ -145,8 +146,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         )
                       ],
                     ),
+                    SizedBox(height: 10),
                     TextField(
-                      onChanged: (text) {},
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                      onChanged: (text) {this.query = text;},
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 36),
                         fillColor: Color(LIGHT_GREY),
@@ -168,7 +171,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SearchPage()));
+                                builder: (context) => SearchPage(query: this.query)));
                       },
                     ),
                   ],
@@ -261,11 +264,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (index + 1) % 2 == 0
-                      ? EdgeInsets.only(left: 10, bottom: 15)
-                      : EdgeInsets.only(right: 10, bottom: 15),
+                  padding: (size.width >= 640) ? 
+                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
+                   : 
+                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width - 60) / 2,
+                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
                       child: ProductEntryCard(
                           product: productsModel.products[index],
                           onPressed: () {
@@ -306,7 +310,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             }),
           ),
         ),
-        (recently != null || recently.length == 0)
+        (recently.length != 0)
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, top: 30, bottom: 20, right: 20),
@@ -325,11 +329,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10,),
                     Row(
                         children: List.generate(
                             (recently.length < 3) ? recently.length : 3,
                             (index) {
-                      if (index >= 2) {
+                      if (((index + 2) * 10) + 40 > size.width) {
                         return Expanded(
                           child: SizedBox(
                             height: 90,
@@ -388,11 +393,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (index + 1) % 2 == 0
-                      ? EdgeInsets.only(left: 10, bottom: 15)
-                      : EdgeInsets.only(right: 10, bottom: 15),
+                  padding: (size.width >= 640) ? 
+                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
+                   : 
+                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width - 60) / 2,
+                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
                               assetUrls:

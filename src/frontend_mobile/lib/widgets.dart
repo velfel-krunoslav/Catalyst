@@ -408,6 +408,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                                   : 'kom')) +
                           ')',
                       style: TextStyle(
+                        fontFamily: 'Inter',
                         fontSize: 16,
                         color: Color(RED_ATTENTION),
                         fontWeight: FontWeight.w700,
@@ -682,7 +683,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                           width: ICON_SIZE,
                         ),
                         onPressed: () {
-                          this.widget.callback(-1);
+                          Navigator.pop(context);
                         },
                       ),
                     ),
@@ -771,6 +772,7 @@ class Contacts extends StatelessWidget {
           children: <Widget>[
             Text("Kontakti:",
                 style: TextStyle(
+                  fontFamily: 'Inter',
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
@@ -812,6 +814,8 @@ class Contacts extends StatelessWidget {
                       Text(
                         contacts[index].name,
                         style: TextStyle(
+
+                  fontFamily: 'Inter',
                             fontSize: 16.0, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -920,6 +924,8 @@ class _ChatsState extends State<Chats> {
                                 Text(
                                   chat.sender.name,
                                   style: TextStyle(
+
+                  fontFamily: 'Inter',
                                       color: Colors.black,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w600),
@@ -930,6 +936,8 @@ class _ChatsState extends State<Chats> {
                                   child: Text(
                                     chat.text,
                                     style: TextStyle(
+
+                  fontFamily: 'Inter',
                                         color: chat.unread
                                             ? Color(LIGHT_GREY)
                                             : Color(DARK_GREY),
@@ -949,6 +957,8 @@ class _ChatsState extends State<Chats> {
                               Text(
                                 chat.time,
                                 style: TextStyle(
+
+                  fontFamily: 'Inter',
                                     color: chat.unread
                                         ? Color(LIGHT_GREY)
                                         : Colors.black,
@@ -958,7 +968,7 @@ class _ChatsState extends State<Chats> {
                               SizedBox(height: 5.0),
                               chat.unread
                                   ? Container(
-                                      width: 40.0,
+                                      width: 100.0,
                                       height: 20.0,
                                       decoration: BoxDecoration(
                                           color: Color(LIGHT_GREY),
@@ -966,11 +976,12 @@ class _ChatsState extends State<Chats> {
                                               BorderRadius.circular(30.0)),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'NEW',
+                                        'NOVA PORUKA',
                                         style: TextStyle(
+
+                  fontFamily: 'Inter',
                                             color: Color(DARK_GREY),
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 12.0),
                                       ),
                                     )
                                   : SizedBox.shrink(),

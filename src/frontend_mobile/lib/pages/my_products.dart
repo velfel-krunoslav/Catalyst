@@ -43,7 +43,7 @@ class _MyProductsState extends State<MyProducts> {
     appBar: AppBar(
         title: Text(
           "Moji proizvodi",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -62,7 +62,7 @@ class _MyProductsState extends State<MyProducts> {
             );
           },
           icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
-          label: Text("Dodaj proizvod",),
+          label: Text("Dodaj proizvod", style: TextStyle(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w700),),
           backgroundColor: Color(MINT),
         ),
     body: ListView(

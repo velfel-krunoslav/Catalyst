@@ -58,9 +58,10 @@ class _HelpSupportState extends State<HelpSupport> {
                   Text('Imam problem sa:',
                       style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 14,
+                          fontSize: 16,
                           color: Color(DARK_GREY)))
                 ]),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -96,21 +97,18 @@ class _HelpSupportState extends State<HelpSupport> {
                         )),
                   ],
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 36),
                 Row(children: [
                   Text('Opis problema:',
                       style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 14,
+                          fontSize: 16,
                           color: Color(DARK_GREY)))
                 ]),
+
+                SizedBox(height: 10),
                 TextField(
                   decoration: InputDecoration(
-                      hintText: "Problem...",
-                      labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          color: Color(BLACK)),
                       border: InputBorder.none,
                       //border: OutlineInputBorder(),
                       fillColor: Color(LIGHT_GREY),

@@ -24,16 +24,11 @@ class _UserInboxState extends State<Inbox> {
         leading: IconButton(
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new ChangeNotifierProvider(
-                        create: (context) => ProductsModel(),
-                        child: ConsumerHomePage())),
-              );
+              Navigator.pop(context);
             }),
         title: Text('Poruke',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                  fontFamily: 'Inter',color: Colors.black, fontWeight: FontWeight.bold)),
         elevation: 0.0,
         actions: <Widget>[
           IconButton(

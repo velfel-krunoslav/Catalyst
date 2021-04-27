@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,7 +19,9 @@ class MyAccount extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Moj nalog",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            fontFamily: 'Inter',
+            color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,

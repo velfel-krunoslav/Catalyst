@@ -42,12 +42,14 @@ class _ChatScreenState extends State<ChatScreen> {
           Text(
             message.time,
             style: TextStyle(
+                  fontFamily: 'Inter',
               color: Colors.black,
               fontSize: 16.0,
             ),
           ),
           Text(message.text,
               style: TextStyle(
+                  fontFamily: 'Inter',
                   color: Colors.black,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600)),
@@ -76,7 +78,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       borderSide: BorderSide(
                     color: Color(TEAL),
                   )),
-                  hintText: 'Posalji poruku...',
+                  hintText: 'Pošalji poruku...',
+                  hintStyle: TextStyle(
+                  fontFamily: 'Inter',)
                 ),
               ),
             ),
@@ -105,12 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: IconButton(
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
-              {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Inbox()),
-                );
-              }
+              Navigator.pop(context);
             }),
         title: Container(
           height: 85,
@@ -123,6 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Text(
                 widget.user.name,
                 style: TextStyle(
+                  fontFamily: 'Inter',
                     color: Colors.black,
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold),
