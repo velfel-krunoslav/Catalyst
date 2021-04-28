@@ -12,14 +12,14 @@
     "absolutePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol",
     "exportedSymbols": {
       "Users": [
-        1304
+        1334
       ]
     },
-    "id": 1305,
+    "id": 1335,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1303,
+        "id": 1333,
         "literals": [
           "solidity",
           ">=",
@@ -38,14 +38,14 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1304,
+        "id": 1334,
         "linearizedBaseContracts": [
-          1304
+          1334
         ],
         "name": "Users",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 1305,
+        "scope": 1335,
         "src": "34:21:5"
       }
     ],
@@ -56,7 +56,7 @@
       "absolutePath": "/home/jovan/Catalyst/src/frontend_mobile/contracts/Users.sol",
       "exportedSymbols": {
         "Users": [
-          1304
+          1334
         ]
       }
     },
@@ -73,7 +73,7 @@
             ".0"
           ]
         },
-        "id": 1303,
+        "id": 1333,
         "name": "PragmaDirective",
         "src": "0:32:5"
       },
@@ -89,20 +89,20 @@
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            1304
+            1334
           ],
           "name": "Users",
           "nodes": [
             null
           ],
-          "scope": 1305
+          "scope": 1335
         },
-        "id": 1304,
+        "id": 1334,
         "name": "ContractDefinition",
         "src": "34:21:5"
       }
     ],
-    "id": 1305,
+    "id": 1335,
     "name": "SourceUnit",
     "src": "0:56:5"
   },
@@ -112,7 +112,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-28T06:57:15.793Z",
+  "updatedAt": "2021-04-28T07:55:19.261Z",
   "devdoc": {
     "methods": {}
   },

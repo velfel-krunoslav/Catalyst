@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   List<int> indices = [];
   List<List<String>> ids = [];
   Future<ProductEntry> Function(int id) getProductByIdCallback;
+  OrdersModel ordersModel;
   _ConsumerCartState(this.getProductByIdCallback);
   @override
   void initState() {
@@ -85,6 +87,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
 
   @override
   Widget build(BuildContext context) {
+    ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -727,10 +730,11 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                 text:
                                     'Potvrdi kupovinu (${total.toStringAsFixed(2)}$CURRENCY)', // should be showing the purchase total saved in a variable, for example
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Blank()));
+                                  DateTime date = new DateTime(now.year, now.month, now.day);
+                                  print(date);
+                                  for(int i = 0; i < products.length; i++) {
+                                     ordersModel.addOrder(products[i].id, quantities[i], date, 0, 0, customerAddress, (desc.compareTo('Plaćanje pouzećem') == 0) ? 0 : 1);
+                                   }
                                 })
                           ],
                         ))

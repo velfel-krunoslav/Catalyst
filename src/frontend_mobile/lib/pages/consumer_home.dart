@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -130,7 +131,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      ConsumerCart(getProductByIdCallback)),
+                                      new ChangeNotifierProvider(
+                                          create: (context) => OrdersModel(0),
+                                          child: ConsumerCart(
+                                              getProductByIdCallback))),
                             );
                           },
                         ),

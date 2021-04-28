@@ -280,6 +280,8 @@ class Order {
   int status; //  confirmed, delivered, refunded, rejected
   int buyerId;
   int sellerId;
+  String deliveryAddress;
+  int paymentType;
   Order(
       {this.id,
       this.productId,
@@ -287,7 +289,9 @@ class Order {
       this.status,
       this.buyerId,
       this.date,
-      this.sellerId});
+      this.sellerId,
+      this.deliveryAddress,
+      this.paymentType});
 }
 
 ChatUser currentUser = ChatUser(

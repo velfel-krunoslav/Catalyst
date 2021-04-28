@@ -103,6 +103,8 @@ class OrdersModel extends ChangeNotifier {
         sellerId: t[6].toInt(),
         status: t[4].toInt(),
         date: date,
+        deliveryAddress: t[7],
+        paymentType: t[8].toInt()
       );
       orders.add(o);
     }
@@ -110,7 +112,7 @@ class OrdersModel extends ChangeNotifier {
   }
 
   addOrder(int _productId, int _amount, DateTime _date, int _buyerId,
-      int _sellerId) async {
+      int _sellerId, String _deliveryAddress, int _paymentType) async {
     isLoading = true;
     notifyListeners();
 
@@ -130,7 +132,9 @@ class OrdersModel extends ChangeNotifier {
                 BigInt.from(_amount),
                 dateStr,
                 BigInt.from(_buyerId),
-                BigInt.from(_sellerId)
+                BigInt.from(_sellerId),
+                _deliveryAddress,
+                BigInt.from(_paymentType)
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
       print("order dodat");

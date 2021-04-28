@@ -35,6 +35,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   bool _stateChange = false;
   ProductEntryListingPage _data;
   var reviewsModel;
+
+  void newReviewCallback2(int productId, int rating, String desc, int userId){
+    reviewsModel.addReview(productId, rating, desc, 0);
+  }
+
   _ProductEntryListing(ProductEntryListingPage _data) {
     this._data = _data;
   }
@@ -215,7 +220,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         new ChangeNotifierProvider(
                                             create: (context) =>
                                                 ReviewsModel(_data.id),
-                                            child: ProductReviews())),
+                                            child: ProductReviews(_data.id, newReviewCallback2))),
                               );
                             },
                             child: Text(
