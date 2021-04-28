@@ -7,9 +7,9 @@ import '../widgets.dart';
 class Settings extends StatelessWidget {
   bool _value = false;
   onSwitchValueChanged(bool value) {
-    setState(() {
+    /*  setState(() {
       _value = value;
-    });
+    });*/
   }
 
   @override
