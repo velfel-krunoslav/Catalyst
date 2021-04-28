@@ -12,7 +12,6 @@ import '../models/productsModel.dart';
 
 String customerAddress = 'Kralja Aleksandra I Karađorđevića 36';
 String desc = '1BvBMSEYstWetqTFn5Au4m4G';
-final _textController = new TextEditingController();
 
 class ConsumerCart extends StatefulWidget {
   Future<ProductEntry> Function(int id) getProductByIdCallback;
@@ -27,7 +26,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   double shipping = 5.0;
   double subtotal = 0;
   double total;
-  String paymentMethod;
+  String method, paymentMethod;
   ProductsModel productsModel;
   List<CartProduct> products = [];
   List<int> quantities = [];
@@ -300,8 +299,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                   flex: 9,
                                   child: Column(children: [
                                     Row(children: [
-                                      Text(
-                                          "Adresa",
+                                      Text('Adresa',
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 16,
@@ -309,11 +307,12 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                               color: Color(BLACK)))
                                     ]),
                                     Row(children: [
-                                      Text( (customerAddress.length > 32)
-                                        ? customerAddress.substring(
-                                        0, 32) +
-                                        '...'
-                                        : customerAddress, // TODO
+                                      Text(
+                                          (customerAddress.length > 32)
+                                              ? customerAddress.substring(
+                                                      0, 32) +
+                                                  '...'
+                                              : customerAddress,
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 16,
@@ -364,31 +363,29 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(15.0),
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              SizedBox(
-                                                                  width: 280,
-                                                                  height: 36,
-                                                                  child: TextField(
-                                                                      controller: _textController,
-                                                                      onChanged: (String value) async {
-                                                                        setState(() {
-                                                                          customerAddress = _textController.text;
-                                                                        });
-                                                                      },
-                                                                      decoration: InputDecoration(
-                                                                          hintText: 'Izmeni adresu',
-                                                                          filled: true,
-                                                                          fillColor: Color(LIGHT_GREY),
-                                                                          border: new OutlineInputBorder(
-                                                                              borderRadius: const BorderRadius.all(
-                                                                                const Radius.circular(5.0),
-                                                                              ),
-                                                                              borderSide: BorderSide.none))))
-                                                            ])),
+                                                        child: TextField(
+                                                            onChanged:
+                                                                (String value) {
+                                                              setState(() {
+                                                                customerAddress =
+                                                                    value;
+                                                              });
+                                                            },
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    hintText:
+                                                                        'Izmeni adresu',
+                                                                    filled:
+                                                                        true,
+                                                                    fillColor:
+                                                                        Color(
+                                                                            LIGHT_GREY),
+                                                                    border: new OutlineInputBorder(
+                                                                        borderRadius: const BorderRadius.all(
+                                                                          const Radius.circular(
+                                                                              5.0),
+                                                                        ),
+                                                                        borderSide: BorderSide.none)))),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -602,30 +599,21 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                           ),
                                                                                           Padding(
                                                                                               padding: const EdgeInsets.all(15.0),
-                                                                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                                                                SizedBox(
-                                                                                                    width: 280,
-                                                                                                    height: 36,
-                                                                                                    child: TextField(
-                                                                                                      controller: _textController,
-                                                                                                      onChanged: (String value) async {
-                                                                                                      setState(
-                                                                                                      () {
-                                                                                                      customerAddress =
-                                                                                                      _textController.text;
-                                                                                                      });
-
-                                                                                                        },
-                                                                                                        decoration: InputDecoration(
-                                                                                                            hintText: 'Unesite privatni ključ',
-                                                                                                            filled: true,
-                                                                                                            fillColor: Color(LIGHT_GREY),
-                                                                                                            border: new OutlineInputBorder(
-                                                                                                                borderRadius: const BorderRadius.all(
-                                                                                                                  const Radius.circular(5.0),
-                                                                                                                ),
-                                                                                                                borderSide: BorderSide.none))))
-                                                                                              ])),
+                                                                                              child: TextField(
+                                                                                                  onChanged: (String value) {
+                                                                                                    setState(() {
+                                                                                                      desc = value;
+                                                                                                    });
+                                                                                                  },
+                                                                                                  decoration: InputDecoration(
+                                                                                                      hintText: 'Unesite privatni ključ',
+                                                                                                      filled: true,
+                                                                                                      fillColor: Color(LIGHT_GREY),
+                                                                                                      border: new OutlineInputBorder(
+                                                                                                          borderRadius: const BorderRadius.all(
+                                                                                                            const Radius.circular(5.0),
+                                                                                                          ),
+                                                                                                          borderSide: BorderSide.none)))),
                                                                                           Row(
                                                                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                             children: [
@@ -649,8 +637,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                                   color: Color(LIGHT_GREY),
                                                                                                   onPressed: () {
                                                                                                     setState(() {
-                                                                                                      desc =
-                                                                                                      paymentMethod = "Plaćanje putem e-novčanika";
+                                                                                                      paymentMethod = desc;
+                                                                                                      method = "Plaćanje putem e-novčanika";
                                                                                                     });
                                                                                                     Navigator.pop(context);
                                                                                                   },
@@ -745,7 +733,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                   DateTime date = new DateTime(now.year, now.month, now.day);
                                   print(date);
                                   for(int i = 0; i < products.length; i++) {
-                                     //ordersModel.addOrder(products[i].id, quantities[i], date, 0, 0, _deliveryAddress, _paymentType);
+                                     ordersModel.addOrder(products[i].id, quantities[i], date, 0, 0, customerAddress, (desc.compareTo('Plaćanje pouzećem') == 0) ? 0 : 1);
                                    }
                                 })
                           ],
