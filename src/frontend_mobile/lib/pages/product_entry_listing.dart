@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'

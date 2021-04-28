@@ -6,6 +6,7 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -16,11 +17,14 @@ import 'package:provider/provider.dart';
 import '../models/productsModel.dart';
 
 class Login extends StatelessWidget {
+  UsersModel usersModel;
+  int userId;
   String privateKey = '';
   String accountAddress = '';
   bool flg = true;
   @override
   Widget build(BuildContext context) {
+    usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
@@ -93,14 +97,18 @@ class Login extends StatelessWidget {
               ButtonFill(
                 text: 'Prijavi se',
                 onPressed: () {
+
                   Prefs.instance.setStringValue('privateKey', privateKey);
                   Prefs.instance
                       .setStringValue('accountAddress', accountAddress);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new MultiProvider(providers: [
+                  //int id = usersModel.checkForUser(accountAddress, privateKey) as int;
+                  usersModel.checkForUser(accountAddress, privateKey).then((rez){
+                    print(rez);
+                    if (rez != null && rez > -1){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => new MultiProvider(providers: [
                               ChangeNotifierProvider<ProductsModel>(
                                   create: (_) => ProductsModel()),
                               ChangeNotifierProvider<CategoriesModel>(
@@ -108,7 +116,14 @@ class Login extends StatelessWidget {
                               // ChangeNotifierProvider<OrdersModel>(
                               //     create: (_) => OrdersModel()),
                             ], child: ConsumerHomePage())),
-                  );
+                      );
+                    }
+                    else{
+                      //TODO pogresan unos podataka za prijavu
+                    }
+                  });
+
+
                 },
               ),
               SizedBox(height: 100.0),

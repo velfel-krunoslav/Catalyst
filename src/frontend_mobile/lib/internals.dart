@@ -181,28 +181,32 @@ class ProductEntryListingPage extends ProductEntry {
 }
 
 class User {
-  String forename;
+  int id;
+  String name;
   String surname;
+  String privateKey;
+  String metamaskAddress;
   String photoUrl;
+  String desc;
+  String email;
   String phoneNumber;
-  String address;
-  String city;
-  String mail;
-  String about;
-  double rating;
-  int reviewsCount;
-
+  String homeAddress;
+  String birthday;
+  int uType;
+  // TODO add rating
   User({
-    this.forename,
+    this.id,
+    this.name,
     this.surname,
+    this.privateKey,
+    this.metamaskAddress,
     this.photoUrl,
+    this.desc,
+    this.email,
     this.phoneNumber,
-    this.address,
-    this.city,
-    this.mail,
-    this.about,
-    this.rating,
-    this.reviewsCount,
+    this.homeAddress,
+    this.birthday,
+    this.uType
   });
 }
 
@@ -231,29 +235,33 @@ class UserReview extends User {
   int stars;
 
   UserReview(
-      {String forename,
+      {int id,
+      String name,
       String surname,
+      String privateKey,
+      String metamaskAddress,
       String photoUrl,
+      String desc,
+      String email,
       String phoneNumber,
-      String address,
-      String city,
-      String mail,
-      String about,
-      double rating,
-      int reviewsCount,
+      String homeAddress,
+      String birthday,
+      int uType,
       this.text,
       this.stars})
       : super(
-            forename: forename,
-            surname: surname,
-            photoUrl: photoUrl,
-            phoneNumber: phoneNumber,
-            address: address,
-            city: city,
-            mail: mail,
-            about: about,
-            rating: rating,
-            reviewsCount: reviewsCount);
+      name: name,
+    surname: surname,
+    privateKey : privateKey,
+    metamaskAddress : metamaskAddress,
+    photoUrl : photoUrl,
+    desc: desc,
+    email:email,
+    phoneNumber:phoneNumber,
+    homeAddress:homeAddress,
+    birthday:birthday,
+    uType:uType,
+  );
 }
 
 class ReviewPage {

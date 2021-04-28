@@ -141,27 +141,27 @@ class OrdersModel extends ChangeNotifier {
       } else {
         isLoading = false;
       }
-    }
-  }
+    }}
 
-  setDateOrders() {
-    for (int i = 0; i < orders.length; i++) {
-      DateTime d = orders[i].date;
-      int flag = 0;
-      for (int j = 0; j < dateOrders.length; j++) {
-        if (dateOrders[j].date.toString() == d.toString()) {
-          dateOrders[j].orders.add(orders[i]);
-          flag = 1;
+
+    setDateOrders() {
+      for (int i = 0; i < orders.length; i++) {
+        DateTime d = orders[i].date;
+        int flag = 0;
+        for (int j = 0; j < dateOrders.length; j++) {
+          if (dateOrders[j].date.toString() == d.toString()) {
+            dateOrders[j].orders.add(orders[i]);
+            flag = 1;
+          }
+        }
+        if (flag == 0) {
+          dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
         }
       }
-      if (flag == 0) {
-        dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
-      }
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
-}
 
 class DateOrder {
   DateTime date;

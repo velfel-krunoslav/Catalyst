@@ -65,7 +65,7 @@ class MyAccount extends StatelessWidget {
           ),
           Center(
               child: Text(
-            user.forename + " " + user.surname,
+            user.name + " " + user.surname,
             style: TextStyle(
                 fontFamily: "Inter", fontSize: 35, fontWeight: FontWeight.w500),
           )),
@@ -75,7 +75,7 @@ class MyAccount extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50),
             child: Text(
-              user.about,
+              user.desc,
               style: TextStyle(fontFamily: "Inter", fontSize: 17),
             ),
           ),
@@ -106,7 +106,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.mail,
+                          user.email,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],
@@ -136,7 +136,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.address + ", " + user.city,
+                          user.homeAddress,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],
