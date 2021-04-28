@@ -13,12 +13,28 @@ import 'package:provider/provider.dart';
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
+  List<Review> reviews = [];
+  Function newReviewCallback2;
+  ProductReviews(this.productId, this.newReviewCallback2);
+  void newReviewCallback(int rating, String desc){
 
-  ProductReviews(this.productId);
-  // @override
-  // void initState() {
-  //
-  // }
+    reviewsModel.addReview(productId, rating, desc, 0);
+    //     .then((value) => (){
+    //   for (int i = 0; i < reviewsModel.reviews.length; i++) {
+    //     setState() {
+    //       reviews.add(reviewsModel.reviews[i]);
+    //     }
+    //   }
+    // }
+    // );
+
+    newReviewCallback2(productId, rating, desc, 0);
+  }
+  @override
+  void init() {
+
+
+  }
   @override
   Widget build(BuildContext context) {
     double width =  MediaQuery.of(context).size.width;
@@ -189,7 +205,7 @@ class ProductReviews extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) => new ChangeNotifierProvider(
                                             create: (context) => ReviewsModel(0),
-                                            child: RatingPage(productId))),
+                                            child: RatingPage(productId, newReviewCallback))),
                                   );
                                 },
                               ),

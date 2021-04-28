@@ -12,10 +12,11 @@ import '../widgets.dart';
 
 class RatingPage extends StatefulWidget {
   int productId;
-  RatingPage(this.productId);
+  Function newReviewCallback;
+  RatingPage(this.productId, this.newReviewCallback);
 
   @override
-  _RatingPage createState() => _RatingPage(productId);
+  _RatingPage createState() => _RatingPage(productId, newReviewCallback);
 }
 
 class _RatingPage extends State<RatingPage> {
@@ -23,7 +24,8 @@ class _RatingPage extends State<RatingPage> {
   String desc;
   ReviewsModel reviewsModel;
   int productId;
-  _RatingPage(this.productId);
+  Function newReviewCallback;
+  _RatingPage(this.productId, this.newReviewCallback);
   @override
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
@@ -59,7 +61,7 @@ class _RatingPage extends State<RatingPage> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                      "assets/avatars/vendor_adrew_ballantyne_cc_by.jpg"),
+                      "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg"),
                 ),
                 Text(
                   "Petar Nikolic",
@@ -109,19 +111,9 @@ class _RatingPage extends State<RatingPage> {
                   ButtonFill(
                     text: 'Dodaj recenziju',
                     onPressed: () {
-                      reviewsModel.addReview(productId, _rating, desc, 0);
-                      // int count = 0;
-                      // Navigator.of(context).popUntil((_) => count++ >= 2);
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) =>
-                      //       new ChangeNotifierProvider(
-                      //           create: (context) =>
-                      //               ReviewsModel(productId),
-                      //           child: ProductReviews(productId))),
-                      //);
-
+                      //reviewsModel.addReview(productId, _rating, desc, 0);
+                      newReviewCallback(_rating, desc);
+                      Navigator.pop(context);
                     },
                   ),
                 ],

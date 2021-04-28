@@ -76,11 +76,10 @@ class ReviewsModel extends ChangeNotifier {
     _getReviewsCount = _contract.function("getReviewsCount");
 
     await getReviews(productId);
-    await getAverage();
-    await getStars();
   }
 
   getReviews(int productId) async {
+    isLoading = true;
     List totalReviewsList = await _client.call(
         contract: _contract,
         function: _getReviewsCount,
@@ -104,8 +103,10 @@ class ReviewsModel extends ChangeNotifier {
           rating: t[2].toInt()));
       //print("Model - "+ reviews[i].id.toString());
     }
-
+    getAverage();
+    getStars();
     notifyListeners();
+    isLoading = false;
   }
 
   addReview(int productId, int rating, String desc, int userId) async {
@@ -125,7 +126,7 @@ class ReviewsModel extends ChangeNotifier {
               BigInt.from(userId)
             ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
-    getReviews(productId);
+    await getReviews(productId);
   }
 
   getAverage() async {
