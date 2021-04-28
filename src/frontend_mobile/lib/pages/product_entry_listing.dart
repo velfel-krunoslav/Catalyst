@@ -215,7 +215,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         new ChangeNotifierProvider(
                                             create: (context) =>
                                                 ReviewsModel(_data.id),
-                                            child: ProductReviews())),
+                                            child: ProductReviews(_data.id))),
                               );
                             },
                             child: Text(

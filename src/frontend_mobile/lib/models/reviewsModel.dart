@@ -102,6 +102,7 @@ class ReviewsModel extends ChangeNotifier {
           desc: t[3],
           productId: t[1].toInt(),
           rating: t[2].toInt()));
+      //print("Model - "+ reviews[i].id.toString());
     }
 
     notifyListeners();

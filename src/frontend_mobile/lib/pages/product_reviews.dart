@@ -13,7 +13,12 @@ import 'package:provider/provider.dart';
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
-  
+
+  ProductReviews(this.productId);
+  // @override
+  // void initState() {
+  //
+  // }
   @override
   Widget build(BuildContext context) {
     double width =  MediaQuery.of(context).size.width;
@@ -182,7 +187,9 @@ class ProductReviews extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => new RatingPage()),
+                                        builder: (context) => new ChangeNotifierProvider(
+                                            create: (context) => ReviewsModel(0),
+                                            child: RatingPage(productId))),
                                   );
                                 },
                               ),
