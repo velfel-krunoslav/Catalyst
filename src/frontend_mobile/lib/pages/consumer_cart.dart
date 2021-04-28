@@ -731,10 +731,23 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                     'Potvrdi kupovinu (${total.toStringAsFixed(2)}$CURRENCY)', // should be showing the purchase total saved in a variable, for example
                                 onPressed: () {
                                   DateTime date = new DateTime(now.year, now.month, now.day);
-                                  print(date);
+                                  List<Order> orders = [];
                                   for(int i = 0; i < products.length; i++) {
-                                     ordersModel.addOrder(products[i].id, quantities[i], date, 0, 0, customerAddress, (desc.compareTo('Plaćanje pouzećem') == 0) ? 0 : 1);
+
+                                    orders.add(Order(id: 0,
+                                                    amount: quantities[i],
+                                                    date: date,
+                                      status: 0,
+                                      sellerId: 0,
+                                      buyerId: 0,
+                                      paymentType: (desc.compareTo('Plaćanje pouzećem') == 0) ? 0 : 1,
+                                      deliveryAddress: customerAddress,
+                                      productId: products[i].id
+
+                                                    ));
                                    }
+                                  ordersModel.addOrder(orders);
+                                  Navigator.pop(context);
                                 })
                           ],
                         ))

@@ -18,7 +18,7 @@ class ProductReviews extends StatelessWidget {
   ProductReviews(this.productId, this.newReviewCallback2);
   void newReviewCallback(int rating, String desc){
 
-    reviewsModel.addReview(productId, rating, desc, 0);
+    //reviewsModel.addReview(productId, rating, desc, 0);
     //     .then((value) => (){
     //   for (int i = 0; i < reviewsModel.reviews.length; i++) {
     //     setState() {

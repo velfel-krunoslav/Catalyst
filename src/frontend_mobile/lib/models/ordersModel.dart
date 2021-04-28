@@ -94,7 +94,7 @@ class OrdersModel extends ChangeNotifier {
       List<String> dateParts = t[3].split("-");
       DateTime date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
           int.parse(dateParts[2].substring(0, 2)));
-      //print(t);
+      print(t);
       Order o = Order(
         id: t[0].toInt(),
         productId: t[1].toInt(),
@@ -111,57 +111,58 @@ class OrdersModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addOrder(int _productId, int _amount, DateTime _date, int _buyerId,
-      int _sellerId, String _deliveryAddress, int _paymentType) async {
+  addOrder(List<Order> orders) async {
     isLoading = true;
-    notifyListeners();
 
-    String dateStr = _date.toString();
-    if (_productId != null &&
-        _buyerId != null &&
-        _sellerId != null &&
-        dateStr != null) {
-      await _client.sendTransaction(
-          _credentials,
-          Transaction.callContract(
-              maxGas: 6721925,
-              contract: _contract,
-              function: _createOrder,
-              parameters: [
-                BigInt.from(_productId),
-                BigInt.from(_amount),
-                dateStr,
-                BigInt.from(_buyerId),
-                BigInt.from(_sellerId),
-                _deliveryAddress,
-                BigInt.from(_paymentType)
-              ],
-              gasPrice: EtherAmount.inWei(BigInt.one)));
-      print("order dodat");
-      getOrders(buyerId);
-    } else {
-      isLoading = false;
-    }
-  }
-
-  setDateOrders() {
     for (int i = 0; i < orders.length; i++) {
-      DateTime d = orders[i].date;
-      int flag = 0;
-      for (int j = 0; j < dateOrders.length; j++) {
-        if (dateOrders[j].date.toString() == d.toString()) {
-          dateOrders[j].orders.add(orders[i]);
-          flag = 1;
+      String dateStr = orders[i].date.toString();
+      if (orders[i].productId != null &&
+          orders[i].buyerId != null &&
+          orders[i].sellerId != null &&
+          dateStr != null) {
+        await _client.sendTransaction(
+            _credentials,
+            Transaction.callContract(
+                maxGas: 6721925,
+                contract: _contract,
+                function: _createOrder,
+                parameters: [
+                  BigInt.from(orders[i].productId),
+                  BigInt.from(orders[i].amount),
+                  dateStr,
+                  BigInt.from(orders[i].buyerId),
+                  BigInt.from(orders[i].sellerId),
+                  orders[i].deliveryAddress,
+                  BigInt.from(orders[i].paymentType)
+                ],
+                gasPrice: EtherAmount.inWei(BigInt.one)));
+        print("order dodat");
+
+        //getOrders(buyerId);
+      } else {
+        isLoading = false;
+      }
+    }}
+
+
+    setDateOrders() {
+      for (int i = 0; i < orders.length; i++) {
+        DateTime d = orders[i].date;
+        int flag = 0;
+        for (int j = 0; j < dateOrders.length; j++) {
+          if (dateOrders[j].date.toString() == d.toString()) {
+            dateOrders[j].orders.add(orders[i]);
+            flag = 1;
+          }
+        }
+        if (flag == 0) {
+          dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
         }
       }
-      if (flag == 0) {
-        dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
-      }
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
-}
 
 class DateOrder {
   DateTime date;

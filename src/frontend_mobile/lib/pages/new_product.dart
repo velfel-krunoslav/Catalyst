@@ -80,7 +80,8 @@ class _NewProductState extends State<NewProduct> {
                 child: Container(
                     width: MediaQuery.of(context).size.width - 40,
                     child: Column(children: [
-                      Row(children: [
+                      Row(
+                          children: [
                         Text('Naziv proizvoda:',
                             style: TextStyle(
                                 fontFamily: 'Inter',
@@ -276,6 +277,7 @@ class _NewProductState extends State<NewProduct> {
                                 width: 142))
                       ]),
                       SizedBox(height: 20),
+
                       Row(children: [
                         Text('Fotografije: (max. 5)',
                             style: TextStyle(
@@ -356,7 +358,10 @@ class _NewProductState extends State<NewProduct> {
                                 //TODO istampati poruku da se popune sva polja
                               }
                             }),
-                      )
+                      ),
+
+
+
                     ])))));
   }
 }

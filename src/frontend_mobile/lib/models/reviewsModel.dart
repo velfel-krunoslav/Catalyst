@@ -94,14 +94,13 @@ class ReviewsModel extends ChangeNotifier {
 
     for (int i = 0; i < reviewsCount; i++) {
       var t = temp[0][i];
-      //print(t);
       reviews.add(Review(
           id: t[0].toInt(),
           userId: t[4].toInt(),
           desc: t[3],
           productId: t[1].toInt(),
           rating: t[2].toInt()));
-      //print("Model - "+ reviews[i].id.toString());
+
     }
     getAverage();
     getStars();
