@@ -6,7 +6,8 @@ import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/login.dart';
 import 'package:frontend_mobile/pages/sign_up.dart';
-
+import 'package:provider/provider.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -70,8 +71,20 @@ class Welcome extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new Login()),
+                                builder: (context) =>
+                                new MultiProvider(providers: [
+                                  ChangeNotifierProvider<UsersModel>(
+                                      create: (_) => UsersModel()),
+
+                                  // ChangeNotifierProvider<OrdersModel>(
+                                  //     create: (_) => OrdersModel()),
+                                ], child: Login())),
                           );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => new Login()),
+                          // );
                         },
                       )
                     ],

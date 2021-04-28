@@ -418,18 +418,17 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   User user = new User(
-      forename: "Petar",
+      name: "Petar",
       surname: "Nikolić",
       photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
       phoneNumber: "+49 76 859 69 58",
-      address: "4070 Jehovah Drive",
-      city: "Roanoke",
-      mail: "jay.ritter@gmail.com",
-      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+      homeAddress: "4070 Jehovah Drive",
+
+      email: "jay.ritter@gmail.com",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
           " sed do eiusmod tempor incididunt ut labore et dolore magna "
           "aliqua.",
-      rating: 4.5,
-      reviewsCount: 67);
+  );
 
   @override
   Widget build(BuildContext context) {
