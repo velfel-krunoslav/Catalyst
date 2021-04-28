@@ -113,7 +113,8 @@ class _RatingPage extends State<RatingPage> {
                     onPressed: () {
                       //reviewsModel.addReview(productId, _rating, desc, 0);
                       newReviewCallback(_rating, desc);
-                      Navigator.pop(context);
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     },
                   ),
                 ],

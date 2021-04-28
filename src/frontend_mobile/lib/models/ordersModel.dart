@@ -94,7 +94,7 @@ class OrdersModel extends ChangeNotifier {
       List<String> dateParts = t[3].split("-");
       DateTime date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
           int.parse(dateParts[2].substring(0, 2)));
-      print(t);
+      //print(t);
       Order o = Order(
         id: t[0].toInt(),
         productId: t[1].toInt(),
