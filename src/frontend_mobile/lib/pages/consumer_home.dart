@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -14,6 +13,9 @@ import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
+import '../sizer_helper.dart'
+    if (dart.library.html) '../sizer_web.dart'
+    if (dart.library.io) '../sizer_io.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   @override
@@ -25,6 +27,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cartItemsCount = 0;
   String query;
+  final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   static GlobalKey<ScaffoldState> _scaffoldKey;
   User user = new User(
@@ -394,7 +397,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget BestDeals() {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       children: [
@@ -438,19 +441,62 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget Categories(List<Category> categories) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
-            children: List.generate(categories.length, (index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                category = index;
-              });
-            },
-            child: CategoryEntry(
-                categories[index].assetUrl, categories[index].name),
-          );
+            children: List.generate(
+                (size.width >= 640)
+                    ? ((categories.length + 1) / 2.0).toInt()
+                    : categories.length, (index) {
+          if (size.width >= 640) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: size.width / 2.0 - 20,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        category = index * 2;
+                      });
+                    },
+                    child: CategoryEntry(categories[index * 2].assetUrl,
+                        categories[index * 2].name),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                (index * 2 + 1 >= categories.length)
+                    ? SizedBox()
+                    : SizedBox(
+                        width: size.width / 2.0 - 20,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              category = index * 2 + 1;
+                            });
+                          },
+                          child: CategoryEntry(
+                              categories[index * 2 + 1].assetUrl,
+                              categories[index * 2 + 1].name),
+                        ),
+                      )
+              ],
+            );
+          } else {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  category = index;
+                });
+              },
+              child: CategoryEntry(
+                  categories[index].assetUrl, categories[index].name),
+            );
+          }
         })));
   }
 }
