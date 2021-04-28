@@ -84,6 +84,79 @@ class Settings extends StatelessWidget {
                   ),
                 ],
               ),
+              Text(
+                "Pristupačnost",
+                style: TextStyle(
+                    color: Color(BLACK),
+                    fontSize: 18,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w800),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                      value: _value,
+                      activeColor: Color(BLACK),
+                      onChanged: (bool value) {
+                        stateSetter(() => onSwitchValueChanged(value));
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text("Noćni režim:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                      value: _value,
+                      activeColor: Color(BLACK),
+                      onChanged: (bool value) {
+                        stateSetter(() => onSwitchValueChanged(value));
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text("Režim visokog kontrasta:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                  ),
+                ],
+              ),
+              Text(
+                "Pretplate",
+                style: TextStyle(
+                    color: Color(BLACK),
+                    fontSize: 18,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w800),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                      value: _value,
+                      activeColor: Color(BLACK),
+                      onChanged: (bool value) {
+                        stateSetter(() => onSwitchValueChanged(value));
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text("Prijavi me na bilten:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                  ),
+                ],
+              ),
             ],
             /* children: [
             SettingsOption(
