@@ -433,12 +433,10 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
-          key: _scaffoldKey,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 161,
@@ -454,15 +452,14 @@ class _SearchPageState extends State<SearchPage> {
                             padding: EdgeInsets.all(0),
                             width: 36,
                             child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () =>
-                                  // Scaffold.of(context).openDrawer(),
-                                  _scaffoldKey.currentState.openDrawer(),
-                            )),
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/ArrowLeft.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                })),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
