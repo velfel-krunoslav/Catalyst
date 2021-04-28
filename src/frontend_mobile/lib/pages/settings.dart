@@ -5,30 +5,87 @@ import 'package:frontend_mobile/config.dart';
 import '../widgets.dart';
 
 class Settings extends StatelessWidget {
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      backgroundColor: Color(LIGHT_GREY),
-      appBar: AppBar(
-        title: Text(
-          "Podešavanja",
-          style: TextStyle(color: Colors.black),
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter stateSetter) {
+      return Scaffold(
+        backgroundColor: Color(LIGHT_GREY),
+        appBar: AppBar(
+          title: Text(
+            "Podešavanja",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
-        child: Column(
-          children: [
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
+          child: Column(
+            children: [
+              Text(
+                "Privatnost",
+                style: TextStyle(
+                    color: Color(BLACK),
+                    fontSize: 18,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w800),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                      value: _value,
+                      activeColor: Color(BLACK),
+                      onChanged: (bool value) {
+                        stateSetter(() => onSwitchValueChanged(value));
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text("Ostanite prijavljeni:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                      value: _value,
+                      activeColor: Color(BLACK),
+                      onChanged: (bool value) {
+                        stateSetter(() => onSwitchValueChanged(value));
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text("Zatraži otključavanje ekrana:",
+                        style: TextStyle(
+                            color: Color(BLACK),
+                            fontFamily: 'Inter',
+                            fontSize: 14)),
+                  ),
+                ],
+              ),
+            ],
+            /* children: [
             SettingsOption(
               text: "Privatnost i bezbednost",
               icon: Icon(Icons.lock_outline),
@@ -66,9 +123,10 @@ class Settings extends StatelessWidget {
               icon: Icon(Icons.description_outlined),
               onPressed: () {},
             ),
-          ],
+          ],*/
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
