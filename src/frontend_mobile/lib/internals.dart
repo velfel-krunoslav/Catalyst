@@ -1,9 +1,24 @@
+import 'dart:convert';
+
 import 'package:frontend_mobile/config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
+Future<http.Response> pushToIPFS(String contents) {
+  return http.post(
+    Uri.https('ipfs.infura.io:5001', '/api/v0/add'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'file': contents,
+    }),
+  );
+}
 
 void performPayment(String targetAccountAddress, int eth) async {
   final client =

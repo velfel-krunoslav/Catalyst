@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/productsModel.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -366,6 +368,17 @@ class _NewProductState extends State<NewProduct> {
                                   imgCount++;
                                   setState(() {
                                     images.add(pickedFile);
+                                    String path = pickedFile.path;
+                                    print('PATH: $path');
+                                    Future<Response> response = pushToIPFS(
+                                        pickedFile.readAsBytesSync().join());
+                                    response.then((value) {
+                                      print(value.body);
+                                      if (value.statusCode == 201) {
+                                        print(
+                                            'HASH: ${jsonDecode(value.body)['Hash']}');
+                                      }
+                                    });
                                   });
                                 }
                               } else {

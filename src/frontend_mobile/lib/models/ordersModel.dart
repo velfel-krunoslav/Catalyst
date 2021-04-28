@@ -96,51 +96,51 @@ class OrdersModel extends ChangeNotifier {
           int.parse(dateParts[2].substring(0, 2)));
       //print(t);
       Order o = Order(
-        id: t[0].toInt(),
-        productId: t[1].toInt(),
-        amount: t[2].toInt(),
-        buyerId: t[5].toInt(),
-        sellerId: t[6].toInt(),
-        status: t[4].toInt(),
-        date: date,
-        deliveryAddress: t[7],
-        paymentType: t[8].toInt()
-      );
+          id: t[0].toInt(),
+          productId: t[1].toInt(),
+          amount: t[2].toInt(),
+          buyerId: t[5].toInt(),
+          sellerId: t[6].toInt(),
+          status: t[4].toInt(),
+          date: date,
+          deliveryAddress: t[7],
+          paymentType: t[8].toInt());
       orders.add(o);
     }
     notifyListeners();
   }
 
-  addOrder(int _productId, int _amount, DateTime _date, int _buyerId,
-      int _sellerId, String _deliveryAddress, int _paymentType) async {
+  addOrder(List<Order> orders) async {
     isLoading = true;
-    notifyListeners();
 
-    String dateStr = _date.toString();
-    if (_productId != null &&
-        _buyerId != null &&
-        _sellerId != null &&
-        dateStr != null) {
-      await _client.sendTransaction(
-          _credentials,
-          Transaction.callContract(
-              maxGas: 6721925,
-              contract: _contract,
-              function: _createOrder,
-              parameters: [
-                BigInt.from(_productId),
-                BigInt.from(_amount),
-                dateStr,
-                BigInt.from(_buyerId),
-                BigInt.from(_sellerId),
-                _deliveryAddress,
-                BigInt.from(_paymentType)
-              ],
-              gasPrice: EtherAmount.inWei(BigInt.one)));
-      print("order dodat");
-      getOrders(buyerId);
-    } else {
-      isLoading = false;
+    for (int i = 0; i < orders.length; i++) {
+      String dateStr = orders[i].date.toString();
+      if (orders[i].productId != null &&
+          orders[i].buyerId != null &&
+          orders[i].sellerId != null &&
+          dateStr != null) {
+        await _client.sendTransaction(
+            _credentials,
+            Transaction.callContract(
+                maxGas: 6721925,
+                contract: _contract,
+                function: _createOrder,
+                parameters: [
+                  BigInt.from(orders[i].productId),
+                  BigInt.from(orders[i].amount),
+                  dateStr,
+                  BigInt.from(orders[i].buyerId),
+                  BigInt.from(orders[i].sellerId),
+                  orders[i].deliveryAddress,
+                  BigInt.from(orders[i].paymentType)
+                ],
+                gasPrice: EtherAmount.inWei(BigInt.one)));
+        print("order dodat");
+
+        //getOrders(buyerId);
+      } else {
+        isLoading = false;
+      }
     }
   }
 
