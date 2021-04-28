@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/pages/user_edit.dart';
 import 'package:frontend_mobile/widgets.dart';
 
 class MyAccount extends StatelessWidget {
@@ -37,7 +38,12 @@ class MyAccount extends StatelessWidget {
                 Icons.edit,
                 color: Colors.black,
               ),
-              onPressed: () {})
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserEdit()),
+                );
+              })
         ],
       ),
       body: Column(
@@ -151,3 +157,4 @@ class MyAccount extends StatelessWidget {
     );
   }
 }
+
