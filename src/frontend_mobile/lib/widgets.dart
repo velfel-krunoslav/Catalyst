@@ -20,6 +20,9 @@ import 'models/productsModel.dart';
 import 'models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/chat_screen.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
+import './sizer_helper.dart'
+    if (dart.library.html) './sizer_web.dart'
+    if (dart.library.io) './sizer_io.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -1097,18 +1100,19 @@ Widget HomeDrawer(
         iconUrl: "assets/icons/SignOut.svg")
   ];
   Size size = MediaQuery.of(context).size;
+  final sizer = getSizer();
   return Container(
-    width: (size.width > size.height) ? 480 : 240,
+    width: ((!sizer.isWeb()) && size.width > size.height) ? 480 : 240,
     child: new Drawer(
       child: Container(
           padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
           color: Color(LIGHT_BLACK),
           child: Column(
               children: List.generate(
-                  (size.width > size.height)
+                  ((!sizer.isWeb()) && size.width > size.height)
                       ? ((options.length + 1) / 2.0).toInt()
                       : options.length, (index) {
-            if (size.width > size.height) {
+            if ((!sizer.isWeb()) && size.width > size.height) {
               return Row(
                 children: [
                   SizedBox(
