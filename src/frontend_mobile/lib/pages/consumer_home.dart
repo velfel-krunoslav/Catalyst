@@ -121,8 +121,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ConsumerCart(getProductByIdCallback)),
+                                  builder: (context) => new ChangeNotifierProvider(
+                                      create: (context) => OrdersModel(0),
+                                      child: ConsumerCart(getProductByIdCallback))),
                             );
                           },
                         ),

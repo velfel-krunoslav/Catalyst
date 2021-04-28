@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +27,14 @@ class _ConsumerCartState extends State<ConsumerCart> {
   double shipping = 5.0;
   double subtotal = 0;
   double total;
-  String method, paymentMethod;
+  String paymentMethod;
   ProductsModel productsModel;
   List<CartProduct> products = [];
   List<int> quantities = [];
   List<int> indices = [];
   List<List<String>> ids = [];
   Future<ProductEntry> Function(int id) getProductByIdCallback;
+  OrdersModel ordersModel;
   _ConsumerCartState(this.getProductByIdCallback);
   @override
   void initState() {
@@ -86,6 +88,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
 
   @override
   Widget build(BuildContext context) {
+    ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -298,11 +301,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                   child: Column(children: [
                                     Row(children: [
                                       Text(
-                                          (customerAddress.length > 32)
-                                              ? customerAddress.substring(
-                                                      0, 32) +
-                                                  '...'
-                                              : customerAddress,
+                                          "Adresa",
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 16,
@@ -310,7 +309,11 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                               color: Color(BLACK)))
                                     ]),
                                     Row(children: [
-                                      Text('Kragujevac, Srbija', // TODO
+                                      Text( (customerAddress.length > 32)
+                                        ? customerAddress.substring(
+                                        0, 32) +
+                                        '...'
+                                        : customerAddress, // TODO
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 16,
@@ -372,10 +375,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                   child: TextField(
                                                                       controller: _textController,
                                                                       onChanged: (String value) async {
-                                                                        setState(
-                                                                            () {
-                                                                          customerAddress =
-                                                                              _textController.text;
+                                                                        setState(() {
+                                                                          customerAddress = _textController.text;
                                                                         });
                                                                       },
                                                                       decoration: InputDecoration(
@@ -606,11 +607,14 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                                     width: 280,
                                                                                                     height: 36,
                                                                                                     child: TextField(
-                                                                                                        controller: _textController,
-                                                                                                        onChanged: (String value) async {
-                                                                                                          setState(() {
-                                                                                                            customerAddress = _textController.text;
-                                                                                                          });
+                                                                                                      controller: _textController,
+                                                                                                      onChanged: (String value) async {
+                                                                                                      setState(
+                                                                                                      () {
+                                                                                                      customerAddress =
+                                                                                                      _textController.text;
+                                                                                                      });
+
                                                                                                         },
                                                                                                         decoration: InputDecoration(
                                                                                                             hintText: 'Unesite privatni ključ',
@@ -645,8 +649,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                                   color: Color(LIGHT_GREY),
                                                                                                   onPressed: () {
                                                                                                     setState(() {
-                                                                                                      paymentMethod = desc;
-                                                                                                      method = "Plaćanje putem e-novčanika";
+                                                                                                      desc =
+                                                                                                      paymentMethod = "Plaćanje putem e-novčanika";
                                                                                                     });
                                                                                                     Navigator.pop(context);
                                                                                                   },
@@ -738,10 +742,11 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                 text:
                                     'Potvrdi kupovinu (${total.toStringAsFixed(2)}$CURRENCY)', // should be showing the purchase total saved in a variable, for example
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Blank()));
+                                  DateTime date = new DateTime(now.year, now.month, now.day);
+                                  print(date);
+                                  for(int i = 0; i < products.length; i++) {
+                                     //ordersModel.addOrder(products[i].id, quantities[i], date, 0, 0, _deliveryAddress, _paymentType);
+                                   }
                                 })
                           ],
                         ))
