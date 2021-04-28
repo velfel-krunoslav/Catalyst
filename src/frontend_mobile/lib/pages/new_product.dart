@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/productsModel.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../internals.dart';
@@ -19,15 +22,13 @@ class NewProduct extends StatefulWidget {
   _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
-String chosenValue;
-int selected;
-bool textFld = false;
+List<File> images = [];
 
-TextEditingController nameController = new TextEditingController();
-TextEditingController descriptionController = new TextEditingController();
-TextEditingController inStockController = new TextEditingController();
-int measure = 0;
-TextEditingController amountController = new TextEditingController();
+String name, description;
+int selectedUnit, inStock, quantity, imgCount = 0;
+double price;
+Category selectedCategory;
+bool textFld = false;
 
 List<Category> categories = [
   Category(id: 0, name: "Peciva", assetUrl: ""),
@@ -40,12 +41,6 @@ List<Category> categories = [
   Category(id: 7, name: "Živina", assetUrl: ""),
   Category(id: 8, name: "Zimnice", assetUrl: ""),
   Category(id: 9, name: "Ostali proizvodi", assetUrl: "")
-];
-Category selectedCategory;
-double price;
-List<String> images = [
-  "assets/product_listings/rakija_silverije_cc_by_sa.jpg",
-  "assets/product_listings/salami_pbkwee_by_sa.jpg"
 ];
 
 class _NewProductState extends State<NewProduct> {
@@ -80,202 +75,264 @@ class _NewProductState extends State<NewProduct> {
                 child: Container(
                     width: MediaQuery.of(context).size.width - 40,
                     child: Column(children: [
-                      Row(children: [
-                        Text('Naziv proizvoda:',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                color: Color(DARK_GREY)))
-                      ]),
-                      SizedBox(height: 10),
-                      SizedBox(
-                          child: TextField(
-                              controller: nameController,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius:
-                                          BorderRadius.circular(5.0)))),
-                          height: 44,
-                          width: MediaQuery.of(context).size.width - 40),
-                      SizedBox(height: 20),
-                      Row(children: [
-                        Text('Opis proizvoda: (do 200 reči)',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                color: Color(DARK_GREY)),
-                            textAlign: TextAlign.left)
-                      ]),
-                      SizedBox(height: 10),
-                      SizedBox(
-                          child: TextField(
-                              controller: descriptionController,
-                              maxLines: 2,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius:
-                                          BorderRadius.circular(5.0)))),
-                          width: MediaQuery.of(context).size.width - 40),
-                      SizedBox(height: 20),
-                      Row(children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text('Kategorija:',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  color: Color(DARK_GREY))),
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: Text('Trenutno na stanju:',
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Naziv proizvoda:',
                                 style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 14,
-                                    color: Color(DARK_GREY))))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 8,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              height: 44,
-                              decoration: BoxDecoration(
-                                  color: Color(LIGHT_GREY),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: new DropdownButton<Category>(
-                                  underline:
-                                      Container(color: Colors.transparent),
-                                  icon: SvgPicture.asset(
-                                      'assets/icons/ArrowDown.svg',
-                                      color: Color(DARK_GREY)),
-                                  isExpanded: true,
-                                  value: selectedCategory,
-                                  onChanged: (Category newValue) {
-                                    setState(() {
-                                      selectedCategory = newValue;
-                                    });
-                                  },
-                                  items: categories.map((Category c) {
-                                    return DropdownMenuItem<Category>(
-                                        child: Text(c.name,
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: c);
-                                  }).toList()),
-                            )),
-                        Expanded(flex: 1, child: SizedBox(width: 5)),
-                        Expanded(
-                            flex: 9,
-                            child: SizedBox(
+                                    color: Color(DARK_GREY))),
+                            SizedBox(
+                                height: 48,
                                 child: TextField(
-                                    controller: inStockController,
+                                    onChanged: (value) {
+                                      name = value;
+                                    },
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Color(LIGHT_GREY),
                                         border: OutlineInputBorder(
                                             borderSide: BorderSide.none,
                                             borderRadius:
-                                                BorderRadius.circular(5.0)))),
-                                height: 44,
-                                width: 142))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text('Jedinica mere:',
+                                                BorderRadius.circular(5.0)))))
+                          ]),
+                      SizedBox(height: 20),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Opis proizvoda: (do 200 reči)',
                                 style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 14,
-                                    color: Color(DARK_GREY)))),
-                        Expanded(
-                            flex: 1,
-                            child: Text('Količina:',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    color: Color(DARK_GREY))))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 8,
-                            child: Container(
+                                    color: Color(DARK_GREY)),
+                                textAlign: TextAlign.left),
+                            TextField(
+                                onChanged: (value) {
+                                  description = value;
+                                },
+                                maxLines: 2,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)))),
+                          ]),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Kategorija:',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(DARK_GREY))),
+                              Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 5, vertical: 5),
-                                height: 44,
+                                height: 48,
+                                width: MediaQuery.of(context).size.width / 2.0 -
+                                    40,
                                 decoration: BoxDecoration(
                                     color: Color(LIGHT_GREY),
                                     borderRadius: BorderRadius.circular(5)),
-                                child: DropdownButton(
+                                child: new DropdownButton<Category>(
                                     underline:
                                         Container(color: Colors.transparent),
                                     icon: SvgPicture.asset(
                                         'assets/icons/ArrowDown.svg',
                                         color: Color(DARK_GREY)),
-                                    dropdownColor: Color(LIGHT_GREY),
                                     isExpanded: true,
-                                    value: selected,
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text("Komad",
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: 0,
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("Masa",
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: 1,
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text("Zapremina",
+                                    value: selectedCategory,
+                                    onChanged: (Category newValue) {
+                                      setState(() {
+                                        selectedCategory = newValue;
+                                      });
+                                    },
+                                    items: categories.map((Category c) {
+                                      return DropdownMenuItem<Category>(
+                                          child: Text(c.name,
                                               style: TextStyle(
                                                   color: Color(DARK_GREY),
                                                   fontSize: 14,
                                                   fontFamily: 'Inter')),
-                                          value: 2)
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selected = value;
-                                        textFld = true;
-                                      });
-                                    }))),
-                        Expanded(flex: 1, child: SizedBox(width: 5)),
-                        Expanded(
-                            flex: 9,
-                            child: SizedBox(
-                                child: TextField(
-                                    controller: amountController,
-                                    enabled: textFld,
-                                    decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(LIGHT_GREY),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)))),
-                                height: 44,
-                                width: 142))
-                      ]),
+                                          value: c);
+                                    }).toList()),
+                              )
+                            ],
+                          ),
+
+//na stanju
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Trenutno na stanju:',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(DARK_GREY))),
+                              SizedBox(
+                                  height: 48,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.0 -
+                                          20,
+                                  child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {
+                                        inStock = int.parse(value);
+                                      },
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(LIGHT_GREY),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)))))
+                            ],
+                          )
+                        ],
+                      ),
                       SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Jedinica mere:',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(DARK_GREY))),
+                              Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      color: Color(LIGHT_GREY),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  height: 48,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.0 -
+                                          40,
+                                  child: DropdownButton(
+                                      underline:
+                                          Container(color: Colors.transparent),
+                                      icon: SvgPicture.asset(
+                                          'assets/icons/ArrowDown.svg',
+                                          color: Color(DARK_GREY)),
+                                      isExpanded: true,
+                                      value: selectedUnit,
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Text("Komad",
+                                              style: TextStyle(
+                                                  color: Color(DARK_GREY),
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter')),
+                                          value: 0,
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Masa",
+                                              style: TextStyle(
+                                                  color: Color(DARK_GREY),
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter')),
+                                          value: 1,
+                                        ),
+                                        DropdownMenuItem(
+                                            child: Text("Zapremina",
+                                                style: TextStyle(
+                                                    color: Color(DARK_GREY),
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter')),
+                                            value: 2)
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedUnit = value;
+                                          textFld = true;
+                                        });
+                                      })),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Količina:',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(DARK_GREY))),
+                              Container(
+                                  height: 48,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.0 -
+                                          20,
+                                  child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {
+                                        quantity = int.parse(value);
+                                      },
+                                      enabled: textFld,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(LIGHT_GREY),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      5.0))))),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Cena:',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Color(DARK_GREY))),
+                              Container(
+                                  height: 48,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.0 -
+                                          40,
+                                  child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {
+                                        price = double.parse(value);
+                                      },
+                                      enabled: textFld,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(LIGHT_GREY),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      5.0))))),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Row(children: [
                         Text('Fotografije: (max. 5)',
                             style: TextStyle(
@@ -289,42 +346,56 @@ class _NewProductState extends State<NewProduct> {
                             //borderRadius: BorderRadius.circular(5.0),
                             child: Container(
                                 color: Color(LIGHT_GREY),
-                                height: 80,
-                                width: 80,
+                                height:
+                                    (MediaQuery.of(context).size.width - 80) /
+                                        4.0,
+                                width:
+                                    (MediaQuery.of(context).size.width - 80) /
+                                        4.0,
                                 child: Center(
                                   child: Text('+',
                                       style: TextStyle(
                                           fontSize: 48,
                                           color: Color(DARK_GREY))),
                                 )),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          new Blank() // TODO - ADD PICTURES
-                                      ));
+                            onTap: () async {
+                              if (imgCount < 3) {
+                                var pickedFile = await ImagePicker.pickImage(
+                                    source: ImageSource.gallery);
+                                if (pickedFile != null) {
+                                  imgCount++;
+                                  setState(() {
+                                    images.add(pickedFile);
+                                  });
+                                }
+                              } else {
+                                //TODO WARN, MAX NO. OF IMAGES LOADED
+                              }
                             }),
                         SizedBox(width: 10),
                         Wrap(
                           children: List.generate(images.length, (index) {
-                            return InkWell(
-                                child: SizedBox(
-                                  child: Image.asset(
+                            return Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  child: Image.file(
                                     images[index],
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.fitHeight,
+                                    height: (MediaQuery.of(context).size.width -
+                                            80) /
+                                        4.0,
+                                    width: (MediaQuery.of(context).size.width -
+                                            80) /
+                                        4.0,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              new Blank() // TODO - SELECT PICTURE TO ADD
-                                          ));
-                                });
+                                SizedBox(
+                                  width: 10,
+                                )
+                              ],
+                            );
                           }),
                         ),
                       ]),
@@ -335,27 +406,29 @@ class _NewProductState extends State<NewProduct> {
                         child: ButtonFill(
                             text: 'Dodaj proizvod',
                             onPressed: () {
-                              price = 2.33;
-                              if (nameController.text != null &&
+                              if (name != null &&
                                   images.length != 0 &&
-                                  selected != null &&
-                                  amountController.text != null &&
-                                  descriptionController.text != null &&
+                                  selectedUnit != null &&
+                                  quantity != null &&
+                                  description != null &&
                                   selectedCategory != null) {
-                                addProductCallback(
-                                    nameController.text,
+                                /* addProductCallback(
+                                    name,
                                     price,
-                                    images,
-                                    selected,
-                                    int.parse(amountController.text),
-                                    descriptionController.text,
-                                    1,
-                                    selectedCategory.id);
+                                    images, // IPFS GOES HERE
+                                    selectedUnit,
+                                    quantity,
+                                    description,
+                                    1, //TODO ADD USER'S ID
+                                    selectedCategory.id); */
                                 Navigator.pop(context);
                               } else {
                                 //TODO istampati poruku da se popune sva polja
                               }
                             }),
+                      ),
+                      SizedBox(
+                        height: 20,
                       )
                     ])))));
   }
