@@ -60,7 +60,7 @@ class ProductReviews extends StatelessWidget {
 
                         SizedBox(height: 12),
                         Text(
-                          reviewsModel.average.toString(),
+                            reviewsModel.average.toString().length > 3 ? reviewsModel.average.toString().substring(0,4) : reviewsModel.average.toString(),
                           style: TextStyle(
                               fontSize: 36,
                               fontFamily: 'Inter',

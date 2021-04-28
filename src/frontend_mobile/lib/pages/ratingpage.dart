@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/blank_page.dart';
+import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/pages/rating.dart';
 import 'package:provider/provider.dart';
 
@@ -109,7 +110,18 @@ class _RatingPage extends State<RatingPage> {
                     text: 'Dodaj recenziju',
                     onPressed: () {
                       reviewsModel.addReview(productId, _rating, desc, 0);
-                      Navigator.pop(context);
+                      // int count = 0;
+                      // Navigator.of(context).popUntil((_) => count++ >= 2);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) =>
+                      //       new ChangeNotifierProvider(
+                      //           create: (context) =>
+                      //               ReviewsModel(productId),
+                      //           child: ProductReviews(productId))),
+                      //);
+
                     },
                   ),
                 ],
