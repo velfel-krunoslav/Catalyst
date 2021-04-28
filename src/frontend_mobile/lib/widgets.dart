@@ -814,9 +814,9 @@ class Contacts extends StatelessWidget {
                       Text(
                         contacts[index].name,
                         style: TextStyle(
-
-                  fontFamily: 'Inter',
-                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                            fontFamily: 'Inter',
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -924,8 +924,7 @@ class _ChatsState extends State<Chats> {
                                 Text(
                                   chat.sender.name,
                                   style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.black,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w600),
@@ -936,8 +935,7 @@ class _ChatsState extends State<Chats> {
                                   child: Text(
                                     chat.text,
                                     style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                        fontFamily: 'Inter',
                                         color: chat.unread
                                             ? Color(LIGHT_GREY)
                                             : Color(DARK_GREY),
@@ -957,8 +955,7 @@ class _ChatsState extends State<Chats> {
                               Text(
                                 chat.time,
                                 style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                    fontFamily: 'Inter',
                                     color: chat.unread
                                         ? Color(LIGHT_GREY)
                                         : Colors.black,
@@ -978,8 +975,7 @@ class _ChatsState extends State<Chats> {
                                       child: Text(
                                         'NOVA PORUKA',
                                         style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                            fontFamily: 'Inter',
                                             color: Color(DARK_GREY),
                                             fontSize: 12.0),
                                       ),
@@ -1014,108 +1010,128 @@ Widget HomeDrawer(
         addProductCallback,
     Future<List<ProductEntry>> Function() sellersProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback) {
+  List<Widget> options = [
+    Row(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: AssetImage(user.photoUrl),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Text(
+          user.forename + " " + user.surname,
+          style: TextStyle(
+              fontFamily: 'Inter',
+              color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.w800),
+        )
+      ],
+    ),
+    DrawerOption(
+        text: "Moj nalog",
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
+        },
+        iconUrl: "assets/icons/User.svg"),
+    DrawerOption(
+        text: "Moji proizvodi",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MyProducts(addProductCallback, sellersProductsCallback)),
+          );
+        },
+        iconUrl: "assets/icons/Package.svg"),
+    DrawerOption(
+        text: "Poruke",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Inbox()),
+          );
+        },
+        iconUrl: "assets/icons/Envelope.svg"),
+    DrawerOption(
+        text: "Istorija narudžbi",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new ChangeNotifierProvider(
+                    create: (context) => OrdersModel(0),
+                    child: OrdersHistory(getProductByIdCallback))),
+          );
+        },
+        iconUrl: "assets/icons/Newspaper.svg"),
+    DrawerOption(
+        text: "Pomoć i podrška",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HelpSupport()),
+          );
+        },
+        iconUrl: "assets/icons/Handshake.svg"),
+    DrawerOption(
+        text: "Podešavanja",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Settings()),
+          );
+        },
+        iconUrl: "assets/icons/Gear.svg"),
+    DrawerOption(
+        text: "Odjavi se",
+        onPressed: () {
+          Prefs.instance.removeAll();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => new Welcome()));
+        },
+        iconUrl: "assets/icons/SignOut.svg")
+  ];
+  Size size = MediaQuery.of(context).size;
   return Container(
-    width: 255,
+    width: (size.width > size.height) ? 480 : 240,
     child: new Drawer(
       child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
-            ),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Moji proizvodi",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MyProducts(
-                            addProductCallback, sellersProductsCallback)),
-                  );
-                },
-                iconUrl: "assets/icons/Package.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Inbox()),
-                  );
-                },
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new ChangeNotifierProvider(
-                            create: (context) => OrdersModel(0),
-                            child: OrdersHistory(getProductByIdCallback))),
-                  );
-                },
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HelpSupport()),
-                  );
-                },
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Prefs.instance.removeAll();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => new Welcome()));
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
-          ],
-        ),
-      ),
+          padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+          color: Color(LIGHT_BLACK),
+          child: Column(
+              children: List.generate(
+                  (size.width > size.height)
+                      ? ((options.length + 1) / 2.0).toInt()
+                      : options.length, (index) {
+            if (size.width > size.height) {
+              return Row(
+                children: [
+                  SizedBox(
+                    width: 200,
+                    height: 80,
+                    child: options[index * 2],
+                  ),
+                  Spacer(),
+                  (index * 2 + 1 >= options.length)
+                      ? SizedBox()
+                      : SizedBox(
+                          width: 200,
+                          height: 80,
+                          child: options[index * 2 + 1],
+                        ),
+                ],
+              );
+            } else {
+              return Column(
+                children: [options[index], SizedBox(height: 10)],
+              );
+            }
+          }).toList())),
     ),
   );
 }
