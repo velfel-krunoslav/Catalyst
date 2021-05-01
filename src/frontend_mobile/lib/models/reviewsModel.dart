@@ -115,7 +115,7 @@ class ReviewsModel extends ChangeNotifier {
     await _client.sendTransaction(
         _credentials,
         Transaction.callContract(
-            maxGas: 6721925,
+            maxGas: 6721975,
             contract: _contract,
             function: _createReview,
             parameters: [

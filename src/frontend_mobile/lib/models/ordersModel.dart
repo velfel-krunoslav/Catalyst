@@ -96,16 +96,15 @@ class OrdersModel extends ChangeNotifier {
           int.parse(dateParts[2].substring(0, 2)));
       //print(t);
       Order o = Order(
-        id: t[0].toInt(),
-        productId: t[1].toInt(),
-        amount: t[2].toInt(),
-        buyerId: t[5].toInt(),
-        sellerId: t[6].toInt(),
-        status: t[4].toInt(),
-        date: date,
-        deliveryAddress: t[7],
-        paymentType: t[8].toInt()
-      );
+          id: t[0].toInt(),
+          productId: t[1].toInt(),
+          amount: t[2].toInt(),
+          buyerId: t[5].toInt(),
+          sellerId: t[6].toInt(),
+          status: t[4].toInt(),
+          date: date,
+          deliveryAddress: t[7],
+          paymentType: t[8].toInt());
       orders.add(o);
     }
     notifyListeners();

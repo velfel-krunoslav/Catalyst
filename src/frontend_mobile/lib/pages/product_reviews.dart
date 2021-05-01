@@ -8,8 +8,6 @@ import 'package:frontend_mobile/pages/ratingpage.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
 
-
-
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
@@ -30,14 +28,12 @@ class ProductReviews extends StatelessWidget {
 
     newReviewCallback2(productId, rating, desc, 0);
   }
+
   @override
-  void init() {
-
-
-  }
+  void init() {}
   @override
   Widget build(BuildContext context) {
-    double width =  MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     reviewsModel = Provider.of<ReviewsModel>(context);
 
     return Scaffold(
@@ -45,9 +41,9 @@ class ProductReviews extends StatelessWidget {
           title: Text(
             "Recenzije",
             style: TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              color: Colors.black),
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w800,
+                color: Colors.black),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -76,7 +72,9 @@ class ProductReviews extends StatelessWidget {
 
                         SizedBox(height: 12),
                         Text(
-                            reviewsModel.average.toString().length > 3 ? reviewsModel.average.toString().substring(0,4) : reviewsModel.average.toString(),
+                          reviewsModel.average.toString().length > 3
+                              ? reviewsModel.average.toString().substring(0, 4)
+                              : reviewsModel.average.toString(),
                           style: TextStyle(
                               fontSize: 36,
                               fontFamily: 'Inter',
@@ -146,14 +144,15 @@ class ProductReviews extends StatelessWidget {
                                               width: 16,
                                               height: 16);
                                         }).toList()),
-                                        SizedBox(width: 20),
+                                SizedBox(width: 20),
                                 SvgPicture.string('''
                           <svg width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" />
                           <rect width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" fill="#ECECEC">
                           <rect width="''' +
                                     (reviewsModel.reviewsCount != 0
                                         ? ((e[2] / reviewsModel.reviewsCount) *
-                                                width * REVIEW_BAR_WIDTH_PERCENT)
+                                                width *
+                                                REVIEW_BAR_WIDTH_PERCENT)
                                             .toString()
                                         : 0.toString()) +
                                     '''" height="5" fill="#''' +
@@ -203,9 +202,12 @@ class ProductReviews extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => new ChangeNotifierProvider(
-                                            create: (context) => ReviewsModel(0),
-                                            child: RatingPage(productId, newReviewCallback))),
+                                        builder: (context) =>
+                                            new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(0),
+                                                child: RatingPage(productId,
+                                                    newReviewCallback))),
                                   );
                                 },
                               ),

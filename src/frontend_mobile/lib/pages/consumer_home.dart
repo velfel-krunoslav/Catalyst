@@ -15,6 +15,9 @@ import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
+import '../sizer_helper.dart'
+    if (dart.library.html) '../sizer_web.dart'
+    if (dart.library.io) '../sizer_io.dart';
 
 class ConsumerHomePage extends StatefulWidget {
 
@@ -29,25 +32,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cartItemsCount = 0;
   String query;
+  final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   String privateKey, accountAddress;
-  @override
-  void initState() {
 
-    super.initState();
-    Prefs.instance.getStringValue("privateKey").then((value1) {
-      privateKey = value1;
-      Prefs.instance.getStringValue("accountAddress").then((value2) {
-        accountAddress = value2;
-        print(privateKey);
-        print(accountAddress);
-        usersModel.getUser(privateKey, accountAddress).then((value){
-          print(value);
-
-        });
-      });
-    });
-  }
+  static GlobalKey<ScaffoldState> _scaffoldKey;
 
   User user = new User(
       name: "Petar",
@@ -97,12 +86,31 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+    Prefs.instance.getStringValue("privateKey").then((value1) {
+      privateKey = value1;
+      Prefs.instance.getStringValue("accountAddress").then((value2) {
+        accountAddress = value2;
+        print(privateKey);
+        print(accountAddress);
+        usersModel.getUser(privateKey, accountAddress).then((value){
+          print(value);
+
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
     print(cartItemsCount);
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
     //TODO  ProductEntry p = productsModel.getProductById(0);
     //     print(p.name);
     return MaterialApp(
@@ -145,9 +153,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => new ChangeNotifierProvider(
-                                      create: (context) => OrdersModel(0),
-                                      child: ConsumerCart(getProductByIdCallback))),
+                                  builder: (context) =>
+                                      new ChangeNotifierProvider(
+                                          create: (context) => OrdersModel(0),
+                                          child: ConsumerCart(
+                                              getProductByIdCallback))),
                             );
                           },
                         ),
@@ -174,7 +184,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     SizedBox(height: 10),
                     TextField(
                       style: TextStyle(fontFamily: 'Inter', fontSize: 16),
-                      onChanged: (text) {this.query = text;},
+                      onChanged: (text) {
+                        this.query = text;
+                      },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 36),
                         fillColor: Color(LIGHT_GREY),
@@ -196,7 +208,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SearchPage(query: this.query)));
+                                builder: (context) =>
+                                    SearchPage(query: this.query)));
                       },
                     ),
                   ],
@@ -289,12 +302,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (size.width >= 640) ? 
-                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
-                   : 
-                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
+                  padding: (size.width >= 640)
+                      ? EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 2) % 3 == 0) ? 0 : 1) * 10.0, 15)
+                      : EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 1) % 2 == 0) ? 0 : 1) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
+                      width: (size.width >= 640)
+                          ? (size.width - 80) / 3
+                          : (size.width - 60) / 2,
                       child: ProductEntryCard(
                           product: productsModel.products[index],
                           onPressed: () {
@@ -354,7 +370,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                         children: List.generate(
                             (recently.length < 3) ? recently.length : 3,
@@ -406,7 +424,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget BestDeals() {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       children: [
@@ -418,12 +436,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (size.width >= 640) ? 
-                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
-                   : 
-                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
+                  padding: (size.width >= 640)
+                      ? EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 2) % 3 == 0) ? 0 : 1) * 10.0, 15)
+                      : EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 1) % 2 == 0) ? 0 : 1) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
+                      width: (size.width >= 640)
+                          ? (size.width - 80) / 3
+                          : (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
                               assetUrls:
@@ -447,19 +468,62 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget Categories(List<Category> categories) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
-            children: List.generate(categories.length, (index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                category = index;
-              });
-            },
-            child: CategoryEntry(
-                categories[index].assetUrl, categories[index].name),
-          );
+            children: List.generate(
+                (size.width >= 640)
+                    ? ((categories.length + 1) / 2.0).toInt()
+                    : categories.length, (index) {
+          if (size.width >= 640) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: size.width / 2.0 - 20,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        category = index * 2;
+                      });
+                    },
+                    child: CategoryEntry(categories[index * 2].assetUrl,
+                        categories[index * 2].name),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                (index * 2 + 1 >= categories.length)
+                    ? SizedBox()
+                    : SizedBox(
+                        width: size.width / 2.0 - 20,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              category = index * 2 + 1;
+                            });
+                          },
+                          child: CategoryEntry(
+                              categories[index * 2 + 1].assetUrl,
+                              categories[index * 2 + 1].name),
+                        ),
+                      )
+              ],
+            );
+          } else {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  category = index;
+                });
+              },
+              child: CategoryEntry(
+                  categories[index].assetUrl, categories[index].name),
+            );
+          }
         })));
   }
 }

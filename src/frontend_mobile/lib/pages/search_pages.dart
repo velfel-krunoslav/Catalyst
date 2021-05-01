@@ -142,159 +142,173 @@ class _SearchPageState extends State<SearchPage> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter stateSetter) {
             return Container(
-              height: 300,
+              height: 280,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Filteri',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Filteri',
                             style: TextStyle(
                                 color: Color(DARK_GREY),
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                                 fontSize: 24)),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50.0),
-                          child: Text('Kategorija:',
-                              style: TextStyle(
-                                  color: Color(BLACK),
-                                  fontFamily: 'Inter',
-                                  fontSize: 14)),
-                        ),
-                        SizedBox(
-                          width: 230,
-                          height: 60,
-                          child: DropdownButtonFormField<String>(
-                            items: _categories.map((String dropDownStringItem) {
-                              return DropdownMenuItem<String>(
-                                  value: dropDownStringItem,
-                                  child: Text(dropDownStringItem));
-                            }).toList(),
-                            onChanged: (String newCategorySelected) {
-                              _DropDownCategorySelected(newCategorySelected);
-                            },
-                            hint: Text(_currentCategorySelected),
-                            decoration: const InputDecoration(
-                              filled: true,
-                              border: const OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(5.0),
+                  Row(
+                    children: [
+                      Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top: 5.0, right: 5.0),
+                            height: 60,
+                            child: Text('Kategorija:',
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 10.0, right: 5.0),
+                            height: 60,
+                            child: Text("Raspon cena ($CURRENCY):",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 3.0, right: 5.0),
+                            height: 60,
+                            child: Text("Proizvodi na akciji:",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 5.0),
+                            child: SizedBox(
+                              width: 240,
+                              height: 60,
+                              child: DropdownButtonFormField<String>(
+                                items: _categories
+                                    .map((String dropDownStringItem) {
+                                  return DropdownMenuItem<String>(
+                                      value: dropDownStringItem,
+                                      child: Text(dropDownStringItem));
+                                }).toList(),
+                                onChanged: (String newCategorySelected) {
+                                  _DropDownCategorySelected(
+                                      newCategorySelected);
+                                },
+                                hint: Text(_currentCategorySelected),
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(5.0),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
-                                borderSide: BorderSide.none,
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 2.0),
-                        child: Text("Raspon cena ($CURRENCY):",
-                            style: TextStyle(
-                                color: Color(BLACK),
-                                fontFamily: 'Inter',
-                                fontSize: 14)),
-                      ),
-                      SizedBox(
-                        width: 89,
-                        height: 44,
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color(LIGHT_GREY),
-                            border: new OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(5.0),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
                                 ),
-                                borderSide: BorderSide.none),
-                          ),
-                        ),
-                      ),
-                      Text("-",
-                          style: TextStyle(
-                              color: Color(BLACK),
-                              fontFamily: 'Inter',
-                              fontSize: 14)),
-                      SizedBox(
-                        width: 89,
-                        height: 44,
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color(LIGHT_GREY),
-                            border: new OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(5.0),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: 17.0, right: 17.0),
+                                child: Text("-",
+                                    style: TextStyle(
+                                        color: Color(BLACK),
+                                        fontFamily: 'Inter',
+                                        fontSize: 14)),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
                                 ),
-                                borderSide: BorderSide.none),
+                              ),
+                            ],
                           ),
-                        ),
+                          Switch(
+                              value: _value,
+                              activeColor: Color(BLACK),
+                              onChanged: (bool value) {
+                                stateSetter(() => onSwitchValueChanged(value));
+                              }),
+                          SizedBox(
+                            width: 86,
+                            height: 40,
+                            // ignore: deprecated_member_use
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              color: Color(LIGHT_GREY),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Primeni',
+                                  style: TextStyle(
+                                      color: Color(BLACK),
+                                      fontFamily: 'Inter',
+                                      fontSize: 14)),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 24.0),
-                        child: Text("Proizvodi na akciji:",
-                            style: TextStyle(
-                                color: Color(BLACK),
-                                fontFamily: 'Inter',
-                                fontSize: 14)),
-                      ),
-                      Switch(
-                          value: _value,
-                          activeColor: Color(BLACK),
-                          onChanged: (bool value) {
-                            stateSetter(() => onSwitchValueChanged(value));
-                          }),
                       Spacer(),
                     ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 86,
-                        height: 36,
-                        // ignore: deprecated_member_use
-                        child: FlatButton(
-                          color: Color(LIGHT_GREY),
-                          onPressed: () {},
-                          child: Text('Primeni',
-                              style: TextStyle(
-                                  color: Color(BLACK),
-                                  fontFamily: 'Inter',
-                                  fontSize: 14)),
-                        ),
-                      ),
-                    ],
-                  ),
+                  )
                 ],
               ),
             );
@@ -330,18 +344,28 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.only(
+                      top: 15.0, bottom: 15.0, left: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 69,
+                        width: 70,
                         height: 55,
                         child: TextField(
                           controller: _textController,
-                          onChanged: (String value) async {
+                          onChanged: (String value) {
                             setState(() {
-                              hintDistance = _textController.text;
+                              if (value == "") {
+                                hintDistance = "3";
+                              } else {
+                                if (value == "0") {
+                                  hintDistance = "1";
+                                  value = "1";
+                                } else {
+                                  hintDistance = value;
+                                }
+                              }
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -397,11 +421,15 @@ class _SearchPageState extends State<SearchPage> {
                   children: [
                     SizedBox(
                       width: 86,
-                      height: 36,
+                      height: 40,
                       // ignore: deprecated_member_use
                       child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
                         color: Color(LIGHT_GREY),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: Text('Primeni',
                             style: TextStyle(
                                 color: Color(BLACK),
@@ -432,12 +460,10 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
-          key: _scaffoldKey,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 161,
@@ -453,15 +479,14 @@ class _SearchPageState extends State<SearchPage> {
                             padding: EdgeInsets.all(0),
                             width: 36,
                             child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36),
-                              onPressed: () =>
-                                  // Scaffold.of(context).openDrawer(),
-                                  _scaffoldKey.currentState.openDrawer(),
-                            )),
+                                padding: EdgeInsets.all(0),
+                                icon: SvgPicture.asset(
+                                    'assets/icons/ArrowLeft.svg',
+                                    width: 36,
+                                    height: 36),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                })),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
