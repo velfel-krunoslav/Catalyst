@@ -23,6 +23,6 @@ const double REVIEW_BAR_WIDTH_PERCENT = 0.64;
 
 /* GLOBALS: */
 const PRIVATE_KEY =
-    "7ffaae9a0b0677385dacf317ad5e601e9f4fa6c2e6a2b578e795d2ad685ea06f";
-const HOST = "192.168.1.8:7545";
-const JSON_NETWORK_ATTR = "5720";
+    "7097e2fa2beaf3ff46c0edafb37ca4b1ad021c3d5e70ca5057bca3754a9aa3b9";
+const HOST = "147.91.204.116:11130";
+const JSON_NETWORK_ATTR = "1619601142169";

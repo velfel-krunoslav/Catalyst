@@ -1024,7 +1024,7 @@ Widget HomeDrawer(
           width: 10,
         ),
         Text(
-          user.forename + " " + user.surname,
+          user.name + " " + user.surname,
           style: TextStyle(
               fontFamily: 'Inter',
               color: Colors.white,
