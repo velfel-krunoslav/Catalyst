@@ -36,10 +36,11 @@ contract Users {
         string memory _phoneNumber,
         string memory _homeAddress,
         string memory _birthday,
-        uint _uType) public {
+        uint _uType) public returns (uint) {
 
         users[usersCount++] = User(usersCount, _name, _surname, _privateKey, _metamaskAddress, _photoUrl, _desc, _email, _phoneNumber, _homeAddress, _birthday, _uType);
         emit UserCreated(_name, usersCount - 1);
+        return usersCount-1;
 
     }
     function checkForUser(string memory _metamaskAddress, string memory _privateKey) public returns (bool bl){
@@ -59,5 +60,16 @@ contract Users {
             return keccak256(bytes(a)) == keccak256(bytes(b));
         }
     }
-    //TODO get users by id
+
+    function getUser(string memory privateKey, string memory accountAddress) public returns (User memory){
+        User memory user;
+        for (uint i= 0; i < usersCount; i++) {
+            if (checkForUser(privateKey, accountAddress)){
+                user = users[i];
+                break;
+            }
+        }
+        return user;
+    }
+
 }

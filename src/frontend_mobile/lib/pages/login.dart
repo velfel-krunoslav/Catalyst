@@ -99,9 +99,8 @@ class Login extends StatelessWidget {
                 onPressed: () {
 
                   Prefs.instance.setStringValue('privateKey', privateKey);
-                  Prefs.instance
-                      .setStringValue('accountAddress', accountAddress);
-                  //int id = usersModel.checkForUser(accountAddress, privateKey) as int;
+                  Prefs.instance.setStringValue('accountAddress', accountAddress);
+
                   usersModel.checkForUser(accountAddress, privateKey).then((rez){
                     print(rez);
                     if (rez != null && rez > -1){
@@ -113,8 +112,8 @@ class Login extends StatelessWidget {
                                   create: (_) => ProductsModel()),
                               ChangeNotifierProvider<CategoriesModel>(
                                   create: (_) => CategoriesModel()),
-                              // ChangeNotifierProvider<OrdersModel>(
-                              //     create: (_) => OrdersModel()),
+                              ChangeNotifierProvider<UsersModel>(
+                                  create: (_) => UsersModel()),
                             ], child: ConsumerHomePage())),
                       );
                     }
@@ -140,7 +139,15 @@ class Login extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => new SignUp()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                            new MultiProvider(providers: [
+                              ChangeNotifierProvider<UsersModel>(
+                                  create: (_) => UsersModel()),
+
+                              // ChangeNotifierProvider<OrdersModel>(
+                              //     create: (_) => OrdersModel()),
+                            ], child: SignUp())),
                       );
                     },
                     child: Text(' Registrujte se. ->',

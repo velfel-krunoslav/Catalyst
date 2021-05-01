@@ -60,7 +60,14 @@ class Welcome extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new SignUp()),
+                                builder: (context) =>
+                                new MultiProvider(providers: [
+                                  ChangeNotifierProvider<UsersModel>(
+                                      create: (_) => UsersModel()),
+
+                                  // ChangeNotifierProvider<OrdersModel>(
+                                  //     create: (_) => OrdersModel()),
+                                ], child: SignUp())),
                           );
                         },
                       ),
