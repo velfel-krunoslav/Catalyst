@@ -1,4 +1,0 @@
-#Wed Apr 07 08:37:43 CEST 2021
-base.0=/home/jovan/Catalyst/src/demo/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
