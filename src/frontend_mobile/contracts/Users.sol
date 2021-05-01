@@ -64,9 +64,8 @@ contract Users {
     function getUser(string memory privateKey, string memory accountAddress) public returns (User memory){
         User memory user;
         for (uint i= 0; i < usersCount; i++) {
-            if (checkForUser(privateKey, accountAddress)){
-                user = users[i];
-                break;
+            if (hashCompareWithLengthCheck(users[i].privateKey, privateKey) && hashCompareWithLengthCheck(users[i].metamaskAddress, accountAddress)){
+                return users[i];
             }
         }
         return user;

@@ -1023,14 +1023,32 @@ Widget HomeDrawer(
         SizedBox(
           width: 10,
         ),
-        Text(
-          user.name + " " + user.surname,
-          style: TextStyle(
-              fontFamily: 'Inter',
-              color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.w800),
-        )
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              user.name.length > 10 ?
+              user.name.substring(0,10) + "..." :
+              user.name,
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800),
+            ),
+            Text(
+              user.surname.length > 10 ?
+              user.surname.substring(0,10) + "..." :
+              user.surname,
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800),
+            )
+          ],
+        ),
+
       ],
     ),
     DrawerOption(

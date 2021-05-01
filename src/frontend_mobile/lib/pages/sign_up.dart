@@ -308,8 +308,7 @@ class _SignUpState extends State<SignUp> {
                             Prefs.instance.setStringValue("privateKey", private_key);
                             Prefs.instance.setStringValue('accountAddress', metamask_address);
                             birthday = _date.toString();
-                            usersModel.createUser(name, surname, private_key, metamask_address, "photoUrl", "Opis", email, phone_number, homeAddress, birthday, 0).then((rez){
-                             // print(rez);
+                            usersModel.createUser(name, surname, private_key, metamask_address, "assets/icons/UserCircle.png", "Opis", email, phone_number, homeAddress, birthday, 0).then((rez){
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -320,7 +319,7 @@ class _SignUpState extends State<SignUp> {
                                       ChangeNotifierProvider<CategoriesModel>(
                                           create: (_) => CategoriesModel()),
                                       ChangeNotifierProvider<UsersModel>(
-                                          create: (_) => UsersModel()),
+                                          create: (_) => UsersModel(private_key,metamask_address)),
                                     ], child: ConsumerHomePage())),
                               );
                             });

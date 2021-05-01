@@ -15,12 +15,14 @@ class UsersModel extends ChangeNotifier {
 
 
   int usersCount = 0;
-  int userId;
+  User user;
+  int id;
+  String privateKey;
+  String accountAddress;
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
 
   final String _privateKey = PRIVATE_KEY;
-  int ordersCount = 0;
 
   bool isLoading = true;
   Credentials _credentials;
@@ -36,8 +38,9 @@ class UsersModel extends ChangeNotifier {
   ContractFunction _createUser;
   ContractFunction _getUser;
 
-  UsersModel() {
-
+  UsersModel([String privateKey = "", String accountAddress = ""]) {
+    this.privateKey = privateKey;
+    this.accountAddress = accountAddress;
     initiateSetup();
   }
 
@@ -72,8 +75,11 @@ class UsersModel extends ChangeNotifier {
     _checkForUser = _contract.function("checkForUser");
     _createUser = _contract.function("createUser");
     _getUser = _contract.function("getUser");
-    //checkForUser("egfsaergsregs", "fw4tg3w4g3w4g3");
-
+    //User ret = await getUser("vaev", "eva");
+    if (privateKey!=null && privateKey!="" && accountAddress!=null && accountAddress!=""){
+      user = await getUser(privateKey, accountAddress);
+    }
+    isLoading = false;
   }
 
 
@@ -111,7 +117,6 @@ class UsersModel extends ChangeNotifier {
 
 
     print("id - " + id.toString());
-    this.userId = id;
     return id;
   }
   createUser(String _name,
@@ -158,10 +163,8 @@ class UsersModel extends ChangeNotifier {
       isLoading = false;
     }
   }
-  getUser(String privateKey, String accountAddress) async {
+  Future<User> getUser(String privateKey, String accountAddress) async {
     isLoading = true;
-    print("model ${privateKey}");
-    print("model ${accountAddress}");
     var temp = await _client.call(
         contract: _contract,
         function: _getUser,

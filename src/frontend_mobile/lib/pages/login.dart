@@ -100,7 +100,6 @@ class Login extends StatelessWidget {
 
                   Prefs.instance.setStringValue('privateKey', privateKey);
                   Prefs.instance.setStringValue('accountAddress', accountAddress);
-
                   usersModel.checkForUser(accountAddress, privateKey).then((rez){
                     print(rez);
                     if (rez != null && rez > -1){
@@ -113,7 +112,7 @@ class Login extends StatelessWidget {
                               ChangeNotifierProvider<CategoriesModel>(
                                   create: (_) => CategoriesModel()),
                               ChangeNotifierProvider<UsersModel>(
-                                  create: (_) => UsersModel()),
+                                  create: (_) => UsersModel(privateKey,accountAddress)),
                             ], child: ConsumerHomePage())),
                       );
                     }

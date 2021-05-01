@@ -89,18 +89,24 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
-    Prefs.instance.getStringValue("privateKey").then((value1) {
-      privateKey = value1;
-      Prefs.instance.getStringValue("accountAddress").then((value2) {
-        accountAddress = value2;
-        print(privateKey);
-        print(accountAddress);
-        usersModel.getUser(privateKey, accountAddress).then((value){
-          print(value);
-
-        });
-      });
-    });
+    // Prefs.instance.getStringValue("privateKey").then((value1) {
+    //   setState(() {
+    //     privateKey = value1;
+    //     Prefs.instance.getStringValue("accountAddress").then((value2) {
+    //       setState(() {
+    //         accountAddress = value2;
+    //
+    //           // usersModel.getUser(privateKey, accountAddress).then((value){
+    //           //   print(value.name);
+    //           // });
+    //
+    //
+    //       });
+    //
+    //     });
+    //   });
+    //
+    // });
   }
 
   @override
@@ -108,7 +114,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
-    print(cartItemsCount);
+    //print("faewfawe " + privateKey);
+    // usersModel.getUser(privateKey, accountAddress).then((value){
+    //   print(value.name);
+    // });
+    //print(cartItemsCount);
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     //TODO  ProductEntry p = productsModel.getProductById(0);
@@ -118,7 +128,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback,
+          drawer: usersModel.isLoading? LinearProgressIndicator() : HomeDrawer(context, usersModel.user, addProductCallback,
               sellersProductsCallback, getProductByIdCallback), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
