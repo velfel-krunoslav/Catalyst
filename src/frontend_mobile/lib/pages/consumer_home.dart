@@ -32,16 +32,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   static GlobalKey<ScaffoldState> _scaffoldKey;
   User user = new User(
-      name: "Petar",
-      surname: "Nikolić",
-      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-      phoneNumber: "+49 76 859 69 58",
-      homeAddress: "4070 Jehovah Drive",
-      email: "jay.ritter@gmail.com",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-          " sed do eiusmod tempor incididunt ut labore et dolore magna "
-          "aliqua.",
-      //rating: 4.5,);
+    name: "Petar",
+    surname: "Nikolić",
+    photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
+    phoneNumber: "+49 76 859 69 58",
+    homeAddress: "4070 Jehovah Drive",
+    email: "jay.ritter@gmail.com",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+        " sed do eiusmod tempor incididunt ut labore et dolore magna "
+        "aliqua.",
+    //rating: 4.5,);
   );
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
@@ -79,6 +79,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
+    Prefs.instance.setStringValue('cartProducts', '0,1;1,1;4,1;5,1');
   }
 
   @override
@@ -292,9 +293,18 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           onPressed: () {
                             ProductEntry product =
                                 productsModel.products[index];
-                            setState(() {
-                              recently.add(product);
-                            });
+                            bool isInList = false;
+                            for (var p in recently) {
+                              if (p.id == product.id) isInList = true;
+                            }
+                            if (!isInList) {
+                              setState(() {
+                                recently.insert(0, product);
+                                if (recently.length > 3) {
+                                  recently.removeAt(3);
+                                }
+                              });
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -375,7 +385,45 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         return Row(
                           children: [
                             GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(
+                                                        recently[index].id),
+                                                child: ProductEntryListing(
+                                                    ProductEntryListingPage(
+                                                        assetUrls:
+                                                            recently[index]
+                                                                .assetUrls,
+                                                        name: recently[index]
+                                                            .name,
+                                                        price: recently[index]
+                                                            .price,
+                                                        classification:
+                                                            recently[index]
+                                                                .classification,
+                                                        quantifier:
+                                                            recently[index]
+                                                                .quantifier,
+                                                        description:
+                                                            recently[index]
+                                                                .desc,
+                                                        id: recently[index].id,
+                                                        userInfo: new UserInfo(
+                                                          profilePictureAssetUrl:
+                                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                          fullName:
+                                                              'Petar Nikolić',
+                                                          reputationNegative: 7,
+                                                          reputationPositive:
+                                                              240,
+                                                        ))))),
+                                  );
+                                },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
                                   child: Image.asset(

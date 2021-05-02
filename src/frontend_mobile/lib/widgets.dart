@@ -862,7 +862,14 @@ class CategoryEntry extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(LIGHT_GREY),
                   shadows: <Shadow>[
-                    Shadow(blurRadius: 5, color: Colors.black)
+                    Shadow(blurRadius: 28, color: Colors.black),
+                    Shadow(blurRadius: 26, color: Colors.black),
+                    Shadow(blurRadius: 24, color: Colors.black),
+                    Shadow(blurRadius: 20, color: Colors.black),
+                    Shadow(blurRadius: 18, color: Colors.black),
+                    Shadow(blurRadius: 16, color: Colors.black),
+                    Shadow(blurRadius: 14, color: Colors.black),
+                    Shadow(blurRadius: 12, color: Colors.black),
                   ])),
         ),
       ],
