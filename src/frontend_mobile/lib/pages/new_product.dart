@@ -18,10 +18,11 @@ import 'consumer_home.dart';
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
-  NewProduct(this.addProductCallback);
+  Function setValues;
+  NewProduct(this.addProductCallback, this.setValues);
 
   @override
-  _NewProductState createState() => _NewProductState(this.addProductCallback);
+  _NewProductState createState() => _NewProductState(this.addProductCallback, this.setValues);
 }
 
 List<File> images = [];
@@ -47,7 +48,8 @@ List<Category> categories = [
 
 class _NewProductState extends State<NewProduct> {
   Function addProductCallback;
-  _NewProductState(this.addProductCallback);
+  Function setValues;
+  _NewProductState(this.addProductCallback, this.setValues);
 
   @override
   Widget build(BuildContext context) {
@@ -419,21 +421,29 @@ class _NewProductState extends State<NewProduct> {
                         child: ButtonFill(
                             text: 'Dodaj proizvod',
                             onPressed: () {
+                              print(usr.id);
+                              List<String> imagesTemp = [];
+                              imagesTemp.add("assets/product_listings/rakija_silverije_cc_by_sa.jpg");
                               if (name != null &&
-                                  images.length != 0 &&
+                                 // images.length != -1 &&
                                   selectedUnit != null &&
                                   quantity != null &&
                                   description != null &&
                                   selectedCategory != null) {
-                                /* addProductCallback(
+                                 addProductCallback(
                                     name,
                                     price,
-                                    images, // IPFS GOES HERE
+                                    //images, // IPFS GOES HERE
+                                     imagesTemp,
                                     selectedUnit,
                                     quantity,
                                     description,
-                                    1, //TODO ADD USER'S ID
-                                    selectedCategory.id); */
+                                    usr.id,
+                                    selectedCategory.id);
+                                 // TODO osveziti prikaz stranice my_products kada dodamo novi proizvod
+                                 //TODO regex provere
+                                 //TODO slike IPFS
+                                 //setValues();
                                 Navigator.pop(context);
                               } else {
                                 //TODO istampati poruku da se popune sva polja

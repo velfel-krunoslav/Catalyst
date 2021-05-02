@@ -38,18 +38,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
   static GlobalKey<ScaffoldState> _scaffoldKey;
 
-  User user = new User(
-      name: "Petar",
-      surname: "Nikolić",
-      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-      phoneNumber: "+49 76 859 69 58",
-      homeAddress: "4070 Jehovah Drive",
-      email: "jay.ritter@gmail.com",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-          " sed do eiusmod tempor incididunt ut labore et dolore magna "
-          "aliqua.",
-      //rating: 4.5,);
-  );
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
   ProductsModel productsModel;
@@ -62,7 +50,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     return await productsModel.getProductById(id);
   }
 
-  void addProductCallback(
+  Function addProductCallback(
       String name,
       double price,
       List<String> assetUrls,
@@ -76,7 +64,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Future<List<ProductEntry>> sellersProductsCallback() async {
-    return await productsModel.getSellersProducts(1); //one sellerId
+    return await productsModel.getSellersProducts(usr.id); //one sellerId
   }
 
   void callback(int cat) {
@@ -89,24 +77,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
-    // Prefs.instance.getStringValue("privateKey").then((value1) {
-    //   setState(() {
-    //     privateKey = value1;
-    //     Prefs.instance.getStringValue("accountAddress").then((value2) {
-    //       setState(() {
-    //         accountAddress = value2;
-    //
-    //           // usersModel.getUser(privateKey, accountAddress).then((value){
-    //           //   print(value.name);
-    //           // });
-    //
-    //
-    //       });
-    //
-    //     });
-    //   });
-    //
-    // });
+
   }
 
   @override
@@ -114,11 +85,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
-    //print("faewfawe " + privateKey);
-    // usersModel.getUser(privateKey, accountAddress).then((value){
-    //   print(value.name);
-    // });
-    //print(cartItemsCount);
+    usr = usersModel.user;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     //TODO  ProductEntry p = productsModel.getProductById(0);
@@ -329,32 +296,38 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             setState(() {
                               recently.add(product);
                             });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      new ChangeNotifierProvider(
-                                          create: (context) =>
-                                              ReviewsModel(product.id),
-                                          child: ProductEntryListing(
-                                              ProductEntryListingPage(
-                                                  assetUrls: product.assetUrls,
-                                                  name: product.name,
-                                                  price: product.price,
-                                                  classification:
-                                                      product.classification,
-                                                  quantifier:
-                                                      product.quantifier,
-                                                  description: product.desc,
-                                                  id: product.id,
-                                                  userInfo: new UserInfo(
-                                                    profilePictureAssetUrl:
-                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                    fullName: 'Petar Nikolić',
-                                                    reputationNegative: 7,
-                                                    reputationPositive: 240,
-                                                  ))))),
-                            );
+                            User user;
+                            usersModel.getUserById(product.sellerId).then((value){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    new ChangeNotifierProvider(
+                                        create: (context) =>
+                                            ReviewsModel(product.id),
+                                        child: ProductEntryListing(
+                                            ProductEntryListingPage(
+                                                assetUrls: product.assetUrls,
+                                                name: product.name,
+                                                price: product.price,
+                                                classification:
+                                                product.classification,
+                                                quantifier:
+                                                product.quantifier,
+                                                description: product.desc,
+                                                id: product.id,
+                                                userInfo: new UserInfo(
+                                                  profilePictureAssetUrl:
+                                                  'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                  fullName: 'Petar Nikolić',
+                                                  reputationNegative: 7,
+                                                  reputationPositive: 240,
+                                                ),
+                                              vendor: value
+                                            )))),
+                              );
+                            });
+
                           })),
                 ),
               );

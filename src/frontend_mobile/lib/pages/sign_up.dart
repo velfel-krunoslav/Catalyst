@@ -308,6 +308,8 @@ class _SignUpState extends State<SignUp> {
                             Prefs.instance.setStringValue("privateKey", private_key);
                             Prefs.instance.setStringValue('accountAddress', metamask_address);
                             birthday = _date.toString();
+                            //TODO proveriti da li postoji user sa unesenim kljucem i adresom
+                            //TODO regex provera
                             usersModel.createUser(name, surname, private_key, metamask_address, "assets/icons/UserCircle.png", "Opis", email, phone_number, homeAddress, birthday, 0).then((rez){
                               Navigator.push(
                                 context,

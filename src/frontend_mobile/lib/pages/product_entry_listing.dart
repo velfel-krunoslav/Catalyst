@@ -249,11 +249,10 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
-                                  child: Image.asset(
-                                      _data.userInfo.profilePictureAssetUrl,
-                                      width: 60,
-                                      height: 60,
-                                      fit: BoxFit.cover),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: AssetImage(_data.vendor.photoUrl),
+                                  ),
                                 ),
                                 SizedBox(width: 10),
                                 Container(
@@ -262,7 +261,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data.userInfo.fullName,
+                                        Text(_data.vendor.name + " " + _data.vendor.surname,
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w800,
@@ -313,7 +312,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                 child: Padding(
                                                   padding: EdgeInsets.all(3),
                                                   child: Center(
-                                                      child: Text(
+                                                      child: Text(    //TODO dodati reputaciju za vendora
                                                     _data.userInfo
                                                         .reputationNegative
                                                         .toString(),

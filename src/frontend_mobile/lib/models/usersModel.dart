@@ -37,6 +37,7 @@ class UsersModel extends ChangeNotifier {
   ContractFunction _checkForUser;
   ContractFunction _createUser;
   ContractFunction _getUser;
+  ContractFunction _getUserById;
 
   UsersModel([String privateKey = "", String accountAddress = ""]) {
     this.privateKey = privateKey;
@@ -75,7 +76,7 @@ class UsersModel extends ChangeNotifier {
     _checkForUser = _contract.function("checkForUser");
     _createUser = _contract.function("createUser");
     _getUser = _contract.function("getUser");
-    //User ret = await getUser("vaev", "eva");
+    _getUserById = _contract.function("getUserById");
     if (privateKey!=null && privateKey!="" && accountAddress!=null && accountAddress!=""){
       user = await getUser(privateKey, accountAddress);
     }
@@ -187,5 +188,31 @@ class UsersModel extends ChangeNotifier {
 
     isLoading = false;
     return user;
+  }
+
+  getUserById(int id) async {
+    isLoading = true;
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getUserById,
+        params: [BigInt.from(id)]);
+    temp = temp[0];
+    User userr = User(
+        id: temp[0].toInt(),
+        name: temp[1],
+        surname: temp[2],
+        privateKey: temp[3],
+        metamaskAddress: temp[4],
+        photoUrl: temp[5],
+        desc: temp[6],
+        email:temp[7],
+        phoneNumber: temp[8],
+        homeAddress: temp[9],
+        birthday: temp[10],
+        uType: temp[11].toInt()
+    );
+    isLoading = false;
+    notifyListeners();
+    return userr;
   }
 }

@@ -24,18 +24,27 @@ class _MyProductsState extends State<MyProducts> {
   Function sellersProductsCallback;
   _MyProductsState(this.addProductCallback, this.sellersProductsCallback);
   List<ProductEntry> products = [];
-  
+  bool isLoading = true;
   @override
   void initState() {
+    setValues();
+  }
+  void setValues(){
+    setState(() {
+      isLoading = true;
+    });
     sellersProductsCallback().then((t){
+      products.clear();
       for(int i = 0; i < t.length; i++){
         setState(() {
           products.add(t[i]);
         });
       }
     });
+    setState(() {
+      isLoading = false;
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -58,14 +67,15 @@ class _MyProductsState extends State<MyProducts> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NewProduct(addProductCallback)),
+              MaterialPageRoute(builder: (context) => NewProduct(addProductCallback, setValues)),
             );
           },
           icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
           label: Text("Dodaj proizvod", style: TextStyle(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w700),),
           backgroundColor: Color(MINT),
         ),
-    body: ListView(
+    body: isLoading == true ? LinearProgressIndicator() :
+    ListView(
       children: [
         SizedBox(height: 20,),
         SingleChildScrollView(
@@ -110,7 +120,9 @@ class _MyProductsState extends State<MyProducts> {
                                                   fullName: 'Petar Nikolić',
                                                   reputationNegative: 7,
                                                   reputationPositive: 240,
-                                                ))))),
+                                                ),
+                                              vendor: usr
+                                            )))),
                               );
                             })),
                   ),

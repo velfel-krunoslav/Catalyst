@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+User usr;
 
 Future<http.Response> pushToIPFS(String contents) {
   return http.post(
@@ -159,7 +160,7 @@ class ProductEntryListingPage extends ProductEntry {
   double averageReviewScore;
   int numberOfReviews;
   UserInfo userInfo;
-
+  User vendor;
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
@@ -170,7 +171,8 @@ class ProductEntryListingPage extends ProductEntry {
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
-      this.userInfo})
+      this.userInfo,
+      this.vendor})
       : super(
             id: id,
             assetUrls: assetUrls,

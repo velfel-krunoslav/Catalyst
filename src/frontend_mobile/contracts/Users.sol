@@ -70,5 +70,14 @@ contract Users {
         }
         return user;
     }
-
+    function getUserById(uint id) public returns (User memory){
+        User memory user;
+        for (uint i= 0; i < usersCount; i++) {
+            if (users[i].id == id){
+                user = users[i];
+                break;
+            }
+        }
+        return user;
+    }
 }
