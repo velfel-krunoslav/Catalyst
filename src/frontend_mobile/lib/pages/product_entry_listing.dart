@@ -38,7 +38,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   var reviewsModel;
 
   void newReviewCallback2(int productId, int rating, String desc, int userId){
-    reviewsModel.addReview(productId, rating, desc, 0);
+    reviewsModel.addReview(productId, rating, desc, usr.id);
   }
 
   _ProductEntryListing(ProductEntryListingPage _data) {
@@ -213,15 +213,16 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         GestureDetector(
                             onTap: () {
-                              //print(_data.id.toString());
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        new ChangeNotifierProvider(
-                                            create: (context) =>
-                                                ReviewsModel(_data.id),
-                                            child: ProductReviews(_data.id, newReviewCallback2))),
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<ReviewsModel>(
+                                          create: (_) => ReviewsModel(_data.id)),
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
+                                    ], child: ProductReviews(_data.id, newReviewCallback2))),
                               );
                             },
                             child: Text(

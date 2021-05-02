@@ -21,8 +21,8 @@ contract Users {
     event UserCreated(string user, uint userNumber);
     constructor() public{
 
-        users[0] = User(0, "Petar", "Petrovic", "key", "address", "fawfa", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
-        users[1] = User(1, "Luka", "Lala", "fw4tg3w4g3w4g3", "egfsaergsregs", "fawfa", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[0] = User(0, "Petar", "Petrovic", "key1", "address1", "assets/icons/UserCircle.png", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[1] = User(1, "Marko", "Markovic", "key2", "address2", "assets/icons/UserCircle.png", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
         usersCount = 2;
     }
 

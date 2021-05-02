@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/rating.dart';
 import 'package:frontend_mobile/pages/ratingpage.dart';
 import 'package:frontend_mobile/widgets.dart';
@@ -11,22 +12,12 @@ import 'package:provider/provider.dart';
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
+  UsersModel usersModel;
   List<Review> reviews = [];
   Function newReviewCallback2;
   ProductReviews(this.productId, this.newReviewCallback2);
   void newReviewCallback(int rating, String desc){
-
-    //reviewsModel.addReview(productId, rating, desc, 0);
-    //     .then((value) => (){
-    //   for (int i = 0; i < reviewsModel.reviews.length; i++) {
-    //     setState() {
-    //       reviews.add(reviewsModel.reviews[i]);
-    //     }
-    //   }
-    // }
-    // );
-
-    newReviewCallback2(productId, rating, desc, 0);
+    newReviewCallback2(productId, rating, desc, usr.id);
   }
 
   @override
@@ -35,7 +26,7 @@ class ProductReviews extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     reviewsModel = Provider.of<ReviewsModel>(context);
-
+    usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -182,10 +173,16 @@ class ProductReviews extends StatelessWidget {
                               child: Wrap(
                                   children: List<Widget>.generate(
                                       reviewsModel.reviewsCount, (int index) {
-                            return ReviewWidget(
-                              review: reviewsModel.reviews[index],
-                            );
-                          }) // [0, 1, 4]
+                                        print( "id " + reviewsModel.reviews[index].userId.toString());
+                                          return ChangeNotifierProvider(
+                                              create: (context) =>
+                                                  UsersModel.fromId(reviewsModel.reviews[index].userId),
+                                              child: ReviewWidget(
+                                                review: reviewsModel.reviews[index],
+                                              ));
+
+
+                          })
                                   )),
                         ),
                         SizedBox(

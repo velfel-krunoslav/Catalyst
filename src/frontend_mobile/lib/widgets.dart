@@ -23,6 +23,7 @@ import 'package:frontend_mobile/pages/inbox.dart';
 import './sizer_helper.dart'
     if (dart.library.html) './sizer_web.dart'
     if (dart.library.io) './sizer_io.dart';
+import 'models/usersModel.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -535,14 +536,25 @@ class SettingsOption extends StatelessWidget {
   }
 }
 
-class ReviewWidget extends StatelessWidget {
+class ReviewWidget extends StatefulWidget {
   Review review;
 
   ReviewWidget({this.review});
 
   @override
+  _ReviewWidgetState createState() => _ReviewWidgetState(this.review);
+}
+
+class _ReviewWidgetState extends State<ReviewWidget> {
+  User user;
+  Review review;
+  _ReviewWidgetState(this.review);
+  UsersModel usersModel;
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    usersModel = Provider.of<UsersModel>(context);
+    return usersModel.isLoading ? LinearProgressIndicator() :
+    Column(
       children: [
         Row(
           children: [
@@ -556,7 +568,7 @@ class ReviewWidget extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 40,
                     backgroundImage: AssetImage(
-                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
+                        usersModel.user.photoUrl),
                   )),
             ),
             SizedBox(
@@ -566,7 +578,7 @@ class ReviewWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(padding: EdgeInsets.only(left: 0, right: 16, top: 0)),
-                Text("Petar Nikolić",
+                Text(usersModel.user.name + " " + usersModel.user.surname,
                     style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -579,9 +591,9 @@ class ReviewWidget extends StatelessWidget {
                   child: Container(
                       width: 200,
                       child: Text(
-                        review.desc.length > 100
-                            ? review.desc.substring(0, 100) + "..."
-                            : review.desc,
+                        widget.review.desc.length > 100
+                            ? widget.review.desc.substring(0, 100) + "..."
+                            : widget.review.desc,
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -600,7 +612,7 @@ class ReviewWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Wrap(
-                      children: List.generate(review.rating, (index) {
+                      children: List.generate(widget.review.rating, (index) {
                         return SvgPicture.asset(
                           "assets/icons/StarFilled.svg",
                         );
@@ -608,7 +620,7 @@ class ReviewWidget extends StatelessWidget {
                     ),
                     Wrap(
                       children:
-                          List.generate(5 - review.rating.round(), (index) {
+                          List.generate(5 - widget.review.rating.round(), (index) {
                         return SvgPicture.asset("assets/icons/StarOutline.svg",
                             color: Color(LIGHT_GREY));
                       }),
@@ -656,12 +668,14 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
   Function callback;
   String categoryName;
   var productsModel;
+  UsersModel usersModel;
   var size;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     productsModel = Provider.of<ProductsModel>(context);
+    usersModel = Provider.of<UsersModel>(context);
     products = productsModel.productsForCategory;
 
     return productsModel.isLoading
@@ -720,38 +734,44 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                   product: products[index],
                                   onPressed: () {
                                     ProductEntry product = products[index];
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              new ChangeNotifierProvider(
-                                                  create: (context) =>
-                                                      ReviewsModel(product.id),
-                                                  child: ProductEntryListing(
-                                                      ProductEntryListingPage(
-                                                          assetUrls:
-                                                              product.assetUrls,
-                                                          name: product.name,
-                                                          price: product.price,
-                                                          classification: product
-                                                              .classification,
-                                                          quantifier: product
-                                                              .quantifier,
-                                                          description:
-                                                              product.desc,
-                                                          id: product.id,
-                                                          userInfo:
-                                                              new UserInfo(
-                                                            profilePictureAssetUrl:
-                                                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                            fullName:
-                                                                'Petar Nikolić',
-                                                            reputationNegative:
-                                                                7,
-                                                            reputationPositive:
-                                                                240,
-                                                          ))))),
-                                    );
+                                    usersModel.getUserById(product.sellerId).then((value){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(product.id),
+                                                child: ProductEntryListing(
+                                                    ProductEntryListingPage(
+                                                        assetUrls:
+                                                        product.assetUrls,
+                                                        name: product.name,
+                                                        price: product.price,
+                                                        classification: product
+                                                            .classification,
+                                                        quantifier: product
+                                                            .quantifier,
+                                                        description:
+                                                        product.desc,
+                                                        id: product.id,
+                                                        userInfo:
+                                                        new UserInfo(
+                                                          profilePictureAssetUrl:
+                                                          'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                          fullName:
+                                                          'Petar Nikolić',
+                                                          reputationNegative:
+                                                          7,
+                                                          reputationPositive:
+                                                          240,
+                                                        ),
+                                                      vendor: value
+                                                    )))),
+                                      );
+
+                                    });
+
                                   })),
                         ),
                       );
@@ -1085,7 +1105,7 @@ Widget HomeDrawer(
             context,
             MaterialPageRoute(
                 builder: (context) => new ChangeNotifierProvider(
-                    create: (context) => OrdersModel(0),
+                    create: (context) => OrdersModel(usr.id),
                     child: OrdersHistory(getProductByIdCallback))),
           );
         },

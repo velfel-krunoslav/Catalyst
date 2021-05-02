@@ -44,7 +44,10 @@ class UsersModel extends ChangeNotifier {
     this.accountAddress = accountAddress;
     initiateSetup();
   }
-
+  UsersModel.fromId(int id){
+    this.id = id;
+    initiateSetup();
+  }
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -79,6 +82,9 @@ class UsersModel extends ChangeNotifier {
     _getUserById = _contract.function("getUserById");
     if (privateKey!=null && privateKey!="" && accountAddress!=null && accountAddress!=""){
       user = await getUser(privateKey, accountAddress);
+    }
+    else if (id !=null && id > -1){
+      user = await getUserById(id);
     }
     isLoading = false;
   }

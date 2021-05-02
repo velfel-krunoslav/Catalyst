@@ -7,6 +7,7 @@ import 'package:frontend_mobile/pages/blank_page.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/pages/rating.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend_mobile/internals.dart';
 
 import '../widgets.dart';
 
@@ -61,10 +62,10 @@ class _RatingPage extends State<RatingPage> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                      "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg"),
+                      usr.photoUrl),
                 ),
                 Text(
-                  "Petar Nikolic",
+                  usr.name + " " + usr.surname,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
                 SizedBox(
@@ -111,7 +112,7 @@ class _RatingPage extends State<RatingPage> {
                   ButtonFill(
                     text: 'Dodaj recenziju',
                     onPressed: () {
-                      //reviewsModel.addReview(productId, _rating, desc, 0);
+                      //TODO omoguciti korisniku da ostavi recenziju samo ako je kupio proizvod i ako nije ostavio recenziju
                       newReviewCallback(_rating, desc);
                       int count = 0;
                       Navigator.of(context).popUntil((_) => count++ >= 2);

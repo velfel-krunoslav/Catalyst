@@ -229,13 +229,25 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   ),
                                 )
                               : Categories(categoriesModel.categories))
-                          : ChangeNotifierProvider(
-                              create: (context) => ProductsModel(category),
-                              child: ProductsForCategory(
-                                  category: category,
-                                  categoryName:
-                                      categoriesModel.categories[category].name,
-                                  callback: this.callback))),
+                          : MultiProvider(providers: [
+                        ChangeNotifierProvider<ProductsModel>(
+                            create: (_) => ProductsModel(category)),
+                        ChangeNotifierProvider<UsersModel>(
+                            create: (_) => UsersModel()),
+                      ], child: ProductsForCategory(
+                                category: category,
+                                categoryName:
+                                categoriesModel.categories[category].name,
+                                callback: this.callback))
+                      // ChangeNotifierProvider(
+                      //         create: (context) => ProductsModel(category),
+                      //         child: ProductsForCategory(
+                      //             category: category,
+                      //             categoryName:
+                      //                 categoriesModel.categories[category].name,
+                      //             callback: this.callback)
+                      // )
+                  ),
                   SingleChildScrollView(
                       child: productsModel.isLoading
                           ? Center(
