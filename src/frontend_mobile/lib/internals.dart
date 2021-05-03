@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+User usr;
+
 Future<http.Response> pushToIPFS(String contents) {
   return http.post(
     Uri.https('ipfs.infura.io:5001', '/api/v0/add'),
@@ -159,7 +161,7 @@ class ProductEntryListingPage extends ProductEntry {
   double averageReviewScore;
   int numberOfReviews;
   UserInfo userInfo;
-
+  User vendor;
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
@@ -170,7 +172,8 @@ class ProductEntryListingPage extends ProductEntry {
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
-      this.userInfo})
+      this.userInfo,
+      this.vendor})
       : super(
             id: id,
             assetUrls: assetUrls,
@@ -194,20 +197,19 @@ class User {
   String birthday;
   int uType;
   // TODO add rating
-  User({
-    this.id,
-    this.name,
-    this.surname,
-    this.privateKey,
-    this.metamaskAddress,
-    this.photoUrl,
-    this.desc,
-    this.email,
-    this.phoneNumber,
-    this.homeAddress,
-    this.birthday,
-    this.uType
-  });
+  User(
+      {this.id,
+      this.name,
+      this.surname,
+      this.privateKey,
+      this.metamaskAddress,
+      this.photoUrl,
+      this.desc,
+      this.email,
+      this.phoneNumber,
+      this.homeAddress,
+      this.birthday,
+      this.uType});
 }
 
 class Review {
@@ -224,10 +226,15 @@ class CartProduct {
   List<String> photoUrl;
   String name;
   double price;
-  int cartQuantity, id;
+  int cartQuantity, id, vendorId;
 
   CartProduct(
-      {this.id, this.photoUrl, this.name, this.price, this.cartQuantity});
+      {this.id,
+      this.vendorId,
+      this.photoUrl,
+      this.name,
+      this.price,
+      this.cartQuantity});
 }
 
 class UserReview extends User {
@@ -250,18 +257,18 @@ class UserReview extends User {
       this.text,
       this.stars})
       : super(
-      name: name,
-    surname: surname,
-    privateKey : privateKey,
-    metamaskAddress : metamaskAddress,
-    photoUrl : photoUrl,
-    desc: desc,
-    email:email,
-    phoneNumber:phoneNumber,
-    homeAddress:homeAddress,
-    birthday:birthday,
-    uType:uType,
-  );
+          name: name,
+          surname: surname,
+          privateKey: privateKey,
+          metamaskAddress: metamaskAddress,
+          photoUrl: photoUrl,
+          desc: desc,
+          email: email,
+          phoneNumber: phoneNumber,
+          homeAddress: homeAddress,
+          birthday: birthday,
+          uType: uType,
+        );
 }
 
 class ReviewPage {

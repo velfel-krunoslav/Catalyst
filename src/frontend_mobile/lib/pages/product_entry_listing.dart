@@ -42,7 +42,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   var reviewsModel;
 
   void newReviewCallback2(int productId, int rating, String desc, int userId) {
-    reviewsModel.addReview(productId, rating, desc, 0);
+    reviewsModel.addReview(productId, rating, desc, usr.id);
   }
 
   _ProductEntryListing(
@@ -219,14 +219,19 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         GestureDetector(
                             onTap: () {
-                              //print(_data.id.toString());
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        new ChangeNotifierProvider(
-                                            create: (context) =>
-                                                ReviewsModel(_data.id),
+                                    builder: (context) => new MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider<
+                                                      ReviewsModel>(
+                                                  create: (_) =>
+                                                      ReviewsModel(_data.id)),
+                                              ChangeNotifierProvider<
+                                                      UsersModel>(
+                                                  create: (_) => UsersModel()),
+                                            ],
                                             child: ProductReviews(
                                                 _data.id, newReviewCallback2))),
                               );
@@ -256,11 +261,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
-                                  child: Image.asset(
-                                      _data.userInfo.profilePictureAssetUrl,
-                                      width: 60,
-                                      height: 60,
-                                      fit: BoxFit.cover),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:
+                                        AssetImage(_data.vendor.photoUrl),
+                                  ),
                                 ),
                                 SizedBox(width: 10),
                                 Container(
@@ -269,7 +274,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data.userInfo.fullName,
+                                        // TODO SUBSTR IF NAME TOO LONG
+                                        Text(
+                                            _data.vendor.name +
+                                                " " +
+                                                _data.vendor.surname,
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w800,
@@ -321,6 +330,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   padding: EdgeInsets.all(3),
                                                   child: Center(
                                                       child: Text(
+                                                    // TODO ADD VENDOR REP
                                                     _data.userInfo
                                                         .reputationNegative
                                                         .toString(),
@@ -396,11 +406,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       }
                                     });
                                   });
-                                  Prefs.instance
-                                      .getStringValue('cartProducts')
-                                      .then((value) {
-                                    refreshInitiator();
-                                  });
+
+                                  refreshInitiator();
                                   Navigator.pop(context);
                                 }),
                           ],

@@ -35,7 +35,7 @@ class OrdersModel extends ChangeNotifier {
   ContractFunction _createOrder;
   ContractFunction _getOrders;
   ContractFunction _getOrdersCount;
-
+  ContractFunction _checkForOrder;
   OrdersModel([int b = 0]) {
     this.buyerId = b;
     initiateSetup();
@@ -72,6 +72,7 @@ class OrdersModel extends ChangeNotifier {
     _createOrder = _contract.function("createOrder");
     _getOrders = _contract.function("getOrders");
     _getOrdersCount = _contract.function("getOrdersCount");
+    _checkForOrder = _contract.function("checkForOrder");
     await getOrders(buyerId);
     setDateOrders();
   }
@@ -160,6 +161,14 @@ class OrdersModel extends ChangeNotifier {
       }
       isLoading = false;
       notifyListeners();
+    }
+
+    checkForOrder(int userId, int productId) async {
+      var temp = await _client.call(
+          contract: _contract,
+          function: _checkForOrder,
+          params: [BigInt.from(userId), BigInt.from(productId)]);
+      return temp[0];
     }
   }
 

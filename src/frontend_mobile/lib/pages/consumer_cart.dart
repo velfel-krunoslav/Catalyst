@@ -70,6 +70,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
               getProductByIdCallback(int.parse(ids[i][0])).then((pr) {
                 CartProduct p = CartProduct(
                     id: pr.id,
+                    vendorId: pr.sellerId,
                     name: pr.name,
                     photoUrl: pr.assetUrls,
                     price: pr.price,
@@ -725,8 +726,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                       amount: quantities[i],
                                       date: date,
                                       status: 0,
-                                      sellerId: 0,
-                                      buyerId: 0,
+                                      sellerId: products[i].vendorId,
+                                      buyerId: usr.id,
                                       paymentType: (desc.compareTo(
                                                   'Plaćanje pouzećem') ==
                                               0)

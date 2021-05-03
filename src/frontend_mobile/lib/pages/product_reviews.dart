@@ -2,31 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/rating.dart';
-import 'package:frontend_mobile/pages/ratingpage.dart';
+import 'package:frontend_mobile/pages/rating_page.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
+  UsersModel usersModel;
   List<Review> reviews = [];
   Function newReviewCallback2;
   ProductReviews(this.productId, this.newReviewCallback2);
-  void newReviewCallback(int rating, String desc){
-
-    //reviewsModel.addReview(productId, rating, desc, 0);
-    //     .then((value) => (){
-    //   for (int i = 0; i < reviewsModel.reviews.length; i++) {
-    //     setState() {
-    //       reviews.add(reviewsModel.reviews[i]);
-    //     }
-    //   }
-    // }
-    // );
-
-    newReviewCallback2(productId, rating, desc, 0);
+  void newReviewCallback(int rating, String desc) {
+    newReviewCallback2(productId, rating, desc, usr.id);
   }
 
   @override
@@ -35,7 +27,7 @@ class ProductReviews extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     reviewsModel = Provider.of<ReviewsModel>(context);
-
+    usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -182,11 +174,13 @@ class ProductReviews extends StatelessWidget {
                               child: Wrap(
                                   children: List<Widget>.generate(
                                       reviewsModel.reviewsCount, (int index) {
-                            return ReviewWidget(
-                              review: reviewsModel.reviews[index],
-                            );
-                          }) // [0, 1, 4]
-                                  )),
+                            return ChangeNotifierProvider(
+                                create: (context) => UsersModel.fromId(
+                                    reviewsModel.reviews[index].userId),
+                                child: ReviewWidget(
+                                  review: reviewsModel.reviews[index],
+                                ));
+                          }))),
                         ),
                         SizedBox(
                           height: 10,
@@ -202,10 +196,17 @@ class ProductReviews extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            new ChangeNotifierProvider(
-                                                create: (context) =>
-                                                    ReviewsModel(0),
+                                        builder: (context) => new MultiProvider(
+                                                providers: [
+                                                  ChangeNotifierProvider<
+                                                          ReviewsModel>(
+                                                      create: (_) =>
+                                                          ReviewsModel(0)),
+                                                  ChangeNotifierProvider<
+                                                          OrdersModel>(
+                                                      create: (_) =>
+                                                          OrdersModel()),
+                                                ],
                                                 child: RatingPage(productId,
                                                     newReviewCallback))),
                                   );

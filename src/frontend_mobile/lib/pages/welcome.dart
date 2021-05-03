@@ -8,6 +8,7 @@ import 'package:frontend_mobile/pages/login.dart';
 import 'package:frontend_mobile/pages/sign_up.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile/models/usersModel.dart';
+
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -61,13 +62,13 @@ class Welcome extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                new MultiProvider(providers: [
-                                  ChangeNotifierProvider<UsersModel>(
-                                      create: (_) => UsersModel()),
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
 
-                                  // ChangeNotifierProvider<OrdersModel>(
-                                  //     create: (_) => OrdersModel()),
-                                ], child: SignUp())),
+                                      // ChangeNotifierProvider<OrdersModel>(
+                                      //     create: (_) => OrdersModel()),
+                                    ], child: SignUp())),
                           );
                         },
                       ),
@@ -79,19 +80,11 @@ class Welcome extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                new MultiProvider(providers: [
-                                  ChangeNotifierProvider<UsersModel>(
-                                      create: (_) => UsersModel()),
-
-                                  // ChangeNotifierProvider<OrdersModel>(
-                                  //     create: (_) => OrdersModel()),
-                                ], child: Login())),
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
+                                    ], child: Login())),
                           );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => new Login()),
-                          // );
                         },
                       )
                     ],

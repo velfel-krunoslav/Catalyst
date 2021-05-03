@@ -365,6 +365,8 @@ class _NewProductState extends State<NewProduct> {
                                     images.add(bytes);
                                   });
                                 });
+                              } else {
+                                // TODO WARN THAT MAX NO. OF IMAGES EXCEEDED
                               }
                             }),
                         SizedBox(width: 10),
@@ -401,21 +403,27 @@ class _NewProductState extends State<NewProduct> {
                         child: ButtonFill(
                             text: 'Dodaj proizvod',
                             onPressed: () {
+                              List<String> imagesTemp = [];
+                              imagesTemp.add(
+                                  "assets/product_listings/rakija_silverije_cc_by_sa.jpg");
                               if (name != null &&
-                                  images.length != 0 &&
+                                  // images.length != -1 &&
                                   selectedUnit != null &&
                                   quantity != null &&
                                   description != null &&
                                   selectedCategory != null) {
-                                /* addProductCallback(
+                                addProductCallback(
                                     name,
                                     price,
-                                    images, // IPFS GOES HERE
+                                    //images, // IPFS GOES HERE
+                                    imagesTemp,
                                     selectedUnit,
                                     quantity,
                                     description,
-                                    1, //TODO ADD USER'S ID
-                                    selectedCategory.id); */
+                                    usr.id,
+                                    selectedCategory.id);
+                                //TODO regex check
+                                //TODO IPFS images
                                 Navigator.pop(context);
                               } else {
                                 //TODO istampati poruku da se popune sva polja

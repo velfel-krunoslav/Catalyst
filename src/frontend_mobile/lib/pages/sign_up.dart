@@ -24,7 +24,6 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   String name;
   DateTime _date;
-  String _dateStr;
   String surname;
 
   String birthday;
@@ -38,7 +37,6 @@ class _SignUpState extends State<SignUp> {
   String private_key;
 
   bool flg = true;
-  String password;
   UsersModel usersModel;
   @override
   Widget build(BuildContext context) {
@@ -275,7 +273,7 @@ class _SignUpState extends State<SignUp> {
                                   borderRadius: BorderRadius.circular(5.0)))),
                       SizedBox(height: 15.0),
                       PasswordField((val) {
-                        password = val;
+                        private_key = val;
                       }, 'Privatni ključ'),
                       SizedBox(height: 20.0),
                       ButtonFill(
@@ -288,6 +286,7 @@ class _SignUpState extends State<SignUp> {
                               email != null &&
                               phone_number != null &&
                               _date != null) {
+                            //TODO regex check
                             //TODO verify private key
                             Prefs.instance
                                 .setStringValue("privateKey", private_key);
@@ -295,35 +294,50 @@ class _SignUpState extends State<SignUp> {
                                 'accountAddress', metamask_address);
                             birthday = _date.toString();
                             usersModel
-                                .createUser(
-                                    name,
-                                    surname,
-                                    private_key,
-                                    metamask_address,
-                                    "photoUrl",
-                                    "Opis",
-                                    email,
-                                    phone_number,
-                                    homeAddress,
-                                    birthday,
-                                    0)
-                                .then((rez) {
-                              // print(rez);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        new MultiProvider(providers: [
-                                          ChangeNotifierProvider<ProductsModel>(
-                                              create: (_) => ProductsModel()),
-                                          ChangeNotifierProvider<
-                                                  CategoriesModel>(
-                                              create: (_) => CategoriesModel()),
-                                          ChangeNotifierProvider<UsersModel>(
-                                              create: (_) => UsersModel()),
-                                        ], child: ConsumerHomePage())),
-                              );
+                                .checkForUser(metamask_address, private_key)
+                                .then((bl) {
+                              if (bl == -1) {
+                                usersModel
+                                    .createUser(
+                                        name,
+                                        surname,
+                                        private_key,
+                                        metamask_address,
+                                        "assets/icons/UserCircle.png",
+                                        "Opis",
+                                        email,
+                                        phone_number,
+                                        homeAddress,
+                                        birthday,
+                                        0)
+                                    .then((rez) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new MultiProvider(providers: [
+                                              ChangeNotifierProvider<
+                                                      ProductsModel>(
+                                                  create: (_) =>
+                                                      ProductsModel()),
+                                              ChangeNotifierProvider<
+                                                      CategoriesModel>(
+                                                  create: (_) =>
+                                                      CategoriesModel()),
+                                              ChangeNotifierProvider<
+                                                      UsersModel>(
+                                                  create: (_) => UsersModel(
+                                                      private_key,
+                                                      metamask_address)),
+                                            ], child: ConsumerHomePage())),
+                                  );
+                                });
+                              } else {
+                                //TODO prikazati korisniku da vec postoji user sa tom adresom i privatnim kljucem
+                              }
                             });
+                          } else {
+                            //TODO prikazati korisniku da mora popuniti sva polja
                           }
                         },
                       ),

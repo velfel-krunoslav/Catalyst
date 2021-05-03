@@ -37,18 +37,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
   static GlobalKey<ScaffoldState> _scaffoldKey;
 
-  User user = new User(
-    name: "Petar",
-    surname: "Nikolić",
-    photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-    phoneNumber: "+49 76 859 69 58",
-    homeAddress: "4070 Jehovah Drive",
-    email: "jay.ritter@gmail.com",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-        " sed do eiusmod tempor incididunt ut labore et dolore magna "
-        "aliqua.",
-    //rating: 4.5,);
-  );
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
   ProductsModel productsModel;
@@ -61,21 +49,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     return await productsModel.getProductById(id);
   }
 
-  void addProductCallback(
-      String name,
-      double price,
-      List<String> assetUrls,
-      int classification,
-      int quantifier,
-      String desc,
-      int sellerId,
-      int categoryId) {
-    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
-        desc, sellerId, categoryId);
-  }
-
-  Future<List<ProductEntry>> sellersProductsCallback() async {
-    return await productsModel.getSellersProducts(1); //one sellerId
+  refreshProductsCallback() {
+    productsModel.getProducts();
   }
 
   void callback(int cat) {
@@ -117,17 +92,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
-    Prefs.instance.getStringValue("privateKey").then((value1) {
-      privateKey = value1;
-      Prefs.instance.getStringValue("accountAddress").then((value2) {
-        accountAddress = value2;
-        print(privateKey);
-        print(accountAddress);
-        usersModel.getUser(privateKey, accountAddress).then((value) {
-          print(value);
-        });
-      });
-    });
   }
 
   @override
@@ -135,23 +99,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
-    print(cartItemsCount);
+    usr = usersModel.user;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-    //TODO  ProductEntry p = productsModel.getProductById(0);
-    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(
-              context,
-              user,
-              addProductCallback,
-              sellersProductsCallback,
-              getProductByIdCallback,
-              initiateCartRefresh), //TODO context
+          drawer: usersModel.isLoading
+              ? LinearProgressIndicator()
+              : HomeDrawer(context, usersModel.user, refreshProductsCallback,
+                  getProductByIdCallback, initiateCartRefresh), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -220,6 +178,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
+                      // TODO FIX BUG KEYBOARD NEEDS FIXING
                       style: TextStyle(fontFamily: 'Inter', fontSize: 16),
                       onChanged: (text) {
                         this.query = text;
@@ -289,8 +248,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   ),
                                 )
                               : Categories(categoriesModel.categories))
-                          : ChangeNotifierProvider(
-                              create: (context) => ProductsModel(category),
+                          : MultiProvider(
+                              providers: [
+                                  ChangeNotifierProvider<ProductsModel>(
+                                      create: (_) => ProductsModel(category)),
+                                  ChangeNotifierProvider<UsersModel>(
+                                      create: (_) => UsersModel()),
+                                ],
                               child: ProductsForCategory(
                                   category: category,
                                   categoryName:
@@ -365,33 +329,39 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 }
                               });
                             }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      new ChangeNotifierProvider(
-                                          create: (context) =>
-                                              ReviewsModel(product.id),
-                                          child: ProductEntryListing(
-                                              ProductEntryListingPage(
-                                                  assetUrls: product.assetUrls,
-                                                  name: product.name,
-                                                  price: product.price,
-                                                  classification:
-                                                      product.classification,
-                                                  quantifier:
-                                                      product.quantifier,
-                                                  description: product.desc,
-                                                  id: product.id,
-                                                  userInfo: new UserInfo(
-                                                    profilePictureAssetUrl:
-                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                    fullName: 'Petar Nikolić',
-                                                    reputationNegative: 7,
-                                                    reputationPositive: 240,
-                                                  )),
-                                              initiateCartRefresh))),
-                            );
+                            usersModel
+                                .getUserById(product.sellerId)
+                                .then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        new ChangeNotifierProvider(
+                                            create: (context) =>
+                                                ReviewsModel(product.id),
+                                            child: ProductEntryListing(
+                                                ProductEntryListingPage(
+                                                    assetUrls:
+                                                        product.assetUrls,
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    classification:
+                                                        product.classification,
+                                                    quantifier:
+                                                        product.quantifier,
+                                                    description: product.desc,
+                                                    id: product.id,
+                                                    userInfo: new UserInfo(
+                                                      profilePictureAssetUrl:
+                                                          'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                      fullName: 'Petar Nikolić',
+                                                      reputationNegative: 7,
+                                                      reputationPositive: 240,
+                                                    ),
+                                                    vendor: value),
+                                                initiateCartRefresh))),
+                              );
+                            });
                           })),
                 ),
               );
@@ -447,41 +417,50 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           children: [
                             GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            new ChangeNotifierProvider(
-                                              create: (context) => ReviewsModel(
-                                                  recently[index].id),
-                                              child: ProductEntryListing(
-                                                  ProductEntryListingPage(
-                                                      assetUrls: recently[index]
-                                                          .assetUrls,
-                                                      name:
-                                                          recently[index].name,
-                                                      price:
-                                                          recently[index].price,
-                                                      classification:
-                                                          recently[index]
-                                                              .classification,
-                                                      quantifier:
-                                                          recently[index]
-                                                              .quantifier,
-                                                      description:
-                                                          recently[index].desc,
-                                                      id: recently[index].id,
-                                                      userInfo: new UserInfo(
-                                                        profilePictureAssetUrl:
-                                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                        fullName:
-                                                            'Petar Nikolić',
-                                                        reputationNegative: 7,
-                                                        reputationPositive: 240,
-                                                      )),
-                                                  initiateCartRefresh),
-                                            )),
-                                  );
+                                  usersModel
+                                      .getUserById(recently[index].sellerId)
+                                      .then((value) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(
+                                                        recently[index].id),
+                                                child: ProductEntryListing(
+                                                    ProductEntryListingPage(
+                                                        assetUrls:
+                                                            recently[index]
+                                                                .assetUrls,
+                                                        name: recently[index]
+                                                            .name,
+                                                        price: recently[index]
+                                                            .price,
+                                                        classification:
+                                                            recently[index]
+                                                                .classification,
+                                                        quantifier:
+                                                            recently[index]
+                                                                .quantifier,
+                                                        description:
+                                                            recently[index]
+                                                                .desc,
+                                                        id: recently[index].id,
+                                                        userInfo: new UserInfo(
+                                                          profilePictureAssetUrl:
+                                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                          fullName:
+                                                              'Petar Nikolić',
+                                                          reputationNegative: 7,
+                                                          reputationPositive:
+                                                              240,
+                                                        ),
+                                                        vendor: value),
+                                                    initiateCartRefresh),
+                                              )),
+                                    );
+                                  });
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),

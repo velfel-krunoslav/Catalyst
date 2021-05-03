@@ -72,4 +72,11 @@ contract Reviews{
         }
         return reviewsForProductCount;
     }
+    function checkForReview(uint userId, uint productId) public returns (bool b){
+        for (uint i=0; i< reviewsCount; i++) {
+            if (reviews[i].userId == userId && reviews[i].productId ==  productId)
+                return true;
+        }
+        return false;
+    }
 }

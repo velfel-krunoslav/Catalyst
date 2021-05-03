@@ -45,13 +45,8 @@ class MyAccount extends StatelessWidget {
           ),
           Center(
             child: CircleAvatar(
-              radius: 60,
-              backgroundColor: Color(TEAL),
-              child: CircleAvatar(
-                radius: 55,
-                backgroundImage: AssetImage(
-                    'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
-              ),
+              radius: 55,
+              backgroundImage: AssetImage(user.photoUrl),
             ),
           ),
           SizedBox(

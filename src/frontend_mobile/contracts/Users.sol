@@ -21,8 +21,8 @@ contract Users {
     event UserCreated(string user, uint userNumber);
     constructor() public{
 
-        users[0] = User(0, "Petar", "Petrovic", "key", "address", "fawfa", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
-        users[1] = User(1, "Luka", "Lala", "fw4tg3w4g3w4g3", "egfsaergsregs", "fawfa", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[0] = User(0, "Petar", "Petrovic", "key1", "address1", "assets/icons/UserCircle.png", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[1] = User(1, "Marko", "Markovic", "key2", "address2", "assets/icons/UserCircle.png", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
         usersCount = 2;
     }
 
@@ -43,13 +43,13 @@ contract Users {
         return usersCount-1;
 
     }
-    function checkForUser(string memory _metamaskAddress, string memory _privateKey) public returns (bool bl){
+    function checkForUser(string memory _metamaskAddress, string memory _privateKey) public returns (uint bl){
 
         for (uint i=0; i< usersCount; i++) {
             if (hashCompareWithLengthCheck(users[i].metamaskAddress, _metamaskAddress) && hashCompareWithLengthCheck(users[i].privateKey,  _privateKey))
-                return true;
+                return users[i].id;
         }
-        return false;
+        return usersCount;
 
     }
 
@@ -64,12 +64,20 @@ contract Users {
     function getUser(string memory privateKey, string memory accountAddress) public returns (User memory){
         User memory user;
         for (uint i= 0; i < usersCount; i++) {
-            if (checkForUser(privateKey, accountAddress)){
+            if (hashCompareWithLengthCheck(users[i].privateKey, privateKey) && hashCompareWithLengthCheck(users[i].metamaskAddress, accountAddress)){
+                return users[i];
+            }
+        }
+        return user;
+    }
+    function getUserById(uint id) public returns (User memory){
+        User memory user;
+        for (uint i= 0; i < usersCount; i++) {
+            if (users[i].id == id){
                 user = users[i];
                 break;
             }
         }
         return user;
     }
-
 }

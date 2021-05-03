@@ -64,4 +64,12 @@ contract Orders{
         }
         return countTemp;
     }
+    function checkForOrder(uint buyerId, uint productId) public returns (bool b){
+        for (uint i=0; i< ordersCount; i++) {
+            if (orders[i].buyerId == buyerId && orders[i].productId ==  productId)
+                return true;
+        }
+        return false;
+    }
+
 }

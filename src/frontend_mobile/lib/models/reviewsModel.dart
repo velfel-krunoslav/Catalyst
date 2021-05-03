@@ -35,7 +35,7 @@ class ReviewsModel extends ChangeNotifier {
   ContractFunction _getReviews;
   ContractFunction _countStars;
   ContractFunction _getReviewsCount;
-
+  ContractFunction _checkForReview;
   ReviewsModel(int productId) {
     this.productId = productId;
     initiateSetup();
@@ -74,7 +74,7 @@ class ReviewsModel extends ChangeNotifier {
     _getReviews = _contract.function("getReviews");
     _countStars = _contract.function("countStars");
     _getReviewsCount = _contract.function("getReviewsCount");
-
+    _checkForReview = _contract.function("checkForReview");
     await getReviews(productId);
   }
 
@@ -152,4 +152,15 @@ class ReviewsModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+  checkForReview(int userId, int productId) async {
+
+    var temp = await _client.call(
+        contract: _contract,
+        function: _checkForReview,
+        params: [BigInt.from(userId), BigInt.from(productId)]);
+    print(temp[0]);
+    return temp[0];
+
+  }
+
 }
