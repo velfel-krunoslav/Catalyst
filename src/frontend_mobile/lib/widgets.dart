@@ -640,21 +640,28 @@ class ReviewWidget extends StatelessWidget {
 }
 
 class ProductsForCategory extends StatefulWidget {
-  ProductsForCategory({this.category, this.categoryName, this.callback});
+  ProductsForCategory(
+      {this.category, this.categoryName, this.callback, this.initiateRefresh});
   int category;
   Function callback;
   String categoryName;
+  VoidCallback initiateRefresh;
   @override
   _ProductsForCategoryState createState() => _ProductsForCategoryState(
-      category: category, categoryName: categoryName, callback: callback);
+      category: category,
+      categoryName: categoryName,
+      callback: callback,
+      initiateRefresh: initiateRefresh);
 }
 
 class _ProductsForCategoryState extends State<ProductsForCategory> {
-  _ProductsForCategoryState({this.category, this.categoryName, this.callback});
+  _ProductsForCategoryState(
+      {this.category, this.categoryName, this.callback, this.initiateRefresh});
   List<ProductEntry> products;
   int category;
   Function callback;
   String categoryName;
+  VoidCallback initiateRefresh;
   var productsModel;
   var size;
 
@@ -750,7 +757,8 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                                                 7,
                                                             reputationPositive:
                                                                 240,
-                                                          ))))),
+                                                          )),
+                                                      initiateRefresh))),
                                     );
                                   })),
                         ),
@@ -910,7 +918,11 @@ class _ChatsState extends State<Chats> {
                   child: Container(
                     margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
                     decoration: BoxDecoration(
-                      color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
+                      gradient: chat.unread
+                          ? LinearGradient(
+                              colors: <Color>[Color(TEAL), Color(MINT)])
+                          : LinearGradient(
+                              colors: [Colors.white, Colors.white]),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10.0),
                         bottomRight: Radius.circular(10.0),
@@ -935,9 +947,11 @@ class _ChatsState extends State<Chats> {
                                   chat.sender.name,
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      color: Colors.black,
+                                      color: chat.unread
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 16.0,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w800),
                                 ),
                                 Container(
                                   width:
@@ -945,12 +959,12 @@ class _ChatsState extends State<Chats> {
                                   child: Text(
                                     chat.text,
                                     style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        color: chat.unread
-                                            ? Color(LIGHT_GREY)
-                                            : Color(DARK_GREY),
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600),
+                                      fontFamily: 'Inter',
+                                      color: chat.unread
+                                          ? Colors.white
+                                          : Color(DARK_GREY),
+                                      fontSize: 16.0,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -1019,7 +1033,8 @@ Widget HomeDrawer(
             int categoryId)
         addProductCallback,
     Future<List<ProductEntry>> Function() sellersProductsCallback,
-    Future<ProductEntry> Function(int id) getProductByIdCallback) {
+    Future<ProductEntry> Function(int id) getProductByIdCallback,
+    VoidCallback initiateRefresh) {
   List<Widget> options = [
     Row(
       children: [
@@ -1053,8 +1068,8 @@ Widget HomeDrawer(
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    MyProducts(addProductCallback, sellersProductsCallback)),
+                builder: (context) => MyProducts(addProductCallback,
+                    sellersProductsCallback, initiateRefresh)),
           );
         },
         iconUrl: "assets/icons/Package.svg"),
@@ -1075,7 +1090,8 @@ Widget HomeDrawer(
             MaterialPageRoute(
                 builder: (context) => new ChangeNotifierProvider(
                     create: (context) => OrdersModel(0),
-                    child: OrdersHistory(getProductByIdCallback))),
+                    child: OrdersHistory(
+                        getProductByIdCallback, initiateRefresh))),
           );
         },
         iconUrl: "assets/icons/Newspaper.svg"),

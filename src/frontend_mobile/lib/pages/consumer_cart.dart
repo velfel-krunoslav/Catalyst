@@ -14,11 +14,12 @@ String customerAddress = 'Kralja Aleksandra I Karađorđevića 36';
 String desc = '1BvBMSEYstWetqTFn5Au4m4G';
 
 class ConsumerCart extends StatefulWidget {
+  VoidCallback initiateRefresh;
   Future<ProductEntry> Function(int id) getProductByIdCallback;
-  ConsumerCart(this.getProductByIdCallback);
+  ConsumerCart(this.getProductByIdCallback, this.initiateRefresh);
   @override
   _ConsumerCartState createState() =>
-      _ConsumerCartState(getProductByIdCallback);
+      _ConsumerCartState(getProductByIdCallback, initiateRefresh);
 }
 
 class _ConsumerCartState extends State<ConsumerCart> {
@@ -26,6 +27,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   double shipping = 5.0;
   double subtotal = 0;
   double total;
+  VoidCallback initiateRefresh;
   String method, paymentMethod;
   ProductsModel productsModel;
   List<CartProduct> products = [];
@@ -34,7 +36,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   List<List<String>> ids = [];
   Future<ProductEntry> Function(int id) getProductByIdCallback;
   OrdersModel ordersModel;
-  _ConsumerCartState(this.getProductByIdCallback);
+  _ConsumerCartState(this.getProductByIdCallback, this.initiateRefresh);
   @override
   void initState() {
     super.initState();
@@ -131,17 +133,15 @@ class _ConsumerCartState extends State<ConsumerCart> {
                         return Padding(
                             padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                             child: Row(children: [
-                              Expanded(
-                                  flex: 3,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      products[index].photoUrl[0],
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  )),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.asset(
+                                  products[index].photoUrl[0],
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 8,
@@ -265,6 +265,12 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                       'cartProducts',
                                                       finalCart);
                                                 });
+                                              });
+                                              Prefs.instance
+                                                  .getStringValue(
+                                                      'cartProducts')
+                                                  .then((value) {
+                                                initiateRefresh();
                                               });
                                             })),
                                   ])
@@ -730,6 +736,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                       productId: products[i].id));
                                 }
                                 ordersModel.addOrder(orders);
+                                Prefs.instance.removeValue('cartProducts');
+                                initiateRefresh();
                                 Navigator.pop(context);
                               })
                         ],

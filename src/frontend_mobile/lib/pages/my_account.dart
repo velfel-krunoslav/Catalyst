@@ -19,9 +19,7 @@ class MyAccount extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Moj nalog",
-          style: TextStyle(
-            fontFamily: 'Inter',
-            color: Colors.black),
+          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -59,7 +57,6 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-
           SizedBox(
             height: 10,
           ),
@@ -82,7 +79,6 @@ class MyAccount extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-
           SizedBox(
             height: 30,
           ),
@@ -91,8 +87,8 @@ class MyAccount extends StatelessWidget {
               width: width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
+                      topRight: Radius.circular(5),
+                      topLeft: Radius.circular(5)),
                   color: Color(LIGHT_GREY)),
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 50),

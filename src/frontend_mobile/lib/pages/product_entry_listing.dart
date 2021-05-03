@@ -21,12 +21,15 @@ import 'inbox.dart';
 
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
-  ProductEntryListing(ProductEntryListingPage productData) {
+  VoidCallback refreshInitiator;
+  ProductEntryListing(
+      ProductEntryListingPage productData, VoidCallback refreshInitiator) {
     this._data = productData;
+    this.refreshInitiator = refreshInitiator;
   }
   @override
   State<StatefulWidget> createState() {
-    return _ProductEntryListing(this._data);
+    return _ProductEntryListing(_data, refreshInitiator);
   }
 }
 
@@ -34,15 +37,18 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   final sizer = getSizer();
   int _current = 0;
   bool _stateChange = false;
+  VoidCallback refreshInitiator;
   ProductEntryListingPage _data;
   var reviewsModel;
 
-  void newReviewCallback2(int productId, int rating, String desc, int userId){
+  void newReviewCallback2(int productId, int rating, String desc, int userId) {
     reviewsModel.addReview(productId, rating, desc, 0);
   }
 
-  _ProductEntryListing(ProductEntryListingPage _data) {
+  _ProductEntryListing(
+      ProductEntryListingPage _data, VoidCallback refreshInitiator) {
     this._data = _data;
+    this.refreshInitiator = refreshInitiator;
   }
   @override
   Widget build(BuildContext context) {
@@ -221,7 +227,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         new ChangeNotifierProvider(
                                             create: (context) =>
                                                 ReviewsModel(_data.id),
-                                            child: ProductReviews(_data.id, newReviewCallback2))),
+                                            child: ProductReviews(
+                                                _data.id, newReviewCallback2))),
                               );
                             },
                             child: Text(
@@ -388,6 +395,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                             'cartProducts', '${_data.id},1');
                                       }
                                     });
+                                  });
+                                  Prefs.instance
+                                      .getStringValue('cartProducts')
+                                      .then((value) {
+                                    refreshInitiator();
                                   });
                                   Navigator.pop(context);
                                 }),

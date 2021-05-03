@@ -214,7 +214,10 @@ class _SearchPageState extends State<SearchPage> {
                                   _DropDownCategorySelected(
                                       newCategorySelected);
                                 },
-                                hint: Text(_currentCategorySelected),
+                                hint: Text(
+                                  _currentCategorySelected,
+                                  style: TextStyle(fontFamily: 'Inter'),
+                                ),
                                 decoration: const InputDecoration(
                                   filled: true,
                                   border: const OutlineInputBorder(
@@ -317,6 +320,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   final _textController = new TextEditingController();
+  final _queryController = new TextEditingController();
   String hintDistance = "3";
 
   // ignore: non_constant_identifier_names
@@ -446,77 +450,63 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   User user = new User(
-      name: "Petar",
-      surname: "Nikolić",
-      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-      phoneNumber: "+49 76 859 69 58",
-      homeAddress: "4070 Jehovah Drive",
-
-      email: "jay.ritter@gmail.com",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-          " sed do eiusmod tempor incididunt ut labore et dolore magna "
-          "aliqua.",
+    name: "Petar",
+    surname: "Nikolić",
+    photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
+    phoneNumber: "+49 76 859 69 58",
+    homeAddress: "4070 Jehovah Drive",
+    email: "jay.ritter@gmail.com",
+    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+        " sed do eiusmod tempor incididunt ut labore et dolore magna "
+        "aliqua.",
   );
 
   @override
   Widget build(BuildContext context) {
+    _queryController.text = this.query;
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            toolbarHeight: 161,
+            toolbarHeight: 180,
             flexibleSpace: SafeArea(
                 child: Padding(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: Column(
                 children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.all(0),
-                            width: 36,
-                            child: IconButton(
-                                padding: EdgeInsets.all(0),
-                                icon: SvgPicture.asset(
-                                    'assets/icons/ArrowLeft.svg',
-                                    width: 36,
-                                    height: 36),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                })),
-                        Spacer(),
-                        IconButton(
-                          icon: SvgPicture.asset(
-                              'assets/icons/ShoppingCart.svg',
-                              width: 36,
-                              height: 36),
-                          onPressed: () {},
-                        ),
-                        Container(
-                          child: Center(
-                            child: Text(
-                              cardItemsCount.toString(),
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16,
-                                  color: Color(DARK_GREY)),
-                            ),
-                          ),
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                              color: Color(LIGHT_GREY),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                        )
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.all(0),
+                          width: BUTTON_HEIGHT,
+                          child: TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Color(LIGHT_GREY)),
+                              child: SvgPicture.asset(
+                                  'assets/icons/ArrowLeft.svg',
+                                  width: 36,
+                                  height: 36),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              })),
+                      SizedBox(width: 12),
+                      Text(
+                        'Pretraga: \"${(this.query.length > 10) ? this.query.substring(0, 10) + '...' : this.query}\"',
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 24,
+                            color: Color(DARK_GREY),
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
                   ),
                   TextField(
+                    controller: _queryController,
                     onChanged: (text) {
                       text = text.toLowerCase();
                       setState(() {
@@ -530,7 +520,7 @@ class _SearchPageState extends State<SearchPage> {
                       contentPadding: EdgeInsets.only(top: 36),
                       fillColor: Color(LIGHT_GREY),
                       filled: true,
-                      hintText: this.query,
+                      hintText: 'Pretraga',
                       hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
                       prefixIcon: Padding(
                         padding: EdgeInsets.only(left: 15, right: 10),
@@ -608,18 +598,6 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: Text(
-            this.query,
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 28,
-                color: Color(DARK_GREY),
-                fontWeight: FontWeight.w700),
-          ),
-        ),
         SizedBox(height: 15),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),

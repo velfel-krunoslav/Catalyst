@@ -13,22 +13,27 @@ import '../internals.dart';
 class MyProducts extends StatefulWidget {
   Function addProductCallback;
   Function sellersProductsCallback;
-  MyProducts(this.addProductCallback, this.sellersProductsCallback);
+  VoidCallback initiateRefresh;
+  MyProducts(this.addProductCallback, this.sellersProductsCallback,
+      this.initiateRefresh);
 
   @override
-  _MyProductsState createState() => _MyProductsState(addProductCallback, sellersProductsCallback);
+  _MyProductsState createState() => _MyProductsState(
+      addProductCallback, sellersProductsCallback, initiateRefresh);
 }
 
 class _MyProductsState extends State<MyProducts> {
   Function addProductCallback;
   Function sellersProductsCallback;
-  _MyProductsState(this.addProductCallback, this.sellersProductsCallback);
+  VoidCallback initiateRefresh;
+  _MyProductsState(this.addProductCallback, this.sellersProductsCallback,
+      this.initiateRefresh);
   List<ProductEntry> products = [];
-  
+
   @override
   void initState() {
-    sellersProductsCallback().then((t){
-      for(int i = 0; i < t.length; i++){
+    sellersProductsCallback().then((t) {
+      for (int i = 0; i < t.length; i++) {
         setState(() {
           products.add(t[i]);
         });
@@ -40,88 +45,104 @@ class _MyProductsState extends State<MyProducts> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-    appBar: AppBar(
-        title: Text(
-          "Moji proizvodi",
-          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-        icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        ),
-    ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NewProduct(addProductCallback)),
-            );
-          },
-          icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
-          label: Text("Dodaj proizvod", style: TextStyle(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w700),),
-          backgroundColor: Color(MINT),
-        ),
-    body: ListView(
-      children: [
-        SizedBox(height: 20,),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Wrap(
-              children: List.generate(products.length, (index) {
-                return InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: (index + 1) % 2 == 0
-                        ? EdgeInsets.only(left: 10, bottom: 15)
-                        : EdgeInsets.only(right: 10, bottom: 15),
-                    child: SizedBox(
-                        width: (size.width - 60) / 2,
-                        child: ProductEntryCard(
-                            product: products[index],
-                            onPressed: () {
-                              ProductEntry product =
-                              products[index];
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    new ChangeNotifierProvider(
-                                        create: (context) =>
-                                            ReviewsModel(product.id),
-                                        child: ProductEntryListing(
-                                            ProductEntryListingPage(
-                                                assetUrls: product.assetUrls,
-                                                name: product.name,
-                                                price: product.price,
-                                                classification:
-                                                product.classification,
-                                                quantifier:
-                                                product.quantifier,
-                                                description: product.desc,
-                                                id: product.id,
-                                                userInfo: new UserInfo(
-                                                  profilePictureAssetUrl:
-                                                  'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                  fullName: 'Petar Nikolić',
-                                                  reputationNegative: 7,
-                                                  reputationPositive: 240,
-                                                ))))),
-                              );
-                            })),
-                  ),
-                );
-              }),
-            ),
+        appBar: AppBar(
+          title: Text(
+            "Moji proizvodi",
+            style: TextStyle(fontFamily: 'Inter', color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
-      ],
-    )
-
-    );
+        floatingActionButton: SizedBox(
+          width: 84,
+          child: ButtonFill(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NewProduct(addProductCallback)),
+              );
+            },
+            iconPath: "assets/icons/PlusCircle.svg",
+          ),
+        ),
+        body: ListView(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Wrap(
+                  children: List.generate(products.length, (index) {
+                    return InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: (size.width >= 640)
+                            ? EdgeInsets.fromLTRB(
+                                ((index % 3 == 0) ? 0 : 1) * 10.0,
+                                0,
+                                (((index - 2) % 3 == 0) ? 0 : 1) * 10.0,
+                                15)
+                            : EdgeInsets.fromLTRB(
+                                ((index % 2 == 0) ? 0 : 1) * 10.0,
+                                0,
+                                (((index - 1) % 2 == 0) ? 0 : 1) * 10.0,
+                                15),
+                        child: SizedBox(
+                            width: (size.width >= 640)
+                                ? (size.width - 80) / 3
+                                : (size.width - 60) / 2,
+                            child: ProductEntryCard(
+                                product: products[index],
+                                onPressed: () {
+                                  ProductEntry product = products[index];
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(product.id),
+                                                child: ProductEntryListing(
+                                                    ProductEntryListingPage(
+                                                        assetUrls:
+                                                            product.assetUrls,
+                                                        name: product.name,
+                                                        price: product.price,
+                                                        classification: product
+                                                            .classification,
+                                                        quantifier:
+                                                            product.quantifier,
+                                                        description:
+                                                            product.desc,
+                                                        id: product.id,
+                                                        userInfo: new UserInfo(
+                                                          profilePictureAssetUrl:
+                                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                          fullName:
+                                                              'Petar Nikolić',
+                                                          reputationNegative: 7,
+                                                          reputationPositive:
+                                                              240,
+                                                        )),
+                                                    initiateRefresh))),
+                                  );
+                                })),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }

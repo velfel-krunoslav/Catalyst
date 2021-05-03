@@ -75,16 +75,43 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
+  void initiateCartRefresh() {
+    setState(() {
+      Prefs.instance.getStringValue('cartProducts').then((value) {
+        if (value.length != 0) {
+          bool containsSpacers = false;
+          for (int i = 0; i < value.length; i++) {
+            if (value[i] == ';') {
+              containsSpacers = true;
+            }
+          }
+          if (containsSpacers) {
+            setState(() {
+              cartItemsCount = value.split(';').length;
+            });
+          } else {
+            setState(() {
+              cartItemsCount = 1;
+            });
+          }
+        } else {
+          setState(() {
+            cartItemsCount = 0;
+          });
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
-    Prefs.instance.setStringValue('cartProducts', '0,1;1,1;4,1;5,1');
+    initiateCartRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(cartItemsCount);
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
 
@@ -95,8 +122,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback,
-              sellersProductsCallback, getProductByIdCallback), //TODO context
+          drawer: HomeDrawer(
+              context,
+              user,
+              addProductCallback,
+              sellersProductsCallback,
+              getProductByIdCallback,
+              initiateCartRefresh), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -134,7 +166,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                       new ChangeNotifierProvider(
                                           create: (context) => OrdersModel(0),
                                           child: ConsumerCart(
-                                              getProductByIdCallback))),
+                                              getProductByIdCallback,
+                                              initiateCartRefresh))),
                             );
                           },
                         ),
@@ -146,13 +179,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: Color(DARK_GREY)),
+                                  color: (cartItemsCount != 0)
+                                      ? Colors.white
+                                      : Color(DARK_GREY)),
                             ),
                           ),
                           height: 36,
                           width: 36,
                           decoration: BoxDecoration(
-                              color: Color(LIGHT_GREY),
+                              color: (cartItemsCount != 0)
+                                  ? Color(TEAL)
+                                  : Color(LIGHT_GREY),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                         )
@@ -329,7 +366,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                     fullName: 'Petar Nikolić',
                                                     reputationNegative: 7,
                                                     reputationPositive: 240,
-                                                  ))))),
+                                                  )),
+                                              initiateCartRefresh))),
                             );
                           })),
                 ),
@@ -391,37 +429,35 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             new ChangeNotifierProvider(
-                                                create: (context) =>
-                                                    ReviewsModel(
-                                                        recently[index].id),
-                                                child: ProductEntryListing(
-                                                    ProductEntryListingPage(
-                                                        assetUrls:
-                                                            recently[index]
-                                                                .assetUrls,
-                                                        name: recently[index]
-                                                            .name,
-                                                        price: recently[index]
-                                                            .price,
-                                                        classification:
-                                                            recently[index]
-                                                                .classification,
-                                                        quantifier:
-                                                            recently[index]
-                                                                .quantifier,
-                                                        description:
-                                                            recently[index]
-                                                                .desc,
-                                                        id: recently[index].id,
-                                                        userInfo: new UserInfo(
-                                                          profilePictureAssetUrl:
-                                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                          fullName:
-                                                              'Petar Nikolić',
-                                                          reputationNegative: 7,
-                                                          reputationPositive:
-                                                              240,
-                                                        ))))),
+                                              create: (context) => ReviewsModel(
+                                                  recently[index].id),
+                                              child: ProductEntryListing(
+                                                  ProductEntryListingPage(
+                                                      assetUrls: recently[index]
+                                                          .assetUrls,
+                                                      name:
+                                                          recently[index].name,
+                                                      price:
+                                                          recently[index].price,
+                                                      classification:
+                                                          recently[index]
+                                                              .classification,
+                                                      quantifier:
+                                                          recently[index]
+                                                              .quantifier,
+                                                      description:
+                                                          recently[index].desc,
+                                                      id: recently[index].id,
+                                                      userInfo: new UserInfo(
+                                                        profilePictureAssetUrl:
+                                                            'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                        fullName:
+                                                            'Petar Nikolić',
+                                                        reputationNegative: 7,
+                                                        reputationPositive: 240,
+                                                      )),
+                                                  initiateCartRefresh),
+                                            )),
                                   );
                                 },
                                 child: ClipRRect(

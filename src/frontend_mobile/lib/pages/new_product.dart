@@ -1,20 +1,14 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-
+import '../image_picker_helper.dart'
+    if (dart.library.html) '../image_picker_web.dart'
+    if (dart.library.io) '../image_picker_io.dart';
 import '../internals.dart';
 import '../widgets.dart';
-import 'blank_page.dart';
-import 'consumer_home.dart';
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
@@ -24,7 +18,7 @@ class NewProduct extends StatefulWidget {
   _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
-List<File> images = [];
+List<Uint8List> images = [];
 
 String name, description;
 int selectedUnit, inStock, quantity, imgCount = 0;
@@ -77,6 +71,9 @@ class _NewProductState extends State<NewProduct> {
                 child: Container(
                     width: MediaQuery.of(context).size.width - 40,
                     child: Column(children: [
+                      SizedBox(
+                        height: 24,
+                      ),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -336,7 +333,7 @@ class _NewProductState extends State<NewProduct> {
                         height: 20,
                       ),
                       Row(children: [
-                        Text('Fotografije: (max. 5)',
+                        Text('Fotografije (max. 3):',
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -361,28 +358,13 @@ class _NewProductState extends State<NewProduct> {
                                           color: Color(DARK_GREY))),
                                 )),
                             onTap: () async {
+                              final imagePicker = getImagePickerMain();
                               if (imgCount < 3) {
-                                var pickedFile = await ImagePicker.pickImage(
-                                    source: ImageSource.gallery);
-                                if (pickedFile != null) {
-                                  imgCount++;
+                                imagePicker.getImage().then((bytes) {
                                   setState(() {
-                                    images.add(pickedFile);
-                                    String path = pickedFile.path;
-                                    print('PATH: $path');
-                                    Future<Response> response = pushToIPFS(
-                                        pickedFile.readAsBytesSync().join());
-                                    response.then((value) {
-                                      print(value.body);
-                                      if (value.statusCode == 201) {
-                                        print(
-                                            'HASH: ${jsonDecode(value.body)['Hash']}');
-                                      }
-                                    });
+                                    images.add(bytes);
                                   });
-                                }
-                              } else {
-                                //TODO WARN, MAX NO. OF IMAGES LOADED
+                                });
                               }
                             }),
                         SizedBox(width: 10),
@@ -393,7 +375,7 @@ class _NewProductState extends State<NewProduct> {
                                 ClipRRect(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),
-                                  child: Image.file(
+                                  child: Image.memory(
                                     images[index],
                                     height: (MediaQuery.of(context).size.width -
                                             80) /
