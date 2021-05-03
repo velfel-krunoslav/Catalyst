@@ -92,39 +92,23 @@ class UsersModel extends ChangeNotifier {
 
   Future<int> checkForUser(String _metamastAddress, String _privateKey) async {
 
-    List totalUsersList = await _client.call(contract: _contract, function: _usersCount, params: []);
-    BigInt totalUsers = totalUsersList[0];
-    usersCount = totalUsers.toInt();
-    List<User> users = [];
-    for (int i = usersCount - 1; i >= 0; i--) {
-      var temp = await _client.call(
-          contract: _contract, function: _users, params: [BigInt.from(i)]);
-      users.add(User(
-        id: temp[0].toInt(),
-        name: temp[1],
-        surname: temp[2],
-        privateKey: temp[3],
-          metamaskAddress : temp[4],
-          photoUrl: temp[5],
-      desc: temp[6],
-      email: temp[7],
-      phoneNumber: temp[8],
-      homeAddress : temp[9],
-      birthday : temp[10],
-      uType: temp[11].toInt()
-      ));
+    List totalList = await _client.call(
+        contract: _contract,
+        function: _usersCount,
+        params: []);
+    BigInt total = totalList[0];
+    usersCount = total.toInt();
+    var temp = await _client.call(
+        contract: _contract,
+        function: _checkForUser,
+        params: [_metamastAddress, _privateKey]);
+    int idd = temp[0].toInt();
+    if (idd == usersCount){
+      return -1;
     }
-
-    int id = -1;
-
-    for (int i = usersCount - 1; i >= 0; i--) {
-      if (users[i].metamaskAddress.compareTo(_metamastAddress) == 0 && users[i].privateKey.compareTo(_privateKey) == 0)
-        id = users[i].id;
+    else{
+      return idd;
     }
-
-
-    print("id - " + id.toString());
-    return id;
   }
   createUser(String _name,
   String _surname,

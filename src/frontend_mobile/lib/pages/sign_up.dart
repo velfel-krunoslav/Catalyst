@@ -304,27 +304,36 @@ class _SignUpState extends State<SignUp> {
                         text: 'Registruj se',
                         onPressed: () {
                           if (name != null && surname!=null && private_key!=null && metamask_address!=null && email!=null && phone_number!=null && _date!=null){
+                            //TODO regex check
                             //TODO verify private key
                             Prefs.instance.setStringValue("privateKey", private_key);
                             Prefs.instance.setStringValue('accountAddress', metamask_address);
                             birthday = _date.toString();
-                            //TODO proveriti da li postoji user sa unesenim kljucem i adresom
-                            //TODO regex provera
-                            usersModel.createUser(name, surname, private_key, metamask_address, "assets/icons/UserCircle.png", "Opis", email, phone_number, homeAddress, birthday, 0).then((rez){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    new MultiProvider(providers: [
-                                      ChangeNotifierProvider<ProductsModel>(
-                                          create: (_) => ProductsModel()),
-                                      ChangeNotifierProvider<CategoriesModel>(
-                                          create: (_) => CategoriesModel()),
-                                      ChangeNotifierProvider<UsersModel>(
-                                          create: (_) => UsersModel(private_key,metamask_address)),
-                                    ], child: ConsumerHomePage())),
-                              );
+                            usersModel.checkForUser(metamask_address, private_key).then((bl){
+                              if (bl == -1){
+                                usersModel.createUser(name, surname, private_key, metamask_address, "assets/icons/UserCircle.png", "Opis", email, phone_number, homeAddress, birthday, 0).then((rez){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        new MultiProvider(providers: [
+                                          ChangeNotifierProvider<ProductsModel>(
+                                              create: (_) => ProductsModel()),
+                                          ChangeNotifierProvider<CategoriesModel>(
+                                              create: (_) => CategoriesModel()),
+                                          ChangeNotifierProvider<UsersModel>(
+                                              create: (_) => UsersModel(private_key,metamask_address)),
+                                        ], child: ConsumerHomePage())),
+                                  );
+                                });
+                              }
+                              else{
+                                //TODO prikazati korisniku da vec postoji user sa tom adresom i privatnim kljucem
+                              }
                             });
+                          }
+                          else{
+                            //TODO prikazati korisniku da mora popuniti sva polja
                           }
                         },
                       ),

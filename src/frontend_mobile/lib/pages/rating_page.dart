@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/blank_page.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
@@ -24,12 +25,14 @@ class _RatingPage extends State<RatingPage> {
   int _rating;
   String desc;
   ReviewsModel reviewsModel;
+  OrdersModel ordersModel;
   int productId;
   Function newReviewCallback;
   _RatingPage(this.productId, this.newReviewCallback);
   @override
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
+    ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -112,10 +115,25 @@ class _RatingPage extends State<RatingPage> {
                   ButtonFill(
                     text: 'Dodaj recenziju',
                     onPressed: () {
-                      //TODO omoguciti korisniku da ostavi recenziju samo ako je kupio proizvod i ako nije ostavio recenziju
-                      newReviewCallback(_rating, desc);
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
+
+                      ordersModel.checkForOrder(usr.id, productId).then((value1){
+                        if (value1 == true){
+                          reviewsModel.checkForReview(usr.id, productId).then((value2){
+                            if (value2 == false){
+                              newReviewCallback(_rating, desc);
+                              int count = 0;
+                              Navigator.of(context).popUntil((_) => count++ >= 2);
+                            }
+                            else{
+                              // TODO prikazati korisniku da je vec ostavio recenziju za ovaj proizvod
+                            }
+                          });
+                        }
+                        else{
+                          // TODO prikazati korisniku da mora da kupi proizvod da bi ostavio recenziju
+                        }
+                      });
+
                     },
                   ),
                 ],

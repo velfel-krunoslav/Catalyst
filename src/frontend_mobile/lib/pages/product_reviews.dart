@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/rating.dart';
-import 'package:frontend_mobile/pages/ratingpage.dart';
+import 'package:frontend_mobile/pages/rating_page.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -200,12 +201,24 @@ class ProductReviews extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            new ChangeNotifierProvider(
-                                                create: (context) =>
-                                                    ReviewsModel(0),
-                                                child: RatingPage(productId,
-                                                    newReviewCallback))),
+                                        new MultiProvider(providers: [
+                                          ChangeNotifierProvider<ReviewsModel>(
+                                              create: (_) => ReviewsModel(0)),
+                                          ChangeNotifierProvider<OrdersModel>(
+                                              create: (_) => OrdersModel()),
+                                        ], child: RatingPage(productId,
+                                            newReviewCallback))),
                                   );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           new ChangeNotifierProvider(
+                                  //               create: (context) =>
+                                  //                   ReviewsModel(0),
+                                  //               child: RatingPage(productId,
+                                  //                   newReviewCallback))),
+                                  // );
                                 },
                               ),
                             ],

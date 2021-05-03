@@ -43,13 +43,13 @@ contract Users {
         return usersCount-1;
 
     }
-    function checkForUser(string memory _metamaskAddress, string memory _privateKey) public returns (bool bl){
+    function checkForUser(string memory _metamaskAddress, string memory _privateKey) public returns (uint bl){
 
         for (uint i=0; i< usersCount; i++) {
             if (hashCompareWithLengthCheck(users[i].metamaskAddress, _metamaskAddress) && hashCompareWithLengthCheck(users[i].privateKey,  _privateKey))
-                return true;
+                return users[i].id;
         }
-        return false;
+        return usersCount;
 
     }
 
