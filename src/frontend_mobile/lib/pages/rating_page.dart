@@ -4,8 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/pages/blank_page.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/pages/rating.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile/internals.dart';

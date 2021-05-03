@@ -18,11 +18,10 @@ import 'consumer_home.dart';
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
-  Function setValues;
-  NewProduct(this.addProductCallback, this.setValues);
+  NewProduct(this.addProductCallback);
 
   @override
-  _NewProductState createState() => _NewProductState(this.addProductCallback, this.setValues);
+  _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
 List<File> images = [];
@@ -48,8 +47,7 @@ List<Category> categories = [
 
 class _NewProductState extends State<NewProduct> {
   Function addProductCallback;
-  Function setValues;
-  _NewProductState(this.addProductCallback, this.setValues);
+  _NewProductState(this.addProductCallback);
 
   @override
   Widget build(BuildContext context) {
@@ -440,10 +438,8 @@ class _NewProductState extends State<NewProduct> {
                                     description,
                                     usr.id,
                                     selectedCategory.id);
-                                 // TODO osveziti prikaz stranice my_products kada dodamo novi proizvod
-                                 //TODO regex provere
-                                 //TODO slike IPFS
-                                 //setValues();
+                                 //TODO regex check
+                                 //TODO IPFS images
                                 Navigator.pop(context);
                               } else {
                                 //TODO istampati poruku da se popune sva polja

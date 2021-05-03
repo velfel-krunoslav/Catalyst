@@ -50,23 +50,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     return await productsModel.getProductById(id);
   }
 
-  Function addProductCallback(
-      String name,
-      double price,
-      List<String> assetUrls,
-      int classification,
-      int quantifier,
-      String desc,
-      int sellerId,
-      int categoryId) {
-    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
-        desc, sellerId, categoryId);
+  refreshProductsCallback(){
+    productsModel.getProducts();
   }
-
-  Future<List<ProductEntry>> sellersProductsCallback() async {
-    return await productsModel.getSellersProducts(usr.id); //one sellerId
-  }
-
   void callback(int cat) {
     setState(() {
       this.category = cat;
@@ -95,8 +81,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: usersModel.isLoading? LinearProgressIndicator() : HomeDrawer(context, usersModel.user, addProductCallback,
-              sellersProductsCallback, getProductByIdCallback), //TODO context
+          drawer: usersModel.isLoading? LinearProgressIndicator() : HomeDrawer(context, usersModel.user, refreshProductsCallback,
+               getProductByIdCallback), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -239,14 +225,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 categoryName:
                                 categoriesModel.categories[category].name,
                                 callback: this.callback))
-                      // ChangeNotifierProvider(
-                      //         create: (context) => ProductsModel(category),
-                      //         child: ProductsForCategory(
-                      //             category: category,
-                      //             categoryName:
-                      //                 categoriesModel.categories[category].name,
-                      //             callback: this.callback)
-                      // )
                   ),
                   SingleChildScrollView(
                       child: productsModel.isLoading

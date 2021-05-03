@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
@@ -11,43 +12,40 @@ import 'package:provider/provider.dart';
 import '../internals.dart';
 
 class MyProducts extends StatefulWidget {
-  Function addProductCallback;
-  Function sellersProductsCallback;
-  MyProducts(this.addProductCallback, this.sellersProductsCallback);
+  Function refreshProductsCallback;
+  MyProducts(this.refreshProductsCallback);
 
   @override
-  _MyProductsState createState() => _MyProductsState(addProductCallback, sellersProductsCallback);
+  _MyProductsState createState() => _MyProductsState(refreshProductsCallback);
 }
 
 class _MyProductsState extends State<MyProducts> {
-  Function addProductCallback;
-  Function sellersProductsCallback;
-  _MyProductsState(this.addProductCallback, this.sellersProductsCallback);
+  Function refreshProductsCallback;
+
+  ProductsModel productsModel;
+  _MyProductsState(this.refreshProductsCallback);
   List<ProductEntry> products = [];
   bool isLoading = true;
-  @override
-  void initState() {
-    setValues();
-  }
-  void setValues(){
-    setState(() {
-      isLoading = true;
+
+  Function addProductCallback2(
+      String name,
+      double price,
+      List<String> assetUrls,
+      int classification,
+      int quantifier,
+      String desc,
+      int sellerId,
+      int categoryId) {
+    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
+        desc, sellerId, categoryId).then((v){
+          refreshProductsCallback();
     });
-    sellersProductsCallback().then((t){
-      products.clear();
-      for(int i = 0; i < t.length; i++){
-        setState(() {
-          products.add(t[i]);
-        });
-      }
-    });
-    setState(() {
-      isLoading = false;
-    });
+
   }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
     return Scaffold(
     appBar: AppBar(
         title: Text(
@@ -67,14 +65,14 @@ class _MyProductsState extends State<MyProducts> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NewProduct(addProductCallback, setValues)),
+              MaterialPageRoute(builder: (context) => NewProduct(addProductCallback2)),
             );
           },
           icon: SvgPicture.asset("assets/icons/PlusCircle.svg",color: Colors.white,),
           label: Text("Dodaj proizvod", style: TextStyle(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w700),),
           backgroundColor: Color(MINT),
         ),
-    body: isLoading == true ? LinearProgressIndicator() :
+    body: productsModel.isLoading == true ? LinearProgressIndicator() :
     ListView(
       children: [
         SizedBox(height: 20,),
@@ -82,7 +80,7 @@ class _MyProductsState extends State<MyProducts> {
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Wrap(
-              children: List.generate(products.length, (index) {
+              children: List.generate(productsModel.products.length, (index) {
                 return InkWell(
                   onTap: () {},
                   child: Padding(
@@ -92,10 +90,10 @@ class _MyProductsState extends State<MyProducts> {
                     child: SizedBox(
                         width: (size.width - 60) / 2,
                         child: ProductEntryCard(
-                            product: products[index],
+                            product: productsModel.products[index],
                             onPressed: () {
                               ProductEntry product =
-                              products[index];
+                              productsModel.products[index];
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

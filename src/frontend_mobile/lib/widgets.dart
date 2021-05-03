@@ -1021,17 +1021,8 @@ class _ChatsState extends State<Chats> {
 Widget HomeDrawer(
     BuildContext context,
     User user,
-    void Function(
-            String name,
-            double price,
-            List<String> assetUrls,
-            int classification,
-            int quantifier,
-            String desc,
-            int sellerId,
-            int categoryId)
-        addProductCallback,
-    Future<List<ProductEntry>> Function() sellersProductsCallback,
+    void Function()
+    refreshProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback) {
   List<Widget> options = [
     Row(
@@ -1085,8 +1076,17 @@ Widget HomeDrawer(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    MyProducts(addProductCallback, sellersProductsCallback)),
+                new MultiProvider(providers: [
+                  ChangeNotifierProvider<ProductsModel>(
+                      create: (_) => ProductsModel.forVendor(usr.id)),
+                ], child: MyProducts(refreshProductsCallback))),
           );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) =>
+          //           MyProducts(addProductCallback)),
+          // );
         },
         iconUrl: "assets/icons/Package.svg"),
     DrawerOption(
