@@ -141,47 +141,72 @@ class ButtonOutline extends TextButton {
 }
 
 class _PasswordFieldState extends State<PasswordField> {
+  final ValueChanged<String> onChange;
+  final String hintText;
   bool _obscureText = true;
-  String _password;
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+  String password;
+
+  _PasswordFieldState(this.onChange, this.hintText);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (val) => val.length < 6 ? 'Lozinka je prekratka.' : null,
-      onSaved: (val) => _password = val,
-      obscureText: _obscureText,
-      style:
-          TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
-      decoration: InputDecoration(
-        hintText: 'Lozinka',
-        filled: true,
-        fillColor: Color(LIGHT_GREY),
-        border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(5.0)),
-        suffixIcon: IconButton(
-          padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-          onPressed: _toggle,
-          icon: SvgPicture.asset(
-            'assets/icons/EyeSlash.svg',
-            color: Color(DARK_GREY),
-            width: INSET_ICON_SIZE,
-            height: INSET_ICON_SIZE,
+    return SizedBox(
+        height: BUTTON_HEIGHT,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(children: [
+          SizedBox(
+            height: BUTTON_HEIGHT,
+            width: MediaQuery.of(context).size.width,
+            child: TextFormField(
+              onChanged: onChange,
+              validator: (val) =>
+                  val.length < 6 ? 'Lozinka je prekratka.' : null,
+              onSaved: (val) => password = val,
+              obscureText: _obscureText,
+              style: TextStyle(
+                  color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
+              decoration: InputDecoration(
+                hintText: 'Lozinka',
+                filled: true,
+                fillColor: Color(LIGHT_GREY),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(5.0)),
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+          Row(
+            children: [
+              Spacer(),
+              SizedBox(
+                height: BUTTON_HEIGHT,
+                width: BUTTON_HEIGHT,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    'assets/icons/EyeSlash.svg',
+                    color: Color(DARK_GREY),
+                    width: INSET_ICON_SIZE,
+                    height: INSET_ICON_SIZE,
+                  ),
+                ),
+              )
+            ],
+          )
+        ]));
   }
 }
 
 class PasswordField extends StatefulWidget {
+  final ValueChanged<String> onChange;
+  final String hintText;
+  PasswordField(this.onChange, this.hintText);
   @override
-  _PasswordFieldState createState() => _PasswordFieldState();
+  _PasswordFieldState createState() => _PasswordFieldState(onChange, hintText);
 }
 
 class DatePickerPopup extends StatefulWidget {

@@ -28,7 +28,9 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
-              child: Padding(padding: EdgeInsets.all(20), child: Column(
+              child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(padding: EdgeInsets.fromLTRB(50.0, 0, 50.0, 0)),
@@ -67,63 +69,38 @@ class Login extends StatelessWidget {
                 },
               ),
               SizedBox(height: 20.0),
-              TextField(
-                obscureText: flg,
-                style: TextStyle(
-                    color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
-                decoration: InputDecoration(
-                  hintText: 'Privatni ključ',
-                  filled: true,
-                  fillColor: Color(LIGHT_GREY),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(5.0)),
-                  suffixIcon: IconButton(
-                    padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-                    onPressed: () => {flg = !flg},
-                    icon: SvgPicture.asset(
-                      'assets/icons/EyeSlash.svg',
-                      color: Color(DARK_GREY),
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                ),
-                onChanged: (value) {
-                  privateKey = value;
-                },
-              ),
+              PasswordField((val) {
+                privateKey = val;
+              }, 'Privatni ključ'),
               SizedBox(height: 20.0),
               ButtonFill(
                 text: 'Prijavi se',
                 onPressed: () {
-
                   Prefs.instance.setStringValue('privateKey', privateKey);
                   Prefs.instance
                       .setStringValue('accountAddress', accountAddress);
                   //int id = usersModel.checkForUser(accountAddress, privateKey) as int;
-                  usersModel.checkForUser(accountAddress, privateKey).then((rez){
+                  usersModel
+                      .checkForUser(accountAddress, privateKey)
+                      .then((rez) {
                     print(rez);
-                    if (rez != null && rez > -1){
+                    if (rez != null && rez > -1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => new MultiProvider(providers: [
-                              ChangeNotifierProvider<ProductsModel>(
-                                  create: (_) => ProductsModel()),
-                              ChangeNotifierProvider<CategoriesModel>(
-                                  create: (_) => CategoriesModel()),
-                              // ChangeNotifierProvider<OrdersModel>(
-                              //     create: (_) => OrdersModel()),
-                            ], child: ConsumerHomePage())),
+                                  ChangeNotifierProvider<ProductsModel>(
+                                      create: (_) => ProductsModel()),
+                                  ChangeNotifierProvider<CategoriesModel>(
+                                      create: (_) => CategoriesModel()),
+                                  // ChangeNotifierProvider<OrdersModel>(
+                                  //     create: (_) => OrdersModel()),
+                                ], child: ConsumerHomePage())),
                       );
-                    }
-                    else{
+                    } else {
                       //TODO pogresan unos podataka za prijavu
                     }
                   });
-
-
                 },
               ),
               SizedBox(height: 100.0),
