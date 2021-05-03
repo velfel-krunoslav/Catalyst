@@ -166,7 +166,7 @@ class _PasswordFieldState extends State<PasswordField> {
               style: TextStyle(
                   color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
               decoration: InputDecoration(
-                hintText: 'Lozinka',
+                hintText: hintText,
                 filled: true,
                 fillColor: Color(LIGHT_GREY),
                 border: OutlineInputBorder(
