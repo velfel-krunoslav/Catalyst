@@ -12,6 +12,8 @@ import 'package:frontend_mobile/pages/welcome.dart';
 
 import 'package:provider/provider.dart';
 
+import 'models/usersModel.dart';
+
 main() {
   WidgetsFlutterBinding.ensureInitialized();
   Prefs.instance.containsKey('privateKey').then((value) {
@@ -60,6 +62,8 @@ class _SkipState extends State<Skip> {
                       create: (_) => CategoriesModel()),
                   ChangeNotifierProvider<OrdersModel>(
                       create: (_) => OrdersModel()),
+                  ChangeNotifierProvider<UsersModel>(
+                    create: (_) => UsersModel()),
                 ], child: ConsumerHomePage())),
       );
     });

@@ -7,6 +7,7 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
@@ -19,6 +20,8 @@ import '../sizer_helper.dart'
     if (dart.library.io) '../sizer_io.dart';
 
 class ConsumerHomePage extends StatefulWidget {
+  ConsumerHomePage();
+
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
@@ -30,7 +33,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   String query;
   final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
+  String privateKey, accountAddress;
+
   static GlobalKey<ScaffoldState> _scaffoldKey;
+
   User user = new User(
     name: "Petar",
     surname: "Nikolić",
@@ -46,7 +52,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
   ProductsModel productsModel;
-  var categoriesModel;
+  CategoriesModel categoriesModel;
+  UsersModel usersModel;
+  int userID;
+  _ConsumerHomePageState();
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
     return await productsModel.getProductById(id);
@@ -108,12 +117,26 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
+    Prefs.instance.getStringValue("privateKey").then((value1) {
+      privateKey = value1;
+      Prefs.instance.getStringValue("accountAddress").then((value2) {
+        accountAddress = value2;
+        print(privateKey);
+        print(accountAddress);
+        usersModel.getUser(privateKey, accountAddress).then((value) {
+          print(value);
+        });
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
+    usersModel = Provider.of<UsersModel>(context);
+    print(cartItemsCount);
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     //TODO  ProductEntry p = productsModel.getProductById(0);
     //     print(p.name);

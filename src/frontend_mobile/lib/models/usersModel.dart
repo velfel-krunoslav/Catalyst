@@ -34,7 +34,7 @@ class UsersModel extends ChangeNotifier {
   ContractFunction _users;
   ContractFunction _checkForUser;
   ContractFunction _createUser;
-
+  ContractFunction _getUser;
 
   UsersModel() {
 
@@ -71,7 +71,7 @@ class UsersModel extends ChangeNotifier {
     _users = _contract.function("users");
     _checkForUser = _contract.function("checkForUser");
     _createUser = _contract.function("createUser");
-
+    _getUser = _contract.function("getUser");
     //checkForUser("egfsaergsregs", "fw4tg3w4g3w4g3");
 
   }
@@ -79,16 +79,13 @@ class UsersModel extends ChangeNotifier {
 
   Future<int> checkForUser(String _metamastAddress, String _privateKey) async {
 
-    List totalUsersList = await _client
-        .call(contract: _contract, function: _usersCount, params: []);
+    List totalUsersList = await _client.call(contract: _contract, function: _usersCount, params: []);
     BigInt totalUsers = totalUsersList[0];
     usersCount = totalUsers.toInt();
     List<User> users = [];
-
     for (int i = usersCount - 1; i >= 0; i--) {
       var temp = await _client.call(
           contract: _contract, function: _users, params: [BigInt.from(i)]);
-      print(temp);
       users.add(User(
         id: temp[0].toInt(),
         name: temp[1],
@@ -151,10 +148,41 @@ class UsersModel extends ChangeNotifier {
                 BigInt.from(_uType)
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
+
       print("user dodat");
+      List totalUsersList = await _client.call(contract: _contract, function: _usersCount, params: []);
+      BigInt totalUsers = totalUsersList[0];
+      usersCount = totalUsers.toInt();
+      return usersCount - 1;
     } else {
       isLoading = false;
     }
   }
+  getUser(String privateKey, String accountAddress) async {
+    isLoading = true;
+    print("model ${privateKey}");
+    print("model ${accountAddress}");
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getUser,
+        params: [privateKey, accountAddress]);
+    temp = temp[0];
+    User user = User(
+        id: temp[0].toInt(),
+        name: temp[1],
+        surname: temp[2],
+        privateKey: temp[3],
+        metamaskAddress: temp[4],
+        photoUrl: temp[5],
+        desc: temp[6],
+        email:temp[7],
+        phoneNumber: temp[8],
+        homeAddress: temp[9],
+        birthday: temp[10],
+        uType: temp[11].toInt()
+        );
 
+    isLoading = false;
+    return user;
+  }
 }
