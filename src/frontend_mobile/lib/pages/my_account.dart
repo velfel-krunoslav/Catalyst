@@ -8,10 +8,16 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/pages/user_edit.dart';
 import 'package:frontend_mobile/widgets.dart';
 
-class MyAccount extends StatelessWidget {
+class MyAccount extends StatefulWidget {
   User user;
 
   MyAccount({this.user});
+
+  @override
+  _MyAccountState createState() => _MyAccountState();
+}
+
+class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -52,7 +58,7 @@ class MyAccount extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 55,
-              backgroundImage: AssetImage(user.photoUrl),
+              backgroundImage: AssetImage(widget.user.photoUrl),
             ),
           ),
           SizedBox(
@@ -63,7 +69,7 @@ class MyAccount extends StatelessWidget {
           ),
           Center(
               child: Text(
-            user.name + " " + user.surname,
+            widget.user.name + " " + widget.user.surname,
             style: TextStyle(
                 fontFamily: "Inter", fontSize: 35, fontWeight: FontWeight.w500),
           )),
@@ -73,7 +79,7 @@ class MyAccount extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50),
             child: Text(
-              user.desc,
+              widget.user.desc,
               style: TextStyle(fontFamily: "Inter", fontSize: 17),
             ),
           ),
@@ -103,7 +109,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.email,
+                          widget.user.email,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],
@@ -118,7 +124,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.phoneNumber,
+                          widget.user.phoneNumber,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],
@@ -133,7 +139,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.homeAddress,
+                          widget.user.homeAddress,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],

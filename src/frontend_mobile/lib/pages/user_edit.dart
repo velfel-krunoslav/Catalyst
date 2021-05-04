@@ -109,7 +109,7 @@ class _UserEdit extends State<UserEdit> {
                               controller: _textControllerInfo,
                               onChanged: (String value) async {
                                 setState(() {
-                                  MyAccount().user.about = _textControllerInfo.text;
+                                  MyAccount().user.desc = _textControllerInfo.text;
                                 });
                               },
                             maxLines: 2,
@@ -149,7 +149,7 @@ class _UserEdit extends State<UserEdit> {
                               controller: _textControllerMail,
                                 onChanged: (String value) async {
                                   setState(() {
-                                    MyAccount().user.mail = _textControllerMail.text;
+                                    MyAccount().user.email = _textControllerMail.text;
                                   });
                               },
                               style: TextStyle(
@@ -227,7 +227,7 @@ class _UserEdit extends State<UserEdit> {
                               controller: _textControllerAdd,
                               onChanged: (String value) async {
                                 setState(() {
-                                  MyAccount().user.address = _textControllerAdd.text;
+                                  MyAccount().user.homeAddress = _textControllerAdd.text;
                                 });
                               },
                               style: TextStyle(

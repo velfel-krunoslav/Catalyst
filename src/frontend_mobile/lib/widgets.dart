@@ -11,6 +11,7 @@ import 'package:frontend_mobile/pages/help_and_support.dart';
 import 'package:frontend_mobile/pages/my_account.dart';
 import 'package:frontend_mobile/pages/my_products.dart';
 import 'package:frontend_mobile/pages/new_product.dart';
+import 'package:frontend_mobile/pages/not_yet_delivered.dart';
 import 'package:frontend_mobile/pages/orders_history.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/settings.dart';
@@ -81,8 +82,12 @@ class ButtonFill extends TextButton {
             ));
 }
 
+enum type {
+  GREEN, RED, YELLOW
+}
+
 class ButtonOutline extends TextButton {
-  ButtonOutline({VoidCallback onPressed, String text, String iconPath})
+  ButtonOutline({VoidCallback onPressed, String text, String iconPath, type buttonType})
       : super(
             onPressed: (onPressed != null) ? onPressed : () {},
             style: TextButton.styleFrom(
@@ -91,10 +96,12 @@ class ButtonOutline extends TextButton {
             child: Ink(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Color(MINT),
-                      Color(TEAL),
-                    ],
+                    colors:
+                      (buttonType == type.YELLOW) ?
+                        [Color(YELLOW), Color(YELLOW)] :
+                        (buttonType == type.RED) ?
+                          [Color(RED_ATTENTION), Color(RED_ATTENTION)] :
+                          [Color(MINT), Color(TEAL)],
                     stops: [0.0, 1.0],
                     tileMode: TileMode.clamp,
                   ),
@@ -115,7 +122,7 @@ class ButtonOutline extends TextButton {
                             ? Row(children: [
                                 SvgPicture.asset(
                                   iconPath,
-                                  color: Color(TEAL),
+                                  color: buttonType == type.YELLOW ? Color(YELLOW) : buttonType == type.RED ? Color(RED_ATTENTION) : Color(TEAL),
                                   width: ICON_SIZE,
                                   height: ICON_SIZE,
                                 ),
@@ -133,7 +140,7 @@ class ButtonOutline extends TextButton {
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
                                     fontSize: 16,
-                                    color: Color(TEAL)))
+                                    color: buttonType == type.YELLOW ? Color(YELLOW) : buttonType == type.RED ? Color(RED_ATTENTION) : Color(TEAL)))
                             : SizedBox(),
                         Spacer()
                       ],
@@ -1046,9 +1053,18 @@ Widget HomeDrawer(
   List<Widget> options = [
     Row(
       children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundImage: AssetImage(user.photoUrl),
+        SizedBox(
+          width: 120,
+          height: 120,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(60),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
+                child: Image.network(user.photoUrl, fit: BoxFit.fill,)
+            ),
+          ),
         ),
         SizedBox(
           width: 10,
@@ -1108,6 +1124,16 @@ Widget HomeDrawer(
           );
         },
         iconUrl: "assets/icons/Package.svg"),
+    DrawerOption(
+        text: "Na čekanju",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotYetDelivered()),
+          );
+        },
+        iconUrl: "assets/icons/Clock.svg"),
+
     DrawerOption(
         text: "Poruke",
         onPressed: () {
