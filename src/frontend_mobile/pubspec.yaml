@@ -54,3 +54,7 @@ flutter:
           weight: 800
         - asset: assets/fonts/Inter-Medium.otf
           weight: 700
+        - asset: assets/fonts/IBMPlexMono-Regular.ttf
+        - asset: assets/fonts/IBMPlexMono-Bold.ttf
+          weight: 900
+          
