@@ -399,6 +399,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           child: SizedBox(
                             height: 90,
                             child: TextButton(
+                              onPressed: () {},
                               style: TextButton.styleFrom(
                                   backgroundColor: Color(LIGHT_GREY)),
                               child: Text(
