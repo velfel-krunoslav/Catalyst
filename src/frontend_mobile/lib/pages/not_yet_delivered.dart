@@ -153,7 +153,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Ime i prezime: ',
+                                Text('Ime i prezime: Jay Ritter',
                                   style: TextStyle(
                                     fontFamily: 'IBM Plex Mono',
                                     fontSize: 16,
@@ -161,7 +161,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                Text('Kontakt telefon: ',
+                                Text('Kontakt telefon: +44/7911-123456',
                                   style: TextStyle(
                                     fontFamily: 'IBM Plex Mono',
                                     fontSize: 16,
@@ -169,7 +169,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                                   )
                                 ),
                                 SizedBox(height: 15),
-                                Text('Adresa: ',
+                                Text('Adresa: Main Boulevard No. 214 26510 London, England',
                                   style: TextStyle(
                                     fontFamily: 'IBM Plex Mono',
                                     fontSize: 16,
@@ -177,13 +177,14 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                                   )
                                 ),
                                 SizedBox(height: 10),
-                                /*Text('Kontakt telefon: ',
+                                Text('Način plaćanja: PLAĆANJE POUZEĆEM ',
                                   style: TextStyle(
                                     fontFamily: 'IBM Plex Mono',
                                     fontSize: 16,
+                                    fontWeight: FontWeight.w900,
                                     color: Color(BLACK)
                                   )
-                                )*/ // TODO insert payment method
+                                ) // TODO insert payment method
                               ],
                             ),
                           )
