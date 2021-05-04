@@ -61,7 +61,7 @@ class _RatingPage extends State<RatingPage> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                      "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg"),
+                      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke'),
                 ),
                 Text(
                   "Petar Nikolic",

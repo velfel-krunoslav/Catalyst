@@ -9,6 +9,7 @@ import '../image_picker_helper.dart'
     if (dart.library.io) '../image_picker_io.dart';
 import '../internals.dart';
 import '../widgets.dart';
+import '../internals.dart';
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
@@ -20,12 +21,15 @@ class NewProduct extends StatefulWidget {
 
 List<Uint8List> images = [];
 
+List<String> imagesUrls = [];
+
 String name, description;
 int selectedUnit, inStock, quantity, imgCount = 0;
 double price;
 Category selectedCategory;
 bool textFld = false;
 
+// TODO PULL CATEGORIES FROM BLOCKCHAIN
 List<Category> categories = [
   Category(id: 0, name: "Peciva", assetUrl: ""),
   Category(id: 1, name: "Suhomesnato", assetUrl: ""),
@@ -364,6 +368,10 @@ class _NewProductState extends State<NewProduct> {
                                   setState(() {
                                     images.add(bytes);
                                   });
+                                  asyncFileUpload(bytes).then((value) {
+                                    imagesUrls
+                                        .add('https://ipfs.io/ipfs/$value');
+                                  });
                                 });
                               } else {
                                 // TODO WARN THAT MAX NO. OF IMAGES EXCEEDED
@@ -403,9 +411,6 @@ class _NewProductState extends State<NewProduct> {
                         child: ButtonFill(
                             text: 'Dodaj proizvod',
                             onPressed: () {
-                              List<String> imagesTemp = [];
-                              imagesTemp.add(
-                                  "assets/product_listings/rakija_silverije_cc_by_sa.jpg");
                               if (name != null &&
                                   // images.length != -1 &&
                                   selectedUnit != null &&
@@ -415,15 +420,13 @@ class _NewProductState extends State<NewProduct> {
                                 addProductCallback(
                                     name,
                                     price,
-                                    //images, // IPFS GOES HERE
-                                    imagesTemp,
+                                    imagesUrls,
                                     selectedUnit,
                                     quantity,
                                     description,
                                     usr.id,
                                     selectedCategory.id);
                                 //TODO regex check
-                                //TODO IPFS images
                                 Navigator.pop(context);
                               } else {
                                 //TODO istampati poruku da se popune sva polja

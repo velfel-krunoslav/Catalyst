@@ -136,7 +136,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                             child: Row(children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(5),
-                                child: Image.asset(
+                                child: Image.network(
                                   products[index].photoUrl[0],
                                   height: 90,
                                   width: 90,

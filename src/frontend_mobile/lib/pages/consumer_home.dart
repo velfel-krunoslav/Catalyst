@@ -353,7 +353,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                     id: product.id,
                                                     userInfo: new UserInfo(
                                                       profilePictureAssetUrl:
-                                                          'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
                                                       fullName: 'Petar Nikolić',
                                                       reputationNegative: 7,
                                                       reputationPositive: 240,
@@ -449,7 +449,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                         id: recently[index].id,
                                                         userInfo: new UserInfo(
                                                           profilePictureAssetUrl:
-                                                              'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                              'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
                                                           fullName:
                                                               'Petar Nikolić',
                                                           reputationNegative: 7,
@@ -464,7 +464,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
-                                  child: Image.asset(
+                                  child: Image.network(
                                     recently[index].assetUrls[0],
                                     height: 90,
                                     width: 90,

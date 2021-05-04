@@ -81,7 +81,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         return Builder(
                           builder: (BuildContext context) {
                             return GestureDetector(
-                              child: Image.asset(
+                              child: Image.network(
                                 '$i',
                                 width: double.infinity,
                                 fit: BoxFit.cover,
@@ -478,7 +478,7 @@ class FullscreenSlider extends StatelessWidget {
                       items: _data.assetUrls
                           .map((item) => Container(
                                 child: Center(
-                                    child: Image.asset(
+                                    child: Image.network(
                                   item,
                                   fit: BoxFit.cover,
                                   //height: height,

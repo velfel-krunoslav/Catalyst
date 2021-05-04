@@ -143,7 +143,7 @@ class _MyProductsState extends State<MyProducts> {
                                                                   userInfo:
                                                                       new UserInfo(
                                                                     profilePictureAssetUrl:
-                                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                                        'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
                                                                     fullName:
                                                                         'Petar Nikolić',
                                                                     reputationNegative:

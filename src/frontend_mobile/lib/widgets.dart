@@ -323,12 +323,12 @@ class ProductEntryCard extends GestureDetector {
                 children: [
                   Container(
                     height: PRODUCT_ENTRY_HEIGHT,
-                    decoration: BoxDecoration(
+                    width: double.infinity,
+                    child: ClipRRect(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5),
                             topRight: Radius.circular(5)),
-                        image: DecorationImage(
-                            image: AssetImage(product.assetUrls[0]),
+                        child: Image.network(product.assetUrls[0],
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(height: 5),
@@ -449,41 +449,6 @@ class DiscountedProductEntryCard extends GestureDetector {
                 ],
               ),
             ));
-}
-
-class CategoryCard extends InkWell {
-  CategoryCard({Category category, VoidCallback onPressed})
-      : super(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-                  width: double.infinity,
-                  height: CATEGORY_HEIGHT,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(category.assetUrl)),
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-                Positioned(
-                  left: 35.0,
-                  child: Text(category.name,
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                          color: Color(LIGHT_GREY),
-                          shadows: <Shadow>[
-                            Shadow(blurRadius: 5, color: Colors.black)
-                          ])),
-                ),
-              ],
-            ),
-            onTap: onPressed);
 }
 
 class DrawerOption extends StatelessWidget {
@@ -801,7 +766,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                                             userInfo:
                                                                 new UserInfo(
                                                               profilePictureAssetUrl:
-                                                                  'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+                                                                  'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
                                                               fullName:
                                                                   'Petar Nikolić',
                                                               reputationNegative:
@@ -908,11 +873,9 @@ class CategoryEntry extends StatelessWidget {
           margin: EdgeInsets.all(10),
           width: double.infinity,
           height: 125.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(assetImagePath, fit: BoxFit.cover)),
         ),
         Positioned(
           left: 35.0,
@@ -1078,6 +1041,8 @@ Widget HomeDrawer(
     void Function() refreshProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback,
     VoidCallback initiateRefresh) {
+  final sizer = getSizer();
+  final size = MediaQuery.of(context).size;
   List<Widget> options = [
     Row(
       children: [
@@ -1091,6 +1056,11 @@ Widget HomeDrawer(
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ((!sizer.isWeb()) && size.width > size.height)
+                ? SizedBox(
+                    height: 16,
+                  )
+                : SizedBox.shrink(),
             Text(
               user.name.length > 10
                   ? user.name.substring(0, 10) + "..."
@@ -1187,8 +1157,6 @@ Widget HomeDrawer(
         },
         iconUrl: "assets/icons/SignOut.svg")
   ];
-  Size size = MediaQuery.of(context).size;
-  final sizer = getSizer();
   return Container(
     width: ((!sizer.isWeb()) && size.width > size.height) ? 480 : 240,
     child: new Drawer(
