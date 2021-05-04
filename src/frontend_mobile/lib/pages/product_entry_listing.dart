@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
@@ -20,12 +21,15 @@ import 'inbox.dart';
 
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
-  ProductEntryListing(ProductEntryListingPage productData) {
+  VoidCallback refreshInitiator;
+  ProductEntryListing(
+      ProductEntryListingPage productData, VoidCallback refreshInitiator) {
     this._data = productData;
+    this.refreshInitiator = refreshInitiator;
   }
   @override
   State<StatefulWidget> createState() {
-    return _ProductEntryListing(this._data);
+    return _ProductEntryListing(_data, refreshInitiator);
   }
 }
 
@@ -33,10 +37,18 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   final sizer = getSizer();
   int _current = 0;
   bool _stateChange = false;
+  VoidCallback refreshInitiator;
   ProductEntryListingPage _data;
   var reviewsModel;
-  _ProductEntryListing(ProductEntryListingPage _data) {
+
+  void newReviewCallback2(int productId, int rating, String desc, int userId) {
+    reviewsModel.addReview(productId, rating, desc, usr.id);
+  }
+
+  _ProductEntryListing(
+      ProductEntryListingPage _data, VoidCallback refreshInitiator) {
     this._data = _data;
+    this.refreshInitiator = refreshInitiator;
   }
   @override
   Widget build(BuildContext context) {
@@ -69,7 +81,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         return Builder(
                           builder: (BuildContext context) {
                             return GestureDetector(
-                              child: Image.asset(
+                              child: Image.network(
                                 '$i',
                                 width: double.infinity,
                                 fit: BoxFit.cover,
@@ -207,15 +219,21 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         GestureDetector(
                             onTap: () {
-                              //print(_data.id.toString());
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        new ChangeNotifierProvider(
-                                            create: (context) =>
-                                                ReviewsModel(_data.id),
-                                            child: ProductReviews())),
+                                    builder: (context) => new MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider<
+                                                      ReviewsModel>(
+                                                  create: (_) =>
+                                                      ReviewsModel(_data.id)),
+                                              ChangeNotifierProvider<
+                                                      UsersModel>(
+                                                  create: (_) => UsersModel()),
+                                            ],
+                                            child: ProductReviews(
+                                                _data.id, newReviewCallback2))),
                               );
                             },
                             child: Text(
@@ -243,11 +261,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
-                                  child: Image.asset(
-                                      _data.userInfo.profilePictureAssetUrl,
-                                      width: 60,
-                                      height: 60,
-                                      fit: BoxFit.cover),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:
+                                        AssetImage(_data.vendor.photoUrl),
+                                  ),
                                 ),
                                 SizedBox(width: 10),
                                 Container(
@@ -256,7 +274,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(_data.userInfo.fullName,
+                                        // TODO SUBSTR IF NAME TOO LONG
+                                        Text(
+                                            _data.vendor.name +
+                                                " " +
+                                                _data.vendor.surname,
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w800,
@@ -308,6 +330,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   padding: EdgeInsets.all(3),
                                                   child: Center(
                                                       child: Text(
+                                                    // TODO ADD VENDOR REP
                                                     _data.userInfo
                                                         .reputationNegative
                                                         .toString(),
@@ -383,6 +406,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       }
                                     });
                                   });
+
+                                  refreshInitiator();
                                   Navigator.pop(context);
                                 }),
                           ],
@@ -453,7 +478,7 @@ class FullscreenSlider extends StatelessWidget {
                       items: _data.assetUrls
                           .map((item) => Container(
                                 child: Center(
-                                    child: Image.asset(
+                                    child: Image.network(
                                   item,
                                   fit: BoxFit.cover,
                                   //height: height,

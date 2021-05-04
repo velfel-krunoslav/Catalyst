@@ -13,16 +13,16 @@ contract Categories {
 
     constructor() public{
 
-        categories[0] = Category(0, "Peciva",'assets/product_categories/baked_goods_benediktv_cc_by.jpg');
-        categories[1] = Category(1, "Suhomesnato",'assets/product_categories/cured_meats_marco_verch_cc_by.jpg');
-        categories[2] = Category(2, "Mlečni proizvodi",'assets/product_categories/dairy_benjamin_horn_cc_by.jpg');
-        categories[3] = Category(3, "Voće i povrće",'assets/product_categories/fruits_and_veg_marco_verch_cc_by.jpg');
-        categories[4] = Category(4, 'Bezalkoholna pića','assets/product_categories/juice_caitlin_regan_cc_by.jpg');
-        categories[5] = Category(5, "Alkohol",'assets/product_categories/alcohol_shunichi_kouroki_cc_by.jpg');
-        categories[6] = Category(6, "Žita",'assets/product_categories/grains_christian_schnettelker_cc_by.jpg');
-        categories[7] = Category(7, "Živina",'assets/product_categories/livestock_marco_verch_cc_by.jpg');
-        categories[8] = Category(8, "Zimnice",'assets/product_categories/preserved_food_dennis_yang_cc_by.jpg');
-        categories[9] = Category(9, "Ostali proizvodi",'assets/product_categories/animal_produce_john_morgan_cc_by.jpg');
+        categories[0] = Category(0, "Peciva",'https://ipfs.io/ipfs/QmerFMhJ7r5WSEQ5DbHZX22CJYmS74K3LVpoeMTArnYLqU');
+        categories[1] = Category(1, "Suhomesnato",'https://ipfs.io/ipfs/QmU46hpezCZkFCnPpQWNu13k9pKU9xRmvWkdW4soNMXJUn');
+        categories[2] = Category(2, "Mlečni proizvodi",'https://ipfs.io/ipfs/QmUe3qfiyRvkLaxESD2Mz98MoHk5sEGsUMADw9JQfGUZqn');
+        categories[3] = Category(3, "Voće i povrće",'https://ipfs.io/ipfs/QmUw334zXVTaeBsUBCB7juYzCFtLvDJo8uHLiKXR7GxKCi');
+        categories[4] = Category(4, 'Bezalkoholna pića','https://ipfs.io/ipfs/QmWc2B627opwwqAgJ9AD6SUnwVv1cHkJxUxiUji6NLH6Yt');
+        categories[5] = Category(5, "Alkohol",'https://ipfs.io/ipfs/QmPnidKXyqe42fBqaiWPuwUWLpWxhXJxJSRaVdn52LxMoq');
+        categories[6] = Category(6, "Žita",'https://ipfs.io/ipfs/QmWVh6vdJr4bbTEEpsMS47KrVFwNQjACR4ruXwdDtMdCSU');
+        categories[7] = Category(7, "Živina",'https://ipfs.io/ipfs/Qme4kZsN4YWK6BbiWHoL5M39Ri3aTMwLbHPNdQTKV4VWN1');
+        categories[8] = Category(8, "Zimnice",'https://ipfs.io/ipfs/Qmbs3E1yK5TjYLdMn4TQbFwYYqcRYKxe14ekE4z3DNcTyc');
+        categories[9] = Category(9, "Ostali proizvodi",'https://ipfs.io/ipfs/QmY2qLu8nKE9i8QXaeNBKTVRQWqNJQ68pk4y6ZRq96MZBC');
         categoriesCount = 10;
     }
 }

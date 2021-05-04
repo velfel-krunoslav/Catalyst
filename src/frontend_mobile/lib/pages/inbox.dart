@@ -28,16 +28,10 @@ class _UserInboxState extends State<Inbox> {
             }),
         title: Text('Poruke',
             style: TextStyle(
-                  fontFamily: 'Inter',color: Colors.black, fontWeight: FontWeight.bold)),
+                fontFamily: 'Inter',
+                color: Colors.black,
+                fontWeight: FontWeight.bold)),
         elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.search, color: Colors.black),
-              onPressed: () {
-                //////////////TODO Search contacts
-                //Navigator.pop(context);
-              }),
-        ],
       ),
       body: Column(
         children: [

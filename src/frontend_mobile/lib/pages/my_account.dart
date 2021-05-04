@@ -20,9 +20,7 @@ class MyAccount extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Moj nalog",
-          style: TextStyle(
-            fontFamily: 'Inter',
-            color: Colors.black),
+          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -53,25 +51,19 @@ class MyAccount extends StatelessWidget {
           ),
           Center(
             child: CircleAvatar(
-              radius: 60,
-              backgroundColor: Color(TEAL),
-              child: CircleAvatar(
-                radius: 55,
-                backgroundImage: AssetImage(
-                    'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
-              ),
+              radius: 55,
+              backgroundImage: AssetImage(user.photoUrl),
             ),
           ),
           SizedBox(
             height: 15,
           ),
-
           SizedBox(
             height: 10,
           ),
           Center(
               child: Text(
-            user.forename + " " + user.surname,
+            user.name + " " + user.surname,
             style: TextStyle(
                 fontFamily: "Inter", fontSize: 35, fontWeight: FontWeight.w500),
           )),
@@ -81,14 +73,13 @@ class MyAccount extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50),
             child: Text(
-              user.about,
+              user.desc,
               style: TextStyle(fontFamily: "Inter", fontSize: 17),
             ),
           ),
           SizedBox(
             height: 20,
           ),
-
           SizedBox(
             height: 30,
           ),
@@ -97,8 +88,8 @@ class MyAccount extends StatelessWidget {
               width: width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
+                      topRight: Radius.circular(5),
+                      topLeft: Radius.circular(5)),
                   color: Color(LIGHT_GREY)),
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 50),
@@ -112,7 +103,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.mail,
+                          user.email,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],
@@ -142,7 +133,7 @@ class MyAccount extends StatelessWidget {
                           width: 15,
                         ),
                         Text(
-                          user.address + ", " + user.city,
+                          user.homeAddress,
                           style: TextStyle(fontFamily: "Inter", fontSize: 17),
                         )
                       ],

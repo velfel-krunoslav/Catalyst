@@ -2,31 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/rating.dart';
-import 'package:frontend_mobile/pages/ratingpage.dart';
+import 'package:frontend_mobile/pages/rating_page.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:provider/provider.dart';
-
-
 
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
-  
+  UsersModel usersModel;
+  List<Review> reviews = [];
+  Function newReviewCallback2;
+  ProductReviews(this.productId, this.newReviewCallback2);
+  void newReviewCallback(int rating, String desc) {
+    newReviewCallback2(productId, rating, desc, usr.id);
+  }
+
+  @override
+  void init() {}
   @override
   Widget build(BuildContext context) {
-    double width =  MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     reviewsModel = Provider.of<ReviewsModel>(context);
-
+    usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(
             "Recenzije",
             style: TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              color: Colors.black),
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w800,
+                color: Colors.black),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -55,7 +64,9 @@ class ProductReviews extends StatelessWidget {
 
                         SizedBox(height: 12),
                         Text(
-                          reviewsModel.average.toString(),
+                          reviewsModel.average.toString().length > 3
+                              ? reviewsModel.average.toString().substring(0, 4)
+                              : reviewsModel.average.toString(),
                           style: TextStyle(
                               fontSize: 36,
                               fontFamily: 'Inter',
@@ -125,14 +136,15 @@ class ProductReviews extends StatelessWidget {
                                               width: 16,
                                               height: 16);
                                         }).toList()),
-                                        SizedBox(width: 20),
+                                SizedBox(width: 20),
                                 SvgPicture.string('''
                           <svg width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" />
                           <rect width="${width * REVIEW_BAR_WIDTH_PERCENT}" height="5" fill="#ECECEC">
                           <rect width="''' +
                                     (reviewsModel.reviewsCount != 0
                                         ? ((e[2] / reviewsModel.reviewsCount) *
-                                                width * REVIEW_BAR_WIDTH_PERCENT)
+                                                width *
+                                                REVIEW_BAR_WIDTH_PERCENT)
                                             .toString()
                                         : 0.toString()) +
                                     '''" height="5" fill="#''' +
@@ -162,11 +174,13 @@ class ProductReviews extends StatelessWidget {
                               child: Wrap(
                                   children: List<Widget>.generate(
                                       reviewsModel.reviewsCount, (int index) {
-                            return ReviewWidget(
-                              review: reviewsModel.reviews[index],
-                            );
-                          }) // [0, 1, 4]
-                                  )),
+                            return ChangeNotifierProvider(
+                                create: (context) => UsersModel.fromId(
+                                    reviewsModel.reviews[index].userId),
+                                child: ReviewWidget(
+                                  review: reviewsModel.reviews[index],
+                                ));
+                          }))),
                         ),
                         SizedBox(
                           height: 10,
@@ -182,7 +196,19 @@ class ProductReviews extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => new RatingPage()),
+                                        builder: (context) => new MultiProvider(
+                                                providers: [
+                                                  ChangeNotifierProvider<
+                                                          ReviewsModel>(
+                                                      create: (_) =>
+                                                          ReviewsModel(0)),
+                                                  ChangeNotifierProvider<
+                                                          OrdersModel>(
+                                                      create: (_) =>
+                                                          OrdersModel()),
+                                                ],
+                                                child: RatingPage(productId,
+                                                    newReviewCallback))),
                                   );
                                 },
                               ),

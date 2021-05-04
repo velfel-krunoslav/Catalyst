@@ -18,13 +18,16 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   _buildChat(Message message, bool isMe) {
+    var size = MediaQuery.of(context).size;
     return Container(
       margin: isMe
-          ? EdgeInsets.only(top: 5.0, bottom: 5.0, left: 80.0)
-          : EdgeInsets.only(top: 5.0, bottom: 5.0, right: 80.0),
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+          ? EdgeInsets.only(top: 5.0, bottom: 5.0, left: (size.width * 0.25))
+          : EdgeInsets.only(top: 5.0, bottom: 5.0, right: size.width * 0.25),
+      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
       decoration: BoxDecoration(
-        color: isMe ? Colors.white : Color(TEAL),
+        gradient: isMe
+            ? LinearGradient(colors: [Colors.white, Colors.white])
+            : LinearGradient(colors: <Color>[Color(MINT), Color(TEAL)]),
         borderRadius: isMe
             ? BorderRadius.only(
                 topLeft: Radius.circular(5.0),
@@ -39,20 +42,23 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(
-            message.time,
-            style: TextStyle(
-                  fontFamily: 'Inter',
-              color: Colors.black,
-              fontSize: 16.0,
-            ),
-          ),
           Text(message.text,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Colors.black,
+                  color: isMe ? Colors.black : Colors.white,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600)),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            message.time,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: isMe ? Colors.black : Colors.white,
+              fontSize: 14.0,
+            ),
+          ),
         ],
       ),
     );
@@ -74,14 +80,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 maxLength: 500,
                 onChanged: (value) {}, /////////////TODO add_message to value
                 decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                    color: Color(TEAL),
-                  )),
-                  hintText: 'Pošalji poruku...',
-                  hintStyle: TextStyle(
-                  fontFamily: 'Inter',)
-                ),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                      color: Color(TEAL),
+                    )),
+                    hintText: 'Pošalji poruku...',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Inter',
+                    )),
               ),
             ),
           ),
@@ -122,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Text(
                 widget.user.name,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                    fontFamily: 'Inter',
                     color: Colors.black,
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold),

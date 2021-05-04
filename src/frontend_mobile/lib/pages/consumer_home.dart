@@ -7,6 +7,7 @@ import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/categoriesModel.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
@@ -14,8 +15,13 @@ import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
+import '../sizer_helper.dart'
+    if (dart.library.html) '../sizer_web.dart'
+    if (dart.library.io) '../sizer_io.dart';
 
 class ConsumerHomePage extends StatefulWidget {
+  ConsumerHomePage();
+
   @override
   _ConsumerHomePageState createState() => _ConsumerHomePageState();
 }
@@ -25,45 +31,26 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int activeMenu = 0;
   int cartItemsCount = 0;
   String query;
+  final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
+  String privateKey, accountAddress;
 
-  User user = new User(
-      forename: "Petar",
-      surname: "Nikolić",
-      photoUrl: "assets/avatars/vendor_andrew_ballantyne_cc_by.jpg",
-      phoneNumber: "+49 76 859 69 58",
-      address: "4070 Jehovah Drive",
-      city: "Roanoke",
-      mail: "jay.ritter@gmail.com",
-      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-          " sed do eiusmod tempor incididunt ut labore et dolore magna "
-          "aliqua.",
-      rating: 4.5,
-      reviewsCount: 67);
+  static GlobalKey<ScaffoldState> _scaffoldKey;
+
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
   ProductsModel productsModel;
-  var categoriesModel;
+  CategoriesModel categoriesModel;
+  UsersModel usersModel;
+  int userID;
+  _ConsumerHomePageState();
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
     return await productsModel.getProductById(id);
   }
 
-  void addProductCallback(
-      String name,
-      double price,
-      List<String> assetUrls,
-      int classification,
-      int quantifier,
-      String desc,
-      int sellerId,
-      int categoryId) {
-    productsModel.addProduct(name, price, assetUrls, classification, quantifier,
-        desc, sellerId, categoryId);
-  }
-
-  Future<List<ProductEntry>> sellersProductsCallback() async {
-    return await productsModel.getSellersProducts(1); //one sellerId
+  refreshProductsCallback() {
+    productsModel.getProducts();
   }
 
   void callback(int cat) {
@@ -72,22 +59,57 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
+  void initiateCartRefresh() {
+    setState(() {
+      Prefs.instance.getStringValue('cartProducts').then((value) {
+        if (value.length != 0) {
+          bool containsSpacers = false;
+          for (int i = 0; i < value.length; i++) {
+            if (value[i] == ';') {
+              containsSpacers = true;
+            }
+          }
+          if (containsSpacers) {
+            setState(() {
+              cartItemsCount = value.split(';').length;
+            });
+          } else {
+            setState(() {
+              cartItemsCount = 1;
+            });
+          }
+        } else {
+          setState(() {
+            cartItemsCount = 0;
+          });
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+    initiateCartRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(cartItemsCount);
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
-
+    usersModel = Provider.of<UsersModel>(context);
+    usr = usersModel.user;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    //TODO  ProductEntry p = productsModel.getProductById(0);
-    //     print(p.name);
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: HomeDrawer(context, user, addProductCallback,
-              sellersProductsCallback, getProductByIdCallback), //TODO context
+          drawer: usersModel.isLoading
+              ? LinearProgressIndicator()
+              : HomeDrawer(context, usersModel.user, refreshProductsCallback,
+                  getProductByIdCallback, initiateCartRefresh), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -122,7 +144,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      ConsumerCart(getProductByIdCallback)),
+                                      new ChangeNotifierProvider(
+                                          create: (context) => OrdersModel(0),
+                                          child: ConsumerCart(
+                                              getProductByIdCallback,
+                                              initiateCartRefresh))),
                             );
                           },
                         ),
@@ -134,13 +160,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: Color(DARK_GREY)),
+                                  color: (cartItemsCount != 0)
+                                      ? Colors.white
+                                      : Color(DARK_GREY)),
                             ),
                           ),
                           height: 36,
                           width: 36,
                           decoration: BoxDecoration(
-                              color: Color(LIGHT_GREY),
+                              color: (cartItemsCount != 0)
+                                  ? Color(TEAL)
+                                  : Color(LIGHT_GREY),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                         )
@@ -148,8 +178,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
+                      // TODO FIX BUG KEYBOARD NEEDS FIXING
                       style: TextStyle(fontFamily: 'Inter', fontSize: 16),
-                      onChanged: (text) {this.query = text;},
+                      onChanged: (text) {
+                        this.query = text;
+                      },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 36),
                         fillColor: Color(LIGHT_GREY),
@@ -171,7 +204,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SearchPage(query: this.query)));
+                                builder: (context) =>
+                                    SearchPage(query: this.query)));
                       },
                     ),
                   ],
@@ -214,8 +248,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   ),
                                 )
                               : Categories(categoriesModel.categories))
-                          : ChangeNotifierProvider(
-                              create: (context) => ProductsModel(category),
+                          : MultiProvider(
+                              providers: [
+                                  ChangeNotifierProvider<ProductsModel>(
+                                      create: (_) => ProductsModel(category)),
+                                  ChangeNotifierProvider<UsersModel>(
+                                      create: (_) => UsersModel()),
+                                ],
                               child: ProductsForCategory(
                                   category: category,
                                   categoryName:
@@ -264,46 +303,65 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (size.width >= 640) ? 
-                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
-                   : 
-                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
+                  padding: (size.width >= 640)
+                      ? EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 2) % 3 == 0) ? 0 : 1) * 10.0, 15)
+                      : EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 1) % 2 == 0) ? 0 : 1) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
+                      width: (size.width >= 640)
+                          ? (size.width - 80) / 3
+                          : (size.width - 60) / 2,
                       child: ProductEntryCard(
                           product: productsModel.products[index],
                           onPressed: () {
                             ProductEntry product =
                                 productsModel.products[index];
-                            setState(() {
-                              recently.add(product);
+                            bool isInList = false;
+                            for (var p in recently) {
+                              if (p.id == product.id) isInList = true;
+                            }
+                            if (!isInList) {
+                              setState(() {
+                                recently.insert(0, product);
+                                if (recently.length > 3) {
+                                  recently.removeAt(3);
+                                }
+                              });
+                            }
+                            usersModel
+                                .getUserById(product.sellerId)
+                                .then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        new ChangeNotifierProvider(
+                                            create: (context) =>
+                                                ReviewsModel(product.id),
+                                            child: ProductEntryListing(
+                                                ProductEntryListingPage(
+                                                    assetUrls:
+                                                        product.assetUrls,
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    classification:
+                                                        product.classification,
+                                                    quantifier:
+                                                        product.quantifier,
+                                                    description: product.desc,
+                                                    id: product.id,
+                                                    userInfo: new UserInfo(
+                                                      profilePictureAssetUrl:
+                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                      fullName: 'Petar Nikolić',
+                                                      reputationNegative: 7,
+                                                      reputationPositive: 240,
+                                                    ),
+                                                    vendor: value),
+                                                initiateCartRefresh))),
+                              );
                             });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      new ChangeNotifierProvider(
-                                          create: (context) =>
-                                              ReviewsModel(product.id),
-                                          child: ProductEntryListing(
-                                              ProductEntryListingPage(
-                                                  assetUrls: product.assetUrls,
-                                                  name: product.name,
-                                                  price: product.price,
-                                                  classification:
-                                                      product.classification,
-                                                  quantifier:
-                                                      product.quantifier,
-                                                  description: product.desc,
-                                                  id: product.id,
-                                                  userInfo: new UserInfo(
-                                                    profilePictureAssetUrl:
-                                                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                    fullName: 'Petar Nikolić',
-                                                    reputationNegative: 7,
-                                                    reputationPositive: 240,
-                                                  ))))),
-                            );
                           })),
                 ),
               );
@@ -329,7 +387,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                         children: List.generate(
                             (recently.length < 3) ? recently.length : 3,
@@ -357,10 +417,55 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         return Row(
                           children: [
                             GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  usersModel
+                                      .getUserById(recently[index].sellerId)
+                                      .then((value) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              new ChangeNotifierProvider(
+                                                create: (context) =>
+                                                    ReviewsModel(
+                                                        recently[index].id),
+                                                child: ProductEntryListing(
+                                                    ProductEntryListingPage(
+                                                        assetUrls:
+                                                            recently[index]
+                                                                .assetUrls,
+                                                        name: recently[index]
+                                                            .name,
+                                                        price: recently[index]
+                                                            .price,
+                                                        classification:
+                                                            recently[index]
+                                                                .classification,
+                                                        quantifier:
+                                                            recently[index]
+                                                                .quantifier,
+                                                        description:
+                                                            recently[index]
+                                                                .desc,
+                                                        id: recently[index].id,
+                                                        userInfo: new UserInfo(
+                                                          profilePictureAssetUrl:
+                                                              'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                          fullName:
+                                                              'Petar Nikolić',
+                                                          reputationNegative: 7,
+                                                          reputationPositive:
+                                                              240,
+                                                        ),
+                                                        vendor: value),
+                                                    initiateCartRefresh),
+                                              )),
+                                    );
+                                  });
+                                },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
-                                  child: Image.asset(
+                                  child: Image.network(
                                     recently[index].assetUrls[0],
                                     height: 90,
                                     width: 90,
@@ -382,7 +487,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget BestDeals() {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       children: [
@@ -394,12 +499,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               return InkWell(
                 onTap: () {},
                 child: Padding(
-                  padding: (size.width >= 640) ? 
-                  EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 2) % 3 == 0) ? 0 : 1 ) * 10.0, 15)
-                   : 
-                  EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1 ) * 10.0, 0, (((index - 1) % 2 == 0) ? 0 : 1 ) * 10.0, 15),
+                  padding: (size.width >= 640)
+                      ? EdgeInsets.fromLTRB(((index % 3 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 2) % 3 == 0) ? 0 : 1) * 10.0, 15)
+                      : EdgeInsets.fromLTRB(((index % 2 == 0) ? 0 : 1) * 10.0,
+                          0, (((index - 1) % 2 == 0) ? 0 : 1) * 10.0, 15),
                   child: SizedBox(
-                      width: (size.width >= 640) ? (size.width - 80) / 3 : (size.width - 60) / 2,
+                      width: (size.width >= 640)
+                          ? (size.width - 80) / 3
+                          : (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
                               assetUrls:
@@ -423,19 +531,62 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   Widget Categories(List<Category> categories) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
         padding: EdgeInsets.all(10),
         child: Column(
-            children: List.generate(categories.length, (index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                category = index;
-              });
-            },
-            child: CategoryEntry(
-                categories[index].assetUrl, categories[index].name),
-          );
+            children: List.generate(
+                (size.width >= 640)
+                    ? ((categories.length + 1) / 2.0).toInt()
+                    : categories.length, (index) {
+          if (size.width >= 640) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: size.width / 2.0 - 20,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        category = index * 2;
+                      });
+                    },
+                    child: CategoryEntry(categories[index * 2].assetUrl,
+                        categories[index * 2].name),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                (index * 2 + 1 >= categories.length)
+                    ? SizedBox()
+                    : SizedBox(
+                        width: size.width / 2.0 - 20,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              category = index * 2 + 1;
+                            });
+                          },
+                          child: CategoryEntry(
+                              categories[index * 2 + 1].assetUrl,
+                              categories[index * 2 + 1].name),
+                        ),
+                      )
+              ],
+            );
+          } else {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  category = index;
+                });
+              },
+              child: CategoryEntry(
+                  categories[index].assetUrl, categories[index].name),
+            );
+          }
         })));
   }
 }

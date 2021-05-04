@@ -12,6 +12,8 @@ import 'package:frontend_mobile/pages/welcome.dart';
 
 import 'package:provider/provider.dart';
 
+import 'models/usersModel.dart';
+
 main() {
   WidgetsFlutterBinding.ensureInitialized();
   Prefs.instance.containsKey('privateKey').then((value) {
@@ -49,19 +51,25 @@ class _SkipState extends State<Skip> {
   @override
   void initState() {
     super.initState();
-    Timer.run(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => new MultiProvider(providers: [
-                  ChangeNotifierProvider<ProductsModel>(
-                      create: (_) => ProductsModel()),
-                  ChangeNotifierProvider<CategoriesModel>(
-                      create: (_) => CategoriesModel()),
-                  ChangeNotifierProvider<OrdersModel>(
-                      create: (_) => OrdersModel()),
-                ], child: ConsumerHomePage())),
-      );
+    Prefs.instance.getStringValue("privateKey").then((value1) {
+      Prefs.instance.getStringValue("accountAddress").then((value2) {
+        Timer.run(() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new MultiProvider(providers: [
+                      ChangeNotifierProvider<ProductsModel>(
+                          create: (_) => ProductsModel()),
+                      ChangeNotifierProvider<CategoriesModel>(
+                          create: (_) => CategoriesModel()),
+                      ChangeNotifierProvider<OrdersModel>(
+                          create: (_) => OrdersModel()),
+                      ChangeNotifierProvider<UsersModel>(
+                          create: (_) => UsersModel(value1, value2)),
+                    ], child: ConsumerHomePage())),
+          );
+        });
+      });
     });
   }
 

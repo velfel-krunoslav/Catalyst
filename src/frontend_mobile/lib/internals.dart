@@ -1,9 +1,25 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:frontend_mobile/config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
+User usr;
+
+Future<String> asyncFileUpload(Uint8List contents) async {
+  var request = http.MultipartRequest(
+      'POST', Uri.parse('https://ipfs.infura.io:5001/api/v0/add'));
+  var pic = await http.MultipartFile.fromBytes('file', contents);
+  request.files.add(pic);
+  var response = await request.send();
+  var responseData = await response.stream.toBytes();
+  var responseString = String.fromCharCodes(responseData);
+  return jsonDecode(responseString)['Hash'];
+}
 
 void performPayment(String targetAccountAddress, int eth) async {
   final client =
@@ -144,7 +160,7 @@ class ProductEntryListingPage extends ProductEntry {
   double averageReviewScore;
   int numberOfReviews;
   UserInfo userInfo;
-
+  User vendor;
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
@@ -155,7 +171,8 @@ class ProductEntryListingPage extends ProductEntry {
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
-      this.userInfo})
+      this.userInfo,
+      this.vendor})
       : super(
             id: id,
             assetUrls: assetUrls,
@@ -166,29 +183,32 @@ class ProductEntryListingPage extends ProductEntry {
 }
 
 class User {
-  String forename;
+  int id;
+  String name;
   String surname;
+  String privateKey;
+  String metamaskAddress;
   String photoUrl;
+  String desc;
+  String email;
   String phoneNumber;
-  String address;
-  String city;
-  String mail;
-  String about;
-  double rating;
-  int reviewsCount;
-
-  User({
-    this.forename,
-    this.surname,
-    this.photoUrl,
-    this.phoneNumber,
-    this.address,
-    this.city,
-    this.mail,
-    this.about,
-    this.rating,
-    this.reviewsCount,
-  });
+  String homeAddress;
+  String birthday;
+  int uType;
+  // TODO add rating
+  User(
+      {this.id,
+      this.name,
+      this.surname,
+      this.privateKey,
+      this.metamaskAddress,
+      this.photoUrl,
+      this.desc,
+      this.email,
+      this.phoneNumber,
+      this.homeAddress,
+      this.birthday,
+      this.uType});
 }
 
 class Review {
@@ -205,10 +225,15 @@ class CartProduct {
   List<String> photoUrl;
   String name;
   double price;
-  int cartQuantity, id;
+  int cartQuantity, id, vendorId;
 
   CartProduct(
-      {this.id, this.photoUrl, this.name, this.price, this.cartQuantity});
+      {this.id,
+      this.vendorId,
+      this.photoUrl,
+      this.name,
+      this.price,
+      this.cartQuantity});
 }
 
 class UserReview extends User {
@@ -216,29 +241,33 @@ class UserReview extends User {
   int stars;
 
   UserReview(
-      {String forename,
+      {int id,
+      String name,
       String surname,
+      String privateKey,
+      String metamaskAddress,
       String photoUrl,
+      String desc,
+      String email,
       String phoneNumber,
-      String address,
-      String city,
-      String mail,
-      String about,
-      double rating,
-      int reviewsCount,
+      String homeAddress,
+      String birthday,
+      int uType,
       this.text,
       this.stars})
       : super(
-            forename: forename,
-            surname: surname,
-            photoUrl: photoUrl,
-            phoneNumber: phoneNumber,
-            address: address,
-            city: city,
-            mail: mail,
-            about: about,
-            rating: rating,
-            reviewsCount: reviewsCount);
+          name: name,
+          surname: surname,
+          privateKey: privateKey,
+          metamaskAddress: metamaskAddress,
+          photoUrl: photoUrl,
+          desc: desc,
+          email: email,
+          phoneNumber: phoneNumber,
+          homeAddress: homeAddress,
+          birthday: birthday,
+          uType: uType,
+        );
 }
 
 class ReviewPage {
@@ -280,6 +309,8 @@ class Order {
   int status; //  confirmed, delivered, refunded, rejected
   int buyerId;
   int sellerId;
+  String deliveryAddress;
+  int paymentType;
   Order(
       {this.id,
       this.productId,
@@ -287,43 +318,52 @@ class Order {
       this.status,
       this.buyerId,
       this.date,
-      this.sellerId});
+      this.sellerId,
+      this.deliveryAddress,
+      this.paymentType});
 }
 
 ChatUser currentUser = ChatUser(
   id: 0,
   name: 'Trenutni user',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
 );
 ChatUser jelena = ChatUser(
   id: 1,
   name: 'Jelena',
-  photoUrl: 'assets/avatars/avatar2.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmVZd57UK4FDVMF46bagh8wQmZtMAHGTDfLGYHXoD93R5P',
 );
 ChatUser luka = ChatUser(
   id: 2,
   name: 'Luka',
-  photoUrl: 'assets/avatars/avatar1.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmcAwtzGN2mgaMcnr1cZuHNBY4QRQZ3pskvKsQ66CFrTNX',
 );
 ChatUser marija = ChatUser(
   id: 3,
   name: 'Marija',
-  photoUrl: 'assets/avatars/avatar3.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmSW4mVxnb7uzStRZCpr8bo5qN3agmDwNZCJxHC737PtHw',
 );
 ChatUser pera = ChatUser(
   id: 4,
   name: 'Slobodanka',
-  photoUrl: 'assets/avatars/avatar4.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmUTVasG46ddZJvcVnoYKrwMjNDc8JYuQdHTpurszoNKFh',
 );
 ChatUser krunoslav = ChatUser(
   id: 5,
   name: 'Krunoslav',
-  photoUrl: 'assets/avatars/avatar5.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmR2Q46xBJesQKiBbGZtJYwvq4KH1hqxavmr9U5d98fbqr',
 );
 ChatUser stefan = ChatUser(
   id: 6,
   name: 'Stefan',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
+  photoUrl:
+      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
 );
 
 List<ChatUser> contacts = [jelena, luka, marija, pera, krunoslav, stefan];

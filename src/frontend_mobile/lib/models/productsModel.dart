@@ -13,7 +13,7 @@ class ProductsModel extends ChangeNotifier {
   List<ProductEntry> products = [];
   List<ProductEntry> productsForCategory = [];
   int category = -1;
-
+  int userId;
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
 
@@ -40,6 +40,10 @@ class ProductsModel extends ChangeNotifier {
 
   ProductsModel([int c = -1]) {
     this.category = c;
+    initiateSetup();
+  }
+  ProductsModel.forVendor(int id) {
+    this.userId = id;
     initiateSetup();
   }
   //ProductsModel(int c){this.category = c;}
@@ -80,9 +84,12 @@ class ProductsModel extends ChangeNotifier {
     _getProductById = _contract.function("getProductById");
     _getSellerProductsCount = _contract.function("getSellerProductsCount");
     _getSellerProducts = _contract.function("getSellerProducts");
-
-    getProducts();
-    getProductsForCategory(category);
+    if (userId != null)
+      products = await getSellersProducts(userId);
+    else {
+      getProducts();
+      getProductsForCategory(category);
+    }
   }
 
   getProducts() async {
@@ -173,7 +180,11 @@ class ProductsModel extends ChangeNotifier {
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
       print("proizvod dodat");
-      getProducts();
+
+      if (userId != null)
+        products = await getSellersProducts(userId);
+      else
+        getProducts();
     } else {
       isLoading = false;
     }
@@ -230,6 +241,8 @@ class ProductsModel extends ChangeNotifier {
   }
 
   getSellersProducts(int sellerId) async {
+    isLoading = true;
+    notifyListeners();
     List<ProductEntry> sellersProducts = [];
     List totalProductsList = await _client.call(
         contract: _contract,
@@ -254,8 +267,8 @@ class ProductsModel extends ChangeNotifier {
           desc: t[7],
           sellerId: t[8].toInt()));
     }
-    // isLoading = false;
-    // notifyListeners();
+    isLoading = false;
+    notifyListeners();
     return sellersProducts;
   }
 }

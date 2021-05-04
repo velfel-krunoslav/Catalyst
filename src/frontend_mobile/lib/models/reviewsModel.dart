@@ -35,7 +35,7 @@ class ReviewsModel extends ChangeNotifier {
   ContractFunction _getReviews;
   ContractFunction _countStars;
   ContractFunction _getReviewsCount;
-
+  ContractFunction _checkForReview;
   ReviewsModel(int productId) {
     this.productId = productId;
     initiateSetup();
@@ -74,13 +74,12 @@ class ReviewsModel extends ChangeNotifier {
     _getReviews = _contract.function("getReviews");
     _countStars = _contract.function("countStars");
     _getReviewsCount = _contract.function("getReviewsCount");
-
+    _checkForReview = _contract.function("checkForReview");
     await getReviews(productId);
-    await getAverage();
-    await getStars();
   }
 
   getReviews(int productId) async {
+    isLoading = true;
     List totalReviewsList = await _client.call(
         contract: _contract,
         function: _getReviewsCount,
@@ -95,16 +94,18 @@ class ReviewsModel extends ChangeNotifier {
 
     for (int i = 0; i < reviewsCount; i++) {
       var t = temp[0][i];
-      //print(t);
       reviews.add(Review(
           id: t[0].toInt(),
           userId: t[4].toInt(),
           desc: t[3],
           productId: t[1].toInt(),
           rating: t[2].toInt()));
-    }
 
+    }
+    getAverage();
+    getStars();
     notifyListeners();
+    isLoading = false;
   }
 
   addReview(int productId, int rating, String desc, int userId) async {
@@ -114,7 +115,7 @@ class ReviewsModel extends ChangeNotifier {
     await _client.sendTransaction(
         _credentials,
         Transaction.callContract(
-            maxGas: 6721925,
+            maxGas: 6721975,
             contract: _contract,
             function: _createReview,
             parameters: [
@@ -124,7 +125,7 @@ class ReviewsModel extends ChangeNotifier {
               BigInt.from(userId)
             ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
-    getReviews(productId);
+    await getReviews(productId);
   }
 
   getAverage() async {
@@ -151,4 +152,15 @@ class ReviewsModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+  checkForReview(int userId, int productId) async {
+
+    var temp = await _client.call(
+        contract: _contract,
+        function: _checkForReview,
+        params: [BigInt.from(userId), BigInt.from(productId)]);
+    print(temp[0]);
+    return temp[0];
+
+  }
+
 }

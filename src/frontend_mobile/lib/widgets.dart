@@ -20,6 +20,10 @@ import 'models/productsModel.dart';
 import 'models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/chat_screen.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
+import './sizer_helper.dart'
+    if (dart.library.html) './sizer_web.dart'
+    if (dart.library.io) './sizer_io.dart';
+import 'models/usersModel.dart';
 
 class ButtonFill extends TextButton {
   ButtonFill({VoidCallback onPressed, String text, String iconPath})
@@ -60,6 +64,7 @@ class ButtonFill extends TextButton {
                           ])
                         : SizedBox(
                             height: BUTTON_HEIGHT,
+                            width: 0,
                           ),
                     (text != null)
                         ? Text(text,
@@ -68,7 +73,7 @@ class ButtonFill extends TextButton {
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
                                 color: Colors.white))
-                        : SizedBox(),
+                        : SizedBox.shrink(),
                     Spacer()
                   ],
                 ),
@@ -138,47 +143,72 @@ class ButtonOutline extends TextButton {
 }
 
 class _PasswordFieldState extends State<PasswordField> {
+  final ValueChanged<String> onChange;
+  final String hintText;
   bool _obscureText = true;
-  String _password;
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+  String password;
+
+  _PasswordFieldState(this.onChange, this.hintText);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (val) => val.length < 6 ? 'Lozinka je prekratka.' : null,
-      onSaved: (val) => _password = val,
-      obscureText: _obscureText,
-      style:
-          TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
-      decoration: InputDecoration(
-        hintText: 'Lozinka',
-        filled: true,
-        fillColor: Color(LIGHT_GREY),
-        border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(5.0)),
-        suffixIcon: IconButton(
-          padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-          onPressed: _toggle,
-          icon: SvgPicture.asset(
-            'assets/icons/EyeSlash.svg',
-            color: Color(DARK_GREY),
-            width: INSET_ICON_SIZE,
-            height: INSET_ICON_SIZE,
+    return SizedBox(
+        height: BUTTON_HEIGHT,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(children: [
+          SizedBox(
+            height: BUTTON_HEIGHT,
+            width: MediaQuery.of(context).size.width,
+            child: TextFormField(
+              onChanged: onChange,
+              validator: (val) =>
+                  val.length < 6 ? 'Lozinka je prekratka.' : null,
+              onSaved: (val) => password = val,
+              obscureText: _obscureText,
+              style: TextStyle(
+                  color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
+              decoration: InputDecoration(
+                hintText: hintText,
+                filled: true,
+                fillColor: Color(LIGHT_GREY),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(5.0)),
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+          Row(
+            children: [
+              Spacer(),
+              SizedBox(
+                height: BUTTON_HEIGHT,
+                width: BUTTON_HEIGHT,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    'assets/icons/EyeSlash.svg',
+                    color: Color(DARK_GREY),
+                    width: INSET_ICON_SIZE,
+                    height: INSET_ICON_SIZE,
+                  ),
+                ),
+              )
+            ],
+          )
+        ]));
   }
 }
 
 class PasswordField extends StatefulWidget {
+  final ValueChanged<String> onChange;
+  final String hintText;
+  PasswordField(this.onChange, this.hintText);
   @override
-  _PasswordFieldState createState() => _PasswordFieldState();
+  _PasswordFieldState createState() => _PasswordFieldState(onChange, hintText);
 }
 
 class DatePickerPopup extends StatefulWidget {
@@ -293,12 +323,12 @@ class ProductEntryCard extends GestureDetector {
                 children: [
                   Container(
                     height: PRODUCT_ENTRY_HEIGHT,
-                    decoration: BoxDecoration(
+                    width: double.infinity,
+                    child: ClipRRect(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5),
                             topRight: Radius.circular(5)),
-                        image: DecorationImage(
-                            image: AssetImage(product.assetUrls[0]),
+                        child: Image.network(product.assetUrls[0],
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(height: 5),
@@ -421,41 +451,6 @@ class DiscountedProductEntryCard extends GestureDetector {
             ));
 }
 
-class CategoryCard extends InkWell {
-  CategoryCard({Category category, VoidCallback onPressed})
-      : super(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-                  width: double.infinity,
-                  height: CATEGORY_HEIGHT,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(category.assetUrl)),
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-                Positioned(
-                  left: 35.0,
-                  child: Text(category.name,
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                          color: Color(LIGHT_GREY),
-                          shadows: <Shadow>[
-                            Shadow(blurRadius: 5, color: Colors.black)
-                          ])),
-                ),
-              ],
-            ),
-            onTap: onPressed);
-}
-
 class DrawerOption extends StatelessWidget {
   String text;
   var onPressed;
@@ -532,133 +527,159 @@ class SettingsOption extends StatelessWidget {
   }
 }
 
-class ReviewWidget extends StatelessWidget {
+class ReviewWidget extends StatefulWidget {
   Review review;
 
   ReviewWidget({this.review});
 
   @override
+  _ReviewWidgetState createState() => _ReviewWidgetState(this.review);
+}
+
+class _ReviewWidgetState extends State<ReviewWidget> {
+  User user;
+  Review review;
+  _ReviewWidgetState(this.review);
+  UsersModel usersModel;
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Color(TEAL),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage(
-                        'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg'),
-                  )),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(padding: EdgeInsets.only(left: 0, right: 16, top: 0)),
-                Text("Petar Nikolić",
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black)),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  child: Container(
-                      width: 200,
-                      child: Text(
-                        review.desc.length > 100
-                            ? review.desc.substring(0, 100) + "..."
-                            : review.desc,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                        ),
-                      )),
-                ),
-              ],
-            ),
-            SizedBox(
-                //height: 100,
-                ),
-            Spacer(),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Wrap(
-                      children: List.generate(review.rating, (index) {
-                        return SvgPicture.asset(
-                          "assets/icons/StarFilled.svg",
-                        );
-                      }),
-                    ),
-                    Wrap(
-                      children:
-                          List.generate(5 - review.rating.round(), (index) {
-                        return SvgPicture.asset("assets/icons/StarOutline.svg",
-                            color: Color(LIGHT_GREY));
-                      }),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text("Pre 1 dan",
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w800,
-                        color: Color(DARK_GREY))),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 20,
-        )
-      ],
-    );
+    usersModel = Provider.of<UsersModel>(context);
+    return usersModel.isLoading
+        ? LinearProgressIndicator()
+        : Column(
+            children: [
+              Row(
+                children: [
+                  Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
+                  SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Color(TEAL),
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundImage: AssetImage(usersModel.user.photoUrl),
+                        )),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0,
+                              right: 16,
+                              top: 0)), //TODO ADD TOP PADDING IF LANDSCAPE
+                      Text(usersModel.user.name + " " + usersModel.user.surname,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black)),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        child: Container(
+                            width: 200,
+                            child: Text(
+                              widget.review.desc.length > 100
+                                  ? widget.review.desc.substring(0, 100) + "..."
+                                  : widget.review.desc,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                      //height: 100,
+                      ),
+                  Spacer(),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Wrap(
+                            children:
+                                List.generate(widget.review.rating, (index) {
+                              return SvgPicture.asset(
+                                "assets/icons/StarFilled.svg",
+                              );
+                            }),
+                          ),
+                          Wrap(
+                            children: List.generate(
+                                5 - widget.review.rating.round(), (index) {
+                              return SvgPicture.asset(
+                                  "assets/icons/StarOutline.svg",
+                                  color: Color(LIGHT_GREY));
+                            }),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text("Pre 1 dan",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w800,
+                              color: Color(DARK_GREY))),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          );
   }
 }
 
 class ProductsForCategory extends StatefulWidget {
-  ProductsForCategory({this.category, this.categoryName, this.callback});
+  ProductsForCategory(
+      {this.category, this.categoryName, this.callback, this.initiateRefresh});
   int category;
   Function callback;
   String categoryName;
+  VoidCallback initiateRefresh;
   @override
   _ProductsForCategoryState createState() => _ProductsForCategoryState(
-      category: category, categoryName: categoryName, callback: callback);
+      category: category,
+      categoryName: categoryName,
+      callback: callback,
+      initiateRefresh: initiateRefresh);
 }
 
 class _ProductsForCategoryState extends State<ProductsForCategory> {
-  _ProductsForCategoryState({this.category, this.categoryName, this.callback});
+  _ProductsForCategoryState(
+      {this.category, this.categoryName, this.callback, this.initiateRefresh});
   List<ProductEntry> products;
   int category;
   Function callback;
   String categoryName;
+  VoidCallback initiateRefresh;
   var productsModel;
+  UsersModel usersModel;
   var size;
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     productsModel = Provider.of<ProductsModel>(context);
+    usersModel = Provider.of<UsersModel>(context);
     products = productsModel.productsForCategory;
 
     return productsModel.isLoading
@@ -717,38 +738,46 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                   product: products[index],
                                   onPressed: () {
                                     ProductEntry product = products[index];
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              new ChangeNotifierProvider(
-                                                  create: (context) =>
-                                                      ReviewsModel(product.id),
-                                                  child: ProductEntryListing(
-                                                      ProductEntryListingPage(
-                                                          assetUrls:
-                                                              product.assetUrls,
-                                                          name: product.name,
-                                                          price: product.price,
-                                                          classification: product
-                                                              .classification,
-                                                          quantifier: product
-                                                              .quantifier,
-                                                          description:
-                                                              product.desc,
-                                                          id: product.id,
-                                                          userInfo:
-                                                              new UserInfo(
-                                                            profilePictureAssetUrl:
-                                                                'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-                                                            fullName:
-                                                                'Petar Nikolić',
-                                                            reputationNegative:
-                                                                7,
-                                                            reputationPositive:
-                                                                240,
-                                                          ))))),
-                                    );
+                                    usersModel
+                                        .getUserById(product.sellerId)
+                                        .then((value) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                new ChangeNotifierProvider(
+                                                    create: (context) =>
+                                                        ReviewsModel(
+                                                            product.id),
+                                                    child: ProductEntryListing(
+                                                        ProductEntryListingPage(
+                                                            assetUrls: product
+                                                                .assetUrls,
+                                                            name: product.name,
+                                                            price:
+                                                                product.price,
+                                                            classification: product
+                                                                .classification,
+                                                            quantifier: product
+                                                                .quantifier,
+                                                            description:
+                                                                product.desc,
+                                                            id: product.id,
+                                                            userInfo:
+                                                                new UserInfo(
+                                                              profilePictureAssetUrl:
+                                                                  'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                              fullName:
+                                                                  'Petar Nikolić',
+                                                              reputationNegative:
+                                                                  7,
+                                                              reputationPositive:
+                                                                  240,
+                                                            ),
+                                                            vendor: value),
+                                                        initiateRefresh))),
+                                      );
+                                    });
                                   })),
                         ),
                       );
@@ -814,9 +843,9 @@ class Contacts extends StatelessWidget {
                       Text(
                         contacts[index].name,
                         style: TextStyle(
-
-                  fontFamily: 'Inter',
-                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                            fontFamily: 'Inter',
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -844,11 +873,9 @@ class CategoryEntry extends StatelessWidget {
           margin: EdgeInsets.all(10),
           width: double.infinity,
           height: 125.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage(assetImagePath)),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(assetImagePath, fit: BoxFit.cover)),
         ),
         Positioned(
           left: 35.0,
@@ -859,7 +886,14 @@ class CategoryEntry extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(LIGHT_GREY),
                   shadows: <Shadow>[
-                    Shadow(blurRadius: 5, color: Colors.black)
+                    Shadow(blurRadius: 28, color: Colors.black),
+                    Shadow(blurRadius: 26, color: Colors.black),
+                    Shadow(blurRadius: 24, color: Colors.black),
+                    Shadow(blurRadius: 20, color: Colors.black),
+                    Shadow(blurRadius: 18, color: Colors.black),
+                    Shadow(blurRadius: 16, color: Colors.black),
+                    Shadow(blurRadius: 14, color: Colors.black),
+                    Shadow(blurRadius: 12, color: Colors.black),
                   ])),
         ),
       ],
@@ -900,7 +934,11 @@ class _ChatsState extends State<Chats> {
                   child: Container(
                     margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
                     decoration: BoxDecoration(
-                      color: chat.unread ? Color(TEAL) : Color(LIGHT_GREY),
+                      gradient: chat.unread
+                          ? LinearGradient(
+                              colors: <Color>[Color(TEAL), Color(MINT)])
+                          : LinearGradient(
+                              colors: [Colors.white, Colors.white]),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10.0),
                         bottomRight: Radius.circular(10.0),
@@ -924,11 +962,12 @@ class _ChatsState extends State<Chats> {
                                 Text(
                                   chat.sender.name,
                                   style: TextStyle(
-
-                  fontFamily: 'Inter',
-                                      color: Colors.black,
+                                      fontFamily: 'Inter',
+                                      color: chat.unread
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 16.0,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w800),
                                 ),
                                 Container(
                                   width:
@@ -936,13 +975,12 @@ class _ChatsState extends State<Chats> {
                                   child: Text(
                                     chat.text,
                                     style: TextStyle(
-
-                  fontFamily: 'Inter',
-                                        color: chat.unread
-                                            ? Color(LIGHT_GREY)
-                                            : Color(DARK_GREY),
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600),
+                                      fontFamily: 'Inter',
+                                      color: chat.unread
+                                          ? Colors.white
+                                          : Color(DARK_GREY),
+                                      fontSize: 16.0,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -957,8 +995,7 @@ class _ChatsState extends State<Chats> {
                               Text(
                                 chat.time,
                                 style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                    fontFamily: 'Inter',
                                     color: chat.unread
                                         ? Color(LIGHT_GREY)
                                         : Colors.black,
@@ -978,8 +1015,7 @@ class _ChatsState extends State<Chats> {
                                       child: Text(
                                         'NOVA PORUKA',
                                         style: TextStyle(
-
-                  fontFamily: 'Inter',
+                                            fontFamily: 'Inter',
                                             color: Color(DARK_GREY),
                                             fontSize: 12.0),
                                       ),
@@ -1002,120 +1038,160 @@ class _ChatsState extends State<Chats> {
 Widget HomeDrawer(
     BuildContext context,
     User user,
-    void Function(
-            String name,
-            double price,
-            List<String> assetUrls,
-            int classification,
-            int quantifier,
-            String desc,
-            int sellerId,
-            int categoryId)
-        addProductCallback,
-    Future<List<ProductEntry>> Function() sellersProductsCallback,
-    Future<ProductEntry> Function(int id) getProductByIdCallback) {
-  return Container(
-    width: 255,
-    child: new Drawer(
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-        color: Color(LIGHT_BLACK),
-        child: Column(
+    void Function() refreshProductsCallback,
+    Future<ProductEntry> Function(int id) getProductByIdCallback,
+    VoidCallback initiateRefresh) {
+  final sizer = getSizer();
+  final size = MediaQuery.of(context).size;
+  List<Widget> options = [
+    Row(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: AssetImage(user.photoUrl),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(user.photoUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  user.forename + " " + user.surname,
-                  style: TextStyle(
-                      fontFamily: 'Inter', color: Colors.white, fontSize: 19),
-                )
-              ],
+            ((!sizer.isWeb()) && size.width > size.height)
+                ? SizedBox(
+                    height: 16,
+                  )
+                : SizedBox.shrink(),
+            Text(
+              user.name.length > 10
+                  ? user.name.substring(0, 10) + "..."
+                  : user.name,
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800),
             ),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Moj nalog",
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAccount(user: user)));
-                },
-                iconUrl: "assets/icons/User.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Moji proizvodi",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MyProducts(
-                            addProductCallback, sellersProductsCallback)),
-                  );
-                },
-                iconUrl: "assets/icons/Package.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Poruke",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Inbox()),
-                  );
-                },
-                iconUrl: "assets/icons/Envelope.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Istorija narudžbi",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new ChangeNotifierProvider(
-                            create: (context) => OrdersModel(0),
-                            child: OrdersHistory(getProductByIdCallback))),
-                  );
-                },
-                iconUrl: "assets/icons/Newspaper.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Pomoć i podrška",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HelpSupport()),
-                  );
-                },
-                iconUrl: "assets/icons/Handshake.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Podešavanja",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
-                },
-                iconUrl: "assets/icons/Gear.svg"),
-            SizedBox(height: 10),
-            DrawerOption(
-                text: "Odjavi se",
-                onPressed: () {
-                  Prefs.instance.removeAll();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => new Welcome()));
-                },
-                iconUrl: "assets/icons/SignOut.svg"),
+            Text(
+              user.surname.length > 10
+                  ? user.surname.substring(0, 10) + "..."
+                  : user.surname,
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800),
+            )
           ],
         ),
-      ),
+      ],
+    ),
+    DrawerOption(
+        text: "Moj nalog",
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
+        },
+        iconUrl: "assets/icons/User.svg"),
+    DrawerOption(
+        text: "Moji proizvodi",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider<ProductsModel>(
+                              create: (_) => ProductsModel.forVendor(usr.id)),
+                        ],
+                        child: MyProducts(
+                            refreshProductsCallback, initiateRefresh))),
+          );
+        },
+        iconUrl: "assets/icons/Package.svg"),
+    DrawerOption(
+        text: "Poruke",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Inbox()),
+          );
+        },
+        iconUrl: "assets/icons/Envelope.svg"),
+    DrawerOption(
+        text: "Istorija narudžbi",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new ChangeNotifierProvider(
+                    create: (context) => OrdersModel(usr.id),
+                    child: OrdersHistory(
+                        getProductByIdCallback, initiateRefresh))),
+          );
+        },
+        iconUrl: "assets/icons/Newspaper.svg"),
+    DrawerOption(
+        text: "Pomoć i podrška",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HelpSupport()),
+          );
+        },
+        iconUrl: "assets/icons/Handshake.svg"),
+    DrawerOption(
+        text: "Podešavanja",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Settings()),
+          );
+        },
+        iconUrl: "assets/icons/Gear.svg"),
+    DrawerOption(
+        text: "Odjavi se",
+        onPressed: () {
+          Prefs.instance.removeAll();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => new Welcome()));
+        },
+        iconUrl: "assets/icons/SignOut.svg")
+  ];
+  return Container(
+    width: ((!sizer.isWeb()) && size.width > size.height) ? 480 : 240,
+    child: new Drawer(
+      child: Container(
+          padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+          color: Color(LIGHT_BLACK),
+          child: Column(
+              children: List.generate(
+                  ((!sizer.isWeb()) && size.width > size.height)
+                      ? ((options.length + 1) / 2.0).toInt()
+                      : options.length, (index) {
+            if ((!sizer.isWeb()) && size.width > size.height) {
+              return Row(
+                children: [
+                  SizedBox(
+                    width: 200,
+                    height: 80,
+                    child: options[index * 2],
+                  ),
+                  Spacer(),
+                  (index * 2 + 1 >= options.length)
+                      ? SizedBox()
+                      : SizedBox(
+                          width: 200,
+                          height: 80,
+                          child: options[index * 2 + 1],
+                        ),
+                ],
+              );
+            } else {
+              return Column(
+                children: [options[index], SizedBox(height: 10)],
+              );
+            }
+          }).toList())),
     ),
   );
 }

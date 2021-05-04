@@ -2,21 +2,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
+import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/pages/blank_page.dart';
+import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:frontend_mobile/pages/rating.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets.dart';
 
 class RatingPage extends StatefulWidget {
+  int productId;
+  Function newReviewCallback;
+  RatingPage(this.productId, this.newReviewCallback);
+
   @override
-  _RatingPage createState() => _RatingPage();
+  _RatingPage createState() => _RatingPage(productId, newReviewCallback);
 }
 
 class _RatingPage extends State<RatingPage> {
   int _rating;
-
+  String desc;
+  ReviewsModel reviewsModel;
+  int productId;
+  Function newReviewCallback;
+  _RatingPage(this.productId, this.newReviewCallback);
   @override
   Widget build(BuildContext context) {
+    reviewsModel = Provider.of<ReviewsModel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -49,7 +61,7 @@ class _RatingPage extends State<RatingPage> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                      "assets/avatars/vendor_adrew_ballantyne_cc_by.jpg"),
+                      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke'),
                 ),
                 Text(
                   "Petar Nikolic",
@@ -71,6 +83,9 @@ class _RatingPage extends State<RatingPage> {
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: TextField(
+                onChanged: (text) {
+                  desc = text;
+                },
                 decoration: InputDecoration(
                     hintText: "Unesi komentar",
                     // labelText: "Dodaj komentar",
@@ -96,10 +111,10 @@ class _RatingPage extends State<RatingPage> {
                   ButtonFill(
                     text: 'Dodaj recenziju',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => new Blank()),
-                      );
+                      //reviewsModel.addReview(productId, _rating, desc, 0);
+                      newReviewCallback(_rating, desc);
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     },
                   ),
                 ],

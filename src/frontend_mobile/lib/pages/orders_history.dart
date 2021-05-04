@@ -12,16 +12,20 @@ import 'date_orders.dart';
 
 class OrdersHistory extends StatefulWidget {
   Function getProductByIdCallback;
-  OrdersHistory(this.getProductByIdCallback);
+  VoidCallback initiateRefresh;
+  OrdersHistory(this.getProductByIdCallback, VoidCallback initiateRefresh);
 
   @override
-  _OrdersHistoryState createState() => _OrdersHistoryState(getProductByIdCallback);
+  _OrdersHistoryState createState() =>
+      _OrdersHistoryState(getProductByIdCallback, initiateRefresh);
 }
 
 class _OrdersHistoryState extends State<OrdersHistory> {
   OrdersModel ordersModel;
   Function getProductByIdCallback;
-  _OrdersHistoryState(this.getProductByIdCallback);
+  VoidCallback initiateRefresh;
+  _OrdersHistoryState(
+      this.getProductByIdCallback, VoidCallback initiateRefresh);
   @override
   Widget build(BuildContext context) {
     ordersModel = Provider.of<OrdersModel>(context);
@@ -43,41 +47,49 @@ class _OrdersHistoryState extends State<OrdersHistory> {
           },
         ),
       ),
-      body: ordersModel.isLoading == true ?
-      LinearProgressIndicator(
-        backgroundColor: Colors.grey,
-      ) :
-      Padding(
-        padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
-        child: ListView(
-          children: [
-            //SizedBox(height: 10,),
-              SingleChildScrollView(
-                child: Column(
-                  children: List.generate(ordersModel.dateOrders.length, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: SettingsOption(
-                        text: ordersModel.dateOrders[index].date.day.toString() + ". " +
-                            ordersModel.dateOrders[index].date.month.toString() + ". " +
-                            ordersModel.dateOrders[index].date.year.toString() + ". ",
-                        icon: Icon(Icons.date_range),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => DateOrders(ordersModel.dateOrders[index], getProductByIdCallback)),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-                ),
-              )
-
-          ]
-
-        ),
-      ),
+      body: ordersModel.isLoading == true
+          ? LinearProgressIndicator(
+              backgroundColor: Colors.grey,
+            )
+          : Padding(
+              padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
+              child: ListView(children: [
+                //SizedBox(height: 10,),
+                SingleChildScrollView(
+                  child: Column(
+                    children:
+                        List.generate(ordersModel.dateOrders.length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: SettingsOption(
+                          text: ordersModel
+                                  .dateOrders[index].date.day
+                                  .toString() +
+                              ". " +
+                              ordersModel.dateOrders[index].date.month
+                                  .toString() +
+                              ". " +
+                              ordersModel.dateOrders[index].date.year
+                                  .toString() +
+                              ". ",
+                          icon: Icon(Icons.date_range),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DateOrders(
+                                      ordersModel.dateOrders[index],
+                                      getProductByIdCallback,
+                                      initiateRefresh)),
+                            );
+                          },
+                        ),
+                      );
+                    }),
+                  ),
+                )
+              ]),
+            ),
     );
   }
 }
