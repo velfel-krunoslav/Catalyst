@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
 import 'package:provider/provider.dart';
 
@@ -77,10 +78,17 @@ class _OrdersHistoryState extends State<OrdersHistory> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DateOrders(
-                                      ordersModel.dateOrders[index],
-                                      getProductByIdCallback,
-                                      initiateRefresh)),
+                                  builder: (context) => new MultiProvider(
+                                          providers: [
+                                            ChangeNotifierProvider<UsersModel>(
+                                                create: (_) => UsersModel(
+                                                    usr.privateKey,
+                                                    usr.metamaskAddress)),
+                                          ],
+                                          child: DateOrders(
+                                              ordersModel.dateOrders[index],
+                                              getProductByIdCallback,
+                                              initiateRefresh))),
                             );
                           },
                         ),

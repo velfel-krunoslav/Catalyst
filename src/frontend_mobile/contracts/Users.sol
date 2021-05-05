@@ -21,8 +21,8 @@ contract Users {
     event UserCreated(string user, uint userNumber);
     constructor() public{
 
-        users[0] = User(0, "Petar", "Petrovic", "key1", "address1", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
-        users[1] = User(1, "Marko", "Markovic", "key2", "address2", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[0] = User(0, "Petar", "Petrovic", "111111", "address1", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[1] = User(1, "Marko", "Markovic", "222222", "address2", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
         usersCount = 2;
     }
 

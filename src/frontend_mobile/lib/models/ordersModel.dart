@@ -40,7 +40,14 @@ class OrdersModel extends ChangeNotifier {
     this.buyerId = b;
     initiateSetup();
   }
-
+  int userId;
+  int productId;
+  bool isValid;
+  OrdersModel.check(int userId, int productId) {
+    this.userId = userId;
+    this.productId = productId;
+    initiateSetup();
+  }
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -73,8 +80,14 @@ class OrdersModel extends ChangeNotifier {
     _getOrders = _contract.function("getOrders");
     _getOrdersCount = _contract.function("getOrdersCount");
     _checkForOrder = _contract.function("checkForOrder");
-    await getOrders(buyerId);
-    setDateOrders();
+    if (productId != null && userId != null) {
+      isValid = await checkForOrder(userId, productId);
+      isLoading = false;
+      notifyListeners();
+    } else {
+      await getOrders(buyerId);
+      setDateOrders();
+    }
   }
 
   getOrders(int buyerId) async {
@@ -111,7 +124,7 @@ class OrdersModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addOrder(List<Order> orders) async {
+  addOrders(List<Order> orders) async {
     isLoading = true;
 
     for (int i = 0; i < orders.length; i++) {
@@ -142,35 +155,35 @@ class OrdersModel extends ChangeNotifier {
       } else {
         isLoading = false;
       }
-    }}
-
-
-    setDateOrders() {
-      for (int i = 0; i < orders.length; i++) {
-        DateTime d = orders[i].date;
-        int flag = 0;
-        for (int j = 0; j < dateOrders.length; j++) {
-          if (dateOrders[j].date.toString() == d.toString()) {
-            dateOrders[j].orders.add(orders[i]);
-            flag = 1;
-          }
-        }
-        if (flag == 0) {
-          dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
-        }
-      }
-      isLoading = false;
-      notifyListeners();
-    }
-
-    checkForOrder(int userId, int productId) async {
-      var temp = await _client.call(
-          contract: _contract,
-          function: _checkForOrder,
-          params: [BigInt.from(userId), BigInt.from(productId)]);
-      return temp[0];
     }
   }
+
+  setDateOrders() {
+    for (int i = 0; i < orders.length; i++) {
+      DateTime d = orders[i].date;
+      int flag = 0;
+      for (int j = 0; j < dateOrders.length; j++) {
+        if (dateOrders[j].date.toString() == d.toString()) {
+          dateOrders[j].orders.add(orders[i]);
+          flag = 1;
+        }
+      }
+      if (flag == 0) {
+        dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
+      }
+    }
+    isLoading = false;
+    notifyListeners();
+  }
+
+  checkForOrder(int userId, int productId) async {
+    var temp = await _client.call(
+        contract: _contract,
+        function: _checkForOrder,
+        params: [BigInt.from(userId), BigInt.from(productId)]);
+    return temp[0];
+  }
+}
 
 class DateOrder {
   DateTime date;

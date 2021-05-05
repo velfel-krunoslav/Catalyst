@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
+import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,9 @@ class _DateOrdersState extends State<DateOrders> {
       this.dateOrder, this.getProductByIdCallback, this.initiateRefresh);
   List<ProductEntry> products = [];
   double sum = 0;
+
+  UsersModel usersModel;
+
   @override
   void initState() {
     for (int i = 0; i < dateOrder.orders.length; i++) {
@@ -43,6 +47,8 @@ class _DateOrdersState extends State<DateOrders> {
 
   @override
   Widget build(BuildContext context) {
+    usersModel = Provider.of<UsersModel>(context);
+
     return Scaffold(
       appBar: AppBar(
           title: Text(
@@ -87,84 +93,91 @@ class _DateOrdersState extends State<DateOrders> {
                   return InkWell(
                     onTap: () {
                       ProductEntry product = products[index];
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => new ChangeNotifierProvider(
-                                create: (context) => ReviewsModel(product.id),
-                                child: ProductEntryListing(
-                                    ProductEntryListingPage(
-                                        assetUrls: product.assetUrls,
-                                        name: product.name,
-                                        price: product.price,
-                                        classification: product.classification,
-                                        quantifier: product.quantifier,
-                                        description: product.desc,
-                                        id: product.id,
-                                        userInfo: new UserInfo(
-                                          profilePictureAssetUrl:
-                                              'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-                                          fullName: 'Petar Nikolić',
-                                          reputationNegative: 7,
-                                          reputationPositive: 240,
-                                        )),
-                                    initiateRefresh))),
-                      );
+                      usersModel.getUserById(product.sellerId).then((value) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => new ChangeNotifierProvider(
+                                  create: (context) => ReviewsModel(product.id),
+                                  child: ProductEntryListing(
+                                      ProductEntryListingPage(
+                                          assetUrls: product.assetUrls,
+                                          name: product.name,
+                                          price: product.price,
+                                          classification:
+                                              product.classification,
+                                          quantifier: product.quantifier,
+                                          description: product.desc,
+                                          id: product.id,
+                                          userInfo: new UserInfo(
+                                            profilePictureAssetUrl:
+                                                'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                            fullName: 'Petar Nikolić',
+                                            reputationNegative: 7,
+                                            reputationPositive: 240,
+                                          ),
+                                          vendor: value),
+                                      initiateRefresh))),
+                        );
+                      });
                     },
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                            bottom:
-                                BorderSide(color: Colors.black, width: 1.0)),
-                      ),
                       child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Image.network(
-                                  products[index].assetUrls[0],
-                                  height: 90,
-                                  width: 90,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(products[index].name,
-                                      style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(BLACK))),
-                                  SizedBox(
-                                    height: 10,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.network(
+                                    products[index].assetUrls[0],
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.fill,
                                   ),
-                                  Text(
-                                      products[index].price.toStringAsFixed(2) +
-                                          " €",
-                                      style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          color: Color(DARK_GREY))),
-                                ],
-                              ),
-                              Spacer(),
-                              Text(
-                                  "x" +
-                                      dateOrder.orders[index].amount.toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 18,
-                                      color: Color(BLACK)))
-                            ],
-                          )),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(products[index].name,
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: Color(BLACK))),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                        products[index]
+                                                .price
+                                                .toStringAsFixed(2) +
+                                            " €",
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            color: Color(DARK_GREY))),
+                                    SizedBox(height: 24),
+                                    Text('Stranica proizvoda ->',
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            color: Colors.blue,
+                                            fontSize: 16)),
+                                  ],
+                                ),
+                                Spacer(),
+                                Text(
+                                    "x" +
+                                        dateOrder.orders[index].amount
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 18,
+                                        color: Color(BLACK)))
+                              ])),
                     ),
                   );
                 }),
@@ -182,25 +195,30 @@ class _DateOrdersState extends State<DateOrders> {
                     bottomRight: Radius.circular(5.0)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  children: [
-                    Text("Total:",
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Color(BLACK))),
-                    Spacer(),
-                    Text(sum.toStringAsFixed(2) + " €",
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Color(BLACK)))
-                  ],
-                ),
-              ),
+                  padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(color: Colors.black, width: 1))),
+                    child: Row(
+                      children: [
+                        SizedBox(height: 48),
+                        Text("Total:",
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: Color(BLACK))),
+                        Spacer(),
+                        Text(sum.toStringAsFixed(2) + " €",
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: Color(BLACK)))
+                      ],
+                    ),
+                  )),
             )),
         SizedBox(
           height: 20,

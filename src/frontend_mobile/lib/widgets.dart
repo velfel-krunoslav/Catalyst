@@ -160,22 +160,33 @@ class _PasswordFieldState extends State<PasswordField> {
   final String hintText;
   bool _obscureText = true;
   String password;
-
+  double textFieldHeight = BUTTON_HEIGHT;
   _PasswordFieldState(this.onChange, this.hintText);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: BUTTON_HEIGHT,
+    return Container(
+        height: textFieldHeight,
         width: MediaQuery.of(context).size.width,
         child: Stack(children: [
-          SizedBox(
-            height: BUTTON_HEIGHT,
+          Container(
+            height: textFieldHeight,
             width: MediaQuery.of(context).size.width,
             child: TextFormField(
               onChanged: onChange,
-              validator: (val) =>
-                  val.length < 6 ? 'Lozinka je prekratka.' : null,
+              validator: (value) {
+                if (value == null || value.isEmpty || value.length < 6) {
+                  setState(() {
+                    textFieldHeight = BUTTON_HEIGHT + 20;
+                  });
+                  return 'Privatni ključ je neispravan';
+                } else {
+                  setState(() {
+                    textFieldHeight = BUTTON_HEIGHT;
+                  });
+                }
+                return null;
+              },
               onSaved: (val) => password = val,
               obscureText: _obscureText,
               style: TextStyle(
@@ -550,7 +561,7 @@ class ReviewWidget extends StatefulWidget {
 }
 
 class _ReviewWidgetState extends State<ReviewWidget> {
-  User user;
+  //User user; //MAY BE A CULPRIT
   Review review;
   _ReviewWidgetState(this.review);
   UsersModel usersModel;
@@ -562,18 +573,27 @@ class _ReviewWidgetState extends State<ReviewWidget> {
         : Column(
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(padding: EdgeInsets.fromLTRB(10, 20, 0, 0)),
                   SizedBox(
                     width: 50,
                     height: 50,
-                    child: CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Color(TEAL),
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundImage: AssetImage(usersModel.user.photoUrl),
-                        )),
+                    child: SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                            ),
+                            child: Image.network(
+                              usersModel.user.photoUrl,
+                              fit: BoxFit.fill,
+                            )),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: 15,
@@ -599,9 +619,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                         child: Container(
                             width: 200,
                             child: Text(
-                              widget.review.desc.length > 100
-                                  ? widget.review.desc.substring(0, 100) + "..."
-                                  : widget.review.desc,
+                              widget.review.desc,
                               style: TextStyle(
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -849,9 +867,9 @@ class Contacts extends StatelessWidget {
                   padding: EdgeInsets.all(10.0),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 25.0,
-                        backgroundImage: AssetImage(contacts[index].photoUrl),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: Image.network(contacts[index].photoUrl),
                       ),
                       Text(
                         contacts[index].name,
@@ -962,9 +980,16 @@ class _ChatsState extends State<Chats> {
                       children: [
                         Row(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 25.0,
-                              backgroundImage: AssetImage(chat.sender.photoUrl),
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
+                                child: Image.network(
+                                  chat.sender.photoUrl,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
                             SizedBox(
                               width: 5.0,

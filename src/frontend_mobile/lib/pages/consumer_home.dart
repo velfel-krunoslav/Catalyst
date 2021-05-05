@@ -94,20 +94,24 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     initiateCartRefresh();
   }
 
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
+
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
     usr = usersModel.user;
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
           key: _scaffoldKey,
           drawer: usersModel.isLoading
-              ? LinearProgressIndicator()
+              ? CircularProgressIndicator()
               : HomeDrawer(context, usersModel.user, refreshProductsCallback,
                   getProductByIdCallback, initiateCartRefresh), //TODO context
           appBar: AppBar(
@@ -148,7 +152,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                           create: (context) => OrdersModel(0),
                                           child: ConsumerCart(
                                               getProductByIdCallback,
-                                              initiateCartRefresh))),
+                                              initiateCartRefresh,
+                                              showInSnackBar))),
                             );
                           },
                         ),
@@ -256,10 +261,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                       create: (_) => UsersModel()),
                                 ],
                               child: ProductsForCategory(
-                                  category: category,
-                                  categoryName:
-                                      categoriesModel.categories[category].name,
-                                  callback: this.callback))),
+                                category: category,
+                                categoryName:
+                                    categoriesModel.categories[category].name,
+                                callback: this.callback,
+                                initiateRefresh: initiateCartRefresh,
+                              ))),
                   SingleChildScrollView(
                       child: productsModel.isLoading
                           ? Center(

@@ -19,7 +19,7 @@ class RatingPage extends StatefulWidget {
 
 class _RatingPage extends State<RatingPage> {
   int _rating;
-  String desc;
+  String desc = "";
   ReviewsModel reviewsModel;
   OrdersModel ordersModel;
   int productId;
@@ -59,9 +59,22 @@ class _RatingPage extends State<RatingPage> {
           children: [
             Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(usr.photoUrl),
+                SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        child: Image.network(
+                          usr.photoUrl,
+                          fit: BoxFit.fill,
+                        )),
+                  ),
                 ),
+                SizedBox(height: 10),
                 Text(
                   usr.name + ' ' + usr.surname, // TODO SUBSTR IF NAME TOO LONG
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
@@ -110,26 +123,23 @@ class _RatingPage extends State<RatingPage> {
                   ButtonFill(
                     text: 'Dodaj recenziju',
                     onPressed: () {
-                      ordersModel
-                          .checkForOrder(usr.id, productId)
-                          .then((value1) {
-                        if (value1 == true) {
-                          reviewsModel
-                              .checkForReview(usr.id, productId)
-                              .then((value2) {
-                            if (value2 == false) {
-                              newReviewCallback(_rating, desc);
-                              int count = 0;
-                              Navigator.of(context)
-                                  .popUntil((_) => count++ >= 2);
-                            } else {
-                              // TODO prikazati korisniku da je vec ostavio recenziju za ovaj proizvod
-                            }
-                          });
-                        } else {
-                          // TODO prikazati korisniku da mora da kupi proizvod da bi ostavio recenziju
-                        }
-                      });
+                      if (_rating != null) {
+                        reviewsModel
+                            .checkForReview(usr.id, productId)
+                            .then((value2) {
+                          if (value2 == false) {
+                            newReviewCallback(_rating, desc);
+                            int count = 0;
+                            Navigator.of(context).popUntil((_) => count++ >= 2);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Već ste ostavili recenziju')));
+                          }
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Niste ostavili ocenu')));
+                      }
                     },
                   ),
                 ],

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
@@ -231,6 +232,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                               ChangeNotifierProvider<
                                                       UsersModel>(
                                                   create: (_) => UsersModel()),
+                                              ChangeNotifierProvider<
+                                                      OrdersModel>(
+                                                  create: (_) =>
+                                                      OrdersModel.check(
+                                                          usr.id, _data.id)),
                                             ],
                                             child: ProductReviews(
                                                 _data.id, newReviewCallback2))),
@@ -259,12 +265,19 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                           children: [
                             Row(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        AssetImage(_data.vendor.photoUrl),
+                                SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                        ),
+                                        child: Image.network(
+                                          _data.vendor.photoUrl,
+                                          fit: BoxFit.fill,
+                                        )),
                                   ),
                                 ),
                                 SizedBox(width: 10),
@@ -372,44 +385,47 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             SizedBox(
                               height: 20,
                             ),
-                            ButtonFill(
-                                iconPath: 'assets/icons/ShoppingBag.svg',
-                                text: 'Dodaj u korpu',
-                                onPressed: () {
-                                  Prefs.instance
-                                      .containsKey('cartProducts')
-                                      .then((exists) {
-                                    Prefs.instance
-                                        .getStringValue('cartProducts')
-                                        .then((value) {
-                                      if (exists == true &&
-                                          (value.compareTo('') != 0)) {
-                                        List<String> tmp = value.split(';');
-                                        bool existsInCart = false;
+                            _data.vendor.id != usr.id
+                                ? ButtonFill(
+                                    iconPath: 'assets/icons/ShoppingBag.svg',
+                                    text: 'Dodaj u korpu',
+                                    onPressed: () {
+                                      Prefs.instance
+                                          .containsKey('cartProducts')
+                                          .then((exists) {
+                                        Prefs.instance
+                                            .getStringValue('cartProducts')
+                                            .then((value) {
+                                          if (exists == true &&
+                                              (value.compareTo('') != 0)) {
+                                            List<String> tmp = value.split(';');
+                                            bool existsInCart = false;
 
-                                        for (var e in tmp) {
-                                          existsInCart =
-                                              (int.parse(e.split(',')[0]) ==
-                                                  _data.id);
-                                        }
+                                            for (var e in tmp) {
+                                              existsInCart =
+                                                  (int.parse(e.split(',')[0]) ==
+                                                      _data.id);
+                                            }
 
-                                        if (!existsInCart) {
-                                          Prefs.instance.setStringValue(
-                                              'cartProducts',
-                                              '$value;${_data.id},1');
-                                        } else {
-                                          //TODO THROW NOTIFICATION
-                                        }
-                                      } else {
-                                        Prefs.instance.setStringValue(
-                                            'cartProducts', '${_data.id},1');
-                                      }
-                                    });
-                                  });
+                                            if (!existsInCart) {
+                                              Prefs.instance.setStringValue(
+                                                  'cartProducts',
+                                                  '$value;${_data.id},1');
+                                            } else {
+                                              //TODO THROW NOTIFICATION
+                                            }
+                                          } else {
+                                            Prefs.instance.setStringValue(
+                                                'cartProducts',
+                                                '${_data.id},1');
+                                          }
+                                        });
+                                      });
 
-                                  refreshInitiator();
-                                  Navigator.pop(context);
-                                }),
+                                      refreshInitiator();
+                                      Navigator.pop(context);
+                                    })
+                                : Container(),
                           ],
                         )),
                   ],

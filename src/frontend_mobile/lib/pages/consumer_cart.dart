@@ -16,10 +16,12 @@ String desc = '1BvBMSEYstWetqTFn5Au4m4G';
 class ConsumerCart extends StatefulWidget {
   VoidCallback initiateRefresh;
   Future<ProductEntry> Function(int id) getProductByIdCallback;
-  ConsumerCart(this.getProductByIdCallback, this.initiateRefresh);
+  Function showInSnackBar;
+  ConsumerCart(
+      this.getProductByIdCallback, this.initiateRefresh, this.showInSnackBar);
   @override
-  _ConsumerCartState createState() =>
-      _ConsumerCartState(getProductByIdCallback, initiateRefresh);
+  _ConsumerCartState createState() => _ConsumerCartState(
+      getProductByIdCallback, initiateRefresh, showInSnackBar);
 }
 
 class _ConsumerCartState extends State<ConsumerCart> {
@@ -30,13 +32,15 @@ class _ConsumerCartState extends State<ConsumerCart> {
   VoidCallback initiateRefresh;
   String method, paymentMethod;
   ProductsModel productsModel;
+  Function showInSnackBar;
   List<CartProduct> products = [];
   List<int> quantities = [];
   List<int> indices = [];
   List<List<String>> ids = [];
   Future<ProductEntry> Function(int id) getProductByIdCallback;
   OrdersModel ordersModel;
-  _ConsumerCartState(this.getProductByIdCallback, this.initiateRefresh);
+  _ConsumerCartState(
+      this.getProductByIdCallback, this.initiateRefresh, this.showInSnackBar);
   @override
   void initState() {
     super.initState();
@@ -720,7 +724,6 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                     new DateTime(now.year, now.month, now.day);
                                 List<Order> orders = [];
                                 for (int i = 0; i < products.length; i++) {
-// TODO update buyer id and seller id
                                   orders.add(Order(
                                       id: 0,
                                       amount: quantities[i],
@@ -736,10 +739,13 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                       deliveryAddress: customerAddress,
                                       productId: products[i].id));
                                 }
-                                ordersModel.addOrder(orders);
-                                Prefs.instance.removeValue('cartProducts');
-                                initiateRefresh();
-                                Navigator.pop(context);
+                                ordersModel.addOrders(orders).then((a) {
+                                  Prefs.instance.removeValue('cartProducts');
+                                  initiateRefresh();
+                                  showInSnackBar(
+                                      "Kupovina je uspešno obavljena");
+                                  Navigator.pop(context);
+                                });
                               })
                         ],
                       ),

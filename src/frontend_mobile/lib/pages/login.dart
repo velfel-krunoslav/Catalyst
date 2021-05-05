@@ -75,29 +75,40 @@ class Login extends StatelessWidget {
           ButtonFill(
             text: 'Prijavi se',
             onPressed: () {
-              Prefs.instance.setStringValue('privateKey', privateKey);
-              Prefs.instance.setStringValue('accountAddress', accountAddress);
+              print(privateKey);
+              print(accountAddress);
+              if (privateKey != null &&
+                  privateKey != "" &&
+                  accountAddress != null &&
+                  accountAddress != "") {
+                Prefs.instance.setStringValue('privateKey', privateKey);
+                Prefs.instance.setStringValue('accountAddress', accountAddress);
 
-              usersModel.checkForUser(accountAddress, privateKey).then((rez) {
-                print(rez);
-                if (rez != null && rez > -1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new MultiProvider(providers: [
-                              ChangeNotifierProvider<ProductsModel>(
-                                  create: (_) => ProductsModel()),
-                              ChangeNotifierProvider<CategoriesModel>(
-                                  create: (_) => CategoriesModel()),
-                              ChangeNotifierProvider<UsersModel>(
-                                  create: (_) =>
-                                      UsersModel(privateKey, accountAddress)),
-                            ], child: ConsumerHomePage())),
-                  );
-                } else {
-                  //TODO pogresan unos podataka za prijavu
-                }
-              });
+                usersModel.checkForUser(accountAddress, privateKey).then((rez) {
+                  print(rez);
+                  if (rez != null && rez > -1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new MultiProvider(providers: [
+                                ChangeNotifierProvider<ProductsModel>(
+                                    create: (_) => ProductsModel()),
+                                ChangeNotifierProvider<CategoriesModel>(
+                                    create: (_) => CategoriesModel()),
+                                ChangeNotifierProvider<UsersModel>(
+                                    create: (_) =>
+                                        UsersModel(privateKey, accountAddress)),
+                              ], child: ConsumerHomePage())),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Uneti podaci su pogrešni')));
+                  }
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Unesite sve podatke')));
+              }
             },
           ),
           SizedBox(height: 100.0),
