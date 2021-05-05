@@ -1,9 +1,9 @@
 module.exports = {
   networks: {
     development: {
-      host: "192.168.0.101",
+      host: "192.168.1.8",
       port: 7545,
-      network_id: "*", // Match any network id
+      network_id: "5720", // Match any network id
     },
     advanced: {
       websockets: true, // Enable EventEmitter interface for web3 (default: false)

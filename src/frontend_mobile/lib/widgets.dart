@@ -82,12 +82,11 @@ class ButtonFill extends TextButton {
             ));
 }
 
-enum type {
-  GREEN, RED, YELLOW
-}
+enum type { GREEN, RED, YELLOW }
 
 class ButtonOutline extends TextButton {
-  ButtonOutline({VoidCallback onPressed, String text, String iconPath, type buttonType})
+  ButtonOutline(
+      {VoidCallback onPressed, String text, String iconPath, type buttonType})
       : super(
             onPressed: (onPressed != null) ? onPressed : () {},
             style: TextButton.styleFrom(
@@ -96,12 +95,11 @@ class ButtonOutline extends TextButton {
             child: Ink(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors:
-                      (buttonType == type.YELLOW) ?
-                        [Color(YELLOW), Color(YELLOW)] :
-                        (buttonType == type.RED) ?
-                          [Color(RED_ATTENTION), Color(RED_ATTENTION)] :
-                          [Color(MINT), Color(TEAL)],
+                    colors: (buttonType == type.YELLOW)
+                        ? [Color(YELLOW), Color(YELLOW)]
+                        : (buttonType == type.RED)
+                            ? [Color(RED_ATTENTION), Color(RED_ATTENTION)]
+                            : [Color(MINT), Color(TEAL)],
                     stops: [0.0, 1.0],
                     tileMode: TileMode.clamp,
                   ),
@@ -122,7 +120,11 @@ class ButtonOutline extends TextButton {
                             ? Row(children: [
                                 SvgPicture.asset(
                                   iconPath,
-                                  color: buttonType == type.YELLOW ? Color(YELLOW) : buttonType == type.RED ? Color(RED_ATTENTION) : Color(TEAL),
+                                  color: buttonType == type.YELLOW
+                                      ? Color(YELLOW)
+                                      : buttonType == type.RED
+                                          ? Color(RED_ATTENTION)
+                                          : Color(TEAL),
                                   width: ICON_SIZE,
                                   height: ICON_SIZE,
                                 ),
@@ -140,7 +142,11 @@ class ButtonOutline extends TextButton {
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
                                     fontSize: 16,
-                                    color: buttonType == type.YELLOW ? Color(YELLOW) : buttonType == type.RED ? Color(RED_ATTENTION) : Color(TEAL)))
+                                    color: buttonType == type.YELLOW
+                                        ? Color(YELLOW)
+                                        : buttonType == type.RED
+                                            ? Color(RED_ATTENTION)
+                                            : Color(TEAL)))
                             : SizedBox(),
                         Spacer()
                       ],
@@ -1054,16 +1060,18 @@ Widget HomeDrawer(
     Row(
       children: [
         SizedBox(
-          width: 120,
-          height: 120,
+          width: 60,
+          height: 60,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(60),
+            borderRadius: BorderRadius.circular(30),
             child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black,
                 ),
-                child: Image.network(user.photoUrl, fit: BoxFit.fill,)
-            ),
+                child: Image.network(
+                  user.photoUrl,
+                  fit: BoxFit.fill,
+                )),
           ),
         ),
         SizedBox(
@@ -1133,7 +1141,6 @@ Widget HomeDrawer(
           );
         },
         iconUrl: "assets/icons/Clock.svg"),
-
     DrawerOption(
         text: "Poruke",
         onPressed: () {
@@ -1186,6 +1193,7 @@ Widget HomeDrawer(
   return Container(
     width: ((!sizer.isWeb()) && size.width > size.height) ? 480 : 240,
     child: new Drawer(
+        child: SingleChildScrollView(
       child: Container(
           padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
           color: Color(LIGHT_BLACK),
@@ -1218,6 +1226,6 @@ Widget HomeDrawer(
               );
             }
           }).toList())),
-    ),
+    )),
   );
 }
