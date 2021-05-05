@@ -411,12 +411,12 @@ class DiscountedProductEntryCard extends GestureDetector {
                 children: [
                   Container(
                     height: PRODUCT_ENTRY_HEIGHT,
-                    decoration: BoxDecoration(
+                    width: double.infinity,
+                    child: ClipRRect(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5),
                             topRight: Radius.circular(5)),
-                        image: DecorationImage(
-                            image: AssetImage(product.assetUrls[0]),
+                        child: Image.network(product.assetUrls[0],
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(height: 5),

@@ -385,7 +385,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             SizedBox(
                               height: 20,
                             ),
-                            _data.vendor.id != usr.id
+                            (_data.vendor.id != usr.id)
                                 ? ButtonFill(
                                     iconPath: 'assets/icons/ShoppingBag.svg',
                                     text: 'Dodaj u korpu',

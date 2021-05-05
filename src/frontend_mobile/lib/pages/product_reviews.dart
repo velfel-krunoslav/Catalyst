@@ -72,7 +72,15 @@ class ProductReviews extends StatelessWidget {
                       );
                     },
                   )
-                : Container(), //TODO dodati zuto dugme
+                : ButtonOutline(
+                    buttonType: type.YELLOW,
+                    text: 'Ostavite recenziju',
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'Recenzije možete kreirati samo za kupljene proizvode')));
+                    },
+                  ),
       ),
       body: reviewsModel.isLoading
           ? LinearProgressIndicator(

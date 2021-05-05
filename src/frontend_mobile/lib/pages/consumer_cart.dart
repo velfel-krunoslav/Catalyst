@@ -15,13 +15,15 @@ String desc = '1BvBMSEYstWetqTFn5Au4m4G';
 
 class ConsumerCart extends StatefulWidget {
   VoidCallback initiateRefresh;
+  VoidCallback incrementCart;
+  VoidCallback decrementCart;
   Future<ProductEntry> Function(int id) getProductByIdCallback;
   Function showInSnackBar;
-  ConsumerCart(
-      this.getProductByIdCallback, this.initiateRefresh, this.showInSnackBar);
+  ConsumerCart(this.getProductByIdCallback, this.initiateRefresh,
+      this.showInSnackBar, this.incrementCart, this.decrementCart);
   @override
-  _ConsumerCartState createState() => _ConsumerCartState(
-      getProductByIdCallback, initiateRefresh, showInSnackBar);
+  _ConsumerCartState createState() => _ConsumerCartState(getProductByIdCallback,
+      initiateRefresh, showInSnackBar, incrementCart, decrementCart);
 }
 
 class _ConsumerCartState extends State<ConsumerCart> {
@@ -30,6 +32,9 @@ class _ConsumerCartState extends State<ConsumerCart> {
   double subtotal = 0;
   double total;
   VoidCallback initiateRefresh;
+
+  VoidCallback incrementCart;
+  VoidCallback decrementCart;
   String method, paymentMethod;
   ProductsModel productsModel;
   Function showInSnackBar;
@@ -39,8 +44,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
   List<List<String>> ids = [];
   Future<ProductEntry> Function(int id) getProductByIdCallback;
   OrdersModel ordersModel;
-  _ConsumerCartState(
-      this.getProductByIdCallback, this.initiateRefresh, this.showInSnackBar);
+  _ConsumerCartState(this.getProductByIdCallback, this.initiateRefresh,
+      this.showInSnackBar, this.incrementCart, this.decrementCart);
   @override
   void initState() {
     super.initState();
@@ -275,7 +280,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                   .getStringValue(
                                                       'cartProducts')
                                                   .then((value) {
-                                                initiateRefresh();
+                                                decrementCart();
                                               });
                                             })),
                                   ])

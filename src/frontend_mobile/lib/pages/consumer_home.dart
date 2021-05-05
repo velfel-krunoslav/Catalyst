@@ -87,6 +87,18 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
+  void incrementCart() {
+    setState(() {
+      cartItemsCount++;
+    });
+  }
+
+  void decrementCart() {
+    setState(() {
+      cartItemsCount--;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +125,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           drawer: usersModel.isLoading
               ? CircularProgressIndicator()
               : HomeDrawer(context, usersModel.user, refreshProductsCallback,
-                  getProductByIdCallback, initiateCartRefresh), //TODO context
+                  getProductByIdCallback, incrementCart), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -153,7 +165,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                           child: ConsumerCart(
                                               getProductByIdCallback,
                                               initiateCartRefresh,
-                                              showInSnackBar))),
+                                              showInSnackBar,
+                                              incrementCart,
+                                              decrementCart))),
                             );
                           },
                         ),
@@ -265,7 +279,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 categoryName:
                                     categoriesModel.categories[category].name,
                                 callback: this.callback,
-                                initiateRefresh: initiateCartRefresh,
+                                initiateRefresh: incrementCart,
                               ))),
                   SingleChildScrollView(
                       child: productsModel.isLoading
@@ -366,7 +380,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                       reputationPositive: 240,
                                                     ),
                                                     vendor: value),
-                                                initiateCartRefresh))),
+                                                incrementCart))),
                               );
                             });
                           })),
