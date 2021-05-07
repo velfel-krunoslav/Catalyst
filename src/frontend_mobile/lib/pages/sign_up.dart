@@ -70,79 +70,85 @@ class _SignUpState extends State<SignUp> {
                       fontWeight: FontWeight.w800,
                       color: Color(DARK_GREY))),
               SizedBox(height: 20),
-              Container(
-                height: textFieldHeight[0],
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      setState(() {
-                        textFieldHeight[0] = BUTTON_HEIGHT + 20;
-                      });
-                      return 'Obavezno polje';
-                    } else {
-                      setState(() {
-                        textFieldHeight[0] = BUTTON_HEIGHT;
-                      });
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      name = value;
-                    });
-                  },
-                  style: TextStyle(
-                      color: Color(DARK_GREY),
-                      fontFamily: 'Inter',
-                      fontSize: 16),
-                  decoration: InputDecoration(
-                    errorStyle: TextStyle(
-                      fontFamily: 'Inter',
+              Row(
+                children: [
+                  Container(
+                    height: textFieldHeight[0],
+                    width: MediaQuery.of(context).size.width / 2.0 - 30,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() {
+                            textFieldHeight[0] = BUTTON_HEIGHT + 20;
+                          });
+                          return 'Obavezno polje';
+                        } else {
+                          setState(() {
+                            textFieldHeight[0] = BUTTON_HEIGHT;
+                          });
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          name = value;
+                        });
+                      },
+                      style: TextStyle(
+                          color: Color(DARK_GREY),
+                          fontFamily: 'Inter',
+                          fontSize: 16),
+                      decoration: InputDecoration(
+                        errorStyle: TextStyle(
+                          fontFamily: 'Inter',
+                        ),
+                        hintText: 'Ime',
+                        filled: true,
+                        fillColor: Color(LIGHT_GREY),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
                     ),
-                    hintText: 'Ime',
-                    filled: true,
-                    fillColor: Color(LIGHT_GREY),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(5.0)),
                   ),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              Container(
-                height: textFieldHeight[1],
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      setState(() {
-                        textFieldHeight[1] = BUTTON_HEIGHT + 20;
-                      });
-                      return 'Obavezno polje';
-                    } else {
-                      setState(() {
-                        textFieldHeight[1] = BUTTON_HEIGHT;
-                      });
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      surname = value;
-                    });
-                  },
-                  style: TextStyle(
-                      color: Color(DARK_GREY),
-                      fontFamily: 'Inter',
-                      fontSize: 16),
-                  decoration: InputDecoration(
-                    hintText: 'Prezime',
-                    filled: true,
-                    fillColor: Color(LIGHT_GREY),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(5.0)),
+                  SizedBox(width: 20.0),
+                  Container(
+                    height: textFieldHeight[1],
+                    width: MediaQuery.of(context).size.width / 2.0 - 30,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() {
+                            textFieldHeight[1] = BUTTON_HEIGHT + 20;
+                          });
+                          return 'Obavezno polje';
+                        } else {
+                          setState(() {
+                            textFieldHeight[1] = BUTTON_HEIGHT;
+                          });
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          surname = value;
+                        });
+                      },
+                      style: TextStyle(
+                          color: Color(DARK_GREY),
+                          fontFamily: 'Inter',
+                          fontSize: 16),
+                      decoration: InputDecoration(
+                        hintText: 'Prezime',
+                        filled: true,
+                        fillColor: Color(LIGHT_GREY),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               SizedBox(height: 15.0),
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -172,75 +178,83 @@ class _SignUpState extends State<SignUp> {
                   ),
                 )),
                 SizedBox(width: 20),
-                TextButton(
-                  style: TextButton.styleFrom(
-                      padding: EdgeInsets.all(0),
-                      backgroundColor: Color(LIGHT_GREY),
-                      minimumSize: Size(BUTTON_HEIGHT, BUTTON_HEIGHT)),
-                  child: SvgPicture.asset('assets/icons/CalendarEmpty.svg',
-                      color: Color(DARK_GREY),
-                      width: INSET_ICON_SIZE,
-                      height: INSET_ICON_SIZE),
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: 320,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    SizedBox(width: 20),
-                                    Text(
-                                      'Izaberite datum',
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(DARK_GREY)),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(5.0) //                 <--- border radius here
+                    ),
+                  ),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(0),
+                        backgroundColor: Color(LIGHT_GREY),
+                        minimumSize: Size(BUTTON_HEIGHT, BUTTON_HEIGHT)),
+                    child: SvgPicture.asset('assets/icons/CalendarEmpty.svg',
+                        color: Color(DARK_GREY),
+                        width: INSET_ICON_SIZE,
+                        height: INSET_ICON_SIZE),
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 320,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Row(
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Text(
+                                        'Izaberite datum',
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            color: Color(DARK_GREY),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 24),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    child: CupertinoDatePicker(
+                                        initialDateTime: (_date == null)
+                                            ? DateTime.now()
+                                            : _date,
+                                        mode: CupertinoDatePickerMode.date,
+                                        onDateTimeChanged: (DateTime chosenDate) {
+                                          setState(() {
+                                            _date = chosenDate;
+                                          });
+                                        }),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                        backgroundColor: Color(LIGHT_GREY)),
+                                    child: Text(
+                                      'Potvrdi',
                                       style: TextStyle(
                                           fontFamily: 'Inter',
-                                          color: Color(DARK_GREY),
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 24),
+                                          color: Colors.black,
+                                          fontSize: 16),
                                     ),
-                                  ],
-                                ),
-                                Container(
-                                  height: 200,
-                                  child: CupertinoDatePicker(
-                                      initialDateTime: (_date == null)
-                                          ? DateTime.now()
-                                          : _date,
-                                      mode: CupertinoDatePickerMode.date,
-                                      onDateTimeChanged: (DateTime chosenDate) {
-                                        setState(() {
-                                          _date = chosenDate;
-                                        });
-                                      }),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                      padding:
-                                          EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                      backgroundColor: Color(LIGHT_GREY)),
-                                  child: Text(
-                                    'Potvrdi',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        color: Colors.black,
-                                        fontSize: 16),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ]),
               SizedBox(height: 15.0),
@@ -403,7 +417,7 @@ class _SignUpState extends State<SignUp> {
                                       ChangeNotifierProvider<UsersModel>(
                                           create: (_) => UsersModel(
                                               private_key, metamask_address)),
-                                    ], child: ConsumerHomePage())),
+                                    ], child: ConsumerHomePage(reg: true,))),
                           );
                         });
                       } else {
