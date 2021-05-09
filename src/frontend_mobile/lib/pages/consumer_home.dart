@@ -31,7 +31,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int category = -1;
   int activeMenu = 0;
   int cartItemsCount = 0;
-  String query;
+  String query = "";
   final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   String privateKey, accountAddress;

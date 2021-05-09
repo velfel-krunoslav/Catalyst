@@ -118,4 +118,66 @@ contract Products{
         }
         return y;
     }
+    function contains (string memory what, string memory where) public returns (bool) {
+        bytes memory whatBytes = bytes (what);
+        bytes memory whereBytes = bytes (where);
+
+        bool found = false;
+        for (uint i = 0; i < whereBytes.length - whatBytes.length; i++) {
+            bool flag = true;
+            for (uint j = 0; j < whatBytes.length; j++)
+                if (whereBytes [i + j] != whatBytes [j]) {
+                    flag = false;
+                    break;
+                }
+            if (flag) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+
+    }
+    function getQueryProductsCount(string memory query) public returns (uint count){
+        uint productsQueryCount = 0;
+        for (uint i= 0; i < productsCount; i++) {
+            if (contains(_toLower(query), _toLower(products[i].name))){
+                productsQueryCount++;
+            }
+        }
+        return productsQueryCount;
+    }
+    function getQueryProducts(string memory query, uint totalProducts) public returns (Product[] memory){
+        uint count = 0;
+        Product[] memory y = new Product[](totalProducts);
+        for (uint i= 0; i < productsCount; i++) {
+            if (contains(_toLower(query), _toLower(products[i].name))){
+                y[count++] = Product(products[i].id,
+                    products[i].name,
+                    products[i].price_numerator,
+                    products[i].price_denominator,
+                    products[i].assetUrls,
+                    products[i].classification,
+                    products[i].quantifier,
+                    products[i].decs,
+                    products[i].sellerId,
+                    products[i].categoryId);
+            }
+        }
+        return y;
+    }
+    function _toLower(string memory str) internal returns (string memory) {
+        bytes memory bStr = bytes(str);
+        bytes memory bLower = new bytes(bStr.length);
+        for (uint i = 0; i < bStr.length; i++) {
+            // Uppercase character...
+            if ((uint8(bStr[i]) >= 65) && (uint8(bStr[i]) <= 90)) {
+                // So we add 32 to make it lowercase
+                bLower[i] = bytes1(uint8(bStr[i]) + 32);
+            } else {
+                bLower[i] = bStr[i];
+            }
+        }
+        return string(bLower);
+    }
 }

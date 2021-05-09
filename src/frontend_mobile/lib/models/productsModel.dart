@@ -37,6 +37,8 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _getProductById;
   ContractFunction _getSellerProductsCount;
   ContractFunction _getSellerProducts;
+  ContractFunction _getQueryProducts;
+  ContractFunction _getQueryProductsCount;
 
   ProductsModel([int c = -1]) {
     this.category = c;
@@ -46,7 +48,6 @@ class ProductsModel extends ChangeNotifier {
     this.userId = id;
     initiateSetup();
   }
-  //ProductsModel(int c){this.category = c;}
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -84,6 +85,9 @@ class ProductsModel extends ChangeNotifier {
     _getProductById = _contract.function("getProductById");
     _getSellerProductsCount = _contract.function("getSellerProductsCount");
     _getSellerProducts = _contract.function("getSellerProducts");
+    _getQueryProducts = _contract.function("getQueryProducts");
+    _getQueryProductsCount = _contract.function("getQueryProductsCount");
+
     if (userId != null)
       products = await getSellersProducts(userId);
     else {
@@ -91,7 +95,42 @@ class ProductsModel extends ChangeNotifier {
       getProductsForCategory(category);
     }
   }
+  getQueryProducts(String query) async {
 
+    isLoading = true;
+    notifyListeners();
+    List<ProductEntry> queryProducts = [];
+    List totalProductsList = await _client.call(
+        contract: _contract,
+        function: _getQueryProductsCount,
+        params: [query]);
+    BigInt totalProducts = totalProductsList[0];
+    int queryProductsCount = totalProducts.toInt();
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getQueryProducts,
+        params: [query, totalProducts]);
+    for (int i = queryProductsCount - 1; i >= 0; i--) {
+      var t = temp[0][i];
+      print(t);
+      queryProducts.add(ProductEntry(
+          id: t[0].toInt(),
+          name: t[1],
+          price: t[2].toInt() / t[3].toInt(),
+          assetUrls: t[4].split(",").toList(),
+          classification: getClassification(t[5].toInt()),
+          quantifier: t[6].toInt(),
+          desc: t[7],
+          sellerId: t[8].toInt()));
+    }
+    productsCount = queryProductsCount;
+    products = queryProducts;
+    isLoading = false;
+    notifyListeners();
+    //return queryProducts;
+
+
+  }
   getProducts() async {
     List totalProductsList = await _client
         .call(contract: _contract, function: _productsCount, params: []);
