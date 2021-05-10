@@ -869,7 +869,13 @@ class Contacts extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(25),
-                        child: Image.network(contacts[index].photoUrl),
+                        child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Image.network(
+                              contacts[index].photoUrl,
+                              fit: BoxFit.cover,
+                            )),
                       ),
                       Text(
                         contacts[index].name,
