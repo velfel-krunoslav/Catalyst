@@ -15,6 +15,7 @@ import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../internals.dart';
+import 'package:flutter/widgets.dart';
 import '../models/productsModel.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
@@ -113,7 +114,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
-
+  final keyCategories = GlobalKey<_ProductsForCategoryState>();
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
@@ -223,11 +224,19 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             borderSide: BorderSide.none),
                       ),
                       onEditingComplete: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    SearchPage(query: this.query)));
+                        productsModel.getQueryProducts(this.query);
+                        if (keyCategories.currentState != null)
+                          keyCategories.currentState.setQuery(this.query);
+                        // Navigator.push(
+                        //     context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => new MultiProvider(
+                        //           providers: [
+                        //             ChangeNotifierProvider<ProductsModel>(
+                        //                 create: (_) => ProductsModel.fromQuery(this.query)),
+                        //           ],
+                        //           child: SearchPage(
+                        //               query: this.query,))),);
                       },
                     ),
                   ],
@@ -278,6 +287,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                       create: (_) => UsersModel()),
                                 ],
                               child: ProductsForCategory(
+                                query: this.query,
+                                key: keyCategories,
                                 category: category,
                                 categoryName:
                                     categoriesModel.categories[category].name,
@@ -660,5 +671,161 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         ),
       );
     });
+  }
+}
+class ProductsForCategory extends StatefulWidget {
+  ProductsForCategory(
+      {this.query,this.category, this.categoryName, this.callback, this.initiateRefresh, Key key}) : super(key: key);
+  int category;
+  Function callback;
+  String categoryName;
+  VoidCallback initiateRefresh;
+  String query;
+  @override
+  _ProductsForCategoryState createState() => _ProductsForCategoryState(
+      category: category,
+      categoryName: categoryName,
+      callback: callback,
+      initiateRefresh: initiateRefresh,
+      query: query);
+}
+
+class _ProductsForCategoryState extends State<ProductsForCategory> {
+  _ProductsForCategoryState(
+      {this.query, this.category, this.categoryName, this.callback, this.initiateRefresh});
+  List<ProductEntry> products;
+  int category;
+  Function callback;
+  String categoryName;
+  String query;
+  VoidCallback initiateRefresh;
+  var productsModel;
+  UsersModel usersModel;
+  var size;
+  void setQuery(String query){
+    setState(() {
+      this.query = query;
+    });
+  }
+  //   productsModel.getQueryProducts(text);
+  //   //     .where((product) {
+  //   //   var productTitle = product.name.toLowerCase();
+  //   //   return productTitle.contains(text);
+  //   // }).toList();
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
+    usersModel = Provider.of<UsersModel>(context);
+    products = productsModel.productsForCategory.where((product){
+      var productTitle = product.name.toLowerCase();
+      return productTitle.contains(query) ? true : false;
+    }).toList();
+
+    return productsModel.isLoading
+        ? Center(
+      child: LinearProgressIndicator(
+        backgroundColor: Colors.grey,
+      ),
+    )
+        : Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/icons/ArrowLeft.svg',
+                    height: ICON_SIZE,
+                    width: ICON_SIZE,
+                  ),
+                  onPressed: () {
+                    this.widget.callback(-1);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  categoryName,
+                  style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 28,
+                      color: Color(DARK_GREY),
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Wrap(
+              children: List.generate(products.length, (index) {
+                return InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: (index + 1) % 2 == 0
+                        ? EdgeInsets.only(left: 10, bottom: 15)
+                        : EdgeInsets.only(right: 10, bottom: 15),
+                    child: SizedBox(
+                        width: (size.width - 60) / 2,
+                        child: ProductEntryCard(
+                            product: products[index],
+                            onPressed: () {
+                              ProductEntry product = products[index];
+                              usersModel
+                                  .getUserById(product.sellerId)
+                                  .then((value) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      new ChangeNotifierProvider(
+                                          create: (context) =>
+                                              ReviewsModel(
+                                                  product.id),
+                                          child: ProductEntryListing(
+                                              ProductEntryListingPage(
+                                                  assetUrls: product
+                                                      .assetUrls,
+                                                  name: product.name,
+                                                  price:
+                                                  product.price,
+                                                  classification: product
+                                                      .classification,
+                                                  quantifier: product
+                                                      .quantifier,
+                                                  description:
+                                                  product.desc,
+                                                  id: product.id,
+                                                  userInfo:
+                                                  new UserInfo(
+                                                    profilePictureAssetUrl:
+                                                    'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                    fullName:
+                                                    'Petar Nikolić',
+                                                    reputationNegative:
+                                                    7,
+                                                    reputationPositive:
+                                                    240,
+                                                  ),
+                                                  vendor: value),
+                                              initiateRefresh))),
+                                );
+                              });
+                            })),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

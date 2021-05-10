@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
+import 'package:frontend_mobile/models/productsModel.dart';
 import 'package:frontend_mobile/widgets.dart';
+import 'package:provider/provider.dart';
 import '../internals.dart';
 
 class SearchPage extends StatefulWidget {
@@ -29,64 +31,7 @@ class _SearchPageState extends State<SearchPage> {
 
   int activeMenu = 0;
   int cardItemsCount = 0;
-  List<ProductEntry> products = [
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmVB38abDTVj5FU1GTbW6k2QhDB8FHxYqhBHwFTrix78Bw'
-        ],
-        name: 'Domaći med',
-        price: 13.90,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmSGWhMdUK9YXdfZBP6gKQozXxqBe4mcdSuhusPbVyZTCx'
-        ],
-        name: 'Pasirani paradajz',
-        price: 2.40,
-        classification: Classification.Weight,
-        quantifier: 500),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmRsZYboEhSYCGZCBiERvKCfEEBEBWxYm6FUNHg2oryKZk'
-        ],
-        name: 'Maslinovo ulje',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmXd1VwfEJWea1TL62q9btikLypcwCf7VTB46HLYx7EsuQ'
-        ],
-        name: 'Pršut',
-        price: 15,
-        classification: Classification.Weight,
-        quantifier: 750),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/Qmb1tVQBXnQeeaQdSoMHjTRBWnGuwGnsWqJg97LdvkkFzS'
-        ],
-        name: 'Rakija',
-        price: 12.40,
-        classification: Classification.Volume,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmRxCijtUoMGDP7vdff1r74DYPhhGhdemtkht5R39pGxzC'
-        ],
-        name: 'Kobasica',
-        price: 16.70,
-        classification: Classification.Weight,
-        quantifier: 1000),
-    new ProductEntry(
-        assetUrls: <String>[
-          'https://ipfs.io/ipfs/QmWWrpbQgUB6LddC4UdZFgC6JPJcv52Sot7fAJjvsqcXgE'
-        ],
-        name: 'Kamamber',
-        price: 29.90,
-        classification: Classification.Weight,
-        quantifier: 500),
-  ];
+
   List<ProductEntry> recently;
   List<ProductEntry> productsToDispay;
   ScrollController _ScrollController;
@@ -110,9 +55,6 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     _ScrollController = ScrollController();
-    setState(() {
-      productsToDispay = products;
-    });
     _ScrollController.addListener(_scrollListener);
     _PageController = PageController(initialPage: 0);
   }
@@ -455,21 +397,10 @@ class _SearchPageState extends State<SearchPage> {
         });
   }
 
-  User user = new User(
-    name: "Petar",
-    surname: "Nikolić",
-    photoUrl:
-        "https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke",
-    phoneNumber: "+49 76 859 69 58",
-    homeAddress: "4070 Jehovah Drive",
-    email: "jay.ritter@gmail.com",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-        " sed do eiusmod tempor incididunt ut labore et dolore magna "
-        "aliqua.",
-  );
-
+  ProductsModel productsModel;
   @override
   Widget build(BuildContext context) {
+    productsModel = Provider.of<ProductsModel>(context);
     _queryController.text = this.query;
     return MaterialApp(
       home: DefaultTabController(
@@ -516,12 +447,17 @@ class _SearchPageState extends State<SearchPage> {
                     controller: _queryController,
                     onChanged: (text) {
                       text = text.toLowerCase();
-                      setState(() {
-                        productsToDispay = products.where((product) {
-                          var productTitle = product.name.toLowerCase();
-                          return productTitle.contains(text);
-                        }).toList();
-                      });
+                      // setState(() {
+                      //   productsModel.getQueryProducts(text);
+                      //   //     .where((product) {
+                      //   //   var productTitle = product.name.toLowerCase();
+                      //   //   return productTitle.contains(text);
+                      //   // }).toList();
+                      // });
+                    },
+                    onEditingComplete: (){
+                      this.query = _queryController.text;
+                      productsModel.getQueryProducts(_queryController.text);
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 36),
@@ -609,7 +545,7 @@ class _SearchPageState extends State<SearchPage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsToDispay.length, (index) {
+            children: List.generate(productsModel.productsToDisplay.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -619,7 +555,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: SizedBox(
                       width: (size.width - 60) / 2,
                       child: ProductEntryCard(
-                          product: productsToDispay[index], onPressed: () {})),
+                          product: productsModel.productsToDisplay[index], onPressed: () {})),
                 ),
               );
             }),

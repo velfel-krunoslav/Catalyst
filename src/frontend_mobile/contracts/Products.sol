@@ -121,7 +121,8 @@ contract Products{
     function contains (string memory what, string memory where) public returns (bool) {
         bytes memory whatBytes = bytes (what);
         bytes memory whereBytes = bytes (where);
-
+        if (keccak256(whatBytes) == keccak256(whereBytes))
+            return true;
         bool found = false;
         for (uint i = 0; i < whereBytes.length - whatBytes.length; i++) {
             bool flag = true;

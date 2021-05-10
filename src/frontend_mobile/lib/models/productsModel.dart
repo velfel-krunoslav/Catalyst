@@ -14,6 +14,7 @@ class ProductsModel extends ChangeNotifier {
   List<ProductEntry> productsForCategory = [];
   int category = -1;
   int userId;
+  String query;
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
 
@@ -46,6 +47,12 @@ class ProductsModel extends ChangeNotifier {
   }
   ProductsModel.forVendor(int id) {
     this.userId = id;
+    initiateSetup();
+  }
+  List<ProductEntry> productsToDisplay = [];
+  int productsToDisplayCount;
+  ProductsModel.fromQuery(String query){
+    this.query = query;
     initiateSetup();
   }
   Future<void> initiateSetup() async {
@@ -90,6 +97,9 @@ class ProductsModel extends ChangeNotifier {
 
     if (userId != null)
       products = await getSellersProducts(userId);
+    else if (query != null){
+      getQueryProducts(query);
+    }
     else {
       getProducts();
       getProductsForCategory(category);
@@ -127,7 +137,7 @@ class ProductsModel extends ChangeNotifier {
     products = queryProducts;
     isLoading = false;
     notifyListeners();
-    //return queryProducts;
+   // return queryProducts;
 
 
   }
