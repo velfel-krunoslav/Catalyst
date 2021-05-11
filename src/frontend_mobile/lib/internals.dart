@@ -13,15 +13,24 @@ User usr;
 
 Future<String> requestGetChat(int id) async {
   var queryParameters = {'id': id.toString()};
-  var uri = Uri.http('192.168.1.3:3000', '/Chat/GetChat', queryParameters);
+  var uri =
+      Uri.http('192.168.1.3:3000', '/Chat/GetChatsFromUserID', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }
 
-Future<String> requestAllChatsForUserID(int id) async {
-  var queryParameters = {'UserID1': id.toString()};
-  var uri =
-      Uri.http('192.168.1.3:3000', '/Chat/GetChatsFromUserID', queryParameters);
+Future<String> requestLatestMessageFromChat(int chatID) async {
+  var queryParameters = {'chatID': chatID.toString()};
+  var uri = Uri.http('192.168.1.3:3000', '/Message/GetLatestMessageFromChatID',
+      queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> requestAllMessagesFromChat(int chatID) async {
+  var queryParameters = {'messageChatID': chatID.toString()};
+  var uri = Uri.http(
+      '192.168.1.3:3000', '/Message/GetAllMessagesFromChatID', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }

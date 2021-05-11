@@ -1,22 +1,53 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 import 'package:frontend_mobile/pages/inbox.dart';
-import 'package:frontend_mobile/widgets.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatUser user;
-  ChatScreen({this.user});
+  int chatID;
+  int currentUserID;
+  ChatScreen({this.user, this.chatID});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ChatScreenState createState() =>
+      _ChatScreenState(this.user, this.chatID, this.currentUserID);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  ChatUser user;
+  int chatID;
+  int currentUserID;
+  List<Message> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      requestAllMessagesFromChat(chatID).then((value) {
+        var tmp = jsonDecode(value);
+        for (var t in tmp) {
+          var u = ChatMessageInfo.fromJson(t);
+          messages.add(Message(
+              sender: user,
+              time: (u.timestamp.year == now.year &&
+                      u.timestamp.month == now.month &&
+                      u.timestamp.day == now.day)
+                  ? '${u.timestamp.hour}:${u.timestamp.minute}'
+                  : '${u.timestamp.day}.${u.timestamp.month}.${u.timestamp.year}.',
+              text: u.messageText,
+              unread: u.statusRead));
+        }
+      });
+    });
+  }
+
+  _ChatScreenState(this.user, this.chatID, this.currentUserID);
   _buildChat(Message message, bool isMe) {
     var size = MediaQuery.of(context).size;
     return Container(
@@ -154,7 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemCount: messages.length,
                         itemBuilder: (BuildContext context, int index) {
                           final Message message = messages[index];
-                          final bool isMe = message.sender.id == currentUser.id;
+                          final bool isMe = message.sender.id == currentUserID;
                           return _buildChat(message, isMe);
                         }),
                   )),

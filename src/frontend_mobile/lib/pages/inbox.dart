@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 
+import 'chat_screen.dart';
+
 class ChatUser {
   int id;
   String name;
@@ -33,140 +35,77 @@ class ChatMessage {
   ChatMessage({this.messageContent, this.messageType});
 }
 
-ChatUser currentUser = ChatUser(
-  id: 0,
-  name: 'Trenutni user',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-);
-ChatUser jelena = ChatUser(
-  id: 1,
-  name: 'Jelena',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmVZd57UK4FDVMF46bagh8wQmZtMAHGTDfLGYHXoD93R5P',
-);
-ChatUser luka = ChatUser(
-  id: 2,
-  name: 'Luka',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmcAwtzGN2mgaMcnr1cZuHNBY4QRQZ3pskvKsQ66CFrTNX',
-);
-ChatUser marija = ChatUser(
-  id: 3,
-  name: 'Marija',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmSW4mVxnb7uzStRZCpr8bo5qN3agmDwNZCJxHC737PtHw',
-);
-ChatUser pera = ChatUser(
-  id: 4,
-  name: 'Slobodanka',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmUTVasG46ddZJvcVnoYKrwMjNDc8JYuQdHTpurszoNKFh',
-);
-ChatUser krunoslav = ChatUser(
-  id: 5,
-  name: 'Krunoslav',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmR2Q46xBJesQKiBbGZtJYwvq4KH1hqxavmr9U5d98fbqr',
-);
-ChatUser stefan = ChatUser(
-  id: 6,
-  name: 'Stefan',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-);
-
-List<ChatUser> contacts = [jelena, luka, marija, pera, krunoslav, stefan];
-
-DateTime now = DateTime.now();
-String formattedDate = DateFormat('kk:mm').format(now);
-
-List<Message> chats = [
-  Message(sender: jelena, time: formattedDate, text: 'Hey?', unread: true),
-  Message(
-      sender: luka,
-      time: formattedDate,
-      text: 'Jesam li parsirao?',
-      unread: false),
-  Message(
-      sender: marija,
-      time: formattedDate,
-      text: 'Posto je paprika,druze?',
-      unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi?', unread: false),
-  Message(
-      sender: stefan,
-      time: formattedDate,
-      text: '.................',
-      unread: false),
-  Message(sender: krunoslav, time: formattedDate, text: 'stres', unread: true),
-  Message(sender: pera, time: formattedDate, text: 'zdera', unread: false),
-  Message(sender: jelena, time: formattedDate, text: 'Hey', unread: true),
-  Message(sender: luka, time: formattedDate, text: 'Parsiraj', unread: false),
-  Message(sender: marija, time: formattedDate, text: 'Aloee', unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi', unread: false),
-  Message(sender: stefan, time: formattedDate, text: '...', unread: false),
-  Message(
-      sender: krunoslav, time: formattedDate, text: 'helloouuu', unread: true),
-  Message(
-      sender: pera,
-      time: formattedDate,
-      text: 'Sta je bre ovo?',
-      unread: false),
-];
-
-List<Message> messages = [
-  Message(sender: luka, time: '5:30', text: 'Jesam li parsirao?', unread: true),
-  Message(
-      sender: currentUser, time: '5:30', text: 'Nisi parsirao!', unread: true),
-  Message(
-    sender: luka,
-    time: '5:31',
-    text: 'Posto paradajz?',
-    unread: true,
-  ),
-  Message(
-      sender: currentUser,
-      time: '5:38',
-      text: '150 dinara kilo!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '8:30',
-      text: 'Skup si brate,moze popust?',
-      unread: true),
-  Message(
-      sender: currentUser,
-      time: '8:32',
-      text: 'Moze,dajem 10% za tebe popusta!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '9:00',
-      text:
-          'Moze salji na sledecu adresu: Radoja Domanovica 1,Kragujevac,34000',
-      unread: true),
-  Message(sender: currentUser, time: '9:11', text: 'Dogovoreno!', unread: true),
-];
-
 class Inbox extends StatefulWidget {
+  dynamic Function(int id) getUserById;
+  Inbox(dynamic Function(int id) getUserById) {
+    this.getUserById = getUserById;
+  }
   @override
-  _UserInboxState createState() => _UserInboxState();
+  _UserInboxState createState() => _UserInboxState(this.getUserById);
 }
 
 class _UserInboxState extends State<Inbox> {
+  dynamic Function(int id) getUserById;
+  _UserInboxState(dynamic Function(int id) getUserById) {
+    this.getUserById = getUserById;
+  }
+  List<User> allUsers = [];
+
+  List<ChatUser> contacts = [];
+  List<Message> chats = [];
+
+  @override
+  void initState() {
+    super.initState();
+    requestGetChat(usr.id).then((rawData) {
+      List<int> partner_ids = [];
+      List<int> chat_ids = [];
+      List<ChatInfo> chatInfo = [];
+      var tmp = jsonDecode(rawData);
+      for (var t in tmp) {
+        chatInfo.add(ChatInfo.fromJson(t));
+      }
+      for (var chat in chatInfo) {
+        partner_ids
+            .add((chat.idReciever != usr.id) ? chat.idReciever : chat.idSender);
+        chat_ids.add(chat.id);
+      }
+
+      for (int p in partner_ids) {
+        getUserById(p).then((userRawData) {
+          // TODO NASTAVITI OVDJE
+          print('********** IME : ${userRawData.name}');
+          allUsers.add(userRawData);
+          contacts.add(ChatUser(
+              id: userRawData.id,
+              name: '${userRawData.name} ${userRawData.surname}',
+              photoUrl: userRawData.photoUrl));
+          print('C O N T A C T S      I T E M ${userRawData.id}');
+        });
+      }
+
+      for (int i = 0; i < chat_ids.length; i++) {
+        requestLatestMessageFromChat(chat_ids[i]).then((value) {
+          print(
+              'requestLatestMessageFromChat RESPONSE ${chat_ids[i]} = $value');
+          var msg = ChatMessageInfo.fromJson(jsonDecode(value));
+
+          chats.add(Message(
+              sender: contacts[i],
+              time: (msg.timestamp.year == now.year &&
+                      msg.timestamp.month == now.month &&
+                      msg.timestamp.day == now.day)
+                  ? '${msg.timestamp.hour}:${msg.timestamp.minute}'
+                  : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
+              text: msg.messageText,
+              unread: msg.statusRead));
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    requestGetChat(1).then((value) {
-      Map<String, dynamic> chat = jsonDecode(value);
-      print('ID:${chat['id']}');
-      print('ID_SENDER:${chat['id_Sender']}');
-      print('ID_RECIEVER:${chat['id_Reciever']}');
-    });
-    requestAllChatsForUserID(1).then((value) {
-      //Map<String, dynamic> chat = jsonDecode(value);
-    });
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -194,8 +133,222 @@ class _UserInboxState extends State<Inbox> {
               ),
               child: Column(
                 children: <Widget>[
-                  Contacts(),
-                  Chats(),
+                  Column(children: <Widget>[
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Kontakti:",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              )),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 90.0,
+                      child: ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: contacts.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            Message chat = chats[index];
+                            return GestureDetector(
+                              onTap: () {
+                                if (chat.unread == true) {
+                                  chat.unread = false;
+                                }
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => ChatScreen(
+                                              user: contacts[
+                                                  index], //////////////ID
+                                            )));
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Column(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Container(
+                                          width: 50,
+                                          height: 50,
+                                          child: Image.network(
+                                            contacts[index].photoUrl,
+                                            fit: BoxFit.cover,
+                                          )),
+                                    ),
+                                    Text(
+                                      contacts[index].name,
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    )
+                  ]),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: ClipRRect(
+                        child: ListView.builder(
+                            itemCount: chats.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Message chat = chats[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  if (chat.unread == true) {
+                                    chat.unread = false;
+                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => ChatScreen(
+                                                user: chat
+                                                    .sender, /////////////////// ID
+                                              )));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: 5.0, bottom: 5.0, right: 5.0),
+                                  decoration: BoxDecoration(
+                                    gradient: chat.unread
+                                        ? LinearGradient(colors: <Color>[
+                                            Color(TEAL),
+                                            Color(MINT)
+                                          ])
+                                        : LinearGradient(colors: [
+                                            Colors.white,
+                                            Colors.white
+                                          ]),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              child: Image.network(
+                                                chat.sender.photoUrl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                chat.sender.name,
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: chat.unread
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.45,
+                                                child: Text(
+                                                  chat.text,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: chat.unread
+                                                        ? Colors.white
+                                                        : Color(DARK_GREY),
+                                                    fontSize: 16.0,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              chat.time,
+                                              style: TextStyle(
+                                                  fontFamily: 'Inter',
+                                                  color: chat.unread
+                                                      ? Color(LIGHT_GREY)
+                                                      : Colors.black,
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(height: 5.0),
+                                            chat.unread
+                                                ? Container(
+                                                    width: 100.0,
+                                                    height: 20.0,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(LIGHT_GREY),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.0)),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'NOVA PORUKA',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          color:
+                                                              Color(DARK_GREY),
+                                                          fontSize: 12.0),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink(),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

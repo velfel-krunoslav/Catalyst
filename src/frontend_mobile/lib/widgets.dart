@@ -821,79 +821,6 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
   }
 }
 
-class Contacts extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text("Kontakti:",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                )),
-            SizedBox(
-              height: 30,
-            ),
-          ],
-        ),
-      ),
-      Container(
-        height: 90.0,
-        child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            scrollDirection: Axis.horizontal,
-            itemCount: contacts.length,
-            itemBuilder: (BuildContext context, int index) {
-              Message chat = chats[index];
-              return GestureDetector(
-                onTap: () {
-                  if (chat.unread == true) {
-                    chat.unread = false;
-                  }
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => ChatScreen(
-                                user: contacts[index], //////////////ID
-                              )));
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
-                        child: Container(
-                            width: 50,
-                            height: 50,
-                            child: Image.network(
-                              contacts[index].photoUrl,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text(
-                        contacts[index].name,
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-      )
-    ]);
-  }
-}
-
 class CategoryEntry extends StatelessWidget {
   final String assetImagePath;
   final String categoryName;
@@ -938,153 +865,13 @@ class CategoryEntry extends StatelessWidget {
   }
 }
 
-class Chats extends StatefulWidget {
-  @override
-  _ChatsState createState() => _ChatsState();
-}
-
-class _ChatsState extends State<Chats> {
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: ClipRRect(
-          child: ListView.builder(
-              itemCount: chats.length,
-              itemBuilder: (BuildContext context, int index) {
-                Message chat = chats[index];
-                return GestureDetector(
-                  onTap: () {
-                    if (chat.unread == true) {
-                      chat.unread = false;
-                    }
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => ChatScreen(
-                                  user: chat.sender, /////////////////// ID
-                                )));
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
-                    decoration: BoxDecoration(
-                      gradient: chat.unread
-                          ? LinearGradient(
-                              colors: <Color>[Color(TEAL), Color(MINT)])
-                          : LinearGradient(
-                              colors: [Colors.white, Colors.white]),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10.0),
-                        bottomRight: Radius.circular(10.0),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: Image.network(
-                                  chat.sender.photoUrl,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  chat.sender.name,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: chat.unread
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  child: Text(
-                                    chat.text,
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: chat.unread
-                                          ? Colors.white
-                                          : Color(DARK_GREY),
-                                      fontSize: 16.0,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                chat.time,
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    color: chat.unread
-                                        ? Color(LIGHT_GREY)
-                                        : Colors.black,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 5.0),
-                              chat.unread
-                                  ? Container(
-                                      width: 100.0,
-                                      height: 20.0,
-                                      decoration: BoxDecoration(
-                                          color: Color(LIGHT_GREY),
-                                          borderRadius:
-                                              BorderRadius.circular(30.0)),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'NOVA PORUKA',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            color: Color(DARK_GREY),
-                                            fontSize: 12.0),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-        ),
-      ),
-    );
-  }
-}
-
 Widget HomeDrawer(
     BuildContext context,
     User user,
     void Function() refreshProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback,
-    VoidCallback initiateRefresh) {
+    VoidCallback initiateRefresh,
+    dynamic Function(int id) getUserById) {
   final sizer = getSizer();
   final size = MediaQuery.of(context).size;
   List<Widget> options = [
@@ -1177,7 +964,7 @@ Widget HomeDrawer(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Inbox()),
+            MaterialPageRoute(builder: (context) => Inbox(getUserById)),
           );
         },
         iconUrl: "assets/icons/Envelope.svg"),

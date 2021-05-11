@@ -100,13 +100,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       cartItemsCount--;
     });
   }
+
   @override
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
-    if (reg == true)
-      showWelcomeDialog();
+    if (reg == true) showWelcomeDialog();
   }
 
   void showInSnackBar(String value) {
@@ -127,8 +127,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           key: _scaffoldKey,
           drawer: usersModel.isLoading
               ? LinearProgressIndicator()
-              : HomeDrawer(context, usersModel.user, refreshProductsCallback,
-                  getProductByIdCallback, incrementCart), //TODO context
+              : HomeDrawer(
+                  context,
+                  usersModel.user,
+                  refreshProductsCallback,
+                  getProductByIdCallback,
+                  incrementCart,
+                  usersModel.getUserById), //TODO context
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
@@ -632,10 +637,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                      "...and allows you to save your favorite items as well as have "
-                      "access to other premium features. If you'd like to just "
-                      "browse blabla then click \"Enter "
-                      "without Login\".",
+                  "...and allows you to save your favorite items as well as have "
+                  "access to other premium features. If you'd like to just "
+                  "browse blabla then click \"Enter "
+                  "without Login\".",
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
@@ -649,7 +654,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   text: "U redu",
                   onPressed: () async {
                     SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     prefs.setString("firstTime", "set");
                     Navigator.of(context).pop();
                   },

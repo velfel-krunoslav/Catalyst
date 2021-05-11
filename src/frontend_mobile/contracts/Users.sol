@@ -23,7 +23,10 @@ contract Users {
 
         users[0] = User(0, "Petar", "Petrovic", "111111", "address1", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
         users[1] = User(1, "Marko", "Markovic", "222222", "address2", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
-        usersCount = 2;
+        users[2] = User(2, "Stevan", "Jakovljevic", "333333", "address3", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+        users[3] = User(3, "Janko", "Stevanovic", "444444", "address4", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "opis proizvodjaca", "email@gmail.com", "1351351351", "Novi sad", "2020-3-3", 1);
+
+        usersCount = 4;
     }
 
     function createUser(string memory _name,

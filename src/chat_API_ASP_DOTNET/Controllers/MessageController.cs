@@ -49,8 +49,8 @@ namespace SignalR_chat_API.Controllers
             }
 
         [HttpGet("GetAllMessagesFromChatID")]
-            public List<Message> GetAllMessagesFromChat(int messageChatID)
-            {
+        public List<Message> GetAllMessagesFromChat(int messageChatID)
+        {
             var chat = context.Messages.Where(x => x.ChatId == messageChatID).ToList();
 
             if (chat == null)
@@ -61,7 +61,22 @@ namespace SignalR_chat_API.Controllers
             {
                 return chat;
             }
+        }
+
+        [HttpGet("GetLatestMessageFromChatID")]
+        public Message GetLatestMessageFromSenderID(int chatID)
+        {
+            var result = context.Messages.Where(x => x.ChatId == chatID).OrderByDescending(x=>x.Timestamp).FirstOrDefault();
+
+            if (result == null)
+            {
+                return null;
             }
+            else
+            {
+                return result;
+            }
+        }
 
 
         [HttpPost("AddMessage")]
