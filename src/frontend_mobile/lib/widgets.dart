@@ -1022,7 +1022,13 @@ Widget HomeDrawer(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NotYetDelivered()),
+            MaterialPageRoute(
+                builder: (context) => new MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<OrdersModel>(
+                          create: (_) => OrdersModel(usr.id)),
+                    ],
+                    child: NotYetDelivered())),
           );
         },
         iconUrl: "assets/icons/Clock.svg"),

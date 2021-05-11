@@ -49,6 +49,12 @@ class ProductsModel extends ChangeNotifier {
     this.userId = id;
     initiateSetup();
   }
+  int productId;
+  ProductEntry product;
+  ProductsModel.forId(int id){
+    this.productId = id;
+    initiateSetup();
+  }
   List<ProductEntry> productsToDisplay = [];
   int productsToDisplayCount;
   ProductsModel.fromQuery(String query){
@@ -94,8 +100,12 @@ class ProductsModel extends ChangeNotifier {
     _getSellerProducts = _contract.function("getSellerProducts");
     _getQueryProducts = _contract.function("getQueryProducts");
     _getQueryProductsCount = _contract.function("getQueryProductsCount");
-
-    if (userId != null)
+    if (productId != null){
+      product = await getProductById(productId);
+      isLoading = false;
+      notifyListeners();
+    }
+    else if (userId != null)
       products = await getSellersProducts(userId);
     else if (query != null){
       getQueryProducts(query);
@@ -122,7 +132,7 @@ class ProductsModel extends ChangeNotifier {
         params: [query, totalProducts]);
     for (int i = queryProductsCount - 1; i >= 0; i--) {
       var t = temp[0][i];
-      print(t);
+      //print(t);
       queryProducts.add(ProductEntry(
           id: t[0].toInt(),
           name: t[1],
@@ -270,7 +280,7 @@ class ProductsModel extends ChangeNotifier {
   }
 
   getProductById(int id) async {
-    isLoading = true;
+
     var temp = await _client.call(
         contract: _contract,
         function: _getProductById,
@@ -285,7 +295,7 @@ class ProductsModel extends ChangeNotifier {
         quantifier: temp[6].toInt(),
         desc: temp[7],
         sellerId: temp[8].toInt());
-    isLoading = false;
+
     return product;
   }
 

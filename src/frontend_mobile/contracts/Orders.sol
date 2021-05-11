@@ -8,8 +8,8 @@ contract Orders{
         uint productId;
         uint amount;
         string date;
-        uint status;
-        uint buyerId;   //  pending, confirmed, delivered, refunded
+        uint status;    //  pending, confirmed, delivered, refunded
+        uint buyerId;
         uint sellerId;
         string deliveryAddress;
         uint paymentType; //    0 - placanje pouzecem //   1 - eterijum
@@ -70,6 +70,42 @@ contract Orders{
                 return true;
         }
         return false;
+    }
+
+    function getDeliveryOrders(uint _sellerId, uint totalOrders) public returns (Order[] memory){
+        uint countTemp = 0;
+        Order[] memory y = new Order[](totalOrders);
+        for (uint i= 0; i < ordersCount; i++) {
+            if (orders[i].sellerId == _sellerId){
+                y[countTemp++] = Order(orders[i].id,
+                    orders[i].productId,
+                    orders[i].amount,
+                    orders[i].date,
+                    orders[i].status,
+                    orders[i].buyerId,
+                    orders[i].sellerId,
+                    orders[i].deliveryAddress,
+                    orders[i].paymentType);
+            }
+        }
+        return y;
+    }
+    function getDeliveryOrdersCount(uint _sellerId) public returns (uint count){
+        uint countTemp = 0;
+        for (uint i= 0; i < ordersCount; i++) {
+            if (orders[i].sellerId == _sellerId){
+                countTemp++;
+            }
+        }
+        return countTemp;
+    }
+    function setStatus(uint _orderId, uint _status) public {
+        for (uint i= 0; i < ordersCount; i++) {
+            if (orders[i].id == _orderId){
+                orders[i].status = _status;
+                break;
+            }
+        }
     }
 
 }

@@ -322,7 +322,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
-            'Preporučeno',
+            this.query == "" ? 'Preporučeno' : 'Pretraga: \"${(this.query.length > 10) ? this.query.substring(0, 10) + '...' : this.query}\"',
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 28,
