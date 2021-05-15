@@ -13,6 +13,7 @@ import 'package:frontend_mobile/pages/product_entry_listing.dart';
 import 'package:frontend_mobile/pages/consumer_cart.dart';
 import 'package:frontend_mobile/pages/search_pages.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../internals.dart';
 import '../models/productsModel.dart';
 import '../sizer_helper.dart'
@@ -20,10 +21,10 @@ import '../sizer_helper.dart'
     if (dart.library.io) '../sizer_io.dart';
 
 class ConsumerHomePage extends StatefulWidget {
-  ConsumerHomePage();
-
+  bool reg = false;
+  ConsumerHomePage({this.reg});
   @override
-  _ConsumerHomePageState createState() => _ConsumerHomePageState();
+  _ConsumerHomePageState createState() => _ConsumerHomePageState(reg);
 }
 
 class _ConsumerHomePageState extends State<ConsumerHomePage> {
@@ -43,7 +44,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   CategoriesModel categoriesModel;
   UsersModel usersModel;
   int userID;
-  _ConsumerHomePageState();
+  bool reg;
+  _ConsumerHomePageState(this.reg);
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
     return await productsModel.getProductById(id);
@@ -98,12 +100,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       cartItemsCount--;
     });
   }
-
   @override
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
+    if (reg == true)
+      showWelcomeDialog();
   }
 
   void showInSnackBar(String value) {
@@ -123,7 +126,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         child: Scaffold(
           key: _scaffoldKey,
           drawer: usersModel.isLoading
-              ? CircularProgressIndicator()
+              ? LinearProgressIndicator()
               : HomeDrawer(context, usersModel.user, refreshProductsCallback,
                   getProductByIdCallback, incrementCart), //TODO context
           appBar: AppBar(
@@ -609,5 +612,53 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             );
           }
         })));
+  }
+
+  void showWelcomeDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => new AlertDialog(
+          title: Center(child: Text("Čestitamo")),
+          content: Container(
+            width: MediaQuery.of(context).size.width / 1.3,
+            height: MediaQuery.of(context).size.height / 2.5,
+            decoration: new BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: const Color(0xFFFFFF),
+              borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+            ),
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                      "...and allows you to save your favorite items as well as have "
+                      "access to other premium features. If you'd like to just "
+                      "browse blabla then click \"Enter "
+                      "without Login\".",
+                  maxLines: 6,
+                  overflow: TextOverflow.visible,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                    fontFamily: 'Inter',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                ButtonFill(
+                  text: "U redu",
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                    prefs.setString("firstTime", "set");
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

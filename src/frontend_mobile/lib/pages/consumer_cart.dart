@@ -421,7 +421,9 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                         child: FlatButton(
                                                           color:
                                                               Color(LIGHT_GREY),
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
                                                           child: Text('Primeni',
                                                               style: TextStyle(
                                                                   color: Color(

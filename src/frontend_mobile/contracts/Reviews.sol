@@ -18,8 +18,8 @@ contract Reviews{
     constructor() public{
 
         reviews[0] = Review(0, 0, 5, "Dobar proizvod", 1);
-        reviews[1] = Review(1, 0, 5, "Dobar proizvod", 2);
-        reviews[2] = Review(2, 0, 5, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ", 3);
+        reviews[1] = Review(1, 0, 5, "Dobar proizvod", 0);
+        reviews[2] = Review(2, 0, 5, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ", 0);
         reviews[3] = Review(3, 1, 5, "Dobar proizvod", 1);
         reviews[4] = Review(3, 1, 3, "Onako", 1);
         reviewsCount = 5;

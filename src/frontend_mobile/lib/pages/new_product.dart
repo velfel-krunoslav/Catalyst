@@ -426,7 +426,16 @@ class _NewProductState extends State<NewProduct> {
                                         borderRadius:
                                             BorderRadius.circular(5.0))))),
                       ],
-                    )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 12, 0, 0),
+                      child: Text(CURRENCY,
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Color(DARK_GREY))),
+                    ),
                   ],
                 ),
                 SizedBox(
