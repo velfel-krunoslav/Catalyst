@@ -53,7 +53,7 @@ class _SettingsState extends State<Settings> {
                 "Privatnost",
                 style: TextStyle(
                     color: Color(BLACK),
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
               ),
@@ -74,7 +74,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
-                            fontSize: 14)),
+                            fontSize: 16)),
                   ),
                 ],
               ),
@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
-                            fontSize: 14)),
+                            fontSize: 16)),
                   ),
                 ],
               ),
@@ -104,7 +104,7 @@ class _SettingsState extends State<Settings> {
                 "Pristupačnost",
                 style: TextStyle(
                     color: Color(BLACK),
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
               ),
@@ -125,7 +125,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
-                            fontSize: 14)),
+                            fontSize: 16)),
                   ),
                 ],
               ),
@@ -146,7 +146,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
-                            fontSize: 14)),
+                            fontSize: 16)),
                   ),
                 ],
               ),
@@ -155,7 +155,7 @@ class _SettingsState extends State<Settings> {
                 "Pretplate",
                 style: TextStyle(
                     color: Color(BLACK),
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
               ),
@@ -176,7 +176,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
-                            fontSize: 14)),
+                            fontSize: 16)),
                   ),
                 ],
               ),
