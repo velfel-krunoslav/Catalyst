@@ -4,8 +4,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
 import '../widgets.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
+  @override
+  _SettingsState createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
   bool _value = false;
+  bool _value1 = false;
+  bool _value2 = false;
+  bool _value3 = false;
+  bool _value4 = false;
+
   onSwitchValueChanged(bool value) {
     /*  setState(() {
       _value = value;
@@ -37,6 +47,7 @@ class Settings extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(45, 40, 45, 30),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Privatnost",
@@ -47,17 +58,19 @@ class Settings extends StatelessWidget {
                     fontWeight: FontWeight.w800),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
                       value: _value,
                       activeColor: Color(BLACK),
                       onChanged: (bool value) {
-                        stateSetter(() => onSwitchValueChanged(value));
+                        setState(() {
+                          _value = value;
+                        });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Ostanite prijavljeni:",
+                    child: Text("Ostanite prijavljeni",
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
@@ -66,17 +79,19 @@ class Settings extends StatelessWidget {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value,
+                      value: _value1,
                       activeColor: Color(BLACK),
                       onChanged: (bool value) {
-                        stateSetter(() => onSwitchValueChanged(value));
+                        setState(() {
+                          _value1 = value;
+                        });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Zatraži otključavanje ekrana:",
+                    child: Text("Zatraži otključavanje ekrana",
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
@@ -84,6 +99,7 @@ class Settings extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
               Text(
                 "Pristupačnost",
                 style: TextStyle(
@@ -93,17 +109,19 @@ class Settings extends StatelessWidget {
                     fontWeight: FontWeight.w800),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value,
+                      value: _value2,
                       activeColor: Color(BLACK),
                       onChanged: (bool value) {
-                        stateSetter(() => onSwitchValueChanged(value));
+                        setState(() {
+                          _value2 = value;
+                        });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Noćni režim:",
+                    child: Text("Noćni režim",
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
@@ -112,17 +130,19 @@ class Settings extends StatelessWidget {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value,
+                      value: _value3,
                       activeColor: Color(BLACK),
                       onChanged: (bool value) {
-                        stateSetter(() => onSwitchValueChanged(value));
+                        setState(() {
+                          _value3 = value;
+                        });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Režim visokog kontrasta:",
+                    child: Text("Režim visokog kontrasta",
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
@@ -130,6 +150,7 @@ class Settings extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
               Text(
                 "Pretplate",
                 style: TextStyle(
@@ -139,17 +160,19 @@ class Settings extends StatelessWidget {
                     fontWeight: FontWeight.w800),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value,
+                      value: _value4,
                       activeColor: Color(BLACK),
                       onChanged: (bool value) {
-                        stateSetter(() => onSwitchValueChanged(value));
+                        setState(() {
+                          _value4 = value;
+                        });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Prijavi me na bilten:",
+                    child: Text("Prijavi me na bilten",
                         style: TextStyle(
                             color: Color(BLACK),
                             fontFamily: 'Inter',
