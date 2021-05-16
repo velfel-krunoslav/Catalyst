@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:provider/provider.dart';
+import '../config.dart';
+import '../widgets.dart';
 
 class Inbox extends StatefulWidget {
   @override

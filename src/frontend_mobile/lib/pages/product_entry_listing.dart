@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
+import '../models/ordersModel.dart';
+import '../models/reviewsModel.dart';
+import '../models/usersModel.dart';
+import '../pages/product_reviews.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
     if (dart.library.io) '../sizer_io.dart';
-import 'package:frontend_mobile/widgets.dart';
+import '../widgets.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend_mobile/pages/inbox.dart';
+import '../pages/inbox.dart';
 import '../internals.dart';
 import '../config.dart';
 import 'inbox.dart';

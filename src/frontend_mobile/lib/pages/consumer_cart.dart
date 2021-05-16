@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/internals.dart';
+import '../config.dart';
+import '../models/ordersModel.dart';
+import '../widgets.dart';
+import '../internals.dart';
 import 'package:provider/provider.dart';
 import 'blank_page.dart';
 import '../models/productsModel.dart';
@@ -422,7 +422,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                           color:
                                                               Color(LIGHT_GREY),
                                                           onPressed: () {
-                                                            Navigator.pop(context);
+                                                            Navigator.pop(
+                                                                context);
                                                           },
                                                           child: Text('Primeni',
                                                               style: TextStyle(

@@ -1,4 +1,4 @@
-import 'package:frontend_mobile/sizer_helper.dart';
+import './sizer_helper.dart';
 
 abstract class Sizer {
   double getImageHeight();

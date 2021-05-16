@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/pages/login.dart';
+import '../config.dart';
+import '../models/categoriesModel.dart';
+import '../models/productsModel.dart';
+import '../models/usersModel.dart';
+import '../widgets.dart';
+import '../pages/login.dart';
 import 'package:provider/provider.dart';
 
 import '../internals.dart';
@@ -180,10 +180,10 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(width: 20),
                 Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Color(DARK_GREY)),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(5.0) //                 <--- border radius here
-                    ),
+                    border: Border.all(color: Color(DARK_GREY)),
+                    borderRadius: BorderRadius.all(Radius.circular(
+                            5.0) //                 <--- border radius here
+                        ),
                   ),
                   child: TextButton(
                     style: TextButton.styleFrom(
@@ -225,7 +225,8 @@ class _SignUpState extends State<SignUp> {
                                             ? DateTime.now()
                                             : _date,
                                         mode: CupertinoDatePickerMode.date,
-                                        onDateTimeChanged: (DateTime chosenDate) {
+                                        onDateTimeChanged:
+                                            (DateTime chosenDate) {
                                           setState(() {
                                             _date = chosenDate;
                                           });
@@ -408,16 +409,21 @@ class _SignUpState extends State<SignUp> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    new MultiProvider(providers: [
-                                      ChangeNotifierProvider<ProductsModel>(
-                                          create: (_) => ProductsModel()),
-                                      ChangeNotifierProvider<CategoriesModel>(
-                                          create: (_) => CategoriesModel()),
-                                      ChangeNotifierProvider<UsersModel>(
-                                          create: (_) => UsersModel(
-                                              private_key, metamask_address)),
-                                    ], child: ConsumerHomePage(reg: true,))),
+                                builder: (context) => new MultiProvider(
+                                        providers: [
+                                          ChangeNotifierProvider<ProductsModel>(
+                                              create: (_) => ProductsModel()),
+                                          ChangeNotifierProvider<
+                                                  CategoriesModel>(
+                                              create: (_) => CategoriesModel()),
+                                          ChangeNotifierProvider<UsersModel>(
+                                              create: (_) => UsersModel(
+                                                  private_key,
+                                                  metamask_address)),
+                                        ],
+                                        child: ConsumerHomePage(
+                                          reg: true,
+                                        ))),
                           );
                         });
                       } else {

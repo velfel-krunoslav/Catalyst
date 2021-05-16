@@ -2,19 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/pages/product_entry_listing.dart';
-import 'package:frontend_mobile/pages/consumer_cart.dart';
-import 'package:frontend_mobile/pages/search_pages.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../models/categoriesModel.dart';
+import '../models/ordersModel.dart';
+import '../models/reviewsModel.dart';
+import '../models/usersModel.dart';
+import '../widgets.dart';
+import '../pages/product_entry_listing.dart';
+import '../pages/consumer_cart.dart';
+import '../pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../internals.dart';
 import '../models/productsModel.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
@@ -100,13 +99,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       cartItemsCount--;
     });
   }
+
   @override
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
-    if (reg == true)
-      showWelcomeDialog();
+    if (reg == true) showWelcomeDialog();
   }
 
   void showInSnackBar(String value) {
@@ -632,10 +631,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                      "...and allows you to save your favorite items as well as have "
-                      "access to other premium features. If you'd like to just "
-                      "browse blabla then click \"Enter "
-                      "without Login\".",
+                  "...and allows you to save your favorite items as well as have "
+                  "access to other premium features. If you'd like to just "
+                  "browse blabla then click \"Enter "
+                  "without Login\".",
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
@@ -649,7 +648,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   text: "U redu",
                   onPressed: () async {
                     SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     prefs.setString("firstTime", "set");
                     Navigator.of(context).pop();
                   },

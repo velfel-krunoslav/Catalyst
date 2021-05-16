@@ -2,12 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import '../config.dart';
+import '../widgets.dart';
+import '../internals.dart';
 
 class NotYetDelivered extends StatefulWidget {
   @override

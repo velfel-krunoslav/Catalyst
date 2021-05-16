@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/pages/login.dart';
-import 'package:frontend_mobile/pages/sign_up.dart';
+import '../config.dart';
+import '../widgets.dart';
+import '../pages/login.dart';
+import '../pages/sign_up.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
+import '../models/usersModel.dart';
 
 class Welcome extends StatelessWidget {
   @override

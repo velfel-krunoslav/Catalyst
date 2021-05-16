@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
+import '../config.dart';
 import '../image_picker_helper.dart'
     if (dart.library.html) '../image_picker_web.dart'
     if (dart.library.io) '../image_picker_io.dart';

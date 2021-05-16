@@ -1,3 +1,3 @@
-import 'package:frontend_mobile/sizer.dart';
+import './sizer.dart';
 
 Sizer getSizer() => throw UnsupportedError('Greška');

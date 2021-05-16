@@ -3,10 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/pages/user_edit.dart';
-import 'package:frontend_mobile/widgets.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../pages/user_edit.dart';
 
 class MyAccount extends StatefulWidget {
   User user;

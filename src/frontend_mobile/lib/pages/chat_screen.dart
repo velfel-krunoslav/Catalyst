@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/pages/inbox.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../config.dart';
+import '../internals.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatUser user;

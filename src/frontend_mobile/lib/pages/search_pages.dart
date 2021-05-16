@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/widgets.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../widgets.dart';
 import '../internals.dart';
 
 class SearchPage extends StatefulWidget {

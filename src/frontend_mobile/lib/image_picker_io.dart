@@ -1,7 +1,6 @@
-import 'dart:io' as io;
 import 'dart:typed_data';
 
-import 'package:frontend_mobile/image_picker.dart' as ipm;
+import './image_picker.dart' as ipm;
 import 'package:image_picker/image_picker.dart' as ip;
 
 class ImagePickerMainIO implements ipm.ImagePickerMain {

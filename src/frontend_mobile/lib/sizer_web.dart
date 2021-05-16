@@ -1,4 +1,4 @@
-import 'package:frontend_mobile/sizer.dart';
+import './sizer.dart';
 
 class SizerWeb implements Sizer {
   double getImageHeight() {

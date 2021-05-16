@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
+import '../config.dart';
 
 import '../internals.dart';
 import '../widgets.dart';
@@ -105,7 +105,6 @@ class _HelpSupportState extends State<HelpSupport> {
                           fontSize: 16,
                           color: Color(DARK_GREY)))
                 ]),
-
                 SizedBox(height: 10),
                 TextField(
                   decoration: InputDecoration(

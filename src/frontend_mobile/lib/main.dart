@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
+import './config.dart';
+import './internals.dart';
+import './models/categoriesModel.dart';
+import './models/ordersModel.dart';
 
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:frontend_mobile/pages/welcome.dart';
+import './models/productsModel.dart';
+import './pages/consumer_home.dart';
+import './pages/welcome.dart';
 
 import 'package:provider/provider.dart';
 

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/pages/product_entry_listing.dart';
+import '../internals.dart';
+import '../models/ordersModel.dart';
+import '../models/reviewsModel.dart';
+import '../models/usersModel.dart';
+import '../pages/product_entry_listing.dart';
 import 'package:provider/provider.dart';
 
 import '../config.dart';
