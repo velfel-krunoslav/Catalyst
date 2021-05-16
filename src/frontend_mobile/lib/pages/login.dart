@@ -53,11 +53,24 @@ class Login extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 50.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text('MetaMask adresa',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 16,
+                  color: Color(DARK_GREY)
+                )
+              ),
+            ],
+          ),
+          SizedBox(height: 5.0),
           TextField(
             style: TextStyle(
                 color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
             decoration: InputDecoration(
-                hintText: 'MetaMask adresa',
+                //hintText: 'MetaMask adresa',
                 filled: true,
                 fillColor: Color(LIGHT_GREY),
                 border: OutlineInputBorder(
@@ -68,9 +81,22 @@ class Login extends StatelessWidget {
             },
           ),
           SizedBox(height: 20.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text('Privatni ključ',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 16,
+                  color: Color(DARK_GREY)
+                )
+              ),
+            ],
+          ),
+          SizedBox(height: 5.0),
           PasswordField((val) {
             privateKey = val;
-          }, 'Privatni ključ'),
+          }, ''),
           SizedBox(height: 20.0),
           ButtonFill(
             text: 'Prijavi se',

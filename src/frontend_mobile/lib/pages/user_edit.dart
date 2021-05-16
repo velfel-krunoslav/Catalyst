@@ -100,7 +100,7 @@ class _UserEdit extends State<UserEdit> {
                             ))
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
                     Row(
                       children: [
                         SizedBox(
@@ -118,7 +118,7 @@ class _UserEdit extends State<UserEdit> {
                                   fontFamily: 'Inter',
                                   fontSize: 16),
                               decoration: InputDecoration(
-                                hintText: 'Opis',
+                                //hintText: 'Opis',
                                 filled: true,
                                 fillColor: Color(LIGHT_GREY),
                                 border: OutlineInputBorder(
@@ -139,7 +139,7 @@ class _UserEdit extends State<UserEdit> {
                             ))
                       ],
                     ),
-                    SizedBox(height: 10),
+                  SizedBox(height: 5),
                     Row(
                       children: [
                         SizedBox(
@@ -157,7 +157,7 @@ class _UserEdit extends State<UserEdit> {
                                   fontFamily: 'Inter',
                                   fontSize: 16),
                               decoration: InputDecoration(
-                                hintText: 'E-mail',
+                                //hintText: 'E-mail',
                                 filled: true,
                                 fillColor: Color(LIGHT_GREY),
                                 border: OutlineInputBorder(
@@ -178,7 +178,7 @@ class _UserEdit extends State<UserEdit> {
                             ))
                       ],
                     ),
-                    SizedBox(height: 10),
+                  SizedBox(height: 5),
                     Row(
                       children: [
                         SizedBox(
@@ -196,7 +196,7 @@ class _UserEdit extends State<UserEdit> {
                                   fontFamily: 'Inter',
                                   fontSize: 16),
                               decoration: InputDecoration(
-                                hintText: 'Broj telefona',
+                                //hintText: 'Broj telefona',
                                 filled: true,
                                 fillColor: Color(LIGHT_GREY),
                                 border: OutlineInputBorder(
@@ -217,7 +217,7 @@ class _UserEdit extends State<UserEdit> {
                             ))
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
                     Row(
                       children: [
                         SizedBox(
@@ -235,7 +235,7 @@ class _UserEdit extends State<UserEdit> {
                                   fontFamily: 'Inter',
                                   fontSize: 16),
                               decoration: InputDecoration(
-                                hintText: 'Adresa',
+                                //hintText: 'Adresa',
                                 filled: true,
                                 fillColor: Color(LIGHT_GREY),
                                 border: OutlineInputBorder(

@@ -42,6 +42,17 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Registrujte se',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: Color(DARK_GREY))),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
         body: Center(
             child: SingleChildScrollView(
                 child: Container(
@@ -50,13 +61,20 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
                       ),
-                      Text('Registrujte se',
-                          style: TextStyle(
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Ime',
+                            style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                              color: Color(DARK_GREY))),
-                      SizedBox(height: 20),
+                              fontSize: 16,
+                              color: Color(DARK_GREY)
+                            )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -70,7 +88,7 @@ class _SignUpState extends State<SignUp> {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                            hintText: 'Ime',
+                            //hintText: 'Ime',
                             filled: true,
                             fillColor: Color(LIGHT_GREY),
                             border: OutlineInputBorder(
@@ -80,6 +98,19 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Prezime',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -93,7 +124,7 @@ class _SignUpState extends State<SignUp> {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                            hintText: 'Prezime',
+                            //hintText: 'Prezime',
                             filled: true,
                             fillColor: Color(LIGHT_GREY),
                             border: OutlineInputBorder(
@@ -103,6 +134,19 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Datum rođenja',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       Row(children: [
                         Flexible(
                             child: TextField(
@@ -116,7 +160,7 @@ class _SignUpState extends State<SignUp> {
                           readOnly: true,
                           decoration: InputDecoration(
                             hintText: (_date == null)
-                                ? 'Datum rođenja'
+                                ? ''
                                 : _date.day.toString() +
                                     '.' +
                                     _date.month.toString() +
@@ -208,6 +252,19 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ]),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Broj telefona',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -221,7 +278,7 @@ class _SignUpState extends State<SignUp> {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                            hintText: 'Broj telefona',
+                            //hintText: 'Broj telefona',
                             filled: true,
                             fillColor: Color(LIGHT_GREY),
                             border: OutlineInputBorder(
@@ -231,6 +288,19 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('E-mail adresa',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       Container(
                         height: 50.0,
                         child: TextField(
@@ -244,7 +314,7 @@ class _SignUpState extends State<SignUp> {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                            hintText: 'E-mail',
+                            //hintText: 'E-mail',
                             filled: true,
                             fillColor: Color(LIGHT_GREY),
                             border: OutlineInputBorder(
@@ -254,6 +324,19 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('MetaMask adresa',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       TextField(
                           onChanged: (value) {
                             setState(() {
@@ -265,16 +348,29 @@ class _SignUpState extends State<SignUp> {
                               fontFamily: 'Inter',
                               fontSize: 16),
                           decoration: InputDecoration(
-                              hintText: 'MetaMask adresa',
+                              //hintText: 'MetaMask adresa',
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                   borderRadius: BorderRadius.circular(5.0)))),
                       SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Privatni ključ',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16,
+                                  color: Color(DARK_GREY)
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
                       PasswordField((val) {
                         private_key = val;
-                      }, 'Privatni ključ'),
+                      }, ''),
                       SizedBox(height: 20.0),
                       ButtonFill(
                         text: 'Registruj se',
@@ -369,7 +465,8 @@ class _SignUpState extends State<SignUp> {
                                   color: Color(DARK_GREY),
                                   fontSize: 16))
                         ],
-                      )
+                      ),
+                      SizedBox(height: 20)
                     ])))));
   }
 }
