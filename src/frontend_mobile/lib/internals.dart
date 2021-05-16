@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:frontend_mobile/config.dart';
@@ -38,6 +37,7 @@ Future<String> requestAllMessagesFromChat(int chatID) async {
 Future<String> asyncFileUpload(Uint8List contents) async {
   var request = http.MultipartRequest(
       'POST', Uri.parse('https://ipfs.infura.io:5001/api/v0/add'));
+  // ignore: await_only_futures
   var pic = await http.MultipartFile.fromBytes('file', contents);
   request.files.add(pic);
   var response = await request.send();
@@ -408,6 +408,11 @@ class ChatMessageInfo {
     this.timestamp,
     this.statusRead,
   });
+
+  @override
+  String toString() {
+    return '[${this.id},${this.chatId},${this.fromId},${this.messageText},${this.timestamp},${this.statusRead}]';
+  }
 
   int id;
   int chatId;

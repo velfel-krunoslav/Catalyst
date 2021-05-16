@@ -1,4 +1,3 @@
-import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:frontend_mobile/image_picker.dart' as ipm;

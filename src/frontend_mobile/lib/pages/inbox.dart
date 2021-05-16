@@ -16,8 +16,12 @@ class ChatUser {
   int id;
   String name;
   String photoUrl;
-
   ChatUser({this.id, this.name, this.photoUrl});
+
+  @override
+  String toString() {
+    return '[${this.id}, ${this.name}, ${this.photoUrl}]';
+  }
 }
 
 class Message {
@@ -27,6 +31,11 @@ class Message {
   bool unread;
 
   Message({this.sender, this.time, this.text, this.unread});
+
+  @override
+  String toString() {
+    return '[${this.sender}, ${this.time}, ${this.text}, ${this.unread}]';
+  }
 }
 
 class ChatMessage {
@@ -50,7 +59,6 @@ class _UserInboxState extends State<Inbox> {
     this.getUserById = getUserById;
   }
   List<User> allUsers = [];
-
   List<ChatUser> contacts = [];
   List<Message> chats = [];
 
@@ -58,54 +66,70 @@ class _UserInboxState extends State<Inbox> {
   void initState() {
     super.initState();
     requestGetChat(usr.id).then((rawData) {
-      List<int> partner_ids = [];
-      List<int> chat_ids = [];
+      List<int> partnerIDs = [];
+      List<int> chatIDs = [];
       List<ChatInfo> chatInfo = [];
       var tmp = jsonDecode(rawData);
       for (var t in tmp) {
         chatInfo.add(ChatInfo.fromJson(t));
       }
       for (var chat in chatInfo) {
-        partner_ids
+        partnerIDs
             .add((chat.idReciever != usr.id) ? chat.idReciever : chat.idSender);
-        chat_ids.add(chat.id);
+        chatIDs.add(chat.id);
       }
 
-      for (int p in partner_ids) {
-        getUserById(p).then((userRawData) {
-          // TODO NASTAVITI OVDJE
-          print('********** IME : ${userRawData.name}');
-          allUsers.add(userRawData);
-          contacts.add(ChatUser(
+      for (int index = 0; index < partnerIDs.length; index++) {
+        getUserById(partnerIDs[index]).then((userRawData) {
+          ChatUser tmpchatuser = ChatUser(
               id: userRawData.id,
               name: '${userRawData.name} ${userRawData.surname}',
-              photoUrl: userRawData.photoUrl));
-          print('C O N T A C T S      I T E M ${userRawData.id}');
-        });
-      }
+              photoUrl: userRawData.photoUrl);
 
-      for (int i = 0; i < chat_ids.length; i++) {
-        requestLatestMessageFromChat(chat_ids[i]).then((value) {
+          allUsers.add(userRawData);
+          contacts.add(tmpchatuser);
+          print('TMPCHATUSER $tmpchatuser');
+
           print(
-              'requestLatestMessageFromChat RESPONSE ${chat_ids[i]} = $value');
-          var msg = ChatMessageInfo.fromJson(jsonDecode(value));
+              'ID_LEN: ${chatIDs.length} |||| CONTACTS_LEN: ${contacts.length} ');
+          requestLatestMessageFromChat(chatIDs[index]).then((value) {
+            var msg = ChatMessageInfo.fromJson(jsonDecode(value));
+            Message tmpmsg = Message(
+                sender: contacts[index],
+                time: (msg.timestamp.year == now.year &&
+                        msg.timestamp.month == now.month &&
+                        msg.timestamp.day == now.day)
+                    ? '${msg.timestamp.hour}:${msg.timestamp.minute}'
+                    : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
+                text: msg.messageText,
+                unread: msg.statusRead);
+            chats.add(tmpmsg);
+            requestLatestMessageFromChat(chatIDs[index]).then((value) {
+              var msg = ChatMessageInfo.fromJson(jsonDecode(value));
+              Message tmpmsg = Message(
+                  sender: contacts[index],
+                  time: (msg.timestamp.year == now.year &&
+                          msg.timestamp.month == now.month &&
+                          msg.timestamp.day == now.day)
+                      ? '${msg.timestamp.hour}:${msg.timestamp.minute}'
+                      : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
+                  text: msg.messageText,
+                  unread: msg.statusRead);
 
-          chats.add(Message(
-              sender: contacts[i],
-              time: (msg.timestamp.year == now.year &&
-                      msg.timestamp.month == now.month &&
-                      msg.timestamp.day == now.day)
-                  ? '${msg.timestamp.hour}:${msg.timestamp.minute}'
-                  : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
-              text: msg.messageText,
-              unread: msg.statusRead));
+              chats.add(tmpmsg);
+            });
+          });
         });
       }
+      print('CHAT IDS: $chatIDs');
+      print('CONTACTS: $contacts');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print('CHATS LENGTH: ${chats.length}');
+    print('CONTACTS LENGTH: ${contacts.length}');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -154,53 +178,59 @@ class _UserInboxState extends State<Inbox> {
                       ),
                     ),
                     Container(
-                      height: 90.0,
-                      child: ListView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: contacts.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Message chat = chats[index];
-                            return GestureDetector(
-                              onTap: () {
-                                if (chat.unread == true) {
-                                  chat.unread = false;
-                                }
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => ChatScreen(
-                                              user: contacts[
-                                                  index], //////////////ID
-                                            )));
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: Container(
-                                          width: 50,
-                                          height: 50,
-                                          child: Image.network(
-                                            contacts[index].photoUrl,
-                                            fit: BoxFit.cover,
-                                          )),
+                        height: 90.0,
+                        child: (contacts.length == 0 ||
+                                (contacts.length != chats.length))
+                            ? Container(
+                                width: 20,
+                                height: 20,
+                                color: Colors.red,
+                              )
+                            : Column(
+                                children:
+                                    List.generate(contacts.length, (index) {
+                                Message chat = chats[index];
+                                print("ALOEEE ${chats[index].text}");
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (chat.unread == true) {
+                                      chat.unread = false;
+                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => ChatScreen(
+                                                  user: contacts[
+                                                      index], //////////////ID
+                                                )));
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          child: Container(
+                                              width: 50,
+                                              height: 50,
+                                              child: Image.network(
+                                                contacts[index].photoUrl,
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        Text(
+                                          contacts[index].name,
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      contacts[index].name,
-                                      style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                    )
+                                  ),
+                                );
+                              })))
                   ]),
                   Expanded(
                     child: Container(
