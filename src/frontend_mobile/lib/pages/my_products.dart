@@ -43,6 +43,7 @@ class _MyProductsState extends State<MyProducts> {
             sellerId, categoryId)
         .then((v) {
       refreshProductsCallback();
+      showInSnackBar("Proizvod je uspešno dodat");
     });
   }
 
@@ -86,7 +87,7 @@ class _MyProductsState extends State<MyProducts> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        NewProduct(addProductCallback2, showInSnackBar)),
+                        NewProduct(addProductCallback2)),
               );
             },
             iconPath: "assets/icons/PlusCircle.svg",

@@ -148,19 +148,29 @@ class _DateOrdersState extends State<DateOrders> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w800,
                                             color: Color(BLACK))),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
+                                    SizedBox(height: 5,),
                                     Text(
                                         products[index]
                                                 .price
                                                 .toStringAsFixed(2) +
-                                            " €",
+                                            CURRENCY,
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 16,
                                             color: Color(DARK_GREY))),
-                                    SizedBox(height: 24),
+                                    SizedBox(height: 5,),
+                                    Text(
+                                        dateOrder.orders[index].status == 0 ? "Na čekanju" :
+                                        (dateOrder.orders[index].status == 1 ? "Potvrđeno" :
+                                        (dateOrder.orders[index].status == 2 ? "Isporučeno" : "Refundirano")
+                                        ),
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: Color(DARK_GREY)),
+                                    ),
+                                    SizedBox(height: 5,),
                                     Text('Stranica proizvoda ->',
                                         style: TextStyle(
                                             fontFamily: 'Inter',

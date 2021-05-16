@@ -371,8 +371,12 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2) +
-                                ' €' +
+                      product.price.toStringAsFixed(2).length + product.quantifier.toString().length > 8 ?
+                      (product.price.toStringAsFixed(2) + CURRENCY)
+                      :
+
+                      (   product.price.toStringAsFixed(2) +
+                                CURRENCY +
                                 ' (' +
                                 product.quantifier.toString() +
                                 ' ' +
@@ -383,7 +387,7 @@ class ProductEntryCard extends GestureDetector {
                                             Classification.Weight)
                                         ? 'gr'
                                         : 'kom')) +
-                                ')',
+                                ')' ),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
@@ -450,7 +454,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       product.price.toStringAsFixed(2) +
-                          ' €' +
+                          CURRENCY +
                           ' (' +
                           product.quantifier.toString() +
                           ' ' +

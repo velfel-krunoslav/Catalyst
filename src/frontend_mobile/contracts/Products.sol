@@ -44,7 +44,6 @@ contract Products{
 
         if (_classif > 2)
             _classif = 0;
-
         products[productsCount++] = Product(productsCount, _productName, _price_nominator, _price_denominator, _assetUrls, _classif, _quantifier, _desc, _sellerId, _categoryId);
         emit ProductCreated(_productName, productsCount - 1);
 

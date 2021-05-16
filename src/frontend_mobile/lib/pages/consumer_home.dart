@@ -125,6 +125,20 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
+          floatingActionButton: Container(
+            height: 70.0,
+            width: 70.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Add your onPressed code here!
+                },
+                child: SvgPicture.asset('assets/icons/Filters.svg',
+                    width: 24, height: 24),
+                backgroundColor: Color(LIGHT_GREY),
+              ),
+            ),
+          ),
           key: _scaffoldKey,
           drawer: usersModel.isLoading
               ? LinearProgressIndicator()
@@ -630,7 +644,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => new AlertDialog(
-          title: Center(child: Text("Čestitamo")),
+          title: Center(child: Text("Uspešna registracija")),
           content: Container(
             width: MediaQuery.of(context).size.width / 1.3,
             height: MediaQuery.of(context).size.height / 2.5,

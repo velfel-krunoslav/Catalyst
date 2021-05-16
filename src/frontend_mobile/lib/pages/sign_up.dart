@@ -180,7 +180,6 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(width: 20),
                 Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Color(DARK_GREY)),
                     borderRadius: BorderRadius.all(
                         Radius.circular(5.0) //                 <--- border radius here
                     ),

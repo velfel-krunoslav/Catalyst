@@ -226,6 +226,8 @@ class CartProduct {
   String name;
   double price;
   int cartQuantity, id, vendorId;
+  Classification classification;
+  int quantifier;
 
   CartProduct(
       {this.id,
@@ -233,7 +235,9 @@ class CartProduct {
       this.photoUrl,
       this.name,
       this.price,
-      this.cartQuantity});
+      this.cartQuantity,
+      this.classification,
+      this.quantifier});
 }
 
 class UserReview extends User {

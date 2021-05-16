@@ -13,12 +13,12 @@ import '../internals.dart';
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
-  Function showInSnackBar;
-  NewProduct(this.addProductCallback, this.showInSnackBar);
+
+  NewProduct(this.addProductCallback);
 
   @override
   _NewProductState createState() =>
-      _NewProductState(this.addProductCallback, this.showInSnackBar);
+      _NewProductState(this.addProductCallback);
 }
 
 List<Uint8List> images = [];
@@ -53,15 +53,21 @@ List<Category> categories = [
 ];
 
 class _NewProductState extends State<NewProduct> {
+  static GlobalKey<ScaffoldState> _scaffoldKey;
   Function addProductCallback;
-  Function showInSnackBar;
-  _NewProductState(this.addProductCallback, this.showInSnackBar);
+  _NewProductState(this.addProductCallback);
   bool isSetUnit = true;
   bool isSetCategory = true;
   bool isSetImages = true;
   @override
+  void initState() {
+    super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
             title: Text('Novi proizvod',
                 style: TextStyle(
@@ -468,13 +474,15 @@ class _NewProductState extends State<NewProduct> {
                             imagePicker.getImage().then((bytes) {
                               setState(() {
                                 images.add(bytes);
+                                imgCount++;
                               });
                               asyncFileUpload(bytes).then((value) {
                                 imagesUrls.add('https://ipfs.io/ipfs/$value');
                               });
                             });
                           } else {
-                            // TODO WARN THAT MAX NO. OF IMAGES EXCEEDED
+                            _scaffoldKey.currentState
+                                .showSnackBar(new SnackBar(content: new Text("Ne možete postaviti više od 3 fotografije")));
                           }
                         }),
                     SizedBox(width: 10),
@@ -550,7 +558,6 @@ class _NewProductState extends State<NewProduct> {
                               description,
                               usr.id,
                               selectedCategory.id);
-                          showInSnackBar("Proizvod je uspešno dodat");
                           Navigator.pop(context);
                         }
                       }),

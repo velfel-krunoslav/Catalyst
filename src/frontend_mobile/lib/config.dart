@@ -18,7 +18,7 @@ const double INSET_ICON_SIZE = 24;
 const double BUTTON_HEIGHT = 60;
 const double PRODUCT_ENTRY_HEIGHT = 200;
 const double CATEGORY_HEIGHT = 126;
-const String CURRENCY = '€';
+const String CURRENCY = ' RSD';
 const double REVIEW_BAR_WIDTH_PERCENT = 0.64;
 
 /* GLOBALS: */

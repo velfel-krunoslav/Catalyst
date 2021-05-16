@@ -51,6 +51,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
     this._data = _data;
     this.refreshInitiator = refreshInitiator;
   }
+  bool toggle = false;
   @override
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
@@ -144,7 +145,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         Text(
                           _data.price.toStringAsFixed(2) +
-                              ' €' +
+                              CURRENCY +
                               ' (' +
                               _data.quantifier.toString() +
                               ' ' +
@@ -448,8 +449,19 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         backgroundColor: Colors.white,
                         minimumSize: Size(36, 36))),
                 Spacer(),
-                TextButton(
-                    onPressed: () {},
+                (_data.vendor.id != usr.id) ? Container() : TextButton(
+                    onPressed: () {
+                      if (toggle == false){
+                        setState(() {
+                          toggle = true;
+                        });
+                      }
+                      else{
+                        setState(() {
+                          toggle = false;
+                        });
+                      }
+                    },
                     child: SvgPicture.asset(
                         'assets/icons/DotsThreeVertical.svg',
                         color: Colors.black),
@@ -459,10 +471,64 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                 SizedBox(width: 20),
               ],
             ),
+            toggle ? Material(
+              color: Color(0x00000000),
+              child: Row(
+                children: [
+                  Spacer(),
+                  Container(
+                      width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 18,),
+                        DropdownOption(
+                          text: "Postavi na akciju",
+                        onPressed: (){},
+                        ),
+                        DropdownOption(
+                          text: "Ukloni proizvod",
+                          onPressed: (){},
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                ],
+              ),
+            ) : Container()
           ],
         ),
       ],
     )));
+  }
+}
+class DropdownOption extends StatelessWidget {
+  Function onPressed;
+  String text;
+  DropdownOption({this.text, this.onPressed});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+          child: InkWell(
+            onTap: onPressed,
+            child: Text(text,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 17,),
+            ),
+          ),
+        ),
+        SizedBox(height: 18,)
+      ],
+    );
   }
 }
 
