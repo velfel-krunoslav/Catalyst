@@ -10,6 +10,27 @@ import 'package:http/http.dart' as http;
 
 User usr;
 
+Future<String> requestChatID(int userID1, int userID2) async {
+  var queryParameters = {
+    'UserID1': userID1.toString(),
+    'UserID2': userID2.toString()
+  };
+  var uri = Uri.http(
+      '192.168.1.3:3000', '/Chat/GetChatBetweenUsers', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+void setMessageReadStatus(int id, bool readStatus) async {
+  var queryParameters = {
+    'IDMessage': id.toString(),
+    'status': readStatus.toString()
+  };
+  var uri = Uri.http(
+      '192.168.1.3:3000', '/Message/ChangeStatusRead', queryParameters);
+  await http.get(uri);
+}
+
 Future<String> requestGetChat(int id) async {
   var queryParameters = {'id': id.toString()};
   var uri =

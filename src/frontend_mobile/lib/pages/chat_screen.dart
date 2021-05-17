@@ -11,30 +11,31 @@ import 'package:frontend_mobile/internals.dart';
 class ChatScreen extends StatefulWidget {
   ChatUser user;
   int chatID;
-  int currentUserID;
   ChatScreen({this.user, this.chatID});
 
   @override
   _ChatScreenState createState() =>
-      _ChatScreenState(this.user, this.chatID, this.currentUserID);
+      _ChatScreenState(user: this.user, chatID: this.chatID);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   ChatUser user;
   int chatID;
-  int currentUserID;
   List<Message> messages = [];
+
+  _ChatScreenState({this.user, this.chatID});
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      requestAllMessagesFromChat(chatID).then((value) {
-        var tmp = jsonDecode(value);
-        for (var t in tmp) {
-          var u = ChatMessageInfo.fromJson(t);
+    requestAllMessagesFromChat(chatID).then((value) {
+      var tmp = jsonDecode(value);
+
+      for (var t in tmp) {
+        ChatMessageInfo u = ChatMessageInfo.fromJson(t);
+        setState(() {
           messages.add(Message(
-              sender: user,
+              senderID: u.fromId,
               time: (u.timestamp.year == now.year &&
                       u.timestamp.month == now.month &&
                       u.timestamp.day == now.day)
@@ -42,12 +43,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   : '${u.timestamp.day}.${u.timestamp.month}.${u.timestamp.year}.',
               text: u.messageText,
               unread: u.statusRead));
-        }
-      });
+        });
+      }
     });
   }
 
-  _ChatScreenState(this.user, this.chatID, this.currentUserID);
   _buildChat(Message message, bool isMe) {
     var size = MediaQuery.of(context).size;
     return Container(
@@ -152,9 +152,14 @@ class _ChatScreenState extends State<ChatScreen> {
           height: 85,
           child: Column(
             children: [
-              CircleAvatar(
-                radius: 30.0,
-                backgroundImage: AssetImage(widget.user.photoUrl),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  color: Colors.black,
+                  width: 60,
+                  height: 60,
+                  child: Image.network(widget.user.photoUrl),
+                ),
               ),
               Text(
                 widget.user.name,
@@ -185,7 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemCount: messages.length,
                         itemBuilder: (BuildContext context, int index) {
                           final Message message = messages[index];
-                          final bool isMe = message.sender.id == currentUserID;
+                          final bool isMe = message.senderID == user.id;
                           return _buildChat(message, isMe);
                         }),
                   )),

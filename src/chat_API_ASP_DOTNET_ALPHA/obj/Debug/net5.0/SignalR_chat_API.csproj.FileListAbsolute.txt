@@ -1,0 +1,312 @@
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\appsettings.json
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.exe
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.deps.json
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.json
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.dev.json
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.Views.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.OpenApi.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfoInputs.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfo.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.csproj.CoreCompileInputs.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.Manifest.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.xml
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\scopedcss\bundle\SignalR_chat_API.styles.css
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.input.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.output.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.RazorCoreGenerate.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cs
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.csproj.CopyComplete
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.genruntimeconfig.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Humanizer.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\libman.json
+C:\Users\97ste\Desktop\SignalR_chat_API\obj\Debug\net5.0\SignalR_chat_API.csprojAssemblyReference.cache
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\97ste\Desktop\SignalR_chat_API\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\appsettings.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\libman.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.exe
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.deps.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.dev.json
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Humanizer.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Microsoft.OpenApi.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.csprojAssemblyReference.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfoInputs.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CoreCompileInputs.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.Manifest.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.xml
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\scopedcss\bundle\SignalR_chat_API.styles.css
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.input.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.output.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorCoreGenerate.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CopyComplete
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\chat_API_ASP DOTNET\obj\Debug\net5.0\SignalR_chat_API.genruntimeconfig.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\appsettings.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\libman.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.exe
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.deps.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.dev.json
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Humanizer.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.OpenApi.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csprojAssemblyReference.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfoInputs.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CoreCompileInputs.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.Manifest.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.xml
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\scopedcss\bundle\SignalR_chat_API.styles.css
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.input.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.output.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorCoreGenerate.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cache
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cs
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CopyComplete
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.genruntimeconfig.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\appsettings.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\libman.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.exe
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.deps.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.runtimeconfig.dev.json
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Humanizer.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Microsoft.OpenApi.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csprojAssemblyReference.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfoInputs.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.AssemblyInfo.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CoreCompileInputs.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorAssemblyInfo.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.Manifest.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\staticwebassets\SignalR_chat_API.StaticWebAssets.xml
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\scopedcss\bundle\SignalR_chat_API.styles.css
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.input.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.TagHelpers.output.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorCoreGenerate.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cache
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.RazorTargetAssemblyInfo.cs
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.Views.pdb
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.csproj.CopyComplete
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\ref\SignalR_chat_API.dll
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.pdb
+C:\Users\97ste\Desktop\Catalyst\src\chat_API_ASP_DOTNET\obj\Debug\net5.0\SignalR_chat_API.genruntimeconfig.cache
