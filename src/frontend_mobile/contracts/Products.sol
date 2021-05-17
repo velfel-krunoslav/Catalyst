@@ -8,6 +8,7 @@ contract Products{
         string name;
         uint price_numerator;
         uint price_denominator;
+        uint discount_percentage;
         string assetUrls;
         uint classification;
         uint quantifier;
@@ -23,28 +24,28 @@ contract Products{
 
     constructor() public{
 
-        products[0] = Product(0, "Domaći med", 50, 3, "https://ipfs.io/ipfs/QmVB38abDTVj5FU1GTbW6k2QhDB8FHxYqhBHwFTrix78Bw", 1, 750,
+        products[0] = Product(0, "Domaći med", 50, 3, 0, "https://ipfs.io/ipfs/QmVB38abDTVj5FU1GTbW6k2QhDB8FHxYqhBHwFTrix78Bw", 1, 750,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,9);
-        products[1] = Product(1, "Pasirani paradajz", 43, 3, "https://ipfs.io/ipfs/QmSGWhMdUK9YXdfZBP6gKQozXxqBe4mcdSuhusPbVyZTCx", 1, 500,
+        products[1] = Product(1, "Pasirani paradajz", 43, 3, 20, "https://ipfs.io/ipfs/QmSGWhMdUK9YXdfZBP6gKQozXxqBe4mcdSuhusPbVyZTCx", 1, 500,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,3);
-        products[2] = Product(2, "Maslinovo ulje", 77, 3, "https://ipfs.io/ipfs/QmRsZYboEhSYCGZCBiERvKCfEEBEBWxYm6FUNHg2oryKZk", 1, 750,
+        products[2] = Product(2, "Maslinovo ulje", 77, 3, 0, "https://ipfs.io/ipfs/QmRsZYboEhSYCGZCBiERvKCfEEBEBWxYm6FUNHg2oryKZk", 1, 750,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,9);
-        products[3] = Product(3, "Pršut", 154, 3, "https://ipfs.io/ipfs/QmXd1VwfEJWea1TL62q9btikLypcwCf7VTB46HLYx7EsuQ", 1, 234,
+        products[3] = Product(3, "Pršut", 154, 3, 0, "https://ipfs.io/ipfs/QmXd1VwfEJWea1TL62q9btikLypcwCf7VTB46HLYx7EsuQ", 1, 234,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,1);
-        products[4] = Product(4, "Rakija", 98, 3, "https://ipfs.io/ipfs/Qmb1tVQBXnQeeaQdSoMHjTRBWnGuwGnsWqJg97LdvkkFzS", 2, 1000,
+        products[4] = Product(4, "Rakija", 98, 3, 0, "https://ipfs.io/ipfs/Qmb1tVQBXnQeeaQdSoMHjTRBWnGuwGnsWqJg97LdvkkFzS", 2, 1000,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,5);
-        products[5] = Product(5, "Kobasica", 74, 3, "https://ipfs.io/ipfs/QmRxCijtUoMGDP7vdff1r74DYPhhGhdemtkht5R39pGxzC", 1, 1000,
+        products[5] = Product(5, "Kobasica", 74, 3, 0, "https://ipfs.io/ipfs/QmRxCijtUoMGDP7vdff1r74DYPhhGhdemtkht5R39pGxzC", 1, 1000,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,1);
-        products[6] = Product(6, "Kamamber", 54,3, "https://ipfs.io/ipfs/QmWWrpbQgUB6LddC4UdZFgC6JPJcv52Sot7fAJjvsqcXgE", 1, 500,
+        products[6] = Product(6, "Kamamber", 54, 3, 0, "https://ipfs.io/ipfs/QmWWrpbQgUB6LddC4UdZFgC6JPJcv52Sot7fAJjvsqcXgE", 1, 500,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,2);
         productsCount = 7;
     }
 
-    function createProduct(string memory _productName, uint _price_nominator, uint _price_denominator, string memory _assetUrls, uint _classif, uint _quantifier, string memory _desc, uint _sellerId, uint _categoryId) public{
+    function createProduct(string memory _productName, uint _price_nominator, uint _price_denominator, uint _discount_percentage, string memory _assetUrls, uint _classif, uint _quantifier, string memory _desc, uint _sellerId, uint _categoryId) public{
 
         if (_classif > 2)
             _classif = 0;
-        products[productsCount++] = Product(productsCount, _productName, _price_nominator, _price_denominator, _assetUrls, _classif, _quantifier, _desc, _sellerId, _categoryId);
+        products[productsCount++] = Product(productsCount, _productName, _price_nominator, _price_denominator, _discount_percentage, _assetUrls, _classif, _quantifier, _desc, _sellerId, _categoryId);
         emit ProductCreated(_productName, productsCount - 1);
 
     }
@@ -54,14 +55,15 @@ contract Products{
         for (uint i= 0; i < productsCount; i++) {
             if (products[i].categoryId == category){
                 y[count++] = Product(products[i].id,
-                products[i].name,
-                products[i].price_numerator,
-                products[i].price_denominator,
-                products[i].assetUrls,
-                products[i].classification,
-                products[i].quantifier,
-                products[i].decs,
-                products[i].sellerId,
+                    products[i].name,
+                    products[i].price_numerator,
+                    products[i].price_denominator,
+                    products[i].discount_percentage,
+                    products[i].assetUrls,
+                    products[i].classification,
+                    products[i].quantifier,
+                    products[i].decs,
+                    products[i].sellerId,
                     products[i].categoryId);
             }
         }
@@ -107,6 +109,7 @@ contract Products{
                     products[i].name,
                     products[i].price_numerator,
                     products[i].price_denominator,
+                    products[i].discount_percentage,
                     products[i].assetUrls,
                     products[i].classification,
                     products[i].quantifier,
@@ -156,6 +159,7 @@ contract Products{
                     products[i].name,
                     products[i].price_numerator,
                     products[i].price_denominator,
+                    products[i].discount_percentage,
                     products[i].assetUrls,
                     products[i].classification,
                     products[i].quantifier,
@@ -172,12 +176,19 @@ contract Products{
         for (uint i = 0; i < bStr.length; i++) {
             // Uppercase character...
             if ((uint8(bStr[i]) >= 65) && (uint8(bStr[i]) <= 90)) {
-                // So we add 32 to make it lowercase
                 bLower[i] = bytes1(uint8(bStr[i]) + 32);
             } else {
                 bLower[i] = bStr[i];
             }
         }
         return string(bLower);
+    }
+    function setSale(uint _product_id, uint _discount_percentage) public{
+        for (uint i= 0; i < productsCount; i++) {
+            if (products[i].id == _product_id){
+                products[i].discount_percentage = _discount_percentage;
+                break;
+            }
+        }
     }
 }

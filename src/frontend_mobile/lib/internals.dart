@@ -97,6 +97,7 @@ class ProductEntry {
   List<String> assetUrls;
   String name;
   double price;
+  int discountPercentage;
   Classification classification;
   int quantifier;
   String desc;
@@ -107,6 +108,7 @@ class ProductEntry {
       this.assetUrls,
       this.name,
       this.price,
+        this.discountPercentage,
       this.classification,
       this.quantifier,
       this.desc,
@@ -168,6 +170,7 @@ class ProductEntryListingPage extends ProductEntry {
       Classification classification,
       int quantifier,
       int id,
+        int discountPercentage,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
@@ -179,7 +182,8 @@ class ProductEntryListingPage extends ProductEntry {
             name: name,
             price: price,
             classification: classification,
-            quantifier: quantifier);
+            quantifier: quantifier,
+            discountPercentage: discountPercentage);
 }
 
 class User {

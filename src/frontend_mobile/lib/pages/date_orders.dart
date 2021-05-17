@@ -104,6 +104,7 @@ class _DateOrdersState extends State<DateOrders> {
                                           assetUrls: product.assetUrls,
                                           name: product.name,
                                           price: product.price,
+                                          discountPercentage: product.discountPercentage,
                                           classification:
                                               product.classification,
                                           quantifier: product.quantifier,
@@ -150,10 +151,8 @@ class _DateOrdersState extends State<DateOrders> {
                                             color: Color(BLACK))),
                                     SizedBox(height: 5,),
                                     Text(
-                                        products[index]
-                                                .price
-                                                .toStringAsFixed(2) +
-                                            CURRENCY,
+                                        products[index].discountPercentage == 0 ? products[index].price.toStringAsFixed(2) + ' $CURRENCY'
+                                            : (products[index].price * (1 - products[index].discountPercentage/100)).toStringAsFixed(2)+ ' $CURRENCY',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 16,

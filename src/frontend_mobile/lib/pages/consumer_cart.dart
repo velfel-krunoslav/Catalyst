@@ -82,7 +82,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                     vendorId: pr.sellerId,
                     name: pr.name,
                     photoUrl: pr.assetUrls,
-                    price: pr.price,
+                    price: (pr.discountPercentage == 0) ? pr.price : pr.price * (1 - pr.discountPercentage/100),
                     cartQuantity: int.parse(ids[i][1]),
                     classification: pr.classification,
                   quantifier: pr.quantifier

@@ -316,7 +316,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 backgroundColor: Colors.grey,
                               ),
                             )
-                          : BestDeals())
+                          : BestDeals(initiateCartRefresh))
                 ],
               ),
             ],
@@ -394,6 +394,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                         product.assetUrls,
                                                     name: product.name,
                                                     price: product.price,
+                                                    discountPercentage: product.discountPercentage,
                                                     classification:
                                                         product.classification,
                                                     quantifier:
@@ -487,6 +488,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                             .name,
                                                         price: recently[index]
                                                             .price,
+                                                        discountPercentage: recently[index].discountPercentage,
                                                         classification:
                                                             recently[index]
                                                                 .classification,
@@ -535,16 +537,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     );
   }
 
-  Widget BestDeals() {
+  Widget BestDeals(VoidCallback initiateRefresh) {
     final size = MediaQuery.of(context).size;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsModel.products.length, (index) {
+            children: List.generate(productsModel.discountedProducts.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -560,16 +563,59 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
                               assetUrls:
-                                  productsModel.products[index].assetUrls,
-                              name: productsModel.products[index].name,
-                              price: productsModel.products[index].price,
+                                  productsModel.discountedProducts[index].assetUrls,
+                              name: productsModel.discountedProducts[index].name,
+                              price: productsModel.discountedProducts[index].price*(1 - productsModel.discountedProducts[index].discountPercentage/100),
                               prevPrice:
-                                  productsModel.products[index].price * 2,
+                                  productsModel.discountedProducts[index].price,
                               classification:
-                                  productsModel.products[index].classification,
+                                  productsModel.discountedProducts[index].classification,
                               quantifier:
-                                  productsModel.products[index].quantifier),
-                          onPressed: () {})),
+                                  productsModel.discountedProducts[index].quantifier),
+                          onPressed: () {
+                            ProductEntry product = productsModel.discountedProducts[index];
+                            usersModel
+                                .getUserById(product.sellerId)
+                                .then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    new ChangeNotifierProvider(
+                                        create: (context) =>
+                                            ReviewsModel(
+                                                product.id),
+                                        child: ProductEntryListing(
+                                            ProductEntryListingPage(
+                                                assetUrls: product
+                                                    .assetUrls,
+                                                name: product.name,
+                                                price:
+                                                product.price,
+                                                discountPercentage: product.discountPercentage,
+                                                classification: product
+                                                    .classification,
+                                                quantifier: product
+                                                    .quantifier,
+                                                description:
+                                                product.desc,
+                                                id: product.id,
+                                                userInfo:
+                                                new UserInfo(
+                                                  profilePictureAssetUrl:
+                                                  'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                  fullName:
+                                                  'Petar Nikolić',
+                                                  reputationNegative:
+                                                  7,
+                                                  reputationPositive:
+                                                  240,
+                                                ),
+                                                vendor: value),
+                                            incrementCart))),
+                              );
+                            });
+                          })),
                 ),
               );
             }),
@@ -788,7 +834,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                         : EdgeInsets.only(right: 10, bottom: 15),
                     child: SizedBox(
                         width: (size.width - 60) / 2,
-                        child: ProductEntryCard(
+                        child: products[index].discountPercentage==0 ? ProductEntryCard(
                             product: products[index],
                             onPressed: () {
                               ProductEntry product = products[index];
@@ -810,6 +856,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                                   name: product.name,
                                                   price:
                                                   product.price,
+                                                  discountPercentage: product.discountPercentage,
                                                   classification: product
                                                       .classification,
                                                   quantifier: product
@@ -832,7 +879,64 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                               initiateRefresh))),
                                 );
                               });
-                            })),
+                            })
+                            : DiscountedProductEntryCard(
+                            product: new DiscountedProductEntry(
+                                assetUrls:
+                                products[index].assetUrls,
+                                name: products[index].name,
+                                price: products[index].price*(1 - products[index].discountPercentage/100),
+                                prevPrice:
+                                products[index].price,
+                                classification:
+                                products[index].classification,
+                                quantifier:
+                                products[index].quantifier),
+                            onPressed: () {
+                              ProductEntry product = products[index];
+                              usersModel
+                                  .getUserById(product.sellerId)
+                                  .then((value) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      new ChangeNotifierProvider(
+                                          create: (context) =>
+                                              ReviewsModel(
+                                                  product.id),
+                                          child: ProductEntryListing(
+                                              ProductEntryListingPage(
+                                                  assetUrls: product
+                                                      .assetUrls,
+                                                  name: product.name,
+                                                  price:
+                                                  product.price,
+                                                  discountPercentage: product.discountPercentage,
+                                                  classification: product
+                                                      .classification,
+                                                  quantifier: product
+                                                      .quantifier,
+                                                  description:
+                                                  product.desc,
+                                                  id: product.id,
+                                                  userInfo:
+                                                  new UserInfo(
+                                                    profilePictureAssetUrl:
+                                                    'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                    fullName:
+                                                    'Petar Nikolić',
+                                                    reputationNegative:
+                                                    7,
+                                                    reputationPositive:
+                                                    240,
+                                                  ),
+                                                  vendor: value),
+                                              initiateRefresh))),
+                                );
+                              });
+                            })
+                    ),
                   ),
                 );
               }),

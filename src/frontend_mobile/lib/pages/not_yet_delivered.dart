@@ -106,11 +106,11 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
   Widget build(BuildContext context) {
     usersModel = Provider.of<UsersModel>(context);
     productsModel = Provider.of<ProductsModel>(context);
-    return usersModel.isLoading || productsModel.isLoading ? LinearProgressIndicator() : Container(
+    return usersModel.isLoading || productsModel.isLoading ? SizedBox(height: 0.5, child: LinearProgressIndicator(backgroundColor: Colors.grey,)) : Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
           border: Border(
-              bottom: BorderSide(color: Colors.black, width: 1))),
+              bottom: BorderSide(color: Colors.grey, width: 1))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -140,7 +140,10 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                           color: Color(BLACK),
                           fontWeight: FontWeight.w700)),
                   SizedBox(height: 5),
-                  Text(productsModel.product.price.toStringAsFixed(2) + ' $CURRENCY',
+                  Text(
+                      productsModel.product.discountPercentage == 0 ? productsModel.product.price.toStringAsFixed(2) + ' $CURRENCY'
+                          : (productsModel.product.price * (1 - productsModel.product.discountPercentage/100)).toStringAsFixed(2)  + ' $CURRENCY'
+                      ,
                       style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 16,
@@ -186,6 +189,8 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                             productsModel.product.assetUrls,
                                             name: productsModel.product.name,
                                             price: productsModel.product.price,
+                                            discountPercentage:
+                                            productsModel.product.discountPercentage,
                                             classification:
                                             productsModel.product.classification,
                                             quantifier:

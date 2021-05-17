@@ -11,6 +11,7 @@ import '../internals.dart';
 
 class ProductsModel extends ChangeNotifier {
   List<ProductEntry> products = [];
+  List<ProductEntry> discountedProducts = [];
   List<ProductEntry> productsForCategory = [];
   int category = -1;
   int userId;
@@ -40,7 +41,7 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _getSellerProducts;
   ContractFunction _getQueryProducts;
   ContractFunction _getQueryProductsCount;
-
+  ContractFunction _setSale;
   ProductsModel([int c = -1]) {
     this.category = c;
     initiateSetup();
@@ -100,6 +101,8 @@ class ProductsModel extends ChangeNotifier {
     _getSellerProducts = _contract.function("getSellerProducts");
     _getQueryProducts = _contract.function("getQueryProducts");
     _getQueryProductsCount = _contract.function("getQueryProductsCount");
+    _setSale = _contract.function("setSale");
+
     if (productId != null){
       product = await getProductById(productId);
       isLoading = false;
@@ -157,29 +160,42 @@ class ProductsModel extends ChangeNotifier {
     BigInt totalProducts = totalProductsList[0];
     productsCount = totalProducts.toInt();
     products.clear();
-
+    discountedProducts.clear();
     for (int i = productsCount - 1; i >= 0; i--) {
       var temp = await _client.call(
           contract: _contract, function: _products, params: [BigInt.from(i)]);
 
       //print(temp);
       double price = temp[2].toInt() / temp[3].toInt();
-      String assets = temp[4];
-      var list = temp[4].split(",").toList();
+      String assets = temp[5];
+      var list = temp[5].split(",").toList();
 
-      Classification classif = getClassification(temp[5].toInt());
-
-      products.add(ProductEntry(
-          id: temp[0].toInt(),
-          name: temp[1],
-          price: price,
-          assetUrls: list,
-          classification: classif,
-          quantifier: temp[6].toInt(),
-          desc: temp[7],
-          sellerId: temp[8].toInt()));
+      Classification classif = getClassification(temp[6].toInt());
+      if (temp[4].toInt() == 0) {
+        products.add(ProductEntry(
+            id: temp[0].toInt(),
+            name: temp[1],
+            price: price,
+            discountPercentage: temp[4].toInt(),
+            assetUrls: list,
+            classification: classif,
+            quantifier: temp[7].toInt(),
+            desc: temp[8],
+            sellerId: temp[9].toInt()));
+      }
+      else{
+        discountedProducts.add(ProductEntry(
+            id: temp[0].toInt(),
+            name: temp[1],
+            price: price,
+            discountPercentage: temp[4].toInt(),
+            assetUrls: list,
+            classification: classif,
+            quantifier: temp[7].toInt(),
+            desc: temp[8],
+            sellerId: temp[9].toInt()));
+      }
     }
-
     isLoading = false;
     notifyListeners();
   }
@@ -230,6 +246,7 @@ class ProductsModel extends ChangeNotifier {
                 name,
                 BigInt.from(numinator),
                 BigInt.from(denuminator),
+                BigInt.from(0),
                 assets,
                 BigInt.from(classification),
                 BigInt.from(quantifier),
@@ -268,11 +285,12 @@ class ProductsModel extends ChangeNotifier {
             id: t[0].toInt(),
             name: t[1],
             price: t[2].toInt() / t[3].toInt(),
-            assetUrls: t[4].split(",").toList(),
-            classification: getClassification(t[5].toInt()),
-            quantifier: t[6].toInt(),
-            desc: t[7],
-            sellerId: t[8].toInt()));
+            discountPercentage: t[4].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            sellerId: t[9].toInt()));
       }
       isLoading = false;
       notifyListeners();
@@ -290,11 +308,12 @@ class ProductsModel extends ChangeNotifier {
         id: temp[0].toInt(),
         name: temp[1],
         price: temp[2].toInt() / temp[3].toInt(),
-        assetUrls: temp[4].split(",").toList(),
-        classification: getClassification(temp[5].toInt()),
-        quantifier: temp[6].toInt(),
-        desc: temp[7],
-        sellerId: temp[8].toInt());
+        discountPercentage: temp[4].toInt(),
+        assetUrls: temp[5].split(",").toList(),
+        classification: getClassification(temp[6].toInt()),
+        quantifier: temp[7].toInt(),
+        desc: temp[8],
+        sellerId: temp[9].toInt());
 
     return product;
   }
@@ -320,14 +339,36 @@ class ProductsModel extends ChangeNotifier {
           id: t[0].toInt(),
           name: t[1],
           price: t[2].toInt() / t[3].toInt(),
-          assetUrls: t[4].split(",").toList(),
-          classification: getClassification(t[5].toInt()),
-          quantifier: t[6].toInt(),
-          desc: t[7],
-          sellerId: t[8].toInt()));
+          discountPercentage: t[4].toInt(),
+          assetUrls: t[5].split(",").toList(),
+          classification: getClassification(t[6].toInt()),
+          quantifier: t[7].toInt(),
+          desc: t[8],
+          sellerId: t[9].toInt()));
     }
     isLoading = false;
     notifyListeners();
     return sellersProducts;
+  }
+  
+  setSale(int productId, int discountPercentage) async {
+    isLoading = true;
+    notifyListeners();
+    if(productId != null && discountPercentage!= null){
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _setSale,
+              parameters: [
+                BigInt.from(productId),
+                BigInt.from(discountPercentage)
+              ],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      products = await getSellersProducts(userId);
+      isLoading = false;
+      notifyListeners();
+    }
   }
 }

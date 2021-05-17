@@ -9,6 +9,7 @@ import 'package:frontend_mobile/models/ordersModel.dart';
 import 'package:frontend_mobile/models/reviewsModel.dart';
 import 'package:frontend_mobile/models/usersModel.dart';
 import 'package:frontend_mobile/pages/product_reviews.dart';
+import 'package:numberpicker/numberpicker.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
     if (dart.library.io) '../sizer_io.dart';
@@ -23,14 +24,16 @@ import 'inbox.dart';
 class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
   VoidCallback refreshInitiator;
+  Function setSale;
   ProductEntryListing(
-      ProductEntryListingPage productData, VoidCallback refreshInitiator) {
+      ProductEntryListingPage productData, VoidCallback refreshInitiator, {void Function(int productId, int percentage) setSale}) {
     this._data = productData;
     this.refreshInitiator = refreshInitiator;
+    this.setSale = setSale;
   }
   @override
   State<StatefulWidget> createState() {
-    return _ProductEntryListing(_data, refreshInitiator);
+    return _ProductEntryListing(_data, refreshInitiator, setSale);
   }
 }
 
@@ -41,15 +44,20 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   VoidCallback refreshInitiator;
   ProductEntryListingPage _data;
   var reviewsModel;
-
+  Function setSale;
   void newReviewCallback2(int productId, int rating, String desc, int userId) {
     reviewsModel.addReview(productId, rating, desc, usr.id);
   }
-
+  void refreshPage(int discountPercentage){
+    setState(() {
+      _data.discountPercentage = discountPercentage;
+    });
+  }
   _ProductEntryListing(
-      ProductEntryListingPage _data, VoidCallback refreshInitiator) {
+      ProductEntryListingPage _data, VoidCallback refreshInitiator, Function setSale) {
     this._data = _data;
     this.refreshInitiator = refreshInitiator;
+    this.setSale = setSale;
   }
   bool toggle = false;
   @override
@@ -145,24 +153,50 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         ),
                         Text(
                           _data.price.toStringAsFixed(2) +
-                              CURRENCY +
+                              CURRENCY + ((_data.discountPercentage != 0) ? "" :
                               ' (' +
                               _data.quantifier.toString() +
                               ' ' +
                               ((_data.classification == Classification.Volume)
                                   ? 'ml'
                                   : ((_data.classification ==
-                                          Classification.Weight)
-                                      ? 'gr'
-                                      : 'kom')) +
-                              ')',
+                                  Classification.Weight)
+                                  ? 'gr'
+                                  : 'kom')) +
+                              ')'
+                          ),
                           textAlign: TextAlign.left,
+                          style: (_data.discountPercentage != 0) ? TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 28,
+                            fontFamily: 'Inter',
+                            decoration: TextDecoration.lineThrough,) :
+                          TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 28,
+                            fontFamily: 'Inter',
+                            decoration: TextDecoration.none,
+                          fontWeight: FontWeight.w800),
+                        ),
+                        (_data.discountPercentage == 0) ? SizedBox(height: 0,) : Text(
+                            (_data.price * (1 - _data.discountPercentage/100)).toStringAsFixed(2)
+                          + CURRENCY +
+                                ' (' +
+                                _data.quantifier.toString() +
+                                ' ' +
+                                ((_data.classification == Classification.Volume)
+                                    ? 'ml'
+                                    : ((_data.classification ==
+                                    Classification.Weight)
+                                    ? 'gr'
+                                    : 'kom')) +
+                                ')',
                           style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 28,
-                              fontFamily: 'Inter',
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.w800),
+                            color: Color(RED_ATTENTION),
+                            fontSize: 28,
+                            fontFamily: 'Inter',
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w800),
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -449,7 +483,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         backgroundColor: Colors.white,
                         minimumSize: Size(36, 36))),
                 Spacer(),
-                (_data.vendor.id != usr.id) ? Container() : TextButton(
+                setSale == null ? Container() : TextButton(
                     onPressed: () {
                       if (toggle == false){
                         setState(() {
@@ -486,13 +520,27 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 18,),
-                        DropdownOption(
+                        _data.discountPercentage == 0 ? DropdownOption(
                           text: "Postavi na akciju",
-                        onPressed: (){},
-                        ),
+                        onPressed: (){
+                            _setSalePressed(_data.price, setSale, _data.id);
+                        },
+                        )
+                            : DropdownOption(
+                          text: "Ukloni sa akcije",
+                          onPressed: (){
+                            setSale(_data.id, 0);
+                            setState(() {
+                              toggle = false;
+                              refreshPage(0);
+                            });
+                          },
+                        )
+                        ,
                         DropdownOption(
                           text: "Ukloni proizvod",
-                          onPressed: (){},
+                          onPressed: (){
+                          },
                         ),
                       ],
                     ),
@@ -506,7 +554,98 @@ class _ProductEntryListing extends State<ProductEntryListing> {
       ],
     )));
   }
+  void _setSalePressed(double _price, Function setSale, int id) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter stateSetter) {
+                return Picker(_price, setSale, id, refreshPage);
+              });
+        });
+  }
 }
+class Picker extends StatefulWidget {
+  double price;
+  Function setSale;
+  int productId;
+  Function refreshPage;
+  Picker(this.price, this.setSale, this.productId, this.refreshPage);
+
+  @override
+  _PickerState createState() => _PickerState(price, setSale, productId, refreshPage);
+}
+
+class _PickerState extends State<Picker> {
+  int _currentValue = 10;
+  double price;
+  Function setSale;
+  int productId;
+  Function refreshPage;
+  _PickerState(this.price, this.setSale, this.productId, this.refreshPage);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 330,
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 10),
+          Text("Izaberite snizenje:",
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 17,),),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 20,),
+              NumberPicker(
+                value: _currentValue,
+                minValue: 5,
+                maxValue: 95,
+                step: 5,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black26),
+                ),
+                onChanged: (value) => setState(() => _currentValue = value),
+              ),
+              SizedBox(width: 10,),
+              Text("%",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 17,)),
+            ],
+          ),
+          SizedBox(height: 20),
+          Text(
+              'Nova cena: ' + (price * (1 - _currentValue/100)).toStringAsFixed(2) + ' $CURRENCY',
+            style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 17,),
+          ),
+          SizedBox(height: 25),
+          SizedBox(
+            height: 50,
+            width: 150,
+            child: ButtonOutline(
+              iconPath: 'assets/icons/Check.svg',
+              buttonType: type.GREEN,
+              text: 'Potvrdi',
+              onPressed: () {
+                setSale(productId, _currentValue);
+                refreshPage(_currentValue);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class DropdownOption extends StatelessWidget {
   Function onPressed;
   String text;
