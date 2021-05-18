@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import 'pages/inbox.dart';
+
 User usr;
 
 Future<String> requestChatID(int userID1, int userID2) async {
@@ -19,6 +21,37 @@ Future<String> requestChatID(int userID1, int userID2) async {
       '192.168.1.3:3000', '/Chat/GetChatBetweenUsers', queryParameters);
   var response = await http.get(uri);
   return response.body;
+}
+/*
+Future<http.Response> publishMessage(Message msg) {
+  return http.post(
+    Uri.http('192.168.1.3:3000', '/Message/AddMessage'),
+    body: jsonEncode(<String, String>{
+      'id': msg.id.toString(),
+      'chatId': msg.sender.chatID.toString(),
+      'fromId': msg.sender.id.toString(),
+      'messageText': msg.text,
+      'timestamp': msg.time,
+      'statusRead': msg.unread.toString()
+    }),
+  );
+}*/
+
+Future<http.Response> publishMessage(Message msg) async {
+  final String apiURL = "http://192.168.1.3:3000/Message/AddMessage";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': msg.id.toString(),
+        'chatId': msg.sender.chatID.toString(),
+        'fromId': msg.sender.id.toString(),
+        'messageText': msg.text,
+        'timestamp': msg.time,
+        'statusRead': msg.unread
+      }));
+  return response;
 }
 
 void setMessageReadStatus(int id, bool readStatus) async {
@@ -346,8 +379,7 @@ class Order {
       this.paymentType});
 }
 
-DateTime now = DateTime.now();
-String formattedDate = DateFormat('kk:mm').format(now);
+String formattedDate = DateFormat('kk:mm').format(DateTime.now());
 
 ChatUserInfo chatUserInfoFromJson(String str) =>
     ChatUserInfo.fromJson(json.decode(str));

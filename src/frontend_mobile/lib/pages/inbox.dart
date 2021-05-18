@@ -23,15 +23,15 @@ class ChatUser {
 
   @override
   String toString() {
-    return '[${this.id}, ${this.name}, ${this.photoUrl}]';
+    return 'ChatUser[${this.id}, ${this.name}, ${this.photoUrl}]';
   }
 }
 
 class Message {
-  final int id;
-  final ChatUser sender;
-  final String time;
-  final String text;
+  int id;
+  ChatUser sender;
+  String time;
+  String text;
   bool unread;
   int senderID;
 
@@ -40,7 +40,7 @@ class Message {
 
   @override
   String toString() {
-    return '[${this.sender}, ${this.time}, ${this.text}, ${this.unread}]';
+    return '["id": ${this.id}, "sender": ${this.sender}, "time": ${this.time}, "text": ${this.text},"unread":  ${this.unread}]';
   }
 }
 
@@ -67,6 +67,11 @@ class _UserInboxState extends State<Inbox> {
   List<User> allUsers = [];
   List<ChatUser> contacts = [];
   List<Message> chats = [];
+  void updateChatsAtIndex(Message msg, int index) {
+    setState(() {
+      chats[index] = msg;
+    });
+  }
 
   @override
   void initState() {
@@ -100,15 +105,16 @@ class _UserInboxState extends State<Inbox> {
               contacts.add(tmpchatuser);
             });
             requestLatestMessageFromChat(chatIDs[index]).then((value) {
+              print('POSLJEDNJA PORUKA ******* $value');
               // TODO CHECK IF RETURN IS NULL
               var msg = ChatMessageInfo.fromJson(jsonDecode(value)[0]);
               Message tmpmsg = Message(
                   id: msg.id,
                   sender: contacts[index],
-                  time: (msg.timestamp.year == now.year &&
-                          msg.timestamp.month == now.month &&
-                          msg.timestamp.day == now.day)
-                      ? '${msg.timestamp.hour}:${msg.timestamp.minute}'
+                  time: (msg.timestamp.year == DateTime.now().year &&
+                          msg.timestamp.month == DateTime.now().month &&
+                          msg.timestamp.day == DateTime.now().day)
+                      ? '${msg.timestamp.hour.toString().padLeft(2, '0')}:${msg.timestamp.minute.toString().padLeft(2, '0')}'
                       : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
                   text: msg.messageText,
                   unread: msg.statusRead);
@@ -122,10 +128,38 @@ class _UserInboxState extends State<Inbox> {
     });
   }
 
+  void redirectToChatInbox(Message chat, int index) {
+    setState(() {
+      chats[index].unread = false;
+    });
+    Function update = () {
+      this.setState(() {});
+    };
+
+    print('${chats[index].sender.id}');
+
+    if (chats[index].sender.id != usr.id) setMessageReadStatus(chat.id, false);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChatScreen(
+                  indexToUpdate: index,
+                  messageList: chats,
+                  updateLastMessage: update,
+                  user: chats[index].sender,
+                  me: ChatUser(
+                      chatID: contacts[index].chatID,
+                      id: usr.id,
+                      name: usr.name,
+                      surname: usr.surname,
+                      photoUrl: usr.photoUrl),
+                  chatID: contacts[index].chatID,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -194,25 +228,11 @@ class _UserInboxState extends State<Inbox> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       Message chat = chats[index];
+                                      print(
+                                          '${chat.unread}      ${chat.sender.id}     ${usr.id}');
                                       return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              chats[index].unread = false;
-                                            });
-
-                                            setMessageReadStatus(
-                                                chat.id, false);
-
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (_) => ChatScreen(
-                                                          user: chat.sender,
-                                                          chatID:
-                                                              contacts[index]
-                                                                  .chatID,
-                                                        )));
-                                          },
+                                          onTap: () =>
+                                              redirectToChatInbox(chat, index),
                                           child: Padding(
                                             padding: EdgeInsets.all(10.0),
                                             child: Column(
@@ -256,27 +276,14 @@ class _UserInboxState extends State<Inbox> {
                                       (BuildContext context, int index) {
                                     Message chat = chats[index];
                                     return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          chats[index].unread = false;
-                                        });
-
-                                        setMessageReadStatus(chat.id, false);
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => ChatScreen(
-                                                      user: chat.sender,
-                                                      chatID: contacts[index]
-                                                          .chatID,
-                                                    )));
-                                      },
+                                      onTap: () =>
+                                          redirectToChatInbox(chat, index),
                                       child: Container(
                                         margin: EdgeInsets.only(
                                             top: 5.0, bottom: 5.0, right: 5.0),
                                         decoration: BoxDecoration(
-                                          gradient: chat.unread
+                                          gradient: (chat.unread == true &&
+                                                  chat.sender.id != usr.id)
                                               ? LinearGradient(colors: <Color>[
                                                   Color(TEAL),
                                                   Color(MINT)
@@ -323,7 +330,10 @@ class _UserInboxState extends State<Inbox> {
                                                       '${chat.sender.name} ${chat.sender.surname}',
                                                       style: TextStyle(
                                                           fontFamily: 'Inter',
-                                                          color: chat.unread
+                                                          color: (chat.unread &&
+                                                                  chat.sender
+                                                                          .id !=
+                                                                      usr.id)
                                                               ? Colors.white
                                                               : Colors.black,
                                                           fontSize: 16.0,
@@ -340,7 +350,10 @@ class _UserInboxState extends State<Inbox> {
                                                         chat.text,
                                                         style: TextStyle(
                                                           fontFamily: 'Inter',
-                                                          color: chat.unread
+                                                          color: (chat.unread &&
+                                                                  chat.sender
+                                                                          .id !=
+                                                                      usr.id)
                                                               ? Colors.white
                                                               : Color(
                                                                   DARK_GREY),
@@ -363,7 +376,10 @@ class _UserInboxState extends State<Inbox> {
                                                     chat.time,
                                                     style: TextStyle(
                                                         fontFamily: 'Inter',
-                                                        color: chat.unread
+                                                        color: (chat.unread &&
+                                                                chat.sender
+                                                                        .id !=
+                                                                    usr.id)
                                                             ? Color(LIGHT_GREY)
                                                             : Colors.black,
                                                         fontSize: 15.0,
@@ -371,7 +387,9 @@ class _UserInboxState extends State<Inbox> {
                                                             FontWeight.bold),
                                                   ),
                                                   SizedBox(height: 5.0),
-                                                  chat.unread
+                                                  (chat.unread &&
+                                                          chat.sender.id !=
+                                                              usr.id)
                                                       ? Container(
                                                           width: 100.0,
                                                           height: 20.0,

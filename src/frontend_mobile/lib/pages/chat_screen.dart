@@ -10,20 +10,47 @@ import 'package:frontend_mobile/internals.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatUser user;
+  ChatUser me;
   int chatID;
-  ChatScreen({this.user, this.chatID});
+  List<Message> messageList;
+  int indexToUpdate;
+  VoidCallback updateLastMessage;
+  ChatScreen(
+      {this.user,
+      this.me,
+      this.chatID,
+      this.updateLastMessage,
+      this.messageList,
+      this.indexToUpdate});
 
   @override
-  _ChatScreenState createState() =>
-      _ChatScreenState(user: this.user, chatID: this.chatID);
+  _ChatScreenState createState() => _ChatScreenState(
+      me: this.me,
+      user: this.user,
+      chatID: this.chatID,
+      updateLastMessage: this.updateLastMessage,
+      messageList: this.messageList,
+      indexToUpdate: this.indexToUpdate);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   ChatUser user;
+  ChatUser me;
   int chatID;
+  String tmpMessage;
   List<Message> messages = [];
 
-  _ChatScreenState({this.user, this.chatID});
+  List<Message> messageList;
+  int indexToUpdate;
+  _ChatScreenState(
+      {this.user,
+      this.me,
+      this.chatID,
+      this.updateLastMessage,
+      this.messageList,
+      this.indexToUpdate});
+
+  VoidCallback updateLastMessage;
 
   @override
   void initState() {
@@ -36,10 +63,10 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           messages.add(Message(
               senderID: u.fromId,
-              time: (u.timestamp.year == now.year &&
-                      u.timestamp.month == now.month &&
-                      u.timestamp.day == now.day)
-                  ? '${u.timestamp.hour}:${u.timestamp.minute}'
+              time: (u.timestamp.year == DateTime.now().year &&
+                      u.timestamp.month == DateTime.now().month &&
+                      u.timestamp.day == DateTime.now().day)
+                  ? '${u.timestamp.hour.toString().padLeft(2, '0')}:${u.timestamp.minute.toString().padLeft(2, '0')}'
                   : '${u.timestamp.day}.${u.timestamp.month}.${u.timestamp.year}.',
               text: u.messageText,
               unread: u.statusRead));
@@ -95,7 +122,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  _buildMessageComposer() {
+  TextEditingController txt = TextEditingController();
+
+  _buildMessageComposer(ChatUser me) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 80.0,
@@ -106,10 +135,13 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Padding(
               padding: EdgeInsets.only(left: 5.0),
               child: TextField(
+                controller: txt,
                 cursorColor: Color(TEAL),
                 textCapitalization: TextCapitalization.sentences,
                 maxLength: 500,
-                onChanged: (value) {}, /////////////TODO add_message to value
+                onChanged: (value) {
+                  tmpMessage = value;
+                },
                 decoration: InputDecoration(
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
@@ -126,8 +158,36 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(Icons.send),
             iconSize: 25.0,
             color: Color(TEAL),
-            onPressed:
-                () {}, /////////////////TODO submit message(value) to database
+            onPressed: () {
+              if (tmpMessage != null && tmpMessage.compareTo('') != 0) {
+                Message tmpmsg = Message(
+                    id: 0,
+                    sender: me,
+                    senderID: me.id,
+                    time:
+                        '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+                    text: tmpMessage,
+                    unread: false);
+
+                messageList[indexToUpdate] = tmpmsg;
+                updateLastMessage();
+
+                setState(() {
+                  messages.add(tmpmsg);
+                });
+
+                Message tmpmsgpub = Message(
+                    id: 0,
+                    sender: me,
+                    senderID: me.id,
+                    time: DateTime.now().toIso8601String(),
+                    text: tmpMessage,
+                    unread: true);
+                publishMessage(tmpmsgpub)
+                    .then((value) => print('${value.statusCode.toString()}'));
+                txt.text = '';
+              }
+            },
           ),
         ],
       ),
@@ -190,12 +250,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemCount: messages.length,
                         itemBuilder: (BuildContext context, int index) {
                           final Message message = messages[index];
-                          final bool isMe = message.senderID == user.id;
-                          return _buildChat(message, isMe);
+                          return _buildChat(message, message.senderID == me.id);
                         }),
                   )),
             ),
-            _buildMessageComposer(),
+            _buildMessageComposer(me),
           ],
         ),
       ),
