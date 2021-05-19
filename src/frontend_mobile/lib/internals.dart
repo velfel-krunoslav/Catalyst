@@ -7,12 +7,92 @@ import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'pages/inbox.dart';
 
 User usr;
+
+Future<String> requestChatID(int userID1, int userID2) async {
+  var queryParameters = {
+    'UserID1': userID1.toString(),
+    'UserID2': userID2.toString()
+  };
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatBetweenUsers', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<http.Response> publishMessage(Message msg) async {
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Message/AddMessage";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': msg.id.toString(),
+        'chatId': msg.sender.chatID.toString(),
+        'fromId': msg.sender.id.toString(),
+        'messageText': msg.text,
+        'timestamp': msg.time,
+        'unread': msg.unread
+      }));
+  return response;
+}
+
+Future<http.Response> addChat(ChatInfo chat) async {
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Chat/AddChat";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "id": chat.id,
+        "id_Sender": chat.idSender,
+        "id_Reciever": chat.idReciever,
+      }));
+  return response;
+}
+
+void setMessageReadStatus(int id, bool readStatus) async {
+  var queryParameters = {
+    'IDMessage': id.toString(),
+    'status': readStatus.toString()
+  };
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/ChangeStatusRead', queryParameters);
+  await http.get(uri);
+}
+
+Future<String> requestGetChat(int id) async {
+  var queryParameters = {'id': id.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatsFromUserID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> requestLatestMessageFromChat(int chatID) async {
+  var queryParameters = {'chatID': chatID.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetLatestMessageFromChatID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> requestAllMessagesFromChat(int chatID) async {
+  var queryParameters = {'messageChatID': chatID.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetAllMessagesFromChatID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
 
 Future<String> asyncFileUpload(Uint8List contents) async {
   var request = http.MultipartRequest(
       'POST', Uri.parse('https://ipfs.infura.io:5001/api/v0/add'));
+  // ignore: await_only_futures
   var pic = await http.MultipartFile.fromBytes('file', contents);
   request.files.add(pic);
   var response = await request.send();
@@ -108,7 +188,7 @@ class ProductEntry {
       this.assetUrls,
       this.name,
       this.price,
-        this.discountPercentage,
+      this.discountPercentage,
       this.classification,
       this.quantifier,
       this.desc,
@@ -170,7 +250,7 @@ class ProductEntryListingPage extends ProductEntry {
       Classification classification,
       int quantifier,
       int id,
-        int discountPercentage,
+      int discountPercentage,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
@@ -222,7 +302,13 @@ class Review {
   String desc;
   int userId;
   DateTime date;
-  Review({this.id, this.productId, this.rating, this.desc, this.userId, this.date});
+  Review(
+      {this.id,
+      this.productId,
+      this.rating,
+      this.desc,
+      this.userId,
+      this.date});
 }
 
 class CartProduct {
@@ -286,29 +372,6 @@ class ReviewPage {
   ReviewPage({this.average, this.reviews, this.reviewsCount, this.stars});
 }
 
-class ChatUser {
-  int id;
-  String name;
-  String photoUrl;
-
-  ChatUser({this.id, this.name, this.photoUrl});
-}
-
-class Message {
-  final ChatUser sender;
-  final String time;
-  final String text;
-  bool unread;
-
-  Message({this.sender, this.time, this.text, this.unread});
-}
-
-class ChatMessage {
-  String messageContent;
-  String messageType;
-  ChatMessage({this.messageContent, this.messageType});
-}
-
 class Order {
   int id;
   int productId;
@@ -333,118 +396,117 @@ class Order {
       this.price});
 }
 
-ChatUser currentUser = ChatUser(
-  id: 0,
-  name: 'Trenutni user',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-);
-ChatUser jelena = ChatUser(
-  id: 1,
-  name: 'Jelena',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmVZd57UK4FDVMF46bagh8wQmZtMAHGTDfLGYHXoD93R5P',
-);
-ChatUser luka = ChatUser(
-  id: 2,
-  name: 'Luka',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmcAwtzGN2mgaMcnr1cZuHNBY4QRQZ3pskvKsQ66CFrTNX',
-);
-ChatUser marija = ChatUser(
-  id: 3,
-  name: 'Marija',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmSW4mVxnb7uzStRZCpr8bo5qN3agmDwNZCJxHC737PtHw',
-);
-ChatUser pera = ChatUser(
-  id: 4,
-  name: 'Slobodanka',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmUTVasG46ddZJvcVnoYKrwMjNDc8JYuQdHTpurszoNKFh',
-);
-ChatUser krunoslav = ChatUser(
-  id: 5,
-  name: 'Krunoslav',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmR2Q46xBJesQKiBbGZtJYwvq4KH1hqxavmr9U5d98fbqr',
-);
-ChatUser stefan = ChatUser(
-  id: 6,
-  name: 'Stefan',
-  photoUrl:
-      'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-);
+String formattedDate = DateFormat('kk:mm').format(DateTime.now());
 
-List<ChatUser> contacts = [jelena, luka, marija, pera, krunoslav, stefan];
+ChatUserInfo chatUserInfoFromJson(String str) =>
+    ChatUserInfo.fromJson(json.decode(str));
 
-DateTime now = DateTime.now();
-String formattedDate = DateFormat('kk:mm').format(now);
+String chatUserInfoToJson(ChatUserInfo data) => json.encode(data.toJson());
 
-List<Message> chats = [
-  Message(sender: jelena, time: formattedDate, text: 'Hey?', unread: true),
-  Message(
-      sender: luka,
-      time: formattedDate,
-      text: 'Jesam li parsirao?',
-      unread: false),
-  Message(
-      sender: marija,
-      time: formattedDate,
-      text: 'Posto je paprika,druze?',
-      unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi?', unread: false),
-  Message(
-      sender: stefan,
-      time: formattedDate,
-      text: '.................',
-      unread: false),
-  Message(sender: krunoslav, time: formattedDate, text: 'stres', unread: true),
-  Message(sender: pera, time: formattedDate, text: 'zdera', unread: false),
-  Message(sender: jelena, time: formattedDate, text: 'Hey', unread: true),
-  Message(sender: luka, time: formattedDate, text: 'Parsiraj', unread: false),
-  Message(sender: marija, time: formattedDate, text: 'Aloee', unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi', unread: false),
-  Message(sender: stefan, time: formattedDate, text: '...', unread: false),
-  Message(
-      sender: krunoslav, time: formattedDate, text: 'helloouuu', unread: true),
-  Message(
-      sender: pera,
-      time: formattedDate,
-      text: 'Sta je bre ovo?',
-      unread: false),
-];
+class ChatUserInfo {
+  ChatUserInfo({
+    this.id,
+    this.metaMaskAddress,
+    this.privateKey,
+    this.firstName,
+    this.lastName,
+  });
 
-List<Message> messages = [
-  Message(sender: luka, time: '5:30', text: 'Jesam li parsirao?', unread: true),
-  Message(
-      sender: currentUser, time: '5:30', text: 'Nisi parsirao!', unread: true),
-  Message(
-    sender: luka,
-    time: '5:31',
-    text: 'Posto paradajz?',
-    unread: true,
-  ),
-  Message(
-      sender: currentUser,
-      time: '5:38',
-      text: '150 dinara kilo!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '8:30',
-      text: 'Skup si brate,moze popust?',
-      unread: true),
-  Message(
-      sender: currentUser,
-      time: '8:32',
-      text: 'Moze,dajem 10% za tebe popusta!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '9:00',
-      text:
-          'Moze salji na sledecu adresu: Radoja Domanovica 1,Kragujevac,34000',
-      unread: true),
-  Message(sender: currentUser, time: '9:11', text: 'Dogovoreno!', unread: true),
-];
+  int id;
+  String metaMaskAddress;
+  String privateKey;
+  String firstName;
+  String lastName;
+
+  factory ChatUserInfo.fromJson(Map<String, dynamic> json) => ChatUserInfo(
+        id: json["id"],
+        metaMaskAddress: json["metaMaskAddress"],
+        privateKey: json["privateKey"],
+        firstName: json["first_Name"],
+        lastName: json["last_Name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "metaMaskAddress": metaMaskAddress,
+        "privateKey": privateKey,
+        "first_Name": firstName,
+        "last_Name": lastName,
+      };
+}
+
+ChatInfo chatInfoFromJson(String str) => ChatInfo.fromJson(json.decode(str));
+
+String chatInfoToJson(ChatInfo data) => json.encode(data.toJson());
+
+class ChatInfo {
+  ChatInfo({
+    this.id,
+    this.idSender,
+    this.idReciever,
+  });
+
+  int id;
+  int idSender;
+  int idReciever;
+
+  factory ChatInfo.fromJson(Map<String, dynamic> json) => ChatInfo(
+        id: json["id"],
+        idSender: json["id_Sender"],
+        idReciever: json["id_Reciever"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "id_Sender": idSender,
+        "id_Reciever": idReciever,
+      };
+}
+
+ChatMessageInfo chatMessageInfoFromJson(String str) =>
+    ChatMessageInfo.fromJson(json.decode(str));
+
+String chatMessageInfoToJson(ChatMessageInfo data) =>
+    json.encode(data.toJson());
+
+class ChatMessageInfo {
+  ChatMessageInfo({
+    this.id,
+    this.chatId,
+    this.fromId,
+    this.messageText,
+    this.timestamp,
+    this.unread,
+  });
+
+  @override
+  String toString() {
+    return '[${this.id},${this.chatId},${this.fromId},${this.messageText},${this.timestamp},${this.unread}]';
+  }
+
+  int id;
+  int chatId;
+  int fromId;
+  String messageText;
+  DateTime timestamp;
+  bool unread;
+
+  factory ChatMessageInfo.fromJson(Map<String, dynamic> json) =>
+      ChatMessageInfo(
+        id: json["id"],
+        chatId: json["chatId"],
+        fromId: json["fromId"],
+        messageText: json["messageText"],
+        timestamp: DateTime.parse(json["timestamp"]),
+        unread: json["unread"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "chatId": chatId,
+        "fromId": fromId,
+        "messageText": messageText,
+        "timestamp": timestamp.toIso8601String(),
+        "unread": unread,
+      };
+}

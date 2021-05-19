@@ -143,8 +143,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           key: _scaffoldKey,
           drawer: usersModel.isLoading
               ? LinearProgressIndicator()
-              : HomeDrawer(context, usersModel.user, refreshProductsCallback,
-                  getProductByIdCallback, incrementCart), //TODO context
+              : HomeDrawer(
+                  context,
+                  usersModel.user,
+                  refreshProductsCallback,
+                  getProductByIdCallback,
+                  incrementCart,
+                  usersModel.getUserById), //TODO context
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
@@ -169,13 +174,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 onPressed: () {
                                   _scaffoldKey.currentState.openDrawer();
                                 })),
-                        SizedBox(width: 130),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SvgPicture.asset('assets/icons/KotaricaIconMonochrome.svg')
-                            ]
+                        Spacer(),
+                        SizedBox(
+                          width: 48,
                         ),
+                        SvgPicture.asset(
+                            'assets/icons/KotaricaIconMonochrome.svg'),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(

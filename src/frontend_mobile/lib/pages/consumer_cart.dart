@@ -749,8 +749,10 @@ class _ConsumerCartState extends State<ConsumerCart> {
                               text:
                                   'Potvrdi kupovinu (${total.toStringAsFixed(2)}$CURRENCY)',
                               onPressed: () {
-                                DateTime date =
-                                    new DateTime(now.year, now.month, now.day);
+                                DateTime date = new DateTime(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day);
                                 List<Order> orders = [];
                                 print(usr.id);
                                 for (int i = 0; i < products.length; i++) {

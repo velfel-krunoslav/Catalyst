@@ -1,8 +1,5 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:fraction/fraction.dart';
 import 'package:http/http.dart';
@@ -97,6 +94,7 @@ class OrdersModel extends ChangeNotifier {
       await getDeliveryOrders(userId);
     }
   }
+
   setStatus(int orderId, int status) async {
     if (orderId != null && status != null) {
       await _client.sendTransaction(
@@ -105,14 +103,12 @@ class OrdersModel extends ChangeNotifier {
               maxGas: 6721925,
               contract: _contract,
               function: _setStatus,
-              parameters: [
-                BigInt.from(orderId),
-                BigInt.from(status)
-              ],
+              parameters: [BigInt.from(orderId), BigInt.from(status)],
               gasPrice: EtherAmount.inWei(BigInt.one)));
       getDeliveryOrders(userId);
     }
   }
+
   getDeliveryOrders(int userId) async {
     isLoading = true;
     notifyListeners();
@@ -131,9 +127,8 @@ class OrdersModel extends ChangeNotifier {
       var t = temp[0][i];
       if (t[4].toInt() == 0) {
         List<String> dateParts = t[3].split("-");
-        DateTime date = DateTime(
-            int.parse(dateParts[0]), int.parse(dateParts[1]),
-            int.parse(dateParts[2].substring(0, 2)));
+        DateTime date = DateTime(int.parse(dateParts[0]),
+            int.parse(dateParts[1]), int.parse(dateParts[2].substring(0, 2)));
 
         //print(t);
         Order o = Order(
@@ -146,13 +141,14 @@ class OrdersModel extends ChangeNotifier {
             date: date,
             deliveryAddress: t[7],
             paymentType: t[8].toInt(),
-        price: t[9].toInt()/t[10].toInt());
+            price: t[9].toInt() / t[10].toInt());
         deliveryOrders.add(o);
       }
     }
     isLoading = false;
     notifyListeners();
   }
+
   getOrders(int buyerId) async {
     List totalList = await _client.call(
         contract: _contract,
@@ -182,7 +178,7 @@ class OrdersModel extends ChangeNotifier {
           date: date,
           deliveryAddress: t[7],
           paymentType: t[8].toInt(),
-          price: t[9].toInt()/t[10].toInt());
+          price: t[9].toInt() / t[10].toInt());
       orders.add(o);
     }
     notifyListeners();

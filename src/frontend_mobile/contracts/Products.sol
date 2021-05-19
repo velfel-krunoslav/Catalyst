@@ -2,6 +2,7 @@ pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 contract Products{
     uint public productsCount = 0;
+    uint public idCount = 0;
 
     struct Product{
         uint id;
@@ -39,13 +40,14 @@ contract Products{
         products[6] = Product(6, "Kamamber", 54, 3, 0, "https://ipfs.io/ipfs/QmWWrpbQgUB6LddC4UdZFgC6JPJcv52Sot7fAJjvsqcXgE", 1, 500,
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 1,2);
         productsCount = 7;
+        idCount = 7;
     }
 
     function createProduct(string memory _productName, uint _price_nominator, uint _price_denominator, uint _discount_percentage, string memory _assetUrls, uint _classif, uint _quantifier, string memory _desc, uint _sellerId, uint _categoryId) public{
 
         if (_classif > 2)
             _classif = 0;
-        products[productsCount++] = Product(productsCount, _productName, _price_nominator, _price_denominator, _discount_percentage, _assetUrls, _classif, _quantifier, _desc, _sellerId, _categoryId);
+        products[productsCount++] = Product(idCount++, _productName, _price_nominator, _price_denominator, _discount_percentage, _assetUrls, _classif, _quantifier, _desc, _sellerId, _categoryId);
         emit ProductCreated(_productName, productsCount - 1);
 
     }
