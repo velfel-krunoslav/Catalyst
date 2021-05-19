@@ -371,8 +371,12 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2) +
-                                ' €' +
+                      product.price.toStringAsFixed(2).length + product.quantifier.toString().length > 8 ?
+                      (product.price.toStringAsFixed(2) + CURRENCY)
+                      :
+
+                      (   product.price.toStringAsFixed(2) +
+                                CURRENCY +
                                 ' (' +
                                 product.quantifier.toString() +
                                 ' ' +
@@ -383,7 +387,7 @@ class ProductEntryCard extends GestureDetector {
                                             Classification.Weight)
                                         ? 'gr'
                                         : 'kom')) +
-                                ')',
+                                ')' ),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
@@ -450,7 +454,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       product.price.toStringAsFixed(2) +
-                          ' €' +
+                          CURRENCY +
                           ' (' +
                           product.quantifier.toString() +
                           ' ' +
@@ -661,7 +665,11 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Pre 1 dan",
+                      Text((widget.review.date.year == DateTime.now().year &&
+                          (widget.review.date.month == DateTime.now().month &&
+                            widget.review.date.day == DateTime.now().day)
+                            ? '${widget.review.date.hour.toString().padLeft(2, '0')}:${widget.review.date.minute.toString().padLeft(2, '0')}'
+                                : '${widget.review.date.day}.${widget.review.date.month}.${widget.review.date.year}.'),
                           style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'Inter',
@@ -679,147 +687,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   }
 }
 
-class ProductsForCategory extends StatefulWidget {
-  ProductsForCategory(
-      {this.category, this.categoryName, this.callback, this.initiateRefresh});
-  int category;
-  Function callback;
-  String categoryName;
-  VoidCallback initiateRefresh;
-  @override
-  _ProductsForCategoryState createState() => _ProductsForCategoryState(
-      category: category,
-      categoryName: categoryName,
-      callback: callback,
-      initiateRefresh: initiateRefresh);
-}
 
-class _ProductsForCategoryState extends State<ProductsForCategory> {
-  _ProductsForCategoryState(
-      {this.category, this.categoryName, this.callback, this.initiateRefresh});
-  List<ProductEntry> products;
-  int category;
-  Function callback;
-  String categoryName;
-  VoidCallback initiateRefresh;
-  var productsModel;
-  UsersModel usersModel;
-  var size;
-
-  @override
-  Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
-    productsModel = Provider.of<ProductsModel>(context);
-    usersModel = Provider.of<UsersModel>(context);
-    products = productsModel.productsForCategory;
-
-    return productsModel.isLoading
-        ? Center(
-            child: LinearProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          )
-        : Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/icons/ArrowLeft.svg',
-                          height: ICON_SIZE,
-                          width: ICON_SIZE,
-                        ),
-                        onPressed: () {
-                          this.widget.callback(-1);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        categoryName,
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 28,
-                            color: Color(DARK_GREY),
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Wrap(
-                    children: List.generate(products.length, (index) {
-                      return InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: (index + 1) % 2 == 0
-                              ? EdgeInsets.only(left: 10, bottom: 15)
-                              : EdgeInsets.only(right: 10, bottom: 15),
-                          child: SizedBox(
-                              width: (size.width - 60) / 2,
-                              child: ProductEntryCard(
-                                  product: products[index],
-                                  onPressed: () {
-                                    ProductEntry product = products[index];
-                                    usersModel
-                                        .getUserById(product.sellerId)
-                                        .then((value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                new ChangeNotifierProvider(
-                                                    create: (context) =>
-                                                        ReviewsModel(
-                                                            product.id),
-                                                    child: ProductEntryListing(
-                                                        ProductEntryListingPage(
-                                                            assetUrls: product
-                                                                .assetUrls,
-                                                            name: product.name,
-                                                            price:
-                                                                product.price,
-                                                            classification: product
-                                                                .classification,
-                                                            quantifier: product
-                                                                .quantifier,
-                                                            description:
-                                                                product.desc,
-                                                            id: product.id,
-                                                            userInfo:
-                                                                new UserInfo(
-                                                              profilePictureAssetUrl:
-                                                                  'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-                                                              fullName:
-                                                                  'Petar Nikolić',
-                                                              reputationNegative:
-                                                                  7,
-                                                              reputationPositive:
-                                                                  240,
-                                                            ),
-                                                            vendor: value),
-                                                        initiateRefresh))),
-                                      );
-                                    });
-                                  })),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          );
-  }
-}
 
 class Contacts extends StatelessWidget {
   @override
@@ -1162,7 +1030,13 @@ Widget HomeDrawer(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NotYetDelivered()),
+            MaterialPageRoute(
+                builder: (context) => new MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<OrdersModel>(
+                          create: (_) => OrdersModel(usr.id)),
+                    ],
+                    child: NotYetDelivered())),
           );
         },
         iconUrl: "assets/icons/Clock.svg"),
@@ -1210,8 +1084,9 @@ Widget HomeDrawer(
         text: "Odjavi se",
         onPressed: () {
           Prefs.instance.removeAll();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => new Welcome()));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => new Welcome()), (Route<dynamic> route) => false);
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => new Welcome()));
         },
         iconUrl: "assets/icons/SignOut.svg")
   ];

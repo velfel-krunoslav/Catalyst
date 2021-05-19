@@ -43,6 +43,17 @@ class _MyProductsState extends State<MyProducts> {
             sellerId, categoryId)
         .then((v) {
       refreshProductsCallback();
+      showInSnackBar("Proizvod je uspešno dodat");
+    });
+  }
+  void setSale(int productId, int percentage){
+    productsModel.setSale(productId, percentage).then((v) {
+      refreshProductsCallback();
+    });
+  }
+  void removeProduct(int productId){
+    productsModel.removeProduct(productId).then((v) {
+      refreshProductsCallback();
     });
   }
 
@@ -86,7 +97,7 @@ class _MyProductsState extends State<MyProducts> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        NewProduct(addProductCallback2, showInSnackBar)),
+                        NewProduct(addProductCallback2)),
               );
             },
             iconPath: "assets/icons/PlusCircle.svg",
@@ -135,7 +146,7 @@ class _MyProductsState extends State<MyProducts> {
                                       width: (size.width >= 640)
                                           ? (size.width - 80) / 3
                                           : (size.width - 60) / 2,
-                                      child: ProductEntryCard(
+                                      child: productsModel.products[index].discountPercentage == 0 ? ProductEntryCard(
                                           product:
                                               productsModel.products[index],
                                           onPressed: () {
@@ -159,6 +170,7 @@ class _MyProductsState extends State<MyProducts> {
                                                                           .name,
                                                                       price: product
                                                                           .price,
+                                                                      discountPercentage: product.discountPercentage,
                                                                       classification:
                                                                           product
                                                                               .classification,
@@ -183,9 +195,64 @@ class _MyProductsState extends State<MyProducts> {
                                                                       ),
                                                                       vendor:
                                                                           usr),
-                                                                  initiateRefresh))),
+                                                                  initiateRefresh, setSale : setSale, removeProduct: removeProduct,))),
                                             );
-                                          })),
+                                          })
+                                      : DiscountedProductEntryCard(
+                                  product: new DiscountedProductEntry(
+                                  assetUrls:
+                                  productsModel.products[index].assetUrls,
+                                      name: productsModel.products[index].name,
+                                      price: productsModel.products[index].price*(1 - productsModel.products[index].discountPercentage/100),
+                                      prevPrice:
+                                      productsModel.products[index].price,
+                                      classification:
+                                      productsModel.products[index].classification,
+                                      quantifier:
+                                      productsModel.products[index].quantifier),
+                                    onPressed: () {
+                                      ProductEntry product =
+                                      productsModel.products[index];
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              new ChangeNotifierProvider(
+                                                  create: (context) =>
+                                                      ReviewsModel(
+                                                          product.id),
+                                                  child: ProductEntryListing(
+                                                      ProductEntryListingPage(
+                                                          assetUrls: product
+                                                              .assetUrls,
+                                                          name: product.name,
+                                                          price:
+                                                          product.price,
+                                                          discountPercentage: product.discountPercentage,
+                                                          classification: product
+                                                              .classification,
+                                                          quantifier: product
+                                                              .quantifier,
+                                                          description:
+                                                          product.desc,
+                                                          id: product.id,
+                                                          userInfo:
+                                                          new UserInfo(
+                                                            profilePictureAssetUrl:
+                                                            'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                            fullName:
+                                                            'Petar Nikolić',
+                                                            reputationNegative:
+                                                            7,
+                                                            reputationPositive:
+                                                            240,
+                                                          ),
+                                                          vendor: usr),
+                                                      initiateRefresh, setSale: setSale, removeProduct: removeProduct))),
+                                        );
+
+                                    })
+                                  ),
                                 ),
                               );
                             }),

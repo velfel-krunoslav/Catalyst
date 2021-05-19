@@ -12,16 +12,16 @@ import '../config.dart';
 import '../internals.dart';
 
 class OrdersModel extends ChangeNotifier {
-  int buyerId = 0;
+  int userId = 0;
   List<Order> orders = [];
+  List<Order> deliveryOrders = [];
   List<DateOrder> dateOrders = [];
-
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
 
   final String _privateKey = PRIVATE_KEY;
   int ordersCount = 0;
-
+  int deliveryOrdersCount = 0;
   bool isLoading = true;
   Credentials _credentials;
   Web3Client _client;
@@ -36,11 +36,14 @@ class OrdersModel extends ChangeNotifier {
   ContractFunction _getOrders;
   ContractFunction _getOrdersCount;
   ContractFunction _checkForOrder;
+  ContractFunction _getDeliveryOrders;
+  ContractFunction _getDeliveryOrdersCount;
+  ContractFunction _setStatus;
+
   OrdersModel([int b = 0]) {
-    this.buyerId = b;
+    this.userId = b;
     initiateSetup();
   }
-  int userId;
   int productId;
   bool isValid;
   OrdersModel.check(int userId, int productId) {
@@ -80,16 +83,76 @@ class OrdersModel extends ChangeNotifier {
     _getOrders = _contract.function("getOrders");
     _getOrdersCount = _contract.function("getOrdersCount");
     _checkForOrder = _contract.function("checkForOrder");
+    _getDeliveryOrders = _contract.function("getDeliveryOrders");
+    _getDeliveryOrdersCount = _contract.function("getDeliveryOrdersCount");
+    _setStatus = _contract.function("setStatus");
+
     if (productId != null && userId != null) {
       isValid = await checkForOrder(userId, productId);
       isLoading = false;
       notifyListeners();
     } else {
-      await getOrders(buyerId);
+      await getOrders(userId);
       setDateOrders();
+      await getDeliveryOrders(userId);
     }
   }
+  setStatus(int orderId, int status) async {
+    if (orderId != null && status != null) {
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _setStatus,
+              parameters: [
+                BigInt.from(orderId),
+                BigInt.from(status)
+              ],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      getDeliveryOrders(userId);
+    }
+  }
+  getDeliveryOrders(int userId) async {
+    isLoading = true;
+    notifyListeners();
+    List totalList = await _client.call(
+        contract: _contract,
+        function: _getDeliveryOrdersCount,
+        params: [BigInt.from(userId)]);
+    BigInt total = totalList[0];
+    deliveryOrdersCount = total.toInt();
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getDeliveryOrders,
+        params: [BigInt.from(userId), total]);
+    deliveryOrders.clear();
+    for (int i = deliveryOrdersCount - 1; i >= 0; i--) {
+      var t = temp[0][i];
+      if (t[4].toInt() == 0) {
+        List<String> dateParts = t[3].split("-");
+        DateTime date = DateTime(
+            int.parse(dateParts[0]), int.parse(dateParts[1]),
+            int.parse(dateParts[2].substring(0, 2)));
 
+        //print(t);
+        Order o = Order(
+            id: t[0].toInt(),
+            productId: t[1].toInt(),
+            amount: t[2].toInt(),
+            buyerId: t[5].toInt(),
+            sellerId: t[6].toInt(),
+            status: t[4].toInt(),
+            date: date,
+            deliveryAddress: t[7],
+            paymentType: t[8].toInt(),
+        price: t[9].toInt()/t[10].toInt());
+        deliveryOrders.add(o);
+      }
+    }
+    isLoading = false;
+    notifyListeners();
+  }
   getOrders(int buyerId) async {
     List totalList = await _client.call(
         contract: _contract,
@@ -118,7 +181,8 @@ class OrdersModel extends ChangeNotifier {
           status: t[4].toInt(),
           date: date,
           deliveryAddress: t[7],
-          paymentType: t[8].toInt());
+          paymentType: t[8].toInt(),
+          price: t[9].toInt()/t[10].toInt());
       orders.add(o);
     }
     notifyListeners();
@@ -133,6 +197,10 @@ class OrdersModel extends ChangeNotifier {
           orders[i].buyerId != null &&
           orders[i].sellerId != null &&
           dateStr != null) {
+        double price = double.parse(orders[i].price.toStringAsFixed(2));
+        Fraction frac1 = price.toFraction();
+        int numinator = frac1.numerator;
+        int denuminator = frac1.denominator;
         await _client.sendTransaction(
             _credentials,
             Transaction.callContract(
@@ -146,7 +214,9 @@ class OrdersModel extends ChangeNotifier {
                   BigInt.from(orders[i].buyerId),
                   BigInt.from(orders[i].sellerId),
                   orders[i].deliveryAddress,
-                  BigInt.from(orders[i].paymentType)
+                  BigInt.from(orders[i].paymentType),
+                  BigInt.from(numinator),
+                  BigInt.from(denuminator)
                 ],
                 gasPrice: EtherAmount.inWei(BigInt.one)));
         print("order dodat");
@@ -172,8 +242,8 @@ class OrdersModel extends ChangeNotifier {
         dateOrders.add(new DateOrder(date: d, orders: [orders[i]]));
       }
     }
-    isLoading = false;
-    notifyListeners();
+    //isLoading = false;
+    //notifyListeners();
   }
 
   checkForOrder(int userId, int productId) async {

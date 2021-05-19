@@ -97,6 +97,7 @@ class ProductEntry {
   List<String> assetUrls;
   String name;
   double price;
+  int discountPercentage;
   Classification classification;
   int quantifier;
   String desc;
@@ -107,6 +108,7 @@ class ProductEntry {
       this.assetUrls,
       this.name,
       this.price,
+        this.discountPercentage,
       this.classification,
       this.quantifier,
       this.desc,
@@ -168,6 +170,7 @@ class ProductEntryListingPage extends ProductEntry {
       Classification classification,
       int quantifier,
       int id,
+        int discountPercentage,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
@@ -179,7 +182,8 @@ class ProductEntryListingPage extends ProductEntry {
             name: name,
             price: price,
             classification: classification,
-            quantifier: quantifier);
+            quantifier: quantifier,
+            discountPercentage: discountPercentage);
 }
 
 class User {
@@ -217,8 +221,8 @@ class Review {
   int rating;
   String desc;
   int userId;
-
-  Review({this.id, this.productId, this.rating, this.desc, this.userId});
+  DateTime date;
+  Review({this.id, this.productId, this.rating, this.desc, this.userId, this.date});
 }
 
 class CartProduct {
@@ -226,6 +230,8 @@ class CartProduct {
   String name;
   double price;
   int cartQuantity, id, vendorId;
+  Classification classification;
+  int quantifier;
 
   CartProduct(
       {this.id,
@@ -233,7 +239,9 @@ class CartProduct {
       this.photoUrl,
       this.name,
       this.price,
-      this.cartQuantity});
+      this.cartQuantity,
+      this.classification,
+      this.quantifier});
 }
 
 class UserReview extends User {
@@ -311,6 +319,7 @@ class Order {
   int sellerId;
   String deliveryAddress;
   int paymentType;
+  double price;
   Order(
       {this.id,
       this.productId,
@@ -320,7 +329,8 @@ class Order {
       this.date,
       this.sellerId,
       this.deliveryAddress,
-      this.paymentType});
+      this.paymentType,
+      this.price});
 }
 
 ChatUser currentUser = ChatUser(

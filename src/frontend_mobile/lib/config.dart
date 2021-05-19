@@ -18,11 +18,11 @@ const double INSET_ICON_SIZE = 24;
 const double BUTTON_HEIGHT = 60;
 const double PRODUCT_ENTRY_HEIGHT = 200;
 const double CATEGORY_HEIGHT = 126;
-const String CURRENCY = '€';
+const String CURRENCY = ' RSD';
 const double REVIEW_BAR_WIDTH_PERCENT = 0.64;
 
 /* GLOBALS: */
 const PRIVATE_KEY =
-    "7097e2fa2beaf3ff46c0edafb37ca4b1ad021c3d5e70ca5057bca3754a9aa3b9";
+    "147f3dd32b5609c3e9b63f9ea1b01735c9a913e35fefbe794fb4b53e40fac2c3";
 const HOST = "192.168.1.8:7545";
 const JSON_NETWORK_ATTR = "5720";

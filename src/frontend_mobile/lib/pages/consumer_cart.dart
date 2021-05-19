@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'blank_page.dart';
 import '../models/productsModel.dart';
 
-String customerAddress = 'Kralja Aleksandra I Karađorđevića 36';
-String desc = '1BvBMSEYstWetqTFn5Au4m4G';
+String customerAddress = usr.homeAddress;
+String desc = usr.privateKey;
 
 class ConsumerCart extends StatefulWidget {
   VoidCallback initiateRefresh;
@@ -82,8 +82,11 @@ class _ConsumerCartState extends State<ConsumerCart> {
                     vendorId: pr.sellerId,
                     name: pr.name,
                     photoUrl: pr.assetUrls,
-                    price: pr.price,
-                    cartQuantity: int.parse(ids[i][1]));
+                    price: (pr.discountPercentage == 0) ? pr.price : pr.price * (1 - pr.discountPercentage/100),
+                    cartQuantity: int.parse(ids[i][1]),
+                    classification: pr.classification,
+                  quantifier: pr.quantifier
+                );
                 setState(() {
                   products.add(p);
                   quantities.add(int.parse(ids[i][1]));
@@ -163,6 +166,24 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w800,
                                             color: Color(BLACK)))
+                                  ]),
+                                  Row(
+                                      children: [
+                                    Text('(' +
+                                    products[index].quantifier.toString() +
+                                        ' ' +
+                                        ((products[index].classification ==
+                                        Classification.Volume)
+                                        ? 'ml'
+                                            : ((products[index].classification ==
+                                        Classification.Weight)
+                                        ? 'gr'
+                                            : 'kom')) +
+                                        ')',
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            color: Color(DARK_GREY)))
                                   ]),
                                   Row(children: [
                                     Text(
@@ -731,6 +752,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                 DateTime date =
                                     new DateTime(now.year, now.month, now.day);
                                 List<Order> orders = [];
+                                print(usr.id);
                                 for (int i = 0; i < products.length; i++) {
                                   orders.add(Order(
                                       id: 0,
@@ -745,7 +767,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           ? 0
                                           : 1,
                                       deliveryAddress: customerAddress,
-                                      productId: products[i].id));
+                                      productId: products[i].id,
+                                  price: products[i].price));
                                 }
                                 ordersModel.addOrders(orders).then((a) {
                                   Prefs.instance.removeValue('cartProducts');

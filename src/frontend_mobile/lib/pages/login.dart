@@ -87,14 +87,13 @@ class Login extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => new MultiProvider(providers: [
-                                ChangeNotifierProvider<ProductsModel>(
-                                    create: (_) => ProductsModel()),
-                                ChangeNotifierProvider<CategoriesModel>(
-                                    create: (_) => CategoriesModel()),
-                                ChangeNotifierProvider<UsersModel>(
-                                    create: (_) =>
-                                        UsersModel(privateKey, accountAddress)),
-                              ], child: ConsumerHomePage())),
+                            ChangeNotifierProvider<ProductsModel>(
+                                create: (_) => ProductsModel()),
+                            ChangeNotifierProvider<CategoriesModel>(
+                                create: (_) => CategoriesModel()),
+                            ChangeNotifierProvider<UsersModel>(
+                                create: (_) => UsersModel(privateKey, accountAddress)),
+                          ], child: ConsumerHomePage())),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
