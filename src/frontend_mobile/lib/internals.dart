@@ -40,7 +40,7 @@ Future<http.Response> publishMessage(Message msg) async {
   return response;
 }
 
-Future<http.Response> addChat(ChatInfo chat) async {
+Future<http.Response> addChat({int idSender, int idReceiver}) async {
   final String apiURL =
       "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Chat/AddChat";
   final response = await http.post(apiURL,
@@ -48,9 +48,9 @@ Future<http.Response> addChat(ChatInfo chat) async {
         'content-type': 'application/json; charset=utf-8',
       },
       body: jsonEncode(<String, dynamic>{
-        "id": chat.id,
-        "id_Sender": chat.idSender,
-        "id_Reciever": chat.idReciever,
+        "id": 0,
+        "id_Sender": idSender,
+        "id_Reciever": idReceiver,
       }));
   return response;
 }

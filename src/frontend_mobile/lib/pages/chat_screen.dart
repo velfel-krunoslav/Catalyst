@@ -171,9 +171,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     text: tmpMessage,
                     unread: false);
 
-                messageList[indexToUpdate] = tmpmsg;
+                if (messageList != null) messageList[indexToUpdate] = tmpmsg;
 
-                updateLastMessage();
+                if (updateLastMessage != null) updateLastMessage();
 
                 setState(() {
                   messages.add(tmpmsg);

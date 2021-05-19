@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:ui';
+import 'package:Kotarica/pages/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -412,27 +414,101 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       ],
                                     )),
                                 Spacer(),
-                                TextButton(
-                                    onPressed: () => {
-                                          /*Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Inbox(
-                                                      ChatUsers(
-                                                          name: _data.userInfo
-                                                              .fullName,
-                                                          imageURL: _data
-                                                              .userInfo
-                                                              .profilePictureAssetUrl))))*/
-                                        },
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Envelope.svg',
-                                        width: 38,
-                                        height: 38,
-                                        color: Color(DARK_GREY)),
-                                    style: TextButton.styleFrom(
-                                        backgroundColor: Color(LIGHT_GREY),
-                                        minimumSize: Size(60, 60))),
+                                (usr.id != _data.vendor.id)
+                                    ? TextButton(
+                                        onPressed: () => {
+                                              addChat(
+                                                      idReceiver:
+                                                          _data.vendor.id,
+                                                      idSender: usr.id)
+                                                  .then((value) {
+                                                int tmpchatID =
+                                                    ChatInfo.fromJson(
+                                                            jsonDecode(value
+                                                                .body
+                                                                .toString()))
+                                                        .id;
+
+                                                if (tmpchatID == -1) {
+                                                  requestChatID(usr.id,
+                                                          _data.vendor.id)
+                                                      .then((number) {
+                                                    int chatID =
+                                                        int.parse(number);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => ChatScreen(
+                                                                user: ChatUser(
+                                                                    chatID:
+                                                                        chatID,
+                                                                    id: _data
+                                                                        .vendor
+                                                                        .id,
+                                                                    photoUrl: _data
+                                                                        .vendor
+                                                                        .photoUrl,
+                                                                    name: _data
+                                                                        .vendor
+                                                                        .name,
+                                                                    surname: _data
+                                                                        .vendor
+                                                                        .surname),
+                                                                me: ChatUser(
+                                                                    chatID:
+                                                                        chatID,
+                                                                    id: usr.id,
+                                                                    photoUrl: usr
+                                                                        .photoUrl,
+                                                                    name: usr
+                                                                        .name,
+                                                                    surname: usr
+                                                                        .surname),
+                                                                chatID: chatID)));
+                                                  });
+                                                } else {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => ChatScreen(
+                                                              user: ChatUser(
+                                                                  chatID:
+                                                                      tmpchatID,
+                                                                  id: _data
+                                                                      .vendor
+                                                                      .id,
+                                                                  photoUrl: _data
+                                                                      .vendor
+                                                                      .photoUrl,
+                                                                  name: _data
+                                                                      .vendor
+                                                                      .name,
+                                                                  surname: _data
+                                                                      .vendor
+                                                                      .surname),
+                                                              me: ChatUser(
+                                                                  chatID:
+                                                                      tmpchatID,
+                                                                  id: usr.id,
+                                                                  photoUrl: usr
+                                                                      .photoUrl,
+                                                                  name:
+                                                                      usr.name,
+                                                                  surname: usr
+                                                                      .surname),
+                                                              chatID: tmpchatID)));
+                                                }
+                                              })
+                                            },
+                                        child: SvgPicture.asset(
+                                            'assets/icons/Envelope.svg',
+                                            width: 38,
+                                            height: 38,
+                                            color: Color(DARK_GREY)),
+                                        style: TextButton.styleFrom(
+                                            backgroundColor: Color(LIGHT_GREY),
+                                            minimumSize: Size(60, 60)))
+                                    : SizedBox.shrink()
                               ],
                             ),
                             SizedBox(
