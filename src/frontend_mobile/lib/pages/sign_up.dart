@@ -407,16 +407,15 @@ class _SignUpState extends State<SignUp> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    new MultiProvider(providers: [
-                                      ChangeNotifierProvider<ProductsModel>(
-                                          create: (_) => ProductsModel()),
-                                      ChangeNotifierProvider<CategoriesModel>(
-                                          create: (_) => CategoriesModel()),
-                                      ChangeNotifierProvider<UsersModel>(
-                                          create: (_) => UsersModel(
-                                              private_key, metamask_address)),
-                                    ], child: ConsumerHomePage(reg: true,))),
+                                builder: (context) => new MultiProvider(providers: [
+                                  ChangeNotifierProvider<ProductsModel>(
+                                      create: (_) => ProductsModel()),
+                                  ChangeNotifierProvider<CategoriesModel>(
+                                      create: (_) => CategoriesModel()),
+                                  ChangeNotifierProvider<UsersModel>(
+                                      create: (_) =>
+                                          UsersModel(private_key, metamask_address)),
+                                ], child: ConsumerHomePage(reg: true,))),
                           );
                         });
                       } else {

@@ -38,7 +38,8 @@ class _DateOrdersState extends State<DateOrders> {
       getProductByIdCallback(dateOrder.orders[i].productId).then((t) {
         setState(() {
           products.add(t);
-          sum += t.price * dateOrder.orders[i].amount;
+          if (dateOrder.orders[i].status != 3)
+            sum += dateOrder.orders[i].price * dateOrder.orders[i].amount;
           //print(t);
         });
       });
@@ -143,7 +144,8 @@ class _DateOrdersState extends State<DateOrders> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(products[index].name,
+                                    Text(products[index].name.length <= 20 ? products[index].name
+                                        : products[index].name.substring(0, 20) + "...",
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 16,
@@ -151,8 +153,8 @@ class _DateOrdersState extends State<DateOrders> {
                                             color: Color(BLACK))),
                                     SizedBox(height: 5,),
                                     Text(
-                                        products[index].discountPercentage == 0 ? products[index].price.toStringAsFixed(2) + ' $CURRENCY'
-                                            : (products[index].price * (1 - products[index].discountPercentage/100)).toStringAsFixed(2)+ ' $CURRENCY',
+                                        dateOrder.orders[index].price.toStringAsFixed(2) + ' $CURRENCY'
+                                            ,
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 16,
@@ -208,7 +210,7 @@ class _DateOrdersState extends State<DateOrders> {
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border(
-                            top: BorderSide(color: Colors.black, width: 1))),
+                            top: BorderSide(color: Colors.grey, width: 1))),
                     child: Row(
                       children: [
                         SizedBox(height: 48),

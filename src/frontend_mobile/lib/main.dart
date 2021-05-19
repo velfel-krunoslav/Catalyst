@@ -62,8 +62,6 @@ class _SkipState extends State<Skip> {
                           create: (_) => ProductsModel()),
                       ChangeNotifierProvider<CategoriesModel>(
                           create: (_) => CategoriesModel()),
-                      ChangeNotifierProvider<OrdersModel>(
-                          create: (_) => OrdersModel()),
                       ChangeNotifierProvider<UsersModel>(
                           create: (_) => UsersModel(value1, value2)),
                     ], child: ConsumerHomePage())),

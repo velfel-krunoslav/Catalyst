@@ -46,7 +46,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   var reviewsModel;
   Function setSale;
   void newReviewCallback2(int productId, int rating, String desc, int userId) {
-    reviewsModel.addReview(productId, rating, desc, usr.id);
+    reviewsModel.addReview(productId, rating, desc, usr.id, DateTime.now());
   }
   void refreshPage(int discountPercentage){
     setState(() {

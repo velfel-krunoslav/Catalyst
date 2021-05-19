@@ -37,7 +37,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   String privateKey, accountAddress;
 
-  static GlobalKey<ScaffoldState> _scaffoldKey;
+  GlobalKey<ScaffoldState> _scaffoldKey;
 
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
@@ -107,7 +107,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
     if (reg == true)
-      showWelcomeDialog();
+     showWelcomeDialog();
   }
 
   void showInSnackBar(String value) {

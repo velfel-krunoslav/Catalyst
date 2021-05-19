@@ -221,8 +221,8 @@ class Review {
   int rating;
   String desc;
   int userId;
-
-  Review({this.id, this.productId, this.rating, this.desc, this.userId});
+  DateTime date;
+  Review({this.id, this.productId, this.rating, this.desc, this.userId, this.date});
 }
 
 class CartProduct {
@@ -319,6 +319,7 @@ class Order {
   int sellerId;
   String deliveryAddress;
   int paymentType;
+  double price;
   Order(
       {this.id,
       this.productId,
@@ -328,7 +329,8 @@ class Order {
       this.date,
       this.sellerId,
       this.deliveryAddress,
-      this.paymentType});
+      this.paymentType,
+      this.price});
 }
 
 ChatUser currentUser = ChatUser(

@@ -131,7 +131,8 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text( productsModel.product.name +
+                  Text( (productsModel.product.name.length <= 10 ? productsModel.product.name
+                      : productsModel.product.name.substring(0, 10) + "...") +
                       ' (' +  productsModel.product.quantifier.toString()
                       +  (productsModel.product.classification.index == 0 ? "" : (productsModel.product.classification.index == 1 ? "g" : "ml"))  + ")",
                       style: TextStyle(
@@ -141,8 +142,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                           fontWeight: FontWeight.w700)),
                   SizedBox(height: 5),
                   Text(
-                      productsModel.product.discountPercentage == 0 ? productsModel.product.price.toStringAsFixed(2) + ' $CURRENCY'
-                          : (productsModel.product.price * (1 - productsModel.product.discountPercentage/100)).toStringAsFixed(2)  + ' $CURRENCY'
+                      deliveryOrder.price.toStringAsFixed(2) + ' $CURRENCY'
                       ,
                       style: TextStyle(
                           fontFamily: 'Inter',
@@ -290,7 +290,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                       fontSize: 16,
                       color: Color(BLACK))),
               Spacer(),
-              Text((productsModel.product.price*deliveryOrder.amount).toStringAsFixed(2) +' $CURRENCY',
+              Text((deliveryOrder.price*deliveryOrder.amount).toStringAsFixed(2) +' $CURRENCY',
                   style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 24,

@@ -123,6 +123,7 @@ class ProductsModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     List<ProductEntry> queryProducts = [];
+    List<ProductEntry> disQueryProducts = [];
     List totalProductsList = await _client.call(
         contract: _contract,
         function: _getQueryProductsCount,
@@ -136,18 +137,36 @@ class ProductsModel extends ChangeNotifier {
     for (int i = queryProductsCount - 1; i >= 0; i--) {
       var t = temp[0][i];
       //print(t);
-      queryProducts.add(ProductEntry(
-          id: t[0].toInt(),
-          name: t[1],
-          price: t[2].toInt() / t[3].toInt(),
-          assetUrls: t[4].split(",").toList(),
-          classification: getClassification(t[5].toInt()),
-          quantifier: t[6].toInt(),
-          desc: t[7],
-          sellerId: t[8].toInt()));
+      if (t[4].toInt() == 0) {
+        queryProducts.add(ProductEntry(
+            id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            discountPercentage: t[4].toInt(),
+            categoryId: t[10].toInt(),
+            sellerId: t[9].toInt()));
+      }
+      else{
+        disQueryProducts.add(ProductEntry(
+            id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            discountPercentage: t[4].toInt(),
+            categoryId: t[10].toInt(),
+            sellerId: t[9].toInt()));
+      }
     }
     productsCount = queryProductsCount;
     products = queryProducts;
+    discountedProducts = disQueryProducts;
     isLoading = false;
     notifyListeners();
    // return queryProducts;

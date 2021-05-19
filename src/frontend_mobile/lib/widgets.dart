@@ -665,7 +665,11 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Pre 1 dan",
+                      Text((widget.review.date.year == DateTime.now().year &&
+                          (widget.review.date.month == DateTime.now().month &&
+                            widget.review.date.day == DateTime.now().day)
+                            ? '${widget.review.date.hour.toString().padLeft(2, '0')}:${widget.review.date.minute.toString().padLeft(2, '0')}'
+                                : '${widget.review.date.day}.${widget.review.date.month}.${widget.review.date.year}.'),
                           style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'Inter',
@@ -1080,8 +1084,9 @@ Widget HomeDrawer(
         text: "Odjavi se",
         onPressed: () {
           Prefs.instance.removeAll();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => new Welcome()));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => new Welcome()), (Route<dynamic> route) => false);
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => new Welcome()));
         },
         iconUrl: "assets/icons/SignOut.svg")
   ];

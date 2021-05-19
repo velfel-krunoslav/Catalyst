@@ -134,6 +134,7 @@ class OrdersModel extends ChangeNotifier {
         DateTime date = DateTime(
             int.parse(dateParts[0]), int.parse(dateParts[1]),
             int.parse(dateParts[2].substring(0, 2)));
+
         //print(t);
         Order o = Order(
             id: t[0].toInt(),
@@ -144,7 +145,8 @@ class OrdersModel extends ChangeNotifier {
             status: t[4].toInt(),
             date: date,
             deliveryAddress: t[7],
-            paymentType: t[8].toInt());
+            paymentType: t[8].toInt(),
+        price: t[9].toInt()/t[10].toInt());
         deliveryOrders.add(o);
       }
     }
@@ -179,7 +181,8 @@ class OrdersModel extends ChangeNotifier {
           status: t[4].toInt(),
           date: date,
           deliveryAddress: t[7],
-          paymentType: t[8].toInt());
+          paymentType: t[8].toInt(),
+          price: t[9].toInt()/t[10].toInt());
       orders.add(o);
     }
     notifyListeners();
@@ -194,6 +197,10 @@ class OrdersModel extends ChangeNotifier {
           orders[i].buyerId != null &&
           orders[i].sellerId != null &&
           dateStr != null) {
+        double price = double.parse(orders[i].price.toStringAsFixed(2));
+        Fraction frac1 = price.toFraction();
+        int numinator = frac1.numerator;
+        int denuminator = frac1.denominator;
         await _client.sendTransaction(
             _credentials,
             Transaction.callContract(
@@ -207,7 +214,9 @@ class OrdersModel extends ChangeNotifier {
                   BigInt.from(orders[i].buyerId),
                   BigInt.from(orders[i].sellerId),
                   orders[i].deliveryAddress,
-                  BigInt.from(orders[i].paymentType)
+                  BigInt.from(orders[i].paymentType),
+                  BigInt.from(numinator),
+                  BigInt.from(denuminator)
                 ],
                 gasPrice: EtherAmount.inWei(BigInt.one)));
         print("order dodat");

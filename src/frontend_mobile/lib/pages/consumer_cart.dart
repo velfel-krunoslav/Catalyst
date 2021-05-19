@@ -751,6 +751,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                 DateTime date =
                                     new DateTime(now.year, now.month, now.day);
                                 List<Order> orders = [];
+                                print(usr.id);
                                 for (int i = 0; i < products.length; i++) {
                                   orders.add(Order(
                                       id: 0,
@@ -765,7 +766,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           ? 0
                                           : 1,
                                       deliveryAddress: customerAddress,
-                                      productId: products[i].id));
+                                      productId: products[i].id,
+                                  price: products[i].price));
                                 }
                                 ordersModel.addOrders(orders).then((a) {
                                   Prefs.instance.removeValue('cartProducts');

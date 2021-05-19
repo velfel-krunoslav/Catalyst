@@ -107,6 +107,8 @@ class _NewProductState extends State<NewProduct> {
                   SizedBox(
                       height: textFieldHeight[0],
                       child: TextFormField(
+                          maxLength: 30,
+                          maxLengthEnforced: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               setState(() {
@@ -141,6 +143,8 @@ class _NewProductState extends State<NewProduct> {
                   SizedBox(
                     height: textFieldHeight[1],
                     child: TextFormField(
+                        maxLength: 200,
+                        maxLengthEnforced: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
@@ -185,6 +189,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[4],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -208,6 +214,7 @@ class _NewProductState extends State<NewProduct> {
                                   quantity = int.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(
@@ -353,6 +360,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[3],
                             width: MediaQuery.of(context).size.width / 2.0 - 20,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -376,6 +385,7 @@ class _NewProductState extends State<NewProduct> {
                                   inStock = int.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(
@@ -402,6 +412,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[5],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -425,6 +437,7 @@ class _NewProductState extends State<NewProduct> {
                                   price = double.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(

@@ -13,7 +13,8 @@ contract Orders{
         uint sellerId;
         string deliveryAddress;
         uint paymentType; //    0 - placanje pouzecem //   1 - eterijum
-
+        uint price_numerator;
+        uint price_denominator;
     }
 
     mapping (uint => Order) public orders;
@@ -22,18 +23,18 @@ contract Orders{
 
     constructor() public{
 
-        orders[0] = Order(0, 0, 1, "2021-02-01", 0, 0, 0, "Kralja Petra, Kragujevac, Srbija", 0);
-        orders[1] = Order(1, 1, 2, "2021-03-01", 0, 0, 0, "Kralja Petra, Kragujevac, Srbija", 0);
-        orders[2] = Order(2, 2, 1, "2021-03-01", 0, 0, 0, "Kralja Petra, Kragujevac, Srbija", 0);
-        orders[3] = Order(3, 3, 3, "2021-04-01", 0, 0, 0, "Kralja Petra, Kragujevac, Srbija", 0);
-        orders[4] = Order(4, 4, 1, "2021-04-01", 0, 0, 0, "Kralja Petra, Kragujevac, Srbija", 0);
-        orders[5] = Order(5, 5, 1, "2021-04-01", 0, 1, 0, "Kralja Petra, Kragujevac, Srbija", 0);
+        orders[0] = Order(0, 0, 1, "2021-02-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[1] = Order(1, 1, 2, "2021-03-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[2] = Order(2, 2, 1, "2021-03-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[3] = Order(3, 3, 3, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[4] = Order(4, 4, 1, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[5] = Order(5, 5, 1, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
         ordersCount = 6;
     }
 
-    function createOrder(uint _productId, uint _amount, string memory _date,  uint _buyerId, uint _sellerId, string memory _deliveryAddress, uint _paymentType) public{
+    function createOrder(uint _productId, uint _amount, string memory _date,  uint _buyerId, uint _sellerId, string memory _deliveryAddress, uint _paymentType, uint _price_numerator, uint _price_denominator) public{
 
-        orders[ordersCount++] = Order(ordersCount, _productId, _amount, _date, 0, _buyerId, _sellerId, _deliveryAddress, _paymentType);
+        orders[ordersCount++] = Order(ordersCount, _productId, _amount, _date, 0, _buyerId, _sellerId, _deliveryAddress, _paymentType, _price_numerator, _price_denominator);
         emit OrderCreated(_productId, ordersCount - 1);
 
     }
@@ -50,7 +51,10 @@ contract Orders{
                     orders[i].buyerId,
                     orders[i].sellerId,
                     orders[i].deliveryAddress,
-                    orders[i].paymentType);
+                    orders[i].paymentType,
+                orders[i].price_numerator,
+                orders[i].price_denominator
+                );
             }
         }
         return y;
@@ -85,7 +89,9 @@ contract Orders{
                     orders[i].buyerId,
                     orders[i].sellerId,
                     orders[i].deliveryAddress,
-                    orders[i].paymentType);
+                    orders[i].paymentType,
+                orders[i].price_numerator,
+                orders[i].price_denominator);
             }
         }
         return y;
