@@ -146,6 +146,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               : HomeDrawer(context, usersModel.user, refreshProductsCallback,
                   getProductByIdCallback, incrementCart), //TODO context
           appBar: AppBar(
+            centerTitle: true,
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
             flexibleSpace: Container(
@@ -168,6 +169,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 onPressed: () {
                                   _scaffoldKey.currentState.openDrawer();
                                 })),
+                        SizedBox(width: 130),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SvgPicture.asset('assets/icons/KotaricaIconMonochrome.svg')
+                            ]
+                        ),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
