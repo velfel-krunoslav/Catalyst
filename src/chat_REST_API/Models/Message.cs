@@ -25,11 +25,11 @@ namespace chat_SignalR.Models
     [Required]
     public DateTime Timestamp { get; set; }
 
-    public bool statusRead { get; set; }
+    public bool unread { get; set; }
 
             public string toString()
         {
-            return Id + " " + ChatId + " " + FromId + " "  + MessageText + " " + Timestamp + " " + statusRead;
+            return Id + " " + ChatId + " " + FromId + " "  + MessageText + " " + Timestamp + " " + unread;
         }
     }
 }

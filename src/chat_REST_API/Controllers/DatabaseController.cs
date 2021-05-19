@@ -13,6 +13,7 @@ namespace SignalR_chat_API.Controllers
     [ApiController]
     public class DatabaseController : ControllerBase
     {
+        /*
         private databaseContext context = new databaseContext();
 
         [HttpGet("ProbaDatabaseController")]
@@ -58,7 +59,7 @@ namespace SignalR_chat_API.Controllers
                                   PrivateKey = u.privateKey,
                                   IDSender = c.Id_Sender,
                                   IDReciever = c.Id_Reciever,
-                                  ChatRead = m.statusRead,
+                                  ChatRead = m.unread,
                                   Message=m.MessageText,
                                   Date=m.Timestamp,
 
@@ -67,7 +68,7 @@ namespace SignalR_chat_API.Controllers
 
             return Ok(user_chats);
         }
-
+        
         //IDUser1 metamask i privatni kljuc sa istim za drugog
         /*
         [HttpGet("UserToUserChatByUserID")]

@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ? '${u.timestamp.hour.toString().padLeft(2, '0')}:${u.timestamp.minute.toString().padLeft(2, '0')}'
                   : '${u.timestamp.day}.${u.timestamp.month}.${u.timestamp.year}.',
               text: u.messageText,
-              unread: u.statusRead));
+              unread: u.unread));
         });
       }
     });
@@ -162,7 +162,7 @@ class _ChatScreenState extends State<ChatScreen> {
               if (tmpMessage != null && tmpMessage.compareTo('') != 0) {
                 Message tmpmsg = Message(
                     id: 0,
-                    sender: me,
+                    sender: user,
                     senderID: me.id,
                     time:
                         '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}',
@@ -170,6 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     unread: false);
 
                 messageList[indexToUpdate] = tmpmsg;
+
                 updateLastMessage();
 
                 setState(() {
@@ -183,8 +184,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     time: DateTime.now().toIso8601String(),
                     text: tmpMessage,
                     unread: true);
-                publishMessage(tmpmsgpub)
-                    .then((value) => print('${value.statusCode.toString()}'));
+                publishMessage(tmpmsgpub).then((value) =>
+                    print('Response value:${value.statusCode.toString()}'));
                 txt.text = '';
               }
             },
@@ -249,7 +250,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.only(top: 25.0),
                         itemCount: messages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final Message message = messages[index];
+                          Message message = messages[index];
                           return _buildChat(message, message.senderID == me.id);
                         }),
                   )),

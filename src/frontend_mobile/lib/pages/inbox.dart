@@ -3,11 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_mobile/config.dart';
 import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'chat_screen.dart';
@@ -33,10 +28,17 @@ class Message {
   String time;
   String text;
   bool unread;
+  bool isMine;
   int senderID;
 
   Message(
-      {this.id, this.senderID, this.sender, this.time, this.text, this.unread});
+      {this.id,
+      this.senderID,
+      this.sender,
+      this.time,
+      this.text,
+      this.unread,
+      this.isMine});
 
   @override
   String toString() {
@@ -68,9 +70,7 @@ class _UserInboxState extends State<Inbox> {
   List<ChatUser> contacts = [];
   List<Message> chats = [];
   void updateChatsAtIndex(Message msg, int index) {
-    setState(() {
-      chats[index] = msg;
-    });
+    setState(() {});
   }
 
   @override
@@ -104,20 +104,21 @@ class _UserInboxState extends State<Inbox> {
             setState(() {
               contacts.add(tmpchatuser);
             });
+
             requestLatestMessageFromChat(chatIDs[index]).then((value) {
-              print('POSLJEDNJA PORUKA ******* $value');
               // TODO CHECK IF RETURN IS NULL
               var msg = ChatMessageInfo.fromJson(jsonDecode(value)[0]);
               Message tmpmsg = Message(
                   id: msg.id,
                   sender: contacts[index],
+                  isMine: msg.fromId == usr.id,
                   time: (msg.timestamp.year == DateTime.now().year &&
                           msg.timestamp.month == DateTime.now().month &&
                           msg.timestamp.day == DateTime.now().day)
                       ? '${msg.timestamp.hour.toString().padLeft(2, '0')}:${msg.timestamp.minute.toString().padLeft(2, '0')}'
                       : '${msg.timestamp.day}.${msg.timestamp.month}.${msg.timestamp.year}.',
                   text: msg.messageText,
-                  unread: msg.statusRead);
+                  unread: msg.unread);
               setState(() {
                 chats.add(tmpmsg);
               });
@@ -136,7 +137,7 @@ class _UserInboxState extends State<Inbox> {
       this.setState(() {});
     };
 
-    print('${chats[index].sender.id}');
+    print('CHATS[INDEX]:${chats[index].sender.id} usr.id:${usr.id}');
 
     if (chats[index].sender.id != usr.id) setMessageReadStatus(chat.id, false);
 
@@ -228,8 +229,6 @@ class _UserInboxState extends State<Inbox> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       Message chat = chats[index];
-                                      print(
-                                          '${chat.unread}      ${chat.sender.id}     ${usr.id}');
                                       return GestureDetector(
                                           onTap: () =>
                                               redirectToChatInbox(chat, index),
@@ -283,7 +282,7 @@ class _UserInboxState extends State<Inbox> {
                                             top: 5.0, bottom: 5.0, right: 5.0),
                                         decoration: BoxDecoration(
                                           gradient: (chat.unread == true &&
-                                                  chat.sender.id != usr.id)
+                                                  (!chat.isMine))
                                               ? LinearGradient(colors: <Color>[
                                                   Color(TEAL),
                                                   Color(MINT)
@@ -331,9 +330,8 @@ class _UserInboxState extends State<Inbox> {
                                                       style: TextStyle(
                                                           fontFamily: 'Inter',
                                                           color: (chat.unread &&
-                                                                  chat.sender
-                                                                          .id !=
-                                                                      usr.id)
+                                                                  (!chat
+                                                                      .isMine))
                                                               ? Colors.white
                                                               : Colors.black,
                                                           fontSize: 16.0,
@@ -351,9 +349,8 @@ class _UserInboxState extends State<Inbox> {
                                                         style: TextStyle(
                                                           fontFamily: 'Inter',
                                                           color: (chat.unread &&
-                                                                  chat.sender
-                                                                          .id !=
-                                                                      usr.id)
+                                                                  (!chat
+                                                                      .isMine))
                                                               ? Colors.white
                                                               : Color(
                                                                   DARK_GREY),
@@ -377,9 +374,7 @@ class _UserInboxState extends State<Inbox> {
                                                     style: TextStyle(
                                                         fontFamily: 'Inter',
                                                         color: (chat.unread &&
-                                                                chat.sender
-                                                                        .id !=
-                                                                    usr.id)
+                                                                (!chat.isMine))
                                                             ? Color(LIGHT_GREY)
                                                             : Colors.black,
                                                         fontSize: 15.0,
@@ -388,8 +383,7 @@ class _UserInboxState extends State<Inbox> {
                                                   ),
                                                   SizedBox(height: 5.0),
                                                   (chat.unread &&
-                                                          chat.sender.id !=
-                                                              usr.id)
+                                                          (!chat.isMine))
                                                       ? Container(
                                                           width: 100.0,
                                                           height: 20.0,

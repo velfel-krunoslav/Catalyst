@@ -14,7 +14,7 @@ namespace SignalR_chat_API.Controllers
         public class MessageController : Controller
         {
             private databaseContext context = new databaseContext();
-
+        /*
             [HttpGet("ProbaMessages")]
             public IActionResult Proba()
             {
@@ -27,13 +27,13 @@ namespace SignalR_chat_API.Controllers
                 int broj = context.Chats.Count();
                 return broj;
             }
-
+        */
             [HttpGet("GetMessage")]
             public Message GetMessage(int id)
             {
                 return context.Messages.Where(x => x.Id == id).FirstOrDefault();
             }
-
+        /*
             [HttpGet("GetAllMessages")]
             public List<Message> GetAllMessages()
             {
@@ -46,12 +46,12 @@ namespace SignalR_chat_API.Controllers
                 {
                     return chat;
                 }
-            }
-
+        }
+        */
         [HttpGet("GetAllMessagesFromChatID")]
         public List<Message> GetAllMessagesFromChat(int messageChatID)
         {
-            var chat = context.Messages.Where(x => x.ChatId == messageChatID).OrderBy(m=>m.Timestamp).ToList();
+            var chat = context.Messages.Where(x => x.ChatId == messageChatID).OrderBy(m => m.Timestamp).ToList();
 
             if (chat == null)
             {
@@ -64,10 +64,16 @@ namespace SignalR_chat_API.Controllers
         }
 
         [HttpGet("GetLatestMessageFromChatID")]
-        public IActionResult GetLatestMessageFromSenderID(int chatID)
+        public IActionResult GetLatestMessageFromChatID(int chatID)
         {
-            var max = context.Messages.Where(x => x.ChatId == chatID).Max(x => x.Id);
-            var result = context.Messages.Where(x => x.Id == max);
+            
+            var max=context.Messages.Where(x => x.ChatId == chatID).DefaultIfEmpty();
+            if (!max.Any())
+            {
+                return null;
+            }
+
+            var result = context.Messages.Where(x => x.Id == context.Messages.Where(x => x.ChatId == chatID).Max(x => x.Id));
 
             if (result == null)
             {
@@ -80,11 +86,11 @@ namespace SignalR_chat_API.Controllers
         }
 
         [HttpGet("ChangeStatusRead")]
-        public void ChangeStatusRead(int IDMessage,bool status)
+        public void ChangeStatusRead(int IDMessage,bool unread)
         {
             Message result = context.Messages.Where(x => x.Id == IDMessage).FirstOrDefault();
 
-            result.statusRead = status;
+            result.unread = unread;
             context.SaveChanges();
         }
 
@@ -94,7 +100,7 @@ namespace SignalR_chat_API.Controllers
             {
             Console.Out.WriteLine("DEBUG STARTS HERE *******");
             Console.Out.WriteLine(messageParam.toString());
-                var isMessagePresent = context.Messages.Where(m => m.Id == messageParam.Id&&m.FromId==messageParam.FromId&&m.MessageText==messageParam.MessageText&&m.Timestamp==messageParam.Timestamp&&m.statusRead==messageParam.statusRead);
+                var isMessagePresent = context.Messages.Where(m => m.Id == messageParam.Id&&m.FromId==messageParam.FromId&&m.MessageText==messageParam.MessageText&&m.Timestamp==messageParam.Timestamp&&m.unread==messageParam.unread);
                 if (!isMessagePresent.Any())
                 {
                     Message message = new Message();
@@ -102,7 +108,7 @@ namespace SignalR_chat_API.Controllers
                     message.ChatId = messageParam.ChatId;
                     message.MessageText = messageParam.MessageText;
                     message.Timestamp = messageParam.Timestamp;
-                    message.statusRead = messageParam.statusRead;
+                    message.unread = messageParam.unread;
 
 
                 context.Messages.Add(message);
@@ -132,5 +138,26 @@ namespace SignalR_chat_API.Controllers
                 }
             }
 
-        }
+            [HttpDelete("DeleteAllMessagesWithChatID")]
+             public IActionResult DeleteAllMessagesWithChatID(int chatID)
+            {
+                var message = context.Messages;
+
+                if (context.Messages.Where(x => x.ChatId == chatID).Count()==0)
+                {
+                return BadRequest(new { message = "ID of message not present!" });
+                }
+                else
+                {
+                while (context.Messages.Where(x => x.ChatId == chatID).Count() != 0)
+                {
+                    Message t = context.Messages.Where(x => x.ChatId == chatID).FirstOrDefault();
+                    context.Messages.Remove(t);
+                    context.SaveChanges();
+                }
+                return Ok("Deleted all messages from chatID: " + chatID + " successfully");
+                }
+            }
+
+    }
     }

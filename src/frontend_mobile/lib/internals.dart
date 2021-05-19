@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:frontend_mobile/config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-
 import 'pages/inbox.dart';
 
 User usr;
@@ -22,20 +20,6 @@ Future<String> requestChatID(int userID1, int userID2) async {
   var response = await http.get(uri);
   return response.body;
 }
-/*
-Future<http.Response> publishMessage(Message msg) {
-  return http.post(
-    Uri.http('192.168.1.3:3000', '/Message/AddMessage'),
-    body: jsonEncode(<String, String>{
-      'id': msg.id.toString(),
-      'chatId': msg.sender.chatID.toString(),
-      'fromId': msg.sender.id.toString(),
-      'messageText': msg.text,
-      'timestamp': msg.time,
-      'statusRead': msg.unread.toString()
-    }),
-  );
-}*/
 
 Future<http.Response> publishMessage(Message msg) async {
   final String apiURL = "http://192.168.1.3:3000/Message/AddMessage";
@@ -49,7 +33,21 @@ Future<http.Response> publishMessage(Message msg) async {
         'fromId': msg.sender.id.toString(),
         'messageText': msg.text,
         'timestamp': msg.time,
-        'statusRead': msg.unread
+        'unread': msg.unread
+      }));
+  return response;
+}
+
+Future<http.Response> addChat(ChatInfo chat) async {
+  final String apiURL = "http://192.168.1.3:3000/Chat/AddChat";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "id": chat.id,
+        "id_Sender": chat.idSender,
+        "id_Reciever": chat.idReciever,
       }));
   return response;
 }
@@ -459,12 +457,12 @@ class ChatMessageInfo {
     this.fromId,
     this.messageText,
     this.timestamp,
-    this.statusRead,
+    this.unread,
   });
 
   @override
   String toString() {
-    return '[${this.id},${this.chatId},${this.fromId},${this.messageText},${this.timestamp},${this.statusRead}]';
+    return '[${this.id},${this.chatId},${this.fromId},${this.messageText},${this.timestamp},${this.unread}]';
   }
 
   int id;
@@ -472,7 +470,7 @@ class ChatMessageInfo {
   int fromId;
   String messageText;
   DateTime timestamp;
-  bool statusRead;
+  bool unread;
 
   factory ChatMessageInfo.fromJson(Map<String, dynamic> json) =>
       ChatMessageInfo(
@@ -481,7 +479,7 @@ class ChatMessageInfo {
         fromId: json["fromId"],
         messageText: json["messageText"],
         timestamp: DateTime.parse(json["timestamp"]),
-        statusRead: json["statusRead"],
+        unread: json["unread"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -490,6 +488,6 @@ class ChatMessageInfo {
         "fromId": fromId,
         "messageText": messageText,
         "timestamp": timestamp.toIso8601String(),
-        "statusRead": statusRead,
+        "unread": unread,
       };
 }

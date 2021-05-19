@@ -9,7 +9,7 @@ using SignalR_chat_API.Data;
 namespace SignalR_chat_API.Migrations
 {
     [DbContext(typeof(databaseContext))]
-    [Migration("20210504213222_first")]
+    [Migration("20210518233526_first")]
     partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace SignalR_chat_API.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<bool>("statusRead")
+                    b.Property<bool>("unread")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

@@ -15,7 +15,7 @@ namespace SignalR_chat_API.Controllers
     public class ChatController : Controller
     {
         private databaseContext context = new databaseContext();
-
+        /*
         [HttpGet("ProbaChats")]
         public IActionResult Proba()
         {
@@ -28,20 +28,20 @@ namespace SignalR_chat_API.Controllers
             int broj = context.Chats.Count();
             return broj;
         }
-
+        
         [HttpGet("CountChatsForUser")]
         public int CountChatsForUser(int id)
         {
             int broj = context.Chats.Where(u => (u.Id_Sender == id || u.Id_Reciever == id)).Select(u => new Chat { Id = u.Id, Id_Sender = u.Id_Sender, Id_Reciever = u.Id_Reciever }).Count();
             return broj;
         }
-
+        */
         [HttpGet("GetChat")]
         public Chat GetChats(int id)
         {
             return context.Chats.Where(x => x.Id == id).FirstOrDefault();
         }
-
+        
         [HttpGet("GetChats")]
         public List<Chat> GetChats()
         {
@@ -55,7 +55,7 @@ namespace SignalR_chat_API.Controllers
                 return chat;
             }
         }
-
+        
         [HttpGet("GetChatsFromUserID")]
         public List<Chat> GetChatsFromUserID(int id)
         {

@@ -31,7 +31,7 @@ namespace SignalR_chat_API.Migrations
                     FromId = table.Column<int>(type: "INTEGER", nullable: false),
                     MessageText = table.Column<string>(type: "varchar(500)", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "getdate()"),
-                    statusRead = table.Column<bool>(type: "INTEGER", nullable: false)
+                    unread = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

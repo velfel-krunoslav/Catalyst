@@ -18,7 +18,7 @@ namespace chat_SignalR.Controllers
     public class UserController : Controller
     {
         private databaseContext context = new databaseContext();
-
+        /*
         [HttpGet("ProbaUsers")]
         public IActionResult Proba()
         {
@@ -31,7 +31,7 @@ namespace chat_SignalR.Controllers
             int broj = context.Users.Count();
             return broj;
         }
-
+        */
         [HttpGet("GetUser")]
         public User GetUser(int id)
         {

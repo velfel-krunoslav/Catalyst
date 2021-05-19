@@ -54,7 +54,7 @@ namespace SignalR_chat_API.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<bool>("statusRead")
+                    b.Property<bool>("unread")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
