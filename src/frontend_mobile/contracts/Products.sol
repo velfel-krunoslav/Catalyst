@@ -191,4 +191,20 @@ contract Products{
             }
         }
     }
+    function removeProduct(uint productId) public {
+        uint index = productsCount;
+        for (uint i= 0; i < productsCount; i++) {
+            if (products[i].id == productId){
+                index = i;
+                break;
+            }
+        }
+        if (index < productsCount){
+            for (uint i = index; i<productsCount - 1; i++){
+                products[i] = products[i+1];
+            }
+            delete products[productsCount-1];
+            productsCount--;
+        }
+    }
 }

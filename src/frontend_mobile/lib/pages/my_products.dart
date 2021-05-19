@@ -50,7 +50,11 @@ class _MyProductsState extends State<MyProducts> {
     productsModel.setSale(productId, percentage).then((v) {
       refreshProductsCallback();
     });
-
+  }
+  void removeProduct(int productId){
+    productsModel.removeProduct(productId).then((v) {
+      refreshProductsCallback();
+    });
   }
 
   static GlobalKey<ScaffoldState> _scaffoldKey;
@@ -191,7 +195,7 @@ class _MyProductsState extends State<MyProducts> {
                                                                       ),
                                                                       vendor:
                                                                           usr),
-                                                                  initiateRefresh, setSale : setSale,))),
+                                                                  initiateRefresh, setSale : setSale, removeProduct: removeProduct,))),
                                             );
                                           })
                                       : DiscountedProductEntryCard(
@@ -244,7 +248,7 @@ class _MyProductsState extends State<MyProducts> {
                                                             240,
                                                           ),
                                                           vendor: usr),
-                                                      initiateRefresh, setSale: setSale,))),
+                                                      initiateRefresh, setSale: setSale, removeProduct: removeProduct))),
                                         );
 
                                     })

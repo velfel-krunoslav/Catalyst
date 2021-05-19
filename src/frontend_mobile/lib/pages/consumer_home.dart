@@ -109,7 +109,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     if (reg == true)
      showWelcomeDialog();
   }
-
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));

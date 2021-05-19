@@ -42,6 +42,7 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _getQueryProducts;
   ContractFunction _getQueryProductsCount;
   ContractFunction _setSale;
+  ContractFunction _removeProduct;
   ProductsModel([int c = -1]) {
     this.category = c;
     initiateSetup();
@@ -102,6 +103,7 @@ class ProductsModel extends ChangeNotifier {
     _getQueryProducts = _contract.function("getQueryProducts");
     _getQueryProductsCount = _contract.function("getQueryProductsCount");
     _setSale = _contract.function("setSale");
+    _removeProduct = _contract.function("removeProduct");
 
     if (productId != null){
       product = await getProductById(productId);
@@ -383,6 +385,25 @@ class ProductsModel extends ChangeNotifier {
               parameters: [
                 BigInt.from(productId),
                 BigInt.from(discountPercentage)
+              ],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      products = await getSellersProducts(userId);
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+  removeProduct(int productId) async {
+    isLoading = true;
+    notifyListeners();
+    if(productId != null){
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _removeProduct,
+              parameters: [
+                BigInt.from(productId),
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
       products = await getSellersProducts(userId);

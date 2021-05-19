@@ -119,22 +119,22 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Image.network(
+                  child: productsModel.product.assetUrls[0] != "" ? Image.network(
                     productsModel.product.assetUrls[0],
                     height: 90,
                     width: 90,
                     fit: BoxFit.cover,
-                  )),
+                  ) : Container(width: 90, height: 90, color: Color(LIGHT_GREY))),
               SizedBox(
                 width: 20,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text( (productsModel.product.name.length <= 10 ? productsModel.product.name
+                  Text( productsModel.product.name != "" ? ((productsModel.product.name.length <= 10 ? productsModel.product.name
                       : productsModel.product.name.substring(0, 10) + "...") +
                       ' (' +  productsModel.product.quantifier.toString()
-                      +  (productsModel.product.classification.index == 0 ? "" : (productsModel.product.classification.index == 1 ? "g" : "ml"))  + ")",
+                      +  (productsModel.product.classification.index == 0 ? "" : (productsModel.product.classification.index == 1 ? "g" : "ml"))  + ")") : "-",
                       style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 16,
@@ -176,26 +176,31 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                new ChangeNotifierProvider(
-                                    create: (context) =>
-                                        ReviewsModel(productsModel.product.id),
-                                    child: ProductEntryListing(
-                                        ProductEntryListingPage(
+                          if (productsModel.product.name != "") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  new ChangeNotifierProvider(
+                                      create: (context) =>
+                                          ReviewsModel(
+                                              productsModel.product.id),
+                                      child: ProductEntryListing(
+                                          ProductEntryListingPage(
                                             assetUrls:
                                             productsModel.product.assetUrls,
                                             name: productsModel.product.name,
                                             price: productsModel.product.price,
                                             discountPercentage:
-                                            productsModel.product.discountPercentage,
+                                            productsModel.product
+                                                .discountPercentage,
                                             classification:
-                                            productsModel.product.classification,
+                                            productsModel.product
+                                                .classification,
                                             quantifier:
                                             productsModel.product.quantifier,
-                                            description: productsModel.product.desc,
+                                            description: productsModel.product
+                                                .desc,
                                             id: productsModel.product.id,
                                             userInfo: new UserInfo(
                                               profilePictureAssetUrl:
@@ -205,9 +210,13 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                               reputationPositive: 240,
                                             ),
                                             vendor: usersModel.user,),
-                                        initiateRefresh
-                                    ))),
-                          );
+                                          initiateRefresh
+                                      ))),
+                            );
+                          }
+                          else{
+                            ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: new Text("Proizvod više nije u ponudi")));
+                          }
                         },
                         child: Text('Stranica proizvoda ->',
                             style: TextStyle(

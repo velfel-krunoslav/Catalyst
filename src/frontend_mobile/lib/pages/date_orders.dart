@@ -94,34 +94,42 @@ class _DateOrdersState extends State<DateOrders> {
                   return InkWell(
                     onTap: () {
                       ProductEntry product = products[index];
-                      usersModel.getUserById(product.sellerId).then((value) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => new ChangeNotifierProvider(
-                                  create: (context) => ReviewsModel(product.id),
-                                  child: ProductEntryListing(
-                                      ProductEntryListingPage(
-                                          assetUrls: product.assetUrls,
-                                          name: product.name,
-                                          price: product.price,
-                                          discountPercentage: product.discountPercentage,
-                                          classification:
-                                              product.classification,
-                                          quantifier: product.quantifier,
-                                          description: product.desc,
-                                          id: product.id,
-                                          userInfo: new UserInfo(
-                                            profilePictureAssetUrl:
-                                                'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-                                            fullName: 'Petar Nikolić',
-                                            reputationNegative: 7,
-                                            reputationPositive: 240,
-                                          ),
-                                          vendor: value),
-                                      initiateRefresh))),
-                        );
-                      });
+                      if (product.name != "") {
+                        usersModel.getUserById(product.sellerId).then((value) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                new ChangeNotifierProvider(
+                                    create: (context) =>
+                                        ReviewsModel(product.id),
+                                    child: ProductEntryListing(
+                                        ProductEntryListingPage(
+                                            assetUrls: product.assetUrls,
+                                            name: product.name,
+                                            price: product.price,
+                                            discountPercentage: product
+                                                .discountPercentage,
+                                            classification:
+                                            product.classification,
+                                            quantifier: product.quantifier,
+                                            description: product.desc,
+                                            id: product.id,
+                                            userInfo: new UserInfo(
+                                              profilePictureAssetUrl:
+                                              'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                              fullName: 'Petar Nikolić',
+                                              reputationNegative: 7,
+                                              reputationPositive: 240,
+                                            ),
+                                            vendor: value),
+                                        initiateRefresh))),
+                          );
+                        });
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: new Text("Proizvod više nije u ponudi")));
+                      }
                     },
                     child: Container(
                       child: Padding(
@@ -131,12 +139,12 @@ class _DateOrdersState extends State<DateOrders> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
-                                  child: Image.network(
+                                  child: products[index].assetUrls[0] != "" ? Image.network(
                                     products[index].assetUrls[0],
                                     height: 90,
                                     width: 90,
                                     fit: BoxFit.fill,
-                                  ),
+                                  ) : Container(width: 90, height: 90, color: Colors.white,),
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -144,8 +152,8 @@ class _DateOrdersState extends State<DateOrders> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(products[index].name.length <= 20 ? products[index].name
-                                        : products[index].name.substring(0, 20) + "...",
+                                    Text(products[index].name != "" ? (products[index].name.length <= 20 ? products[index].name
+                                        : products[index].name.substring(0, 20) + "...") : "-",
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 16,

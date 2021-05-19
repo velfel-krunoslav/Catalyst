@@ -25,15 +25,17 @@ class ProductEntryListing extends StatefulWidget {
   ProductEntryListingPage _data;
   VoidCallback refreshInitiator;
   Function setSale;
+  Function removeProduct;
   ProductEntryListing(
-      ProductEntryListingPage productData, VoidCallback refreshInitiator, {void Function(int productId, int percentage) setSale}) {
+      ProductEntryListingPage productData, VoidCallback refreshInitiator, {void Function(int productId,  int percentage) setSale, void Function(int productId) removeProduct}) {
     this._data = productData;
     this.refreshInitiator = refreshInitiator;
     this.setSale = setSale;
+    this.removeProduct = removeProduct;
   }
   @override
   State<StatefulWidget> createState() {
-    return _ProductEntryListing(_data, refreshInitiator, setSale);
+    return _ProductEntryListing(_data, refreshInitiator, setSale, removeProduct);
   }
 }
 
@@ -45,6 +47,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   ProductEntryListingPage _data;
   var reviewsModel;
   Function setSale;
+  Function removeProduct;
   void newReviewCallback2(int productId, int rating, String desc, int userId) {
     reviewsModel.addReview(productId, rating, desc, usr.id, DateTime.now());
   }
@@ -54,10 +57,11 @@ class _ProductEntryListing extends State<ProductEntryListing> {
     });
   }
   _ProductEntryListing(
-      ProductEntryListingPage _data, VoidCallback refreshInitiator, Function setSale) {
+      ProductEntryListingPage _data, VoidCallback refreshInitiator, Function setSale, Function removeProduct) {
     this._data = _data;
     this.refreshInitiator = refreshInitiator;
     this.setSale = setSale;
+    this.removeProduct = removeProduct;
   }
   bool toggle = false;
   @override
@@ -540,6 +544,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                         DropdownOption(
                           text: "Ukloni proizvod",
                           onPressed: (){
+                            removeProduct(_data.id);
+                            Navigator.pop(context);
                           },
                         ),
                       ],
