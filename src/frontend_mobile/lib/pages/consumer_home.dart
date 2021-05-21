@@ -713,7 +713,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
           title: Center(child: Text("Uspešna registracija")),
           content: Container(
             width: MediaQuery.of(context).size.width / 1.3,
-            height: MediaQuery.of(context).size.height / 2.5,
+            height: MediaQuery.of(context).size.height /
+                4.5, // TODO PROVJERITI VISINU
             decoration: new BoxDecoration(
               shape: BoxShape.rectangle,
               color: const Color(0xFFFFFF),
@@ -723,10 +724,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "...and allows you to save your favorite items as well as have "
-                  "access to other premium features. If you'd like to just "
-                  "browse blabla then click \"Enter "
-                  "without Login\".",
+                  "Uživajte u kupovini!",
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
