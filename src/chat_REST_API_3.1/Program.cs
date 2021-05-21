@@ -20,7 +20,7 @@ namespace chat_REST_API_3._1
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://localhost:3000");
+                    webBuilder.UseUrls("http://0.0.0.0:11135");
                     webBuilder.UseStartup<Startup>();
                 });
     }
