@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import './config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
@@ -101,22 +100,39 @@ Future<String> asyncFileUpload(Uint8List contents) async {
   return jsonDecode(responseString)['Hash'];
 }
 
-void performPayment(String targetAccountAddress, int eth) async {
+Future<bool> performPayment(String privateKey, String targetAccountAddress,
+    {dynamic eth, dynamic wei}) async {
+  bool hasFault = false;
   final client =
       Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
-  final credentials = await client.credentialsFromPrivateKey(PRIVATE_KEY);
+  final credentials = await client
+      .credentialsFromPrivateKey(privateKey)
+      .onError((error, stackTrace) {
+    hasFault = true;
+  });
+  String hash;
+  hash = await client
+      .sendTransaction(
+        credentials,
+        Transaction(
+          to: EthereumAddress.fromHex(targetAccountAddress),
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: 100000,
+          value: (eth != null)
+              ? EtherAmount.fromUnitAndValue(EtherUnit.ether, eth)
+              : EtherAmount.fromUnitAndValue(EtherUnit.wei, wei),
+        ),
+        fetchChainIdFromNetworkId: false,
+      )
+      .onError((error, stackTrace) => hash = null);
 
-  await client.sendTransaction(
-    credentials,
-    Transaction(
-      to: EthereumAddress.fromHex(targetAccountAddress),
-      gasPrice: EtherAmount.inWei(BigInt.one),
-      maxGas: 100000,
-      value: EtherAmount.fromUnitAndValue(EtherUnit.ether, eth),
-    ),
-    fetchChainIdFromNetworkId: false,
-  );
-  await client.dispose();
+  if (hash == null || hasFault) return false;
+
+  var res = await client
+      .getTransactionReceipt(hash)
+      .whenComplete(() => client.dispose());
+
+  return res.status;
 }
 
 class Prefs {

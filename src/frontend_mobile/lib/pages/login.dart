@@ -53,12 +53,10 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text('MetaMask adresa',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  color: Color(DARK_GREY)
-                )
-              ),
+                  style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      color: Color(DARK_GREY))),
             ],
           ),
           SizedBox(height: 5.0),
@@ -81,12 +79,10 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text('Privatni ključ',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  color: Color(DARK_GREY)
-                )
-              ),
+                  style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      color: Color(DARK_GREY))),
             ],
           ),
           SizedBox(height: 5.0),
@@ -113,13 +109,14 @@ class Login extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => new MultiProvider(providers: [
-                            ChangeNotifierProvider<ProductsModel>(
-                                create: (_) => ProductsModel()),
-                            ChangeNotifierProvider<CategoriesModel>(
-                                create: (_) => CategoriesModel()),
-                            ChangeNotifierProvider<UsersModel>(
-                                create: (_) => UsersModel(privateKey, accountAddress)),
-                          ], child: ConsumerHomePage())),
+                                ChangeNotifierProvider<ProductsModel>(
+                                    create: (_) => ProductsModel()),
+                                ChangeNotifierProvider<CategoriesModel>(
+                                    create: (_) => CategoriesModel()),
+                                ChangeNotifierProvider<UsersModel>(
+                                    create: (_) =>
+                                        UsersModel(privateKey, accountAddress)),
+                              ], child: ConsumerHomePage())),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

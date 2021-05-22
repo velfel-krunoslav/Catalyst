@@ -422,6 +422,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                           _data.vendor.id,
                                                       idSender: usr.id)
                                                   .then((value) {
+                                                print(
+                                                    'addChat body: ${value.body}');
                                                 int tmpchatID =
                                                     ChatInfo.fromJson(
                                                             jsonDecode(value

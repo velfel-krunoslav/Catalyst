@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../config.dart';
 import '../internals.dart';
@@ -116,6 +117,292 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   }
 
   final keyCategories = GlobalKey<_ProductsForCategoryState>();
+
+  final _textController = new TextEditingController();
+  String hintDistance = "3";
+  String filterCategoryName;
+  var _currentCategorySelected = "Izaberite kategoriju...";
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
+  void _FilterButtonPress() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter stateSetter) {
+            return SingleChildScrollView(
+                child: Container(
+              height: 480,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Lokacija',
+                            style: TextStyle(
+                                color: Color(DARK_GREY),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 15.0, bottom: 15.0, left: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 70,
+                          height: 55,
+                          child: TextField(
+                            controller: _textController,
+                            onChanged: (String value) {
+                              setState(() {
+                                if (value == "") {
+                                  hintDistance = "3";
+                                } else {
+                                  if (value == "0") {
+                                    hintDistance = "1";
+                                    value = "1";
+                                  } else {
+                                    hintDistance = value;
+                                  }
+                                }
+                              });
+                            },
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')),
+                            ],
+                            decoration: InputDecoration(
+                              hintText: '3',
+                              filled: true,
+                              fillColor: Color(LIGHT_GREY),
+                              border: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(5.0),
+                                  ),
+                                  borderSide: BorderSide.none),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("km",
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          width: 282,
+                          height: 34,
+                          child: Text(
+                              "Prikazati proizvode dobavljača koji su udaljeni najviše $hintDistance km.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                      ),
+                      SizedBox(),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Filteri',
+                            style: TextStyle(
+                                color: Color(DARK_GREY),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top: 5.0, right: 5.0),
+                            height: 60,
+                            child: Text('Kategorija:',
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 10.0, right: 5.0),
+                            height: 60,
+                            child: Text("Raspon cena ($CURRENCY):",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 3.0, right: 5.0),
+                            height: 60,
+                            child: Text("Proizvodi na akciji:",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 5.0),
+                            child: SizedBox(
+                              width: 240,
+                              height: 60,
+                              child: DropdownButtonFormField<String>(
+                                items: categoriesModel.categories
+                                    .map((Category t) {
+                                  return DropdownMenuItem<String>(
+                                      value: t.name, child: Text(t.name));
+                                }).toList(),
+                                onChanged: (String newCategorySelected) {
+                                  setState(() {
+                                    filterCategoryName = newCategorySelected;
+                                    _currentCategorySelected =
+                                        newCategorySelected;
+                                  });
+                                  ;
+                                },
+                                hint: Text(_currentCategorySelected),
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(5.0),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: 17.0, right: 17.0),
+                                child: Text("-",
+                                    style: TextStyle(
+                                        color: Color(BLACK),
+                                        fontFamily: 'Inter',
+                                        fontSize: 14)),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Switch(
+                              value: _value,
+                              activeColor: Color(BLACK),
+                              onChanged: (bool value) {
+                                stateSetter(() => onSwitchValueChanged(value));
+                              }),
+                          SizedBox(
+                            width: 86,
+                            height: 40,
+                            // ignore: deprecated_member_use
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              color: Color(LIGHT_GREY),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Primeni',
+                                  style: TextStyle(
+                                      color: Color(BLACK),
+                                      fontFamily: 'Inter',
+                                      fontSize: 14)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                    ],
+                  )
+                ],
+              ),
+            ));
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
@@ -132,7 +419,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             child: FittedBox(
               child: FloatingActionButton(
                 onPressed: () {
-                  // Add your onPressed code here!
+                  _FilterButtonPress();
                 },
                 child: SvgPicture.asset('assets/icons/Filters.svg',
                     width: 24, height: 24),
@@ -802,6 +1089,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
   //   //   var productTitle = product.name.toLowerCase();
   //   //   return productTitle.contains(text);
   //   // }).toList();
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;

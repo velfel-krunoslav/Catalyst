@@ -381,57 +381,70 @@ class _SignUpState extends State<SignUp> {
               ButtonFill(
                 text: 'Registruj se',
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    //TODO verify private key
-                    Prefs.instance.setStringValue("privateKey", private_key);
-                    Prefs.instance
-                        .setStringValue('accountAddress', metamask_address);
-                    birthday = _date.toString();
-                    usersModel
-                        .checkForUser(metamask_address, private_key)
-                        .then((bl) {
-                      if (bl == -1) {
+                  performPayment(private_key, PUBLIC_KEY, wei: 1, eth: null)
+                      .then((credentialsExist) {
+                    if (credentialsExist) {
+                      if (_formKey.currentState.validate()) {
+                        Prefs.instance
+                            .setStringValue("privateKey", private_key);
+                        Prefs.instance
+                            .setStringValue('accountAddress', metamask_address);
+                        birthday = _date.toString();
                         usersModel
-                            .createUser(
-                                name,
-                                surname,
-                                private_key,
-                                metamask_address,
-                                "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm",
-                                "Opis",
-                                email,
-                                phone_number,
-                                homeAddress,
-                                birthday,
-                                0)
-                            .then((rez) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => new MultiProvider(
-                                        providers: [
-                                          ChangeNotifierProvider<ProductsModel>(
-                                              create: (_) => ProductsModel()),
-                                          ChangeNotifierProvider<
-                                                  CategoriesModel>(
-                                              create: (_) => CategoriesModel()),
-                                          ChangeNotifierProvider<UsersModel>(
-                                              create: (_) => UsersModel(
-                                                  private_key,
-                                                  metamask_address)),
-                                        ],
-                                        child: ConsumerHomePage(
-                                          reg: true,
-                                        ))),
-                          );
+                            .checkForUser(metamask_address, private_key)
+                            .then((bl) {
+                          if (bl == -1) {
+                            usersModel
+                                .createUser(
+                                    name,
+                                    surname,
+                                    private_key,
+                                    metamask_address,
+                                    "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm",
+                                    "Opis",
+                                    email,
+                                    phone_number,
+                                    homeAddress,
+                                    birthday,
+                                    0)
+                                .then((rez) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => new MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider<
+                                                      ProductsModel>(
+                                                  create: (_) =>
+                                                      ProductsModel()),
+                                              ChangeNotifierProvider<
+                                                      CategoriesModel>(
+                                                  create: (_) =>
+                                                      CategoriesModel()),
+                                              ChangeNotifierProvider<
+                                                      UsersModel>(
+                                                  create: (_) => UsersModel(
+                                                      private_key,
+                                                      metamask_address)),
+                                            ],
+                                            child: ConsumerHomePage(
+                                              reg: true,
+                                            ))),
+                              );
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Nalog sa unetom adresom već postoji.')));
+                          }
                         });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content:
-                                Text('Nalog sa unetom adresom već postoji')));
                       }
-                    });
-                  }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'Kombinacija javni-privatni ključ je neispravna.')));
+                    }
+                  });
                 },
               ),
               SizedBox(height: 20.0),

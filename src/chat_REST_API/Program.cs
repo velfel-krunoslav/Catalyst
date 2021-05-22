@@ -23,7 +23,7 @@ namespace SignalR_chat_API
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://192.168.1.8:3001");
+                    webBuilder.UseUrls("http://0.0.0.0:11135");
                     webBuilder.UseStartup<Startup>();
                 });
     }

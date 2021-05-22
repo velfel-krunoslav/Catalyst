@@ -21,6 +21,7 @@ class UserEdit extends StatefulWidget {
 
 class _UserEdit extends State<UserEdit> {
   User user;
+  String imageUrl;
   _UserEdit(this.user);
   Uint8List _image = null;
   final _textControllerInfo = new TextEditingController();
@@ -262,6 +263,9 @@ class _UserEdit extends State<UserEdit> {
                 ButtonFill(
                   text: 'Primeni',
                   onPressed: () {
+                    asyncFileUpload(_image).then((value) {
+                      imageUrl = 'https://ipfs.io/ipfs/$value';
+                    });
                     Navigator.pop(
                       context,
                       MaterialPageRoute(builder: (context) => new MyAccount()),

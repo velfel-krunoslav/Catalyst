@@ -23,12 +23,12 @@ contract Orders{
 
     constructor() public{
 
-        orders[0] = Order(0, 0, 1, "2021-02-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
-        orders[1] = Order(1, 1, 2, "2021-03-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
-        orders[2] = Order(2, 2, 1, "2021-03-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
-        orders[3] = Order(3, 3, 3, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
-        orders[4] = Order(4, 4, 1, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
-        orders[5] = Order(5, 5, 1, "2021-04-01", 0, 0, 1, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[0] = Order(0, 0, 1, "2021-02-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[1] = Order(1, 1, 2, "2021-03-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[2] = Order(2, 2, 1, "2021-03-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[3] = Order(3, 3, 3, "2021-04-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[4] = Order(4, 4, 1, "2021-04-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
+        orders[5] = Order(5, 5, 1, "2021-04-01", 0, 52, 53, "Kralja Petra, Kragujevac, Srbija", 0, 43, 3);
         ordersCount = 6;
     }
 

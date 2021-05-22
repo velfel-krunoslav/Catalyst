@@ -18,11 +18,11 @@ contract Reviews{
 
     constructor() public{
 
-        reviews[0] = Review(0, 0, 5, "Dobar proizvod", 0, "2021-05-18 07:05:00.000");
-        reviews[1] = Review(1, 3, 5, "Dobar proizvod", 0, "2021-02-01");
-        reviews[2] = Review(2, 4, 5, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ", 0, "2021-02-01");
-        reviews[3] = Review(3, 1, 5, "Dobar proizvod", 0, "2021-02-01");
-        reviews[4] = Review(3, 2, 3, "Onako", 0, "2021-02-01");
+        reviews[0] = Review(0, 0, 5, "Dobar proizvod", 52, "2021-05-18 07:05:00.000");
+        reviews[1] = Review(1, 3, 5, "Dobar proizvod", 52, "2021-02-01");
+        reviews[2] = Review(2, 4, 5, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ", 52, "2021-02-01");
+        reviews[3] = Review(3, 1, 5, "Dobar proizvod", 52, "2021-02-01");
+        reviews[4] = Review(3, 2, 3, "Onako", 52, "2021-02-01");
         reviewsCount = 5;
     }
 

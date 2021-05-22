@@ -377,7 +377,7 @@ class ProductEntryCard extends GestureDetector {
                                 ? (product.price.toStringAsFixed(2) + CURRENCY)
                                 : (product.price.toStringAsFixed(2) +
                                     CURRENCY +
-                                    ' (' +
+                                    '\n(' +
                                     product.quantifier.toString() +
                                     ' ' +
                                     ((product.classification ==
@@ -439,7 +439,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.prevPrice.toStringAsFixed(2),
+                            product.prevPrice.toStringAsFixed(2) + '$CURRENCY',
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -455,7 +455,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                     child: Text(
                       product.price.toStringAsFixed(2) +
                           CURRENCY +
-                          ' (' +
+                          '\n(' +
                           product.quantifier.toString() +
                           ' ' +
                           ((product.classification == Classification.Volume)
