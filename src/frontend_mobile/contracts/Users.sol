@@ -20,9 +20,9 @@ contract Users {
     mapping (uint => User) public users;
     event UserCreated(string user, uint userNumber);
     constructor() public{
-        users[0] = User(52, "Jovan", "Petrovic", "132f4ebc52cf7c27c954bcc14121ad05dd1a1625c8dbcb63eebabb2e3e79c3df", "d24E599b031105E33c03bd1ab8C5869cD97627A8", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "jpetrovic@gmail.com", "0623496521", "Novi sad", "2020-3-3", 1);
-        users[1] = User(53, "Dusan", "Jakovljevic", "bd57c6089a89d06291a39b45b4e8d6b1f43f3d527f9f6f180b046ce2c20aa03d", "29D57a9857418cfcBC467212C9BDc52e8747e14d", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "djakovljevic@gmail.com", "0641369954", "Kragujevac", "2020-3-3", 1);
-        users[2] = User(54, "Stevan", "Mitrovic", "a0162eb01a6784fedf6fe2317fdc5d787b3a8980a606bfe9a4897ca490bbbbb", "370d110a4ca79a3A9552C0672D6a2478ecF9D72A", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "smitrovic@gmail.com", "066321459", "Beograd", "2020-3-3", 1);
+        users[0] = User(52, "Jovan", "Petrovic", "bd57c6089a89d06291a39b45b4e8d6b1f43f3d527f9f6f180b046ce2c20aa03d", "29d57a9857418cfcbc467212c9bdc52e8747e14d", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "jpetrovic@gmail.com", "0623496521", "Novi sad", "2020-3-3", 1);
+        users[1] = User(53, "Dusan", "Jakovljevic", "a0162eb01a6784fedf6fe2317fdc5d787b3a8980a606bfe9a4897ca490bbbbb1", "370d110a4ca79a3a9552c0672d6a2478ecf9d72a", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "djakovljevic@gmail.com", "0641369954", "Kragujevac", "2020-3-3", 1);
+        users[2] = User(54, "Stevan", "Mitrovic", "41bdd0d42bc829903350f696e9a5063a43601dc6fd7dee3ee38c7c67dbbf06d8", "40ee840b5597a8a3c5755662e179d640662da66c", "https://ipfs.io/ipfs/QmYCykGuZMMbHcjzJYYJEMYWRrHr5g9gfkUqTkhkaC4gnm", "Poljoprivrednik sa 20 godina iskustva.", "smitrovic@gmail.com", "066321459", "Beograd", "2020-3-3", 1);
 
         usersCount = 3;
     }
