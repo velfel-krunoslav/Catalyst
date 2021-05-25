@@ -340,6 +340,7 @@ class _DatePickerState extends State<DatePickerPopup> {
 }
 
 class ProductEntryCard extends GestureDetector {
+  String unit = '';
   ProductEntryCard({VoidCallback onPressed, ProductEntry product})
       : super(
             onTap: onPressed,
@@ -374,23 +375,18 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2).length +
-                                        product.quantifier.toString().length >
-                                    8
-                                ? (product.price.toStringAsFixed(2) + CURRENCY)
-                                : (product.price.toStringAsFixed(2) +
-                                    CURRENCY +
-                                    '\n(' +
-                                    product.quantifier.toString() +
-                                    ' ' +
-                                    ((product.classification ==
-                                            Classification.Volume)
-                                        ? 'ml'
-                                        : ((product.classification ==
-                                                Classification.Weight)
-                                            ? 'gr'
-                                            : 'kom')) +
-                                    ')'),
+                            (product.price.toStringAsFixed(2) +
+                                CURRENCY +
+                                '\n' +
+                                product.quantifier.toString() +
+                                ' ' +
+                                ((product.classification ==
+                                        Classification.Volume)
+                                    ? 'ml'
+                                    : ((product.classification ==
+                                            Classification.Weight)
+                                        ? 'gr'
+                                        : 'kom'))),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
@@ -458,16 +454,14 @@ class DiscountedProductEntryCard extends GestureDetector {
                     child: Text(
                       product.price.toStringAsFixed(2) +
                           CURRENCY +
-                          '\n(' +
+                          '\n' +
                           product.quantifier.toString() +
-                          ' ' +
                           ((product.classification == Classification.Volume)
                               ? 'ml'
                               : ((product.classification ==
                                       Classification.Weight)
                                   ? 'gr'
-                                  : 'kom')) +
-                          ')',
+                                  : 'kom')),
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
