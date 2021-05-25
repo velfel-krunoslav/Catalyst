@@ -799,42 +799,126 @@ Widget HomeDrawer(
         ),
       ],
     ),
-    DrawerOption(
-        text: "Moj nalog",
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
-        },
-        iconUrl: "assets/icons/User.svg"),
-    DrawerOption(
-        text: "Moji proizvodi",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new MultiProvider(
-                        providers: [
-                          ChangeNotifierProvider<ProductsModel>(
-                              create: (_) => ProductsModel.forVendor(usr.id)),
-                        ],
-                        child: MyProducts(
-                            refreshProductsCallback, initiateRefresh))),
-          );
-        },
-        iconUrl: "assets/icons/Package.svg"),
-    DrawerOption(
-        text: "Na čekanju",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new MultiProvider(providers: [
-                      ChangeNotifierProvider<OrdersModel>(
-                          create: (_) => OrdersModel(usr.id)),
-                    ], child: NotYetDelivered())),
-          );
-        },
-        iconUrl: "assets/icons/Clock.svg"),
+    Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text('PRODAJA',
+              style: TextStyle(
+                  color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+          SizedBox(
+            width: 10,
+          ),
+          Flexible(
+              child: Container(
+                  decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(
+              //                    <--- top side
+              color: Colors.white,
+              width: 1.0,
+            )),
+          ))),
+          SizedBox(
+            width: 10,
+          )
+        ],
+      ),
+      DrawerOption(
+          text: "Moji proizvodi",
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider<ProductsModel>(
+                                create: (_) => ProductsModel.forVendor(usr.id)),
+                          ],
+                          child: MyProducts(
+                              refreshProductsCallback, initiateRefresh))),
+            );
+          },
+          iconUrl: "assets/icons/Package.svg"),
+      DrawerOption(
+          text: "Na čekanju",
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new MultiProvider(providers: [
+                        ChangeNotifierProvider<OrdersModel>(
+                            create: (_) => OrdersModel(usr.id)),
+                      ], child: NotYetDelivered())),
+            );
+          },
+          iconUrl: "assets/icons/Clock.svg"),
+    ]),
+    Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('PORUČIVANJE',
+                style: TextStyle(
+                    color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+            SizedBox(
+              width: 10,
+            ),
+            Flexible(
+                child: Container(
+                    decoration: BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+                //                    <--- top side
+                color: Colors.white,
+                width: 1.0,
+              )),
+            ))),
+            SizedBox(
+              width: 10,
+            )
+          ],
+        ),
+        DrawerOption(
+            text: "Istorija narudžbi",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new ChangeNotifierProvider(
+                        create: (context) => OrdersModel(usr.id),
+                        child: OrdersHistory(
+                            getProductByIdCallback, initiateRefresh))),
+              );
+            },
+            iconUrl: "assets/icons/Newspaper.svg"),
+      ],
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text('OSTALO',
+            style: TextStyle(
+                color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+        SizedBox(
+          width: 10,
+        ),
+        Flexible(
+            child: Container(
+                decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+            //                    <--- top side
+            color: Colors.white,
+            width: 1.0,
+          )),
+        ))),
+        SizedBox(
+          width: 10,
+        )
+      ],
+    ),
     DrawerOption(
         text: "Poruke",
         onPressed: () {
@@ -845,18 +929,12 @@ Widget HomeDrawer(
         },
         iconUrl: "assets/icons/Envelope.svg"),
     DrawerOption(
-        text: "Istorija narudžbi",
+        text: "Moj nalog",
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new ChangeNotifierProvider(
-                    create: (context) => OrdersModel(usr.id),
-                    child: OrdersHistory(
-                        getProductByIdCallback, initiateRefresh))),
-          );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
         },
-        iconUrl: "assets/icons/Newspaper.svg"),
+        iconUrl: "assets/icons/User.svg"),
     DrawerOption(
         text: "Pomoć i podrška",
         onPressed: () {
@@ -896,33 +974,10 @@ Widget HomeDrawer(
           color: Color(LIGHT_BLACK),
           padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
           child: Column(
-              children: List.generate(
-                  ((!sizer.isWeb()) && size.width > size.height)
-                      ? ((options.length + 1) / 2.0).toInt()
-                      : options.length, (index) {
-            if ((!sizer.isWeb()) && size.width > size.height) {
-              return Row(
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 80,
-                    child: options[index * 2],
-                  ),
-                  Spacer(),
-                  (index * 2 + 1 >= options.length)
-                      ? SizedBox()
-                      : SizedBox(
-                          width: 200,
-                          height: 80,
-                          child: options[index * 2 + 1],
-                        ),
-                ],
-              );
-            } else {
-              return Column(
-                children: [options[index], SizedBox(height: 10)],
-              );
-            }
+              children: List.generate(options.length, (index) {
+            return Column(
+              children: [options[index], SizedBox(height: 10)],
+            );
           }).toList())),
     )),
   );
