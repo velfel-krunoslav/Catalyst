@@ -737,7 +737,9 @@ Widget HomeDrawer(
     void Function() refreshProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback,
     VoidCallback initiateRefresh,
-    dynamic Function(int id) getUserById) {
+    dynamic Function(int id) getUserById,
+    bool hasMessages,
+    Function setHasNewMessages) {
   final sizer = getSizer();
   final size = MediaQuery.of(context).size;
   List<Widget> options = [
@@ -913,15 +915,33 @@ Widget HomeDrawer(
         )
       ],
     ),
-    DrawerOption(
-        text: "Poruke",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Inbox(getUserById)),
-          );
-        },
-        iconUrl: "assets/icons/Envelope.svg"),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        DrawerOption(
+            text: "Poruke",
+            onPressed: () {
+              setHasNewMessages(false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Inbox(getUserById)),
+              );
+            },
+            iconUrl: "assets/icons/Envelope.svg"),
+        SizedBox(
+          width: 6,
+        ),
+        (hasMessages)
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  color: Color(RED_ATTENTION),
+                ))
+            : SizedBox.shrink()
+      ],
+    ),
     DrawerOption(
         text: "Moj nalog",
         onPressed: () {

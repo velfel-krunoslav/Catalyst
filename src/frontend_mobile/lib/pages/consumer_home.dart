@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,6 +24,7 @@ import '../models/productsModel.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
     if (dart.library.io) '../sizer_io.dart';
+import 'inbox.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   bool reg = false;
@@ -47,6 +51,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   UsersModel usersModel;
   int userID;
   bool reg;
+  bool hasNewMessages = false;
+
+  Function setHasNewMessages;
+
   _ConsumerHomePageState(this.reg);
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
@@ -103,12 +111,59 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
+  Timer _timer;
+
   @override
   void initState() {
     super.initState();
+    setHasNewMessages = (bool status) {
+    setState(() {
+      this.hasNewMessages = status;
+    });
+  };
+    final _tmp = Provider.of<UsersModel>(context, listen: false);
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
     if (reg == true) showWelcomeDialog();
+    const time = const Duration(seconds: 10);
+    _timer = new Timer.periodic(time, (Timer t) {
+      print('run');
+      requestGetChat(usr.id).then((rawData) {
+        List<int> partnerIDs = [];
+        List<int> chatIDs = [];
+        List<ChatInfo> chatInfo = [];
+        var tmp = jsonDecode(rawData);
+        for (var t in tmp) {
+          chatInfo.add(ChatInfo.fromJson(t));
+        }
+        for (var chat in chatInfo) {
+          partnerIDs.add(
+              (chat.idReciever != usr.id) ? chat.idReciever : chat.idSender);
+          chatIDs.add(chat.id);
+        }
+
+        int newunread = 0;
+        for (int index = 0; index < partnerIDs.length; index++) {
+          _tmp.getUserById(partnerIDs[index]).then((userRawData) {
+            requestChatID(usr.id, userRawData.id).then((chatID) {
+              requestLatestMessageFromChat(chatIDs[index]).then((value) {
+                // TODO CHECK IF RETURN IS NULL
+                var msg = ChatMessageInfo.fromJson(jsonDecode(value)[0]);
+                setState(() {
+                  hasNewMessages = hasNewMessages || msg.unread;
+                });
+              });
+            });
+          });
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void showInSnackBar(String value) {
@@ -436,7 +491,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   refreshProductsCallback,
                   getProductByIdCallback,
                   incrementCart,
-                  usersModel.getUserById), //TODO context
+                  usersModel.getUserById,
+                  hasNewMessages,
+                  setHasNewMessages), //TODO context
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
