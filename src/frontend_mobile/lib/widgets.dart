@@ -205,7 +205,7 @@ class _PasswordFieldState extends State<PasswordField> {
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 20,
               ),
               SizedBox(
                 height: BUTTON_HEIGHT,

@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
+import 'package:web3dart/crypto.dart';
+import 'package:web3dart/web3dart.dart';
 import '../config.dart';
 import '../internals.dart';
 import '../models/categoriesModel.dart';
@@ -137,16 +142,15 @@ class LoginState extends State<Login> {
                             accountAddress != null &&
                             accountAddress != "") {
                           switchState();
-                          Prefs.instance
-                              .setStringValue('privateKey', privateKey);
-                          Prefs.instance
-                              .setStringValue('accountAddress', accountAddress);
-
                           usersModel
                               .checkForUser(accountAddress, privateKey)
                               .then((rez) {
                             print(rez);
                             if (rez != null && rez > -1) {
+                              Prefs.instance
+                                  .setStringValue('privateKey', privateKey);
+                              Prefs.instance.setStringValue(
+                                  'accountAddress', accountAddress);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
