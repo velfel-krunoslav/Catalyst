@@ -168,46 +168,51 @@ class _PasswordFieldState extends State<PasswordField> {
     return Container(
         height: textFieldHeight,
         width: MediaQuery.of(context).size.width,
-        child: Stack(children: [
-          Container(
+        child: Container(
             height: textFieldHeight,
             width: MediaQuery.of(context).size.width,
-            child: TextFormField(
-              onChanged: onChange,
-              validator: (value) {
-                if (value == null || value.isEmpty || value.length < 6) {
-                  setState(() {
-                    textFieldHeight = BUTTON_HEIGHT + 20;
-                  });
-                  return 'Privatni ključ je neispravan';
-                } else {
-                  setState(() {
-                    textFieldHeight = BUTTON_HEIGHT;
-                  });
-                }
-                return null;
-              },
-              onSaved: (val) => password = val,
-              obscureText: _obscureText,
-              style: TextStyle(
-                  color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
-              decoration: InputDecoration(
-                hintText: hintText,
-                filled: true,
-                fillColor: Color(LIGHT_GREY),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(5.0)),
+            child: Row(children: [
+              Expanded(
+                child: TextFormField(
+                  onChanged: onChange,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 6) {
+                      setState(() {
+                        textFieldHeight = BUTTON_HEIGHT + 20;
+                      });
+                      return 'Privatni ključ je neispravan';
+                    } else {
+                      setState(() {
+                        textFieldHeight = BUTTON_HEIGHT;
+                      });
+                    }
+                    return null;
+                  },
+                  onSaved: (val) => password = val,
+                  obscureText: _obscureText,
+                  style: TextStyle(
+                      color: Color(DARK_GREY),
+                      fontFamily: 'Inter',
+                      fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    filled: true,
+                    fillColor: Color(LIGHT_GREY),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Row(
-            children: [
-              Spacer(),
+              SizedBox(
+                width: 10,
+              ),
               SizedBox(
                 height: BUTTON_HEIGHT,
                 width: BUTTON_HEIGHT,
                 child: TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Color(LIGHT_GREY)),
                   onPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -221,9 +226,7 @@ class _PasswordFieldState extends State<PasswordField> {
                   ),
                 ),
               )
-            ],
-          )
-        ]));
+            ])));
   }
 }
 
