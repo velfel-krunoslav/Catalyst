@@ -36,7 +36,7 @@ class _HelpSupportState extends State<HelpSupport> {
                   fontWeight: FontWeight.w800,
                   color: Color(DARK_GREY))),
           centerTitle: true,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(BACKGROUND),
           elevation: 0.0,
           leading: IconButton(
             icon: SvgPicture.asset(
@@ -128,7 +128,7 @@ class _HelpSupportState extends State<HelpSupport> {
                             MaterialPageRoute(
                                 builder: (context) => Scaffold(
                                     appBar: AppBar(
-                                        backgroundColor: Colors.white,
+                                        backgroundColor: Color(BACKGROUND),
                                         elevation: 0.0,
                                         leading: IconButton(
                                           icon: SvgPicture.asset(

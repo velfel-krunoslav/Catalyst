@@ -11,6 +11,8 @@ const TEAL = 0xFF0EAD65;
 const CYAN = 0xFF0F62FE;
 const LIGHT_BLACK = 0xFF202020;
 const YELLOW = 0xFFE7A600;
+const FOREGROUND = 0xFF000000;
+const BACKGROUND = 0xFFFFFFFF;
 
 /* PARAMS: */
 const double ICON_SIZE = 36;

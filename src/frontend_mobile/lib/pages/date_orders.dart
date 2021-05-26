@@ -65,7 +65,7 @@ class _DateOrdersState extends State<DateOrders> {
                   fontWeight: FontWeight.w800,
                   color: Color(DARK_GREY))),
           centerTitle: true,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(BACKGROUND),
           elevation: 0.0,
           leading: IconButton(
             icon: SvgPicture.asset(
@@ -149,7 +149,7 @@ class _DateOrdersState extends State<DateOrders> {
                                       : Container(
                                           width: 90,
                                           height: 90,
-                                          color: Colors.white,
+                                          color: Color(BACKGROUND),
                                         ),
                                 ),
                                 SizedBox(

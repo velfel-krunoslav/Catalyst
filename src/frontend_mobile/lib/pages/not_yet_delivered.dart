@@ -32,7 +32,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(BACKGROUND),
           title: Text('Porudžbine na čekanju',
               style: TextStyle(
                   fontFamily: 'Inter',
@@ -51,7 +51,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
           )),
       body: ordersModel.isLoading == true
           ? LinearProgressIndicator(
-              backgroundColor: Colors.grey,
+              backgroundColor: Color(DARK_GREY),
             )
           : (ordersModel.deliveryOrders.length == 0
               ? Center(
@@ -63,7 +63,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                           color: Color(DARK_GREY))))
               : Container(
                   padding: EdgeInsets.all(20),
-                  color: Colors.white,
+                  color: Color(BACKGROUND),
                   child: SingleChildScrollView(
                       child: Column(
                     children: List.generate(ordersModel.deliveryOrders.length,
@@ -111,13 +111,13 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
         ? SizedBox(
             height: 0.5,
             child: LinearProgressIndicator(
-              backgroundColor: Colors.grey,
+              backgroundColor: Color(DARK_GREY),
             ))
         : Container(
             margin: const EdgeInsets.only(bottom: 24),
             decoration: BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey, width: 1))),
+                border: Border(
+                    bottom: BorderSide(color: Color(DARK_GREY), width: 1))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -256,7 +256,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                               child: Text('Stranica proizvoda ->',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      color: Colors.blue,
+                                      color: Color(CYAN),
                                       fontSize: 16)),
                             )
                           ],

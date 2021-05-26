@@ -160,6 +160,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                 ],
                               )),
                           Card(
+                              color: Color(BACKGROUND),
                               margin: EdgeInsets.fromLTRB(
                                   0, sizer.getImageHeight() - 5, 0, 0),
                               child: Padding(
@@ -173,7 +174,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         _data.name,
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Color(FOREGROUND),
                                             fontSize: 28,
                                             fontFamily: 'Inter',
                                             decoration: TextDecoration.none,
@@ -250,7 +251,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         _data.description,
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Color(FOREGROUND),
                                             fontSize: 16,
                                             fontFamily: 'Inter',
                                             decoration: TextDecoration.none,
@@ -284,7 +285,9 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                               .round(),
                                                       (i) => i + 1).map((e) {
                                                     return SvgPicture.asset(
-                                                        'assets/icons/StarOutline.svg');
+                                                      'assets/icons/StarOutline.svg',
+                                                      color: Color(FOREGROUND),
+                                                    );
                                                   }).toList(),
                                                 ),
                                                 SizedBox(
@@ -298,7 +301,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   style: TextStyle(
                                                       decoration:
                                                           TextDecoration.none,
-                                                      color: Colors.black,
+                                                      color: Color(FOREGROUND),
                                                       fontSize: 14),
                                                 )
                                               ].toList(),
@@ -355,6 +358,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Card(
+                                      color: Color(BACKGROUND),
                                       elevation: 0,
                                       margin: EdgeInsets.zero,
                                       shape: ContinuousRectangleBorder(
@@ -389,6 +393,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   )),
                                               SizedBox(width: 10),
                                               Container(
+                                                  color: Color(BACKGROUND),
                                                   constraints: BoxConstraints(
                                                       minHeight: 60),
                                                   child: Column(
@@ -409,8 +414,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                                   FontWeight
                                                                       .w800,
                                                               fontSize: 18,
-                                                              color: Colors
-                                                                  .black)),
+                                                              color: Color(
+                                                                  FOREGROUND))),
                                                       SizedBox(
                                                         height: 10,
                                                       ),
@@ -662,9 +667,9 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                   },
                                   child: SvgPicture.asset(
                                       'assets/icons/ArrowLeft.svg',
-                                      color: Colors.black),
+                                      color: Color(FOREGROUND)),
                                   style: TextButton.styleFrom(
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Color(BACKGROUND),
                                       minimumSize: Size(36, 36))),
                               Spacer(),
                               setSale == null
@@ -683,9 +688,9 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       },
                                       child: SvgPicture.asset(
                                           'assets/icons/DotsThreeVertical.svg',
-                                          color: Colors.black),
+                                          color: Color(FOREGROUND)),
                                       style: TextButton.styleFrom(
-                                          backgroundColor: Colors.white,
+                                          backgroundColor: Color(BACKGROUND),
                                           minimumSize: Size(36, 36))),
                               SizedBox(width: 20),
                             ],
@@ -697,9 +702,10 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                     children: [
                                       Spacer(),
                                       Container(
+                                        color: Color(BACKGROUND),
                                         width: 200,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: Color(BACKGROUND),
                                           borderRadius:
                                               BorderRadius.circular(5),
                                         ),
@@ -811,7 +817,7 @@ class _PickerState extends State<Picker> {
                 step: 5,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black26),
+                  border: Border.all(color: Color(LIGHT_GREY)),
                 ),
                 onChanged: (value) => setState(() => _currentValue = value),
               ),
@@ -942,9 +948,9 @@ class FullscreenSlider extends StatelessWidget {
                           Navigator.pop(context);
                         },
                         child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
-                            color: Colors.black),
+                            color: Color(FOREGROUND)),
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: Color(BACKGROUND),
                             minimumSize: Size(36, 36)))
                   ],
                 )

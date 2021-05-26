@@ -17,8 +17,7 @@ class NewProduct extends StatefulWidget {
   NewProduct(this.addProductCallback);
 
   @override
-  _NewProductState createState() =>
-      _NewProductState(this.addProductCallback);
+  _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
 List<Uint8List> images = [];
@@ -64,6 +63,7 @@ class _NewProductState extends State<NewProduct> {
     super.initState();
     _scaffoldKey = GlobalKey<ScaffoldState>();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +76,7 @@ class _NewProductState extends State<NewProduct> {
                     fontWeight: FontWeight.w800,
                     color: Color(DARK_GREY))),
             centerTitle: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
               icon: SvgPicture.asset(
@@ -283,7 +283,8 @@ class _NewProductState extends State<NewProduct> {
                                 child: Text(
                                   "Obavezno polje",
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.red[700]),
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
                                 ),
                               )
                             : Container()
@@ -342,7 +343,8 @@ class _NewProductState extends State<NewProduct> {
                                 child: Text(
                                   "Obavezno polje",
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.red[700]),
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
                                 ),
                               )
                             : Container()
@@ -494,8 +496,9 @@ class _NewProductState extends State<NewProduct> {
                               });
                             });
                           } else {
-                            _scaffoldKey.currentState
-                                .showSnackBar(new SnackBar(content: new Text("Ne možete postaviti više od 3 fotografije")));
+                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                content: new Text(
+                                    "Ne možete postaviti više od 3 fotografije")));
                           }
                         }),
                     SizedBox(width: 10),
@@ -530,8 +533,8 @@ class _NewProductState extends State<NewProduct> {
                           padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
                           child: Text(
                             "Izaberite barem jednu fotografiju",
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.red[700]),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(RED_ATTENTION)),
                           ),
                         )
                       : Container(),

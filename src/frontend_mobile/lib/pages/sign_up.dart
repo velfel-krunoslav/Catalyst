@@ -277,7 +277,7 @@ class _SignUpState extends State<SignUp> {
                                                 'Potvrdi',
                                                 style: TextStyle(
                                                     fontFamily: 'Inter',
-                                                    color: Colors.black,
+                                                    color: Color(FOREGROUND),
                                                     fontSize: 16),
                                               ),
                                             ),

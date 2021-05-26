@@ -39,7 +39,7 @@ class _UserEdit extends State<UserEdit> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
             title: Text('Izmena profila',
                 style: TextStyle(
@@ -48,7 +48,7 @@ class _UserEdit extends State<UserEdit> {
                     fontWeight: FontWeight.w800,
                     color: Color(DARK_GREY))),
             centerTitle: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
               icon: SvgPicture.asset(
@@ -89,7 +89,7 @@ class _UserEdit extends State<UserEdit> {
                           borderRadius: BorderRadius.circular(60),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: Color(BACKGROUND),
                             ),
                             child: (_image == null)
                                 ? Image.network(

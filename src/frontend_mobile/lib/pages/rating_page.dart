@@ -32,7 +32,7 @@ class _RatingPage extends State<RatingPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
@@ -66,7 +66,7 @@ class _RatingPage extends State<RatingPage> {
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Color(FOREGROUND),
                         ),
                         child: Image.network(
                           usr.photoUrl,

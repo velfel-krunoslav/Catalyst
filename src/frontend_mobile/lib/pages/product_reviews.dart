@@ -37,9 +37,9 @@ class ProductReviews extends StatelessWidget {
           style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w800,
-              color: Colors.black),
+              color: Color(FOREGROUND)),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
@@ -84,7 +84,7 @@ class ProductReviews extends StatelessWidget {
       ),
       body: reviewsModel.isLoading
           ? LinearProgressIndicator(
-              backgroundColor: Colors.grey,
+              backgroundColor: Color(DARK_GREY),
             )
           : SingleChildScrollView(
               child: Column(
@@ -113,7 +113,7 @@ class ProductReviews extends StatelessWidget {
                               (index) {
                             return SvgPicture.asset(
                                 "assets/icons/StarFilled.svg",
-                                color: Colors.yellow[700]);
+                                color: Color(YELLOW));
                           }),
                         ),
                         Wrap(
@@ -121,7 +121,7 @@ class ProductReviews extends StatelessWidget {
                               5 - reviewsModel.average.round(), (index) {
                             return SvgPicture.asset(
                                 "assets/icons/StarOutline.svg",
-                                color: Colors.yellow[700]);
+                                color: Color(YELLOW));
                           }),
                         ),
                         SizedBox(
@@ -133,7 +133,9 @@ class ProductReviews extends StatelessWidget {
                   Text(
                     reviewsModel.reviewsCount.toString() + " recenzija",
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 16, color: Colors.black),
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        color: Color(FOREGROUND)),
                   ),
                   SizedBox(
                     height: 25,
@@ -191,7 +193,7 @@ class ProductReviews extends StatelessWidget {
                         ));
                   })),
                   SizedBox(
-                    height:60,
+                    height: 60,
                   ),
                 ],
               ),

@@ -86,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
       decoration: BoxDecoration(
         gradient: isMe
-            ? LinearGradient(colors: [Colors.white, Colors.white])
+            ? LinearGradient(colors: [Color(BACKGROUND), Color(BACKGROUND)])
             : LinearGradient(colors: <Color>[Color(MINT), Color(TEAL)]),
         borderRadius: isMe
             ? BorderRadius.only(
@@ -105,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Text(message.text,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: isMe ? Colors.black : Colors.white,
+                  color: isMe ? Color(FOREGROUND) : Color(BACKGROUND),
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600)),
           SizedBox(
@@ -115,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
             message.time,
             style: TextStyle(
               fontFamily: 'Inter',
-              color: isMe ? Colors.black : Colors.white,
+              color: isMe ? Color(FOREGROUND) : Color(BACKGROUND),
               fontSize: 14.0,
             ),
           ),
@@ -130,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 80.0,
-      color: Colors.white,
+      color: Color(BACKGROUND),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -210,7 +210,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 95,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         leading: IconButton(
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
@@ -223,7 +223,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  color: Colors.black,
+                  color: Color(FOREGROUND),
                   width: 60,
                   height: 60,
                   child: Image.network(widget.user.photoUrl),
@@ -233,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 widget.user.name,
                 style: TextStyle(
                     fontFamily: 'Inter',
-                    color: Colors.black,
+                    color: Color(FOREGROUND),
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold),
               ),

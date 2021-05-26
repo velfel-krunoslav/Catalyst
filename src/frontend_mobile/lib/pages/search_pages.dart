@@ -527,7 +527,7 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             )),
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
           ),
           body: SingleChildScrollView(child: SearchContent()),
         ),

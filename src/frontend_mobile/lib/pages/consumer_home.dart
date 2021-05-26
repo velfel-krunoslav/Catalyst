@@ -511,9 +511,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             child: IconButton(
                                 padding: EdgeInsets.all(0),
                                 icon: SvgPicture.asset(
-                                    'assets/icons/DotsNine.svg',
-                                    width: 36,
-                                    height: 36),
+                                  'assets/icons/DotsNine.svg',
+                                  width: 36,
+                                  height: 36,
+                                  color: Color(FOREGROUND),
+                                ),
                                 onPressed: () {
                                   _scaffoldKey.currentState.openDrawer();
                                 })),
@@ -614,38 +616,42 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               )),
             ),
             bottom: TabBar(
-                indicatorColor: Colors.black,
+                indicatorColor: Color(FOREGROUND),
                 labelPadding: EdgeInsets.all(8),
                 tabs: List.generate(menuItems.length, (index) {
                   return Text(
                     menuItems[index],
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      color: Colors.black,
+                      color: Color(FOREGROUND),
                       fontSize: 16,
                     ),
                   );
                 })),
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
           ),
           body: Stack(
             children: [
               TabBarView(
                 children: [
                   SingleChildScrollView(
+                    child: Container(
+                      color: Color(BACKGROUND),
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Color(DARK_GREY),
                               ),
                             )
-                          : HomeContent()),
+                          : HomeContent(),
+                    ),
+                  ),
                   SingleChildScrollView(
                       child: category == -1
                           ? (categoriesModel.isLoading
                               ? Center(
                                   child: LinearProgressIndicator(
-                                    backgroundColor: Colors.grey,
+                                    backgroundColor: Color(DARK_GREY),
                                   ),
                                 )
                               : Categories(categoriesModel.categories))
@@ -669,7 +675,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Color(DARK_GREY),
                               ),
                             )
                           : BestDeals(initiateCartRefresh))
@@ -698,7 +704,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 28,
-                color: Color(DARK_GREY),
+                color:
+                    FOREGROUND == 0xFFFFFFFF ? Colors.white : Color(DARK_GREY),
                 fontWeight: FontWeight.w700),
           ),
         ),
@@ -1071,7 +1078,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Color(FOREGROUND),
                     fontSize: 18.0,
                     fontFamily: 'Inter',
                   ),
@@ -1159,7 +1166,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
     return productsModel.isLoading
         ? Center(
             child: LinearProgressIndicator(
-              backgroundColor: Colors.grey,
+              backgroundColor: Color(DARK_GREY),
             ),
           )
         : Container(

@@ -108,7 +108,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   Widget build(BuildContext context) {
     ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
             title: Text('Korpa',
                 style: TextStyle(
@@ -117,7 +117,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                     fontWeight: FontWeight.w800,
                     color: Color(DARK_GREY))),
             centerTitle: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
               icon: SvgPicture.asset(
@@ -277,7 +277,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             child: new TextButton(
                                                 style: TextButton.styleFrom(
                                                     backgroundColor:
-                                                        Colors.white,
+                                                        Color(BACKGROUND),
                                                     elevation: 3),
                                                 child: SvgPicture.asset(
                                                     'assets/icons/Trash.svg',

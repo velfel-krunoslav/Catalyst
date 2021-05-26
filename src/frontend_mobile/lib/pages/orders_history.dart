@@ -38,7 +38,7 @@ class _OrdersHistoryState extends State<OrdersHistory> {
           "Istorija narudžbi",
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),

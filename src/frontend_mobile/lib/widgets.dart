@@ -54,7 +54,7 @@ class ButtonFill extends TextButton {
                         ? Row(children: [
                             SvgPicture.asset(
                               iconPath,
-                              color: Colors.white,
+                              color: Color(BACKGROUND),
                               width: ICON_SIZE,
                               height: ICON_SIZE,
                             ),
@@ -73,7 +73,7 @@ class ButtonFill extends TextButton {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
-                                color: Colors.white))
+                                color: Color(BACKGROUND)))
                         : SizedBox.shrink(),
                     Spacer()
                   ],
@@ -111,7 +111,7 @@ class ButtonOutline extends TextButton {
                   child: Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        color: Colors.white,
+                        color: Color(BACKGROUND),
                         borderRadius: BorderRadius.all(Radius.circular(2))),
                     child: Row(
                       children: [
@@ -323,7 +323,7 @@ class _DatePickerState extends State<DatePickerPopup> {
                           'Potvrdi',
                           style: TextStyle(
                               fontFamily: 'Inter',
-                              color: Colors.black,
+                              color: Color(FOREGROUND),
                               fontSize: 16),
                         ),
                       ),
@@ -490,7 +490,7 @@ class DrawerOption extends StatelessWidget {
         children: [
           SvgPicture.asset(
             this.iconUrl,
-            color: Colors.white,
+            color: Color(BACKGROUND),
           ),
           SizedBox(
             width: 15,
@@ -498,7 +498,7 @@ class DrawerOption extends StatelessWidget {
           Text(
             this.text,
             style: TextStyle(
-                fontFamily: 'Inter', color: Colors.white, fontSize: 16),
+                fontFamily: 'Inter', color: Color(BACKGROUND), fontSize: 16),
           ),
           SizedBox(
             height: 65,
@@ -525,7 +525,7 @@ class SettingsOption extends StatelessWidget {
         decoration: BoxDecoration(
             //border: Border.all(color: Color(DARK_GREY)),
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.white),
+            color: Color(BACKGROUND)),
         child: Row(
           children: [
             SizedBox(
@@ -538,7 +538,7 @@ class SettingsOption extends StatelessWidget {
             Text(
               this.text,
               style: TextStyle(
-                  fontFamily: "Inter", fontSize: 15, color: Colors.black),
+                  fontFamily: "Inter", fontSize: 15, color: Color(FOREGROUND)),
             ),
             Spacer(),
             Icon(Icons.arrow_forward_ios_outlined),
@@ -587,7 +587,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                         borderRadius: BorderRadius.circular(40),
                         child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: Color(FOREGROUND),
                             ),
                             child: Image.network(
                               usersModel.user.photoUrl,
@@ -612,7 +612,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                               fontSize: 14,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w800,
-                              color: Colors.black)),
+                              color: Color(FOREGROUND))),
                       SizedBox(
                         height: 5,
                       ),
@@ -716,14 +716,14 @@ class CategoryEntry extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(LIGHT_GREY),
                   shadows: <Shadow>[
-                    Shadow(blurRadius: 28, color: Colors.black),
-                    Shadow(blurRadius: 26, color: Colors.black),
-                    Shadow(blurRadius: 24, color: Colors.black),
-                    Shadow(blurRadius: 20, color: Colors.black),
-                    Shadow(blurRadius: 18, color: Colors.black),
-                    Shadow(blurRadius: 16, color: Colors.black),
-                    Shadow(blurRadius: 14, color: Colors.black),
-                    Shadow(blurRadius: 12, color: Colors.black),
+                    Shadow(blurRadius: 28, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 26, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 24, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 20, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 18, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 16, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 14, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 12, color: Color(FOREGROUND)),
                   ])),
         ),
       ],
@@ -752,7 +752,7 @@ Widget HomeDrawer(
             borderRadius: BorderRadius.circular(30),
             child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Color(FOREGROUND),
                 ),
                 child: Image.network(
                   user.photoUrl,
@@ -777,7 +777,7 @@ Widget HomeDrawer(
                   : user.name,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Colors.white,
+                  color: Color(BACKGROUND),
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             ),
@@ -787,7 +787,7 @@ Widget HomeDrawer(
                   : user.surname,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Colors.white,
+                  color: Color(BACKGROUND),
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             )
@@ -801,7 +801,7 @@ Widget HomeDrawer(
         children: [
           Text('PRODAJA',
               style: TextStyle(
-                  color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+                  color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
           SizedBox(
             width: 10,
           ),
@@ -811,7 +811,7 @@ Widget HomeDrawer(
             border: Border(
                 top: BorderSide(
               //                    <--- top side
-              color: Colors.white,
+              color: Color(BACKGROUND),
               width: 1.0,
             )),
           ))),
@@ -857,7 +857,9 @@ Widget HomeDrawer(
           children: [
             Text('PORUČIVANJE',
                 style: TextStyle(
-                    color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+                    color: Color(BACKGROUND),
+                    fontFamily: 'Inter',
+                    fontSize: 12)),
             SizedBox(
               width: 10,
             ),
@@ -867,7 +869,7 @@ Widget HomeDrawer(
               border: Border(
                   top: BorderSide(
                 //                    <--- top side
-                color: Colors.white,
+                color: Color(BACKGROUND),
                 width: 1.0,
               )),
             ))),
@@ -896,7 +898,7 @@ Widget HomeDrawer(
       children: [
         Text('OSTALO',
             style: TextStyle(
-                color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
+                color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
         SizedBox(
           width: 10,
         ),
@@ -906,7 +908,7 @@ Widget HomeDrawer(
           border: Border(
               top: BorderSide(
             //                    <--- top side
-            color: Colors.white,
+            color: Color(BACKGROUND),
             width: 1.0,
           )),
         ))),

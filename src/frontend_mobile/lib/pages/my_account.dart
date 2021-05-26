@@ -27,9 +27,9 @@ class _MyAccountState extends State<MyAccount> {
         appBar: AppBar(
           title: Text(
             "Moj nalog",
-            style: TextStyle(fontFamily: 'Inter', color: Colors.black),
+            style: TextStyle(fontFamily: 'Inter', color: Color(FOREGROUND)),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Color(BACKGROUND),
           elevation: 0,
           leading: IconButton(
             icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
@@ -41,7 +41,7 @@ class _MyAccountState extends State<MyAccount> {
             IconButton(
                 icon: Icon(
                   Icons.edit,
-                  color: Colors.black,
+                  color: Color(FOREGROUND),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -65,7 +65,7 @@ class _MyAccountState extends State<MyAccount> {
                     borderRadius: BorderRadius.circular(60),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Color(FOREGROUND),
                         ),
                         child: Image.network(
                           widget.user.photoUrl,

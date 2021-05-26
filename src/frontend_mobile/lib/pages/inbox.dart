@@ -161,9 +161,9 @@ class _UserInboxState extends State<Inbox> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(BACKGROUND),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         leading: IconButton(
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
@@ -172,7 +172,7 @@ class _UserInboxState extends State<Inbox> {
         title: Text('Poruke',
             style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.black,
+                color: Color(FOREGROUND),
                 fontWeight: FontWeight.bold)),
         elevation: 0.0,
       ),
@@ -206,7 +206,7 @@ class _UserInboxState extends State<Inbox> {
                                 Text("Kontakti:",
                                     style: TextStyle(
                                       fontFamily: 'Inter',
-                                      color: Colors.black,
+                                      color: Color(FOREGROUND),
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16.0,
                                     )),
@@ -243,7 +243,8 @@ class _UserInboxState extends State<Inbox> {
                                                           BorderRadius.circular(
                                                               25),
                                                       child: Container(
-                                                          color: Colors.black,
+                                                          color:
+                                                              Color(FOREGROUND),
                                                           width: 50,
                                                           height: 50,
                                                           child: Image.network(
@@ -269,7 +270,7 @@ class _UserInboxState extends State<Inbox> {
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Color(BACKGROUND),
                             ),
                             child: ClipRRect(
                               child: ListView.builder(
@@ -297,8 +298,8 @@ class _UserInboxState extends State<Inbox> {
                                                           Color(MINT)
                                                         ])
                                                   : LinearGradient(colors: [
-                                                      Colors.white,
-                                                      Colors.white
+                                                      Color(BACKGROUND),
+                                                      Color(BACKGROUND)
                                                     ]),
                                               borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(10.0),
@@ -322,7 +323,8 @@ class _UserInboxState extends State<Inbox> {
                                                             BorderRadius
                                                                 .circular(30),
                                                         child: Container(
-                                                          color: Colors.black,
+                                                          color:
+                                                              Color(FOREGROUND),
                                                           child: Image.network(
                                                             chat.sender
                                                                 .photoUrl,
@@ -347,7 +349,8 @@ class _UserInboxState extends State<Inbox> {
                                                               color: (chat.unread &&
                                                                       (!chat
                                                                           .isMine))
-                                                                  ? Colors.white
+                                                                  ? Color(
+                                                                      BACKGROUND)
                                                                   : Colors
                                                                       .black,
                                                               fontSize: 16.0,
@@ -369,7 +372,8 @@ class _UserInboxState extends State<Inbox> {
                                                               color: (chat.unread &&
                                                                       (!chat
                                                                           .isMine))
-                                                                  ? Colors.white
+                                                                  ? Color(
+                                                                      BACKGROUND)
                                                                   : Color(
                                                                       DARK_GREY),
                                                               fontSize: 16.0,
@@ -397,7 +401,8 @@ class _UserInboxState extends State<Inbox> {
                                                                         .isMine))
                                                                 ? Color(
                                                                     LIGHT_GREY)
-                                                                : Colors.black,
+                                                                : Color(
+                                                                    FOREGROUND),
                                                             fontSize: 15.0,
                                                             fontWeight:
                                                                 FontWeight
