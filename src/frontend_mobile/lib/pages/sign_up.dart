@@ -420,6 +420,9 @@ class _SignUpState extends State<SignUp> {
                             this.isLoading = true;
                           });
 
+                          private_key = private_key.trim();
+                          metamask_address = metamask_address.trim();
+
                           final client = Web3Client('http://' + HOST, Client(),
                               enableBackgroundIsolate: true);
                           client.credentialsFromPrivateKey(private_key).then(
