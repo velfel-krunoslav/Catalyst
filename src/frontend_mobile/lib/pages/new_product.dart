@@ -11,6 +11,13 @@ import '../internals.dart';
 import '../widgets.dart';
 import '../internals.dart';
 
+class SuperImage {
+  Uint8List rawData;
+  String url;
+
+  SuperImage({this.rawData, this.url});
+}
+
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
 
@@ -20,7 +27,7 @@ class NewProduct extends StatefulWidget {
   _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
-List<Uint8List> images = [];
+List<SuperImage> images = [];
 List<double> textFieldHeight = [
   BUTTON_HEIGHT,
   BUTTON_HEIGHT + 20,
@@ -29,7 +36,7 @@ List<double> textFieldHeight = [
   BUTTON_HEIGHT,
   BUTTON_HEIGHT
 ];
-List<String> imagesUrls = [];
+
 RegExp regNum = new RegExp(r"^[0-9]*$");
 RegExp regReal = new RegExp(r'^\d+(\.\d+)?$');
 String name, description;
@@ -487,12 +494,14 @@ class _NewProductState extends State<NewProduct> {
                           final imagePicker = getImagePickerMain();
                           if (imgCount < 3) {
                             imagePicker.getImage().then((bytes) {
-                              setState(() {
-                                images.add(bytes);
-                                imgCount++;
-                              });
                               asyncFileUpload(bytes).then((value) {
-                                imagesUrls.add('https://ipfs.io/ipfs/$value');
+                                SuperImage tmp = SuperImage();
+                                tmp.rawData = bytes;
+                                tmp.url = 'https://ipfs.io/ipfs/$value';
+                                setState(() {
+                                  images.add(tmp);
+                                  imgCount++;
+                                });
                               });
                             });
                           } else {
@@ -506,19 +515,50 @@ class _NewProductState extends State<NewProduct> {
                       children: List.generate(images.length, (index) {
                         return Row(
                           children: [
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              child: Image.memory(
-                                images[index],
-                                height:
-                                    (MediaQuery.of(context).size.width - 80) /
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  child: Image.memory(
+                                    images[index].rawData,
+                                    height: (MediaQuery.of(context).size.width -
+                                            80) /
                                         4.0,
-                                width:
-                                    (MediaQuery.of(context).size.width - 80) /
+                                    width: (MediaQuery.of(context).size.width -
+                                            80) /
                                         4.0,
-                                fit: BoxFit.cover,
-                              ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: MouseRegion(
+                                        opaque: true,
+                                        cursor: SystemMouseCursors.click,
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              images.remove(images[index]);
+                                              imgCount--;
+                                            });
+                                          },
+                                          child: Container(
+                                            color: Color(BACKGROUND),
+                                            width: 28,
+                                            height: 28,
+                                            child: Center(
+                                              child: Text('-',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color:
+                                                          Color(FOREGROUND))),
+                                            ),
+                                          ),
+                                        )))
+                              ],
                             ),
                             SizedBox(
                               width: 10,
@@ -556,7 +596,7 @@ class _NewProductState extends State<NewProduct> {
                         } else {
                           isSetCategory = true;
                         }
-                        if (imagesUrls.length == 0) {
+                        if (images.length == 0) {
                           isSetImages = false;
                         } else {
                           isSetImages = true;
@@ -565,6 +605,10 @@ class _NewProductState extends State<NewProduct> {
                             isSetCategory &&
                             isSetUnit &&
                             isSetImages) {
+                          List<String> imagesUrls = [];
+                          for (var t in images) {
+                            imagesUrls.add(t.url);
+                          }
                           addProductCallback(
                               name,
                               price,
@@ -574,6 +618,10 @@ class _NewProductState extends State<NewProduct> {
                               description,
                               usr.id,
                               selectedCategory.id);
+                          setState(() {
+                            images = null;
+                            imgCount = 0;
+                          });
                           Navigator.pop(context);
                         }
                       }),
