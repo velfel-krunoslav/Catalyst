@@ -202,13 +202,16 @@ class LoginState extends State<Login> {
                                       ], child: SignUp())),
                             );
                           },
-                          child: Text(' Registrujte se. ->',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color(TEAL),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700),
-                              textAlign: TextAlign.center),
+                          child: MouseRegion(
+                              opaque: true,
+                              cursor: SystemMouseCursors.click,
+                              child: Text(' Registrujte se. ->',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      color: Color(TEAL),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                  textAlign: TextAlign.center)),
                         )
                       ],
                     )

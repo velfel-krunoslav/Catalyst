@@ -10404,7 +10404,7 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
-    "1621952557296": {
+    "1622018855198": {
       "events": {},
       "links": {},
       "address": "0xafF6969fE4fd52966C4fdcAB98D9f649118881b3",
@@ -10412,7 +10412,7 @@
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-05-25T14:26:52.662Z",
+  "updatedAt": "2021-05-26T08:48:22.518Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

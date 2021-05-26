@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ejFqWmg9s7PrM+Vnl8x2hojwgy76OL0aTDvLWkvX/houqCiBA3fHle/qIDA8i7L4cJomylONilKvHev/1jz/kQ==",
+  "dgSpecHash": "ZHLu+lJDHLf91XnlJoMMD39RiGToSbcQJlW8Gw97PYrUjnTCxNuN6DjdO/s/uepkuz/91Hg85QfOqTgk2QHvZw==",
   "success": true,
   "projectFilePath": "/home/jovan/Catalyst/src/chat_REST_API/SignalR_chat_API.csproj",
   "expectedPackageFiles": [

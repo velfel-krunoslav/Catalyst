@@ -533,12 +533,15 @@ class _SignUpState extends State<SignUp> {
                                         ], child: Login())),
                               );
                             },
-                            child: Text('<- Prijavite se',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    color: Color(TEAL),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700))),
+                            child: MouseRegion(
+                                opaque: true,
+                                cursor: SystemMouseCursors.click,
+                                child: Text('<- Prijavite se',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        color: Color(TEAL),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700)))),
                         Text(' ukoliko već imate nalog.',
                             style: TextStyle(
                                 fontFamily: 'Inter',

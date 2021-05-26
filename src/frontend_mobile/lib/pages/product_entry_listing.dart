@@ -337,13 +337,16 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                               newReviewCallback2))),
                                             );
                                           },
-                                          child: Text(
-                                            'Sve ocene ->',
-                                            style: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Color(CYAN),
-                                                fontSize: 17),
-                                          )),
+                                          child: MouseRegion(
+                                              opaque: true,
+                                              cursor: SystemMouseCursors.click,
+                                              child: Text(
+                                                'Sve ocene ->',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Color(CYAN),
+                                                    fontSize: 16),
+                                              ))),
                                     ]),
                               )),
                           Padding(
@@ -360,22 +363,30 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                         children: [
                                           Row(
                                             children: [
-                                              SizedBox(
-                                                width: 60,
-                                                height: 60,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                  child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                      ),
-                                                      child: Image.network(
-                                                        _data.vendor.photoUrl,
-                                                        fit: BoxFit.fill,
-                                                      )),
-                                                ),
-                                              ),
+                                              // TODO VENDOR PROFILE REDIRECT
+                                              MouseRegion(
+                                                  opaque: true,
+                                                  cursor:
+                                                      SystemMouseCursors.click,
+                                                  child: SizedBox(
+                                                    width: 60,
+                                                    height: 60,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.black,
+                                                          ),
+                                                          child: Image.network(
+                                                            _data.vendor
+                                                                .photoUrl,
+                                                            fit: BoxFit.fill,
+                                                          )),
+                                                    ),
+                                                  )),
                                               SizedBox(width: 10),
                                               Container(
                                                   constraints: BoxConstraints(

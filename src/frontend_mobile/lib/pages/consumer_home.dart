@@ -117,17 +117,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   void initState() {
     super.initState();
     setHasNewMessages = (bool status) {
-    setState(() {
-      this.hasNewMessages = status;
-    });
-  };
+      setState(() {
+        this.hasNewMessages = status;
+      });
+    };
     final _tmp = Provider.of<UsersModel>(context, listen: false);
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
     if (reg == true) showWelcomeDialog();
-    const time = const Duration(seconds: 10);
+    const time = const Duration(seconds: 30);
     _timer = new Timer.periodic(time, (Timer t) {
-      print('run');
       requestGetChat(usr.id).then((rawData) {
         List<int> partnerIDs = [];
         List<int> chatIDs = [];

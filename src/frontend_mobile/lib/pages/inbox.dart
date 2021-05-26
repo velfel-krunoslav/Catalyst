@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import '../config.dart';
 import '../internals.dart';
@@ -227,37 +228,41 @@ class _UserInboxState extends State<Inbox> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       Message chat = chats[index];
-                                      return GestureDetector(
-                                          onTap: () =>
-                                              redirectToChatInbox(chat, index),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Column(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
-                                                  child: Container(
-                                                      color: Colors.black,
-                                                      width: 50,
-                                                      height: 50,
-                                                      child: Image.network(
-                                                        contacts[index]
-                                                            .photoUrl,
-                                                        fit: BoxFit.cover,
-                                                      )),
+                                      return MouseRegion(
+                                          opaque: true,
+                                          cursor: SystemMouseCursors.click,
+                                          child: InkWell(
+                                              onTap: () => redirectToChatInbox(
+                                                  chat, index),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
+                                                      child: Container(
+                                                          color: Colors.black,
+                                                          width: 50,
+                                                          height: 50,
+                                                          child: Image.network(
+                                                            contacts[index]
+                                                                .photoUrl,
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    ),
+                                                    Text(
+                                                      contacts[index].name,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Text(
-                                                  contacts[index].name,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Inter',
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                              ],
-                                            ),
-                                          ));
+                                              )));
                                     }),
                               ))
                         ]),
@@ -272,146 +277,167 @@ class _UserInboxState extends State<Inbox> {
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     Message chat = chats[index];
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          redirectToChatInbox(chat, index),
-                                      child: Container(
-                                        margin: EdgeInsets.only(
-                                            top: 5.0, bottom: 5.0, right: 5.0),
-                                        decoration: BoxDecoration(
-                                          gradient: (chat.unread == true &&
-                                                  (!chat.isMine))
-                                              ? LinearGradient(colors: <Color>[
-                                                  Color(TEAL),
-                                                  Color(MINT)
-                                                ])
-                                              : LinearGradient(colors: [
-                                                  Colors.white,
-                                                  Colors.white
-                                                ]),
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10.0),
-                                            bottomRight: Radius.circular(10.0),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  width: 60,
-                                                  height: 60,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    child: Container(
-                                                      color: Colors.black,
-                                                      child: Image.network(
-                                                        chat.sender.photoUrl,
-                                                        fit: BoxFit.cover,
+                                    return MouseRegion(
+                                        opaque: true,
+                                        cursor: SystemMouseCursors.click,
+                                        child: InkWell(
+                                          onTap: () =>
+                                              redirectToChatInbox(chat, index),
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5.0,
+                                                bottom: 5.0,
+                                                right: 5.0),
+                                            decoration: BoxDecoration(
+                                              gradient: (chat.unread == true &&
+                                                      (!chat.isMine))
+                                                  ? LinearGradient(
+                                                      colors: <Color>[
+                                                          Color(TEAL),
+                                                          Color(MINT)
+                                                        ])
+                                                  : LinearGradient(colors: [
+                                                      Colors.white,
+                                                      Colors.white
+                                                    ]),
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10.0),
+                                                bottomRight:
+                                                    Radius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: <Widget>[
+                                                    SizedBox(width: 10),
+                                                    SizedBox(
+                                                      width: 60,
+                                                      height: 60,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30),
+                                                        child: Container(
+                                                          color: Colors.black,
+                                                          child: Image.network(
+                                                            chat.sender
+                                                                .photoUrl,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 5.0,
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '${chat.sender.name} ${chat.sender.surname}',
-                                                      style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          color: (chat.unread &&
-                                                                  (!chat
-                                                                      .isMine))
-                                                              ? Colors.white
-                                                              : Colors.black,
-                                                          fontSize: 16.0,
-                                                          fontWeight:
-                                                              FontWeight.w800),
+                                                    SizedBox(
+                                                      width: 5.0,
                                                     ),
-                                                    Container(
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          '${chat.sender.name} ${chat.sender.surname}',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              color: (chat.unread &&
+                                                                      (!chat
+                                                                          .isMine))
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                              fontSize: 16.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800),
+                                                        ),
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
                                                               0.45,
-                                                      child: Text(
-                                                        chat.text,
-                                                        style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          color: (chat.unread &&
-                                                                  (!chat
-                                                                      .isMine))
-                                                              ? Colors.white
-                                                              : Color(
-                                                                  DARK_GREY),
-                                                          fontSize: 16.0,
+                                                          child: Text(
+                                                            chat.text,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              color: (chat.unread &&
+                                                                      (!chat
+                                                                          .isMine))
+                                                                  ? Colors.white
+                                                                  : Color(
+                                                                      DARK_GREY),
+                                                              fontSize: 16.0,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
                                                         ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        chat.time,
+                                                        style: TextStyle(
+                                                            fontFamily: 'Inter',
+                                                            color: (chat.unread &&
+                                                                    (!chat
+                                                                        .isMine))
+                                                                ? Color(
+                                                                    LIGHT_GREY)
+                                                                : Colors.black,
+                                                            fontSize: 15.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(height: 5.0),
+                                                      (chat.unread &&
+                                                              (!chat.isMine))
+                                                          ? Container(
+                                                              width: 100.0,
+                                                              height: 20.0,
+                                                              decoration: BoxDecoration(
+                                                                  color: Color(
+                                                                      LIGHT_GREY),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              30.0)),
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                'NOVA PORUKA',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    color: Color(
+                                                                        DARK_GREY),
+                                                                    fontSize:
+                                                                        12.0),
+                                                              ),
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Text(
-                                                    chat.time,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Inter',
-                                                        color: (chat.unread &&
-                                                                (!chat.isMine))
-                                                            ? Color(LIGHT_GREY)
-                                                            : Colors.black,
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(height: 5.0),
-                                                  (chat.unread &&
-                                                          (!chat.isMine))
-                                                      ? Container(
-                                                          width: 100.0,
-                                                          height: 20.0,
-                                                          decoration: BoxDecoration(
-                                                              color: Color(
-                                                                  LIGHT_GREY),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          30.0)),
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                            'NOVA PORUKA',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                color: Color(
-                                                                    DARK_GREY),
-                                                                fontSize: 12.0),
-                                                          ),
-                                                        )
-                                                      : SizedBox.shrink(),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
+                                          ),
+                                        ));
                                   }),
                             ),
                           ),
