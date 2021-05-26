@@ -352,225 +352,218 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           fontWeight: FontWeight.w800,
                                           color: Color(DARK_GREY)))),
                               SizedBox(height: 20),
-                              Row(children: [
-                                SvgPicture.asset('assets/icons/MapPin.svg'),
-                                SizedBox(width: 6),
-                                Expanded(
-                                    flex: 9,
-                                    child: Column(children: [
-                                      Row(children: [
-                                        Text('Adresa',
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800,
-                                                color: Color(BLACK)))
-                                      ]),
-                                      Row(children: [
-                                        Text(
-                                            (customerAddress.length > 32)
-                                                ? customerAddress.substring(
-                                                        0, 32) +
-                                                    '...'
-                                                : customerAddress,
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontSize: 16,
-                                                color: Color(DARK_GREY)))
-                                      ])
-                                    ])),
-                                Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                        icon: SvgPicture.asset(
-                                            'assets/icons/ArrowRight.svg',
-                                            height: ICON_SIZE,
-                                            color: Color(DARK_GREY)),
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              context: context,
-                                              builder: (context) {
-                                                return Container(
-                                                  height: 250,
-                                                  child: Column(
+                              MouseRegion(
+                                  opaque: true,
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                              height: 250,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            'Promena adrese za dostavu',
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    DARK_GREY),
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 18)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              15.0),
+                                                      child: TextField(
+                                                        onChanged:
+                                                            (String value) {
+                                                          setState(() {
+                                                            customerAddress =
+                                                                value;
+                                                          });
+                                                        },
+                                                      )),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
                                                     children: [
+                                                      SizedBox(),
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                                'Promena adrese za dostavu',
-                                                                style: TextStyle(
-                                                                    color: Color(
-                                                                        DARK_GREY),
-                                                                    fontFamily:
-                                                                        'Inter',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
-                                                                    fontSize:
-                                                                        18)),
-                                                          ],
+                                                                .all(10.0),
+                                                        child: Container(
+                                                          width: 280,
+                                                          height: 36,
+                                                          child: Text(
+                                                              "Trenutna adresa za dostavu je $customerAddress",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      BLACK),
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontSize:
+                                                                      16)),
                                                         ),
                                                       ),
-                                                      Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(15.0),
-                                                          child: TextField(
-                                                            onChanged:
-                                                                (String value) {
-                                                              setState(() {
-                                                                customerAddress =
-                                                                    value;
-                                                              });
-                                                            },
-                                                          )),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          SizedBox(),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(10.0),
-                                                            child: Container(
-                                                              width: 280,
-                                                              height: 36,
-                                                              child: Text(
-                                                                  "Trenutna adresa za dostavu je $customerAddress",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          BLACK),
-                                                                      fontFamily:
-                                                                          'Inter',
-                                                                      fontSize:
-                                                                          16)),
-                                                            ),
-                                                          ),
-                                                          SizedBox(),
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 100,
-                                                            height: 50,
-                                                            child: FlatButton(
-                                                              color: Color(
-                                                                  LIGHT_GREY),
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text(
-                                                                  'Primeni',
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          BLACK),
-                                                                      fontFamily:
-                                                                          'Inter',
-                                                                      fontSize:
-                                                                          16)),
-                                                            ),
-                                                          ),
-                                                        ],
+                                                      SizedBox(),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 100,
+                                                        height: 50,
+                                                        child: FlatButton(
+                                                          color:
+                                                              Color(LIGHT_GREY),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text('Primeni',
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      BLACK),
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontSize:
+                                                                      16)),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
-                                                );
-                                              });
-                                        }))
-                              ]),
+                                                ],
+                                              ),
+                                            );
+                                          });
+                                    },
+                                    child: Row(children: [
+                                      SvgPicture.asset(
+                                          'assets/icons/MapPin.svg'),
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                          flex: 9,
+                                          child: Column(children: [
+                                            Row(children: [
+                                              Text('Adresa',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Color(BLACK)))
+                                            ]),
+                                            Row(children: [
+                                              Text(
+                                                  (customerAddress.length > 32)
+                                                      ? customerAddress
+                                                              .substring(
+                                                                  0, 32) +
+                                                          '...'
+                                                      : customerAddress,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      color: Color(DARK_GREY)))
+                                            ])
+                                          ])),
+                                      Expanded(
+                                          flex: 1,
+                                          child: SvgPicture.asset(
+                                              'assets/icons/ArrowRight.svg',
+                                              height: ICON_SIZE,
+                                              color: Color(DARK_GREY)))
+                                    ]),
+                                  )),
                               SizedBox(height: 20),
-                              Row(children: [
-                                SvgPicture.asset('assets/icons/CreditCard.svg'),
-                                SizedBox(width: 6),
-                                Expanded(
-                                    flex: 9,
-                                    child: Column(children: [
-                                      Row(children: [
-                                        Text('Način plaćanja',
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800,
-                                                color: Color(BLACK)))
-                                      ]),
-                                      Row(children: [
-                                        Text(
-                                            (desc.length > 24)
-                                                ? desc.substring(0, 24) + '...'
-                                                : desc,
-                                            style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontSize: 16,
-                                                color: Color(DARK_GREY)))
-                                      ])
-                                    ])),
-                                Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                        icon: SvgPicture.asset(
-                                            'assets/icons/ArrowRight.svg',
-                                            height: ICON_SIZE,
-                                            color: Color(DARK_GREY)),
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              context: context,
-                                              builder: (context) {
-                                                return Container(
-                                                    height: 250,
-                                                    child: Column(children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Row(
+                              MouseRegion(
+                                  opaque: true,
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                                height: 250,
+                                                child: Column(children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            'Odabir načina plaćanja',
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    DARK_GREY),
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 18)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              50.0),
+                                                      child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           children: [
-                                                            Text(
-                                                                'Odabir načina plaćanja',
-                                                                style: TextStyle(
-                                                                    color: Color(
-                                                                        DARK_GREY),
-                                                                    fontFamily:
-                                                                        'Inter',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
-                                                                    fontSize:
-                                                                        18)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(50.0),
-                                                          child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Row(
+                                                            MouseRegion(
+                                                              opaque: true,
+                                                              cursor:
+                                                                  SystemMouseCursors
+                                                                      .click,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    paymentMethod =
+                                                                        customerAddress;
+                                                                    desc =
+                                                                        "Plaćanje pouzećem";
+                                                                  });
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .spaceBetween,
@@ -592,115 +585,143 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                     SizedBox(
                                                                         height:
                                                                             36,
-                                                                        child: GestureDetector(
-                                                                            onTap: () {
-                                                                              setState(() {
-                                                                                paymentMethod = customerAddress;
-                                                                                desc = "Plaćanje pouzećem";
-                                                                              });
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK)))))
+                                                                        child: Text(
+                                                                            '->',
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 18,
+                                                                                color: Color(LIGHT_BLACK))))
                                                                   ],
                                                                 ),
-                                                                SizedBox(
-                                                                    height: 20,
-                                                                    width: 200),
-                                                                Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      SizedBox(
-                                                                          width:
-                                                                              280,
-                                                                          height:
-                                                                              36,
-                                                                          child: Text(
-                                                                              'Plaćanje putem e-novčanika',
-                                                                              style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: Color(LIGHT_BLACK)))),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              36,
-                                                                          child: GestureDetector(
-                                                                              onTap: () {
-                                                                                showModalBottomSheet(
-                                                                                    isScrollControlled: true,
-                                                                                    context: context,
-                                                                                    builder: (context) {
-                                                                                      return Container(
-                                                                                          height: 250,
-                                                                                          child: Column(children: [
-                                                                                            Padding(
-                                                                                              padding: const EdgeInsets.all(8.0),
-                                                                                              child: Row(
-                                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Text('Unos privatnog ključa', style: TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 18)),
-                                                                                                ],
-                                                                                              ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 20,
+                                                                width: 200),
+                                                            MouseRegion(
+                                                                opaque: true,
+                                                                cursor:
+                                                                    SystemMouseCursors
+                                                                        .click,
+                                                                child:
+                                                                    GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          showModalBottomSheet(
+                                                                              isScrollControlled: true,
+                                                                              context: context,
+                                                                              builder: (context) {
+                                                                                return Container(
+                                                                                    height: 250,
+                                                                                    child: Column(children: [
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.all(8.0),
+                                                                                        child: Row(
+                                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                                          children: [
+                                                                                            Text('Unos privatnog ključa', style: TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 18)),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                      Padding(
+                                                                                          padding: const EdgeInsets.all(15.0),
+                                                                                          child: TextField(
+                                                                                              onChanged: (String value) {
+                                                                                                setState(() {
+                                                                                                  desc = value;
+                                                                                                });
+                                                                                              },
+                                                                                              decoration: InputDecoration(
+                                                                                                  hintText: 'Unesite privatni ključ',
+                                                                                                  filled: true,
+                                                                                                  fillColor: Color(LIGHT_GREY),
+                                                                                                  border: new OutlineInputBorder(
+                                                                                                      borderRadius: const BorderRadius.all(
+                                                                                                        const Radius.circular(5.0),
+                                                                                                      ),
+                                                                                                      borderSide: BorderSide.none)))),
+                                                                                      Row(
+                                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                        children: [
+                                                                                          SizedBox(),
+                                                                                          Padding(
+                                                                                            padding: const EdgeInsets.all(10.0),
+                                                                                            child: Container(
+                                                                                              width: 280,
+                                                                                              height: 36,
+                                                                                              child: Text("Trenutni privatni ključ je $desc", textAlign: TextAlign.center, style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
                                                                                             ),
-                                                                                            Padding(
-                                                                                                padding: const EdgeInsets.all(15.0),
-                                                                                                child: TextField(
-                                                                                                    onChanged: (String value) {
-                                                                                                      setState(() {
-                                                                                                        desc = value;
-                                                                                                      });
-                                                                                                    },
-                                                                                                    decoration: InputDecoration(
-                                                                                                        hintText: 'Unesite privatni ključ',
-                                                                                                        filled: true,
-                                                                                                        fillColor: Color(LIGHT_GREY),
-                                                                                                        border: new OutlineInputBorder(
-                                                                                                            borderRadius: const BorderRadius.all(
-                                                                                                              const Radius.circular(5.0),
-                                                                                                            ),
-                                                                                                            borderSide: BorderSide.none)))),
-                                                                                            Row(
-                                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                              children: [
-                                                                                                SizedBox(),
-                                                                                                Padding(
-                                                                                                  padding: const EdgeInsets.all(10.0),
-                                                                                                  child: Container(
-                                                                                                    width: 280,
-                                                                                                    height: 36,
-                                                                                                    child: Text("Trenutni privatni ključ je $desc", textAlign: TextAlign.center, style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                SizedBox(),
-                                                                                              ],
-                                                                                            ),
-                                                                                            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                                                              SizedBox(
-                                                                                                  width: 100,
-                                                                                                  height: 50,
-                                                                                                  child: FlatButton(
-                                                                                                    color: Color(LIGHT_GREY),
-                                                                                                    onPressed: () {
-                                                                                                      setState(() {
-                                                                                                        paymentMethod = desc;
-                                                                                                        method = "Plaćanje putem e-novčanika";
-                                                                                                      });
-                                                                                                      Navigator.pop(context);
-                                                                                                    },
-                                                                                                    child: Text('Potvrdi', style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
-                                                                                                  ))
-                                                                                            ])
-                                                                                          ]));
-                                                                                    });
-                                                                              },
-                                                                              child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK)))))
-                                                                    ])
-                                                              ]))
-                                                    ]));
-                                              });
-                                        }))
-                              ]),
+                                                                                          ),
+                                                                                          SizedBox(),
+                                                                                        ],
+                                                                                      ),
+                                                                                      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                                                        SizedBox(
+                                                                                            width: 100,
+                                                                                            height: 50,
+                                                                                            child: FlatButton(
+                                                                                              color: Color(LIGHT_GREY),
+                                                                                              onPressed: () {
+                                                                                                setState(() {
+                                                                                                  paymentMethod = desc;
+                                                                                                  method = "Plaćanje putem e-novčanika";
+                                                                                                });
+                                                                                                Navigator.pop(context);
+                                                                                              },
+                                                                                              child: Text('Potvrdi', style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
+                                                                                            ))
+                                                                                      ])
+                                                                                    ]));
+                                                                              });
+                                                                        },
+                                                                        child: Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children: [
+                                                                              SizedBox(width: 280, height: 36, child: Text('Plaćanje putem e-novčanika', style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: Color(LIGHT_BLACK)))),
+                                                                              SizedBox(height: 36, child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK))))
+                                                                            ])))
+                                                          ]))
+                                                ]));
+                                          });
+                                    },
+                                    child: Row(children: [
+                                      SvgPicture.asset(
+                                          'assets/icons/CreditCard.svg'),
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                          flex: 9,
+                                          child: Column(children: [
+                                            Row(children: [
+                                              Text('Način plaćanja',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Color(BLACK)))
+                                            ]),
+                                            Row(children: [
+                                              Text(
+                                                  (desc.length > 24)
+                                                      ? desc.substring(0, 24) +
+                                                          '...'
+                                                      : desc,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      color: Color(DARK_GREY)))
+                                            ])
+                                          ])),
+                                      Expanded(
+                                          flex: 1,
+                                          child: SvgPicture.asset(
+                                              'assets/icons/ArrowRight.svg',
+                                              height: ICON_SIZE,
+                                              color: Color(DARK_GREY)))
+                                    ]),
+                                  )),
                               SizedBox(height: 20),
                               Row(children: [
                                 Expanded(
