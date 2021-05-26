@@ -82,4 +82,22 @@ contract Users {
         }
         return user;
     }
+    function editUser(uint _id,
+        string memory _photoUrl,
+        string memory _desc,
+        string memory _email,
+        string memory _phoneNumber,
+        string memory _homeAddress) public {
+        for (uint i= 0; i < usersCount; i++) {
+            if (users[i].id == _id){
+                users[i].photoUrl = _photoUrl;
+                users[i].desc = _desc;
+                users[i].email = _email;
+                users[i].phoneNumber = _phoneNumber;
+                users[i].homeAddress = _homeAddress;
+                break;
+            }
+        }
+    }
+
 }

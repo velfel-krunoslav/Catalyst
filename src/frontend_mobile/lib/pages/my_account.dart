@@ -3,15 +3,17 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../models/usersModel.dart';
+import 'package:provider/provider.dart';
+
 import '../config.dart';
 import '../internals.dart';
 import '../pages/user_edit.dart';
 
 class MyAccount extends StatefulWidget {
   User user;
-
-  MyAccount({this.user});
-
+  Function editUserCallback;
+  MyAccount({this.user, this.editUserCallback});
   @override
   _MyAccountState createState() => _MyAccountState(user);
 }
@@ -19,6 +21,16 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   User user;
   _MyAccountState(this.user);
+
+  editProfileCallback2(User u) {
+    setState(() {
+      user = u;
+    });
+    widget.editUserCallback(u);
+    ScaffoldMessenger.of(context).showSnackBar(
+        new SnackBar(content: new Text("Uspešna izmena profila")));
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -45,9 +57,12 @@ class _MyAccountState extends State<MyAccount> {
                 ),
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserEdit(user)),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new MultiProvider(providers: [
+                                ChangeNotifierProvider<UsersModel>(
+                                    create: (_) => UsersModel()),
+                              ], child: UserEdit(user, editProfileCallback2))));
                 })
           ],
         ),
@@ -68,7 +83,7 @@ class _MyAccountState extends State<MyAccount> {
                           color: Color(FOREGROUND),
                         ),
                         child: Image.network(
-                          widget.user.photoUrl,
+                          user.photoUrl,
                           fit: BoxFit.fill,
                         )),
                   ),

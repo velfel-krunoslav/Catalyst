@@ -739,7 +739,8 @@ Widget HomeDrawer(
     VoidCallback initiateRefresh,
     dynamic Function(int id) getUserById,
     bool hasMessages,
-    Function setHasNewMessages) {
+    Function setHasNewMessages,
+    Function(User u) editUserCallback) {
   final sizer = getSizer();
   final size = MediaQuery.of(context).size;
   List<Widget> options = [
@@ -947,8 +948,11 @@ Widget HomeDrawer(
     DrawerOption(
         text: "Moj nalog",
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MyAccount(
+                      user: user, editUserCallback: editUserCallback)));
         },
         iconUrl: "assets/icons/User.svg"),
     DrawerOption(

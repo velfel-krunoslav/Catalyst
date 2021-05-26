@@ -457,6 +457,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         });
   }
 
+  editUserCallback(User u) {
+    final _tmp = Provider.of<UsersModel>(context, listen: false);
+    setState(() {
+      _tmp.user = u;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     productsModel = Provider.of<ProductsModel>(context);
@@ -486,13 +493,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               ? LinearProgressIndicator()
               : HomeDrawer(
                   context,
-                  usersModel.user,
+                  usr,
                   refreshProductsCallback,
                   getProductByIdCallback,
                   incrementCart,
                   usersModel.getUserById,
                   hasNewMessages,
-                  setHasNewMessages), //TODO context
+                  setHasNewMessages,
+                  editUserCallback), //TODO context
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
