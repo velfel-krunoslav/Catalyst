@@ -214,13 +214,14 @@ class _DateOrdersState extends State<DateOrders> {
                                 ),
                                 Spacer(),
                                 Text(
-                                    "x" +
-                                        dateOrder.orders[index].amount
-                                            .toString(),
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 18,
-                                        color: Color(BLACK)))
+                                  "x" +
+                                      dateOrder.orders[index].amount.toString(),
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 18,
+                                      color: Color(BLACK)),
+                                  textAlign: TextAlign.end,
+                                )
                               ])),
                     ),
                   );
