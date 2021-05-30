@@ -158,10 +158,11 @@ class ButtonOutline extends TextButton {
 class _PasswordFieldState extends State<PasswordField> {
   final ValueChanged<String> onChange;
   final String hintText;
+  final VoidCallback onSubmitted;
   bool _obscureText = true;
   String password;
   double textFieldHeight = BUTTON_HEIGHT;
-  _PasswordFieldState(this.onChange, this.hintText);
+  _PasswordFieldState(this.onChange, this.hintText, this.onSubmitted);
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +175,9 @@ class _PasswordFieldState extends State<PasswordField> {
             child: Row(children: [
               Expanded(
                 child: TextFormField(
+                  onFieldSubmitted: (value) {
+                    onSubmitted();
+                  },
                   onChanged: onChange,
                   validator: (value) {
                     if (value == null || value.isEmpty || value.length < 6) {
@@ -233,9 +237,11 @@ class _PasswordFieldState extends State<PasswordField> {
 class PasswordField extends StatefulWidget {
   final ValueChanged<String> onChange;
   final String hintText;
-  PasswordField(this.onChange, this.hintText);
+  final VoidCallback onSubmitted;
+  PasswordField(this.onChange, this.hintText, [this.onSubmitted]);
   @override
-  _PasswordFieldState createState() => _PasswordFieldState(onChange, hintText);
+  _PasswordFieldState createState() =>
+      _PasswordFieldState(onChange, hintText, onSubmitted);
 }
 
 class DatePickerPopup extends StatefulWidget {

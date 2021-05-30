@@ -47,6 +47,44 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    VoidCallback startLoginRoutine = () {
+      if (privateKey != null &&
+          privateKey != "" &&
+          accountAddress != null &&
+          accountAddress != "") {
+        switchState();
+        privateKey = privateKey.trim();
+        accountAddress = accountAddress.trim();
+        usersModel.checkForUser(accountAddress, privateKey).then((rez) {
+          print(rez);
+          if (rez != null && rez > -1) {
+            Prefs.instance.setStringValue('privateKey', privateKey);
+            Prefs.instance.setStringValue('accountAddress', accountAddress);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new MultiProvider(providers: [
+                        ChangeNotifierProvider<ProductsModel>(
+                            create: (_) => ProductsModel()),
+                        ChangeNotifierProvider<CategoriesModel>(
+                            create: (_) => CategoriesModel()),
+                        ChangeNotifierProvider<UsersModel>(
+                            create: (_) =>
+                                UsersModel(privateKey, accountAddress)),
+                      ], child: ConsumerHomePage())),
+            );
+          } else {
+            switchState();
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Uneti podaci su pogrešni')));
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Unesite sve podatke')));
+      }
+    };
+
     usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
       body: (isLoading == true)
@@ -132,54 +170,12 @@ class LoginState extends State<Login> {
                     SizedBox(height: 5.0),
                     PasswordField((val) {
                       privateKey = val;
-                    }, ''),
+                    }, '', startLoginRoutine),
                     SizedBox(height: 20.0),
                     ButtonFill(
                       text: 'Prijavi se',
                       onPressed: () {
-                        if (privateKey != null &&
-                            privateKey != "" &&
-                            accountAddress != null &&
-                            accountAddress != "") {
-                          switchState();
-                          privateKey = privateKey.trim();
-                          accountAddress = accountAddress.trim();
-                          usersModel
-                              .checkForUser(accountAddress, privateKey)
-                              .then((rez) {
-                            print(rez);
-                            if (rez != null && rez > -1) {
-                              Prefs.instance
-                                  .setStringValue('privateKey', privateKey);
-                              Prefs.instance.setStringValue(
-                                  'accountAddress', accountAddress);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        new MultiProvider(providers: [
-                                          ChangeNotifierProvider<ProductsModel>(
-                                              create: (_) => ProductsModel()),
-                                          ChangeNotifierProvider<
-                                                  CategoriesModel>(
-                                              create: (_) => CategoriesModel()),
-                                          ChangeNotifierProvider<UsersModel>(
-                                              create: (_) => UsersModel(
-                                                  privateKey, accountAddress)),
-                                        ], child: ConsumerHomePage())),
-                              );
-                            } else {
-                              switchState();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Uneti podaci su pogrešni')));
-                            }
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Unesite sve podatke')));
-                        }
+                        startLoginRoutine();
                       },
                     ),
                     SizedBox(height: 100.0),
