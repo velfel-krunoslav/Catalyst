@@ -101,6 +101,7 @@ class _SignUpState extends State<SignUp> {
                           height: textFieldHeight[0],
                           width: MediaQuery.of(context).size.width / 2.0 - 30,
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 setState(() {
@@ -141,6 +142,7 @@ class _SignUpState extends State<SignUp> {
                           height: textFieldHeight[1],
                           width: MediaQuery.of(context).size.width / 2.0 - 30,
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 setState(() {
