@@ -28460,15 +28460,15 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
-    "1622018855198": {
+    "1622395231852": {
       "events": {},
       "links": {},
-      "address": "0xf4766A72293AABe0c5c2f3709f1a996b4541111c",
-      "transactionHash": "0xa5e459be2711f1b89ca14e579fb45560e9b2afc9e85ffd5cae830cdef5b653f4"
+      "address": "0xc1Cc00a3Df3b030E426A0053D69c3afF6FCDCBDb",
+      "transactionHash": "0xe0958152be1355e7b4e6a8bd77200f158ae6639fdd7a9b20b9ed1f82160899f3"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-05-26T12:09:48.901Z",
+  "updatedAt": "2021-05-30T17:21:59.996Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

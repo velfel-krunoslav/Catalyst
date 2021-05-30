@@ -28,7 +28,7 @@ class _MyAccountState extends State<MyAccount> {
     });
     widget.editUserCallback(u);
     ScaffoldMessenger.of(context).showSnackBar(
-        new SnackBar(content: new Text("Uspešna izmena profila")));
+        new SnackBar(content: new Text("Informacije su uspešno ažurirane")));
   }
 
   @override

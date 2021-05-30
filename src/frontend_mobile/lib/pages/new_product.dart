@@ -511,62 +511,69 @@ class _NewProductState extends State<NewProduct> {
                           }
                         }),
                     SizedBox(width: 10),
-                    Wrap(
-                      children: List.generate(images.length, (index) {
-                        return Row(
-                          children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  child: Image.memory(
-                                    images[index].rawData,
-                                    height: (MediaQuery.of(context).size.width -
-                                            80) /
-                                        4.0,
-                                    width: (MediaQuery.of(context).size.width -
-                                            80) /
-                                        4.0,
-                                    fit: BoxFit.cover,
+                    (images != null)
+                        ? Wrap(
+                            children: List.generate(images.length, (index) {
+                              return Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        child: Image.memory(
+                                          images[index].rawData,
+                                          height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: MouseRegion(
+                                              opaque: true,
+                                              cursor: SystemMouseCursors.click,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    images
+                                                        .remove(images[index]);
+                                                    imgCount--;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  color: Color(BACKGROUND),
+                                                  width: 28,
+                                                  height: 28,
+                                                  child: Center(
+                                                    child: Text('-',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: Color(
+                                                                FOREGROUND))),
+                                                  ),
+                                                ),
+                                              )))
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: MouseRegion(
-                                        opaque: true,
-                                        cursor: SystemMouseCursors.click,
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              images.remove(images[index]);
-                                              imgCount--;
-                                            });
-                                          },
-                                          child: Container(
-                                            color: Color(BACKGROUND),
-                                            width: 28,
-                                            height: 28,
-                                            child: Center(
-                                              child: Text('-',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color:
-                                                          Color(FOREGROUND))),
-                                            ),
-                                          ),
-                                        )))
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            )
-                          ],
-                        );
-                      }),
-                    ),
+                                  SizedBox(
+                                    width: 10,
+                                  )
+                                ],
+                              );
+                            }),
+                          )
+                        : SizedBox.shrink()
                   ]),
                   !isSetImages
                       ? Padding(
