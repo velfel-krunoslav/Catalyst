@@ -295,6 +295,7 @@ class _SignUpState extends State<SignUp> {
                     Container(
                       height: textFieldHeight[3],
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
