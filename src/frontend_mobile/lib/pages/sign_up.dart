@@ -253,9 +253,10 @@ class _SignUpState extends State<SignUp> {
                                             Container(
                                               height: 200,
                                               child: CupertinoDatePicker(
+                                                  maximumDate: DateTime(2010),
                                                   initialDateTime:
                                                       (_date == null)
-                                                          ? DateTime.now()
+                                                          ? DateTime(2010)
                                                           : _date,
                                                   mode: CupertinoDatePickerMode
                                                       .date,
