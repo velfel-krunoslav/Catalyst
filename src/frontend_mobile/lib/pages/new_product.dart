@@ -53,7 +53,7 @@ List<Category> categories = [
   Category(id: 4, name: "Bezalkoholna pića", assetUrl: ""),
   Category(id: 5, name: "Alkohol", assetUrl: ""),
   Category(id: 6, name: "Žita", assetUrl: ""),
-  Category(id: 7, name: "Živina", assetUrl: ""),
+  Category(id: 7, name: "Domaće životinje", assetUrl: ""),
   Category(id: 8, name: "Zimnice", assetUrl: ""),
   Category(id: 9, name: "Ostali proizvodi", assetUrl: "")
 ];

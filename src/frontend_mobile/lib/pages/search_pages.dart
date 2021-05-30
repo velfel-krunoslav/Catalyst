@@ -69,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
     'Bezalkoholna pića',
     'Alkohol',
     'Žita',
-    'Živina',
+    'Domaće životinje',
     'Zimnice',
     'Ostali proizvodi',
   ];
