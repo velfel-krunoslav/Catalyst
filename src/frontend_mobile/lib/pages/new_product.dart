@@ -553,6 +553,12 @@ class _NewProductState extends State<NewProduct> {
                                                   color: Color(BACKGROUND),
                                                   width: 28,
                                                   height: 28,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.black,
+                                                          width: 1,
+                                                          style: BorderStyle
+                                                              .solid)),
                                                   child: Center(
                                                     child: Text('-',
                                                         style: TextStyle(

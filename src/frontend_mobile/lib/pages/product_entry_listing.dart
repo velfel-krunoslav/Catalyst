@@ -70,6 +70,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   bool toggle = false;
   bool messagesAreLoading = false;
   bool showAlertDialog = false;
+  CarouselController cc = new CarouselController();
   @override
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
@@ -101,6 +102,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                             children: [
                               GestureDetector(
                                   child: CarouselSlider(
+                                carouselController: cc,
                                 options: CarouselOptions(
                                     autoPlay: false,
                                     height: sizer.getImageHeight(),
@@ -120,12 +122,25 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                           fit: BoxFit.cover,
                                         ),
                                         onTap: () {
+                                          List<String> newAssetOrder = [];
+                                          for (int i = _current;
+                                              i < _data.assetUrls.length;
+                                              i++) {
+                                            newAssetOrder
+                                                .add(_data.assetUrls[i]);
+                                          }
+                                          for (int i = 0;
+                                              i < _current - 1;
+                                              i++) {
+                                            newAssetOrder
+                                                .add(_data.assetUrls[i]);
+                                          }
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       new FullscreenSlider(
-                                                          widget._data)));
+                                                          newAssetOrder)));
                                         },
                                       );
                                     },
@@ -155,7 +170,63 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                     height: 10,
                                   )
                                 ],
-                              )
+                              ),
+                              (sizer.isWeb())
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 160, 20, 20),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                              width: 48,
+                                              height: 48,
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _current--;
+                                                      if (_current < 0) {
+                                                        _current = _data
+                                                                .assetUrls
+                                                                .length -
+                                                            1;
+                                                      }
+
+                                                      cc.animateToPage(
+                                                          _current);
+                                                    });
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                      'assets/icons/ArrowLeftSlider.svg',
+                                                      color: Color(FOREGROUND)),
+                                                  style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color(LIGHT_GREY)))),
+                                          Spacer(),
+                                          SizedBox(
+                                              width: 48,
+                                              height: 48,
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _current++;
+                                                      if (_current >=
+                                                          _data.assetUrls
+                                                              .length) {
+                                                        _current = 0;
+                                                      }
+                                                      cc.animateToPage(
+                                                          _current);
+                                                    });
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                      'assets/icons/ArrowRightSlider.svg',
+                                                      color: Color(FOREGROUND)),
+                                                  style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color(LIGHT_GREY))))
+                                        ],
+                                      ))
+                                  : SizedBox.shrink()
                             ],
                           )),
                       Card(
@@ -643,16 +714,18 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                       Row(
                         children: [
                           SizedBox(width: 20),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: SvgPicture.asset(
-                                  'assets/icons/ArrowLeft.svg',
-                                  color: Color(FOREGROUND)),
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Color(BACKGROUND),
-                                  minimumSize: Size(36, 36))),
+                          SizedBox(
+                              width: 36,
+                              height: 36,
+                              child: TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: SvgPicture.asset(
+                                      'assets/icons/ArrowLeft.svg',
+                                      color: Color(FOREGROUND)),
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: Color(BACKGROUND)))),
                           Spacer(),
                           setSale == null
                               ? Container()
@@ -957,11 +1030,10 @@ class DropdownOption extends StatelessWidget {
 }
 
 class FullscreenSlider extends StatelessWidget {
-  int _current = 0;
-  ProductEntryListingPage _data;
+  List<String> assetUrls;
 
-  FullscreenSlider(ProductEntryListingPage _data) {
-    this._data = _data;
+  FullscreenSlider(List<String> assetUrls) {
+    this.assetUrls = assetUrls;
   }
   @override
   Widget build(BuildContext context) {
@@ -981,7 +1053,7 @@ class FullscreenSlider extends StatelessWidget {
                         enlargeCenterPage: false,
                         // autoPlay: false,
                       ),
-                      items: _data.assetUrls
+                      items: assetUrls
                           .map((item) => Container(
                                 child: Center(
                                     child: Image.network(
