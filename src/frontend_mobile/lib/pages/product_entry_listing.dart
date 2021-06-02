@@ -399,6 +399,8 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                       ],
                                                       child: ProductReviews(
                                                           _data.id,
+                                                          _data.name,
+                                                          _data.assetUrls[0],
                                                           newReviewCallback2))),
                                         );
                                       },
