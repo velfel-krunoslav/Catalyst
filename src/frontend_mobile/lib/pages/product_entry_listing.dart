@@ -945,8 +945,27 @@ class _PickerState extends State<Picker> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              getSizer().isWeb()
+                  ? Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () => setState(() {
+                            final newValue = _currentValue - 5;
+                            _currentValue = newValue.clamp(5, 95);
+                          }),
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () => setState(() {
+                                  final newValue = _currentValue + 5;
+                                  _currentValue = newValue.clamp(5, 95);
+                                })),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
-                width: 20,
+                width: 10,
               ),
               NumberPicker(
                 value: _currentValue,
@@ -967,6 +986,11 @@ class _PickerState extends State<Picker> {
                     fontFamily: 'Inter',
                     fontSize: 17,
                   )),
+              getSizer().isWeb()
+                  ? SizedBox(
+                      width: 35,
+                    )
+                  : SizedBox.shrink(),
             ],
           ),
           SizedBox(height: 20),
