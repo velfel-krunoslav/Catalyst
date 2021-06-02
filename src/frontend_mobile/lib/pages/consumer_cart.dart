@@ -119,8 +119,9 @@ class _ConsumerCartState extends State<ConsumerCart> {
             centerTitle: true,
             backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
-            leading: IconButton(
-              icon: SvgPicture.asset(
+            leading: TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.white),
+              child: SvgPicture.asset(
                 'assets/icons/ArrowLeft.svg',
                 height: ICON_SIZE,
                 width: ICON_SIZE,
@@ -182,7 +183,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                 fontFamily: 'Inter',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
-                                                color: Color(BLACK)))
+                                                color: Color(FOREGROUND)))
                                       ]),
                                       Row(children: [
                                         Text(
@@ -239,7 +240,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                               child: Text('-',
                                                   style: TextStyle(
                                                       fontFamily: 'Inter',
-                                                      color: Color(BLACK)))),
+                                                      color:
+                                                          Color(DARK_GREY)))),
                                         ),
                                         SizedBox(
                                           width: 10,
@@ -268,7 +270,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                               child: Text('+',
                                                   style: TextStyle(
                                                       fontFamily: 'Inter',
-                                                      color: Color(BLACK)))),
+                                                      color:
+                                                          Color(DARK_GREY)))),
                                         ),
                                         Spacer(),
                                         SizedBox(
@@ -277,7 +280,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             child: new TextButton(
                                                 style: TextButton.styleFrom(
                                                     backgroundColor:
-                                                        Color(BACKGROUND),
+                                                        Colors.white,
                                                     elevation: 3),
                                                 child: SvgPicture.asset(
                                                     'assets/icons/Trash.svg',
@@ -362,6 +365,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           context: context,
                                           builder: (context) {
                                             return Container(
+                                              color: Color(BACKGROUND),
                                               height: 250,
                                               child: Column(
                                                 children: [
@@ -465,7 +469,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                     },
                                     child: Row(children: [
                                       SvgPicture.asset(
-                                          'assets/icons/MapPin.svg'),
+                                          'assets/icons/MapPin.svg',
+                                          color: Color(FOREGROUND)),
                                       SizedBox(width: 6),
                                       Expanded(
                                           flex: 9,
@@ -477,7 +482,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w800,
-                                                      color: Color(BLACK)))
+                                                      color: Color(FOREGROUND)))
                                             ]),
                                             Row(children: [
                                               Text(
@@ -513,6 +518,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           builder: (context) {
                                             return Container(
                                                 height: 250,
+                                                color: Color(BACKGROUND),
                                                 child: Column(children: [
                                                   Padding(
                                                     padding:
@@ -612,6 +618,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                               context: context,
                                                                               builder: (context) {
                                                                                 return Container(
+                                                                                    color: Color(BACKGROUND),
                                                                                     height: 250,
                                                                                     child: Column(children: [
                                                                                       Padding(
@@ -688,7 +695,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                     },
                                     child: Row(children: [
                                       SvgPicture.asset(
-                                          'assets/icons/CreditCard.svg'),
+                                          'assets/icons/CreditCard.svg',
+                                          color: Color(FOREGROUND)),
                                       SizedBox(width: 6),
                                       Expanded(
                                           flex: 9,
@@ -700,7 +708,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w800,
-                                                      color: Color(BLACK)))
+                                                      color: Color(FOREGROUND)))
                                             ]),
                                             Row(children: [
                                               Text(

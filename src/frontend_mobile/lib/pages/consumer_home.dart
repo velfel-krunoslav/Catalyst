@@ -192,6 +192,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               builder: (BuildContext context, StateSetter stateSetter) {
             return SingleChildScrollView(
                 child: Container(
+              color: Color(BACKGROUND),
               height: 480,
               child: Column(
                 children: [
@@ -240,6 +241,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   RegExp(r'[0-9]')),
                             ],
                             decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Color(FOREGROUND)),
                               hintText: '3',
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
@@ -255,7 +257,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Text("km",
                               style: TextStyle(
-                                  color: Color(BLACK),
+                                  color: Color(FOREGROUND),
                                   fontFamily: 'Inter',
                                   fontSize: 14)),
                         ),
@@ -275,7 +277,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               "Prikazati proizvode dobavljača koji su udaljeni najviše $hintDistance km.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Color(BLACK),
+                                  color: Color(FOREGROUND),
                                   fontFamily: 'Inter',
                                   fontSize: 14)),
                         ),
@@ -309,7 +311,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             height: 60,
                             child: Text('Kategorija:',
                                 style: TextStyle(
-                                    color: Color(BLACK),
+                                    color: Color(FOREGROUND),
                                     fontFamily: 'Inter',
                                     fontSize: 14)),
                           ),
@@ -318,7 +320,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             height: 60,
                             child: Text("Raspon cena ($CURRENCY):",
                                 style: TextStyle(
-                                    color: Color(BLACK),
+                                    color: Color(FOREGROUND),
                                     fontFamily: 'Inter',
                                     fontSize: 14)),
                           ),
@@ -327,7 +329,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             height: 60,
                             child: Text("Proizvodi na akciji:",
                                 style: TextStyle(
-                                    color: Color(BLACK),
+                                    color: Color(FOREGROUND),
                                     fontFamily: 'Inter',
                                     fontSize: 14)),
                           ),
@@ -338,14 +340,21 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(bottom: 5.0),
-                            child: SizedBox(
+                            child: Container(
                               width: 240,
                               height: 60,
                               child: DropdownButtonFormField<String>(
+                                dropdownColor: Color(LIGHT_GREY),
                                 items: categoriesModel.categories
                                     .map((Category t) {
                                   return DropdownMenuItem<String>(
-                                      value: t.name, child: Text(t.name));
+                                      value: t.name,
+                                      child: Text(
+                                        t.name,
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            color: Color(FOREGROUND)),
+                                      ));
                                 }).toList(),
                                 onChanged: (String newCategorySelected) {
                                   setState(() {
@@ -395,7 +404,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     EdgeInsets.only(left: 17.0, right: 17.0),
                                 child: Text("-",
                                     style: TextStyle(
-                                        color: Color(BLACK),
+                                        color: Color(FOREGROUND),
                                         fontFamily: 'Inter',
                                         fontSize: 14)),
                               ),
@@ -471,6 +480,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     usersModel = Provider.of<UsersModel>(context);
     usr = usersModel.user;
     return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: const Color(BACKGROUND)),
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
@@ -484,7 +494,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                 },
                 child: SvgPicture.asset('assets/icons/Filters.svg',
                     width: 24, height: 24),
-                backgroundColor: Color(LIGHT_GREY),
+                backgroundColor: Colors.white,
               ),
             ),
           ),
@@ -532,13 +542,17 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           width: 48,
                         ),
                         SvgPicture.asset(
-                            'assets/icons/KotaricaIconMonochrome.svg'),
+                            'assets/icons/KotaricaIconMonochrome.svg',
+                            color: BACKGROUND == 0xFF000000
+                                ? Colors.white
+                                : Color(DARK_GREEN)),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
                               'assets/icons/ShoppingCart.svg',
                               width: 36,
-                              height: 36),
+                              height: 36,
+                              color: Color(FOREGROUND)),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -591,11 +605,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         fillColor: Color(LIGHT_GREY),
                         filled: true,
                         hintText: 'Pretraga',
-                        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                        hintStyle: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 16,
+                            color: Color(DARK_GREY)),
                         prefixIcon: Padding(
                           padding: EdgeInsets.only(left: 15, right: 10),
                           child: SvgPicture.asset(
-                              'assets/icons/MagnifyingGlass.svg'),
+                            'assets/icons/MagnifyingGlass.svg',
+                            color: Color(DARK_GREY),
+                          ),
                         ),
                         border: new OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
@@ -662,7 +681,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     backgroundColor: Color(DARK_GREY),
                                   ),
                                 )
-                              : Categories(categoriesModel.categories))
+                              : Container(
+                                  color: Color(BACKGROUND),
+                                  child:
+                                      Categories(categoriesModel.categories)))
                           : MultiProvider(
                               providers: [
                                   ChangeNotifierProvider<ProductsModel>(
@@ -686,7 +708,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                 backgroundColor: Color(DARK_GREY),
                               ),
                             )
-                          : BestDeals(initiateCartRefresh))
+                          : Container(
+                              color: Color(BACKGROUND),
+                              child: BestDeals(initiateCartRefresh)))
                 ],
               ),
             ],
@@ -712,8 +736,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 28,
-                color:
-                    FOREGROUND == 0xFFFFFFFF ? Colors.white : Color(DARK_GREY),
+                color: Color(DARK_GREY),
                 fontWeight: FontWeight.w700),
           ),
         ),

@@ -87,6 +87,7 @@ class LoginState extends State<Login> {
 
     usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
+      backgroundColor: Color(BACKGROUND),
       body: (isLoading == true)
           ? Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +117,9 @@ class LoginState extends State<Login> {
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w800,
                             fontSize: 28,
-                            color: Color(DARK_GREEN)),
+                            color: BACKGROUND == 0xFF000000
+                                ? Colors.white
+                                : Color(DARK_GREEN)),
                         textAlign: TextAlign.center),
                     SizedBox(height: 40.0),
                     Text(

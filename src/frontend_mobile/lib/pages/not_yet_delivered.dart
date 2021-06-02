@@ -56,6 +56,8 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
           : (ordersModel.deliveryOrders.length == 0
               ? Center(
                   child: Text('Nemate porudžbina na čekanju.',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
                       style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 24,

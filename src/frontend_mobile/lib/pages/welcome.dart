@@ -15,6 +15,7 @@ class Welcome extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(BACKGROUND),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -35,7 +36,9 @@ class Welcome extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800,
                     fontSize: 28,
-                    color: Color(DARK_GREEN)),
+                    color: BACKGROUND == 0xFF000000
+                        ? Colors.white
+                        : Color(DARK_GREEN)),
               ), //end title
 
               SizedBox(height: 40.0),

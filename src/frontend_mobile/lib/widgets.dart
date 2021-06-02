@@ -372,7 +372,10 @@ class ProductEntryCard extends GestureDetector {
                       product.name.length > 15
                           ? product.name.substring(0, 15) + '...'
                           : product.name,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          color: Color(FOREGROUND)),
                     ),
                   ),
                   SizedBox(height: 5),
@@ -414,7 +417,7 @@ class DiscountedProductEntryCard extends GestureDetector {
       : super(
             onTap: onPressed,
             child: Card(
-              color: Color(LIGHT_GREY),
+              color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -435,7 +438,10 @@ class DiscountedProductEntryCard extends GestureDetector {
                       product.name.length > 15
                           ? product.name.substring(0, 15) + '...'
                           : product.name,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 16),
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          color: Colors.black),
                     ),
                   ),
                   SizedBox(height: 5),
@@ -449,7 +455,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
                               fontSize: 16,
-                              color: Color(DARK_GREY),
+                              color: Colors.grey[700],
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -496,7 +502,7 @@ class DrawerOption extends StatelessWidget {
         children: [
           SvgPicture.asset(
             this.iconUrl,
-            color: Color(BACKGROUND),
+            color: Colors.white,
           ),
           SizedBox(
             width: 15,
@@ -504,7 +510,7 @@ class DrawerOption extends StatelessWidget {
           Text(
             this.text,
             style: TextStyle(
-                fontFamily: 'Inter', color: Color(BACKGROUND), fontSize: 16),
+                fontFamily: 'Inter', color: Colors.white, fontSize: 16),
           ),
           SizedBox(
             height: 65,
@@ -720,7 +726,7 @@ class CategoryEntry extends StatelessWidget {
                   fontSize: 24,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
-                  color: Color(LIGHT_GREY),
+                  color: Colors.black,
                   shadows: <Shadow>[
                     Shadow(blurRadius: 28, color: Color(FOREGROUND)),
                     Shadow(blurRadius: 26, color: Color(FOREGROUND)),
@@ -759,7 +765,7 @@ Widget HomeDrawer(
             borderRadius: BorderRadius.circular(30),
             child: Container(
                 decoration: BoxDecoration(
-                  color: Color(FOREGROUND),
+                  color: Colors.black,
                 ),
                 child: Image.network(
                   user.photoUrl,
@@ -784,7 +790,7 @@ Widget HomeDrawer(
                   : user.name,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Color(BACKGROUND),
+                  color: Colors.white,
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             ),
@@ -794,7 +800,7 @@ Widget HomeDrawer(
                   : user.surname,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Color(BACKGROUND),
+                  color: Colors.white,
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             )
@@ -808,7 +814,7 @@ Widget HomeDrawer(
         children: [
           Text('PRODAJA',
               style: TextStyle(
-                  color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
+                  color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
           SizedBox(
             width: 10,
           ),
@@ -818,7 +824,7 @@ Widget HomeDrawer(
             border: Border(
                 top: BorderSide(
               //                    <--- top side
-              color: Color(BACKGROUND),
+              color: Colors.white,
               width: 1.0,
             )),
           ))),
@@ -864,9 +870,7 @@ Widget HomeDrawer(
           children: [
             Text('PORUČIVANJE',
                 style: TextStyle(
-                    color: Color(BACKGROUND),
-                    fontFamily: 'Inter',
-                    fontSize: 12)),
+                    color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
             SizedBox(
               width: 10,
             ),
@@ -876,7 +880,7 @@ Widget HomeDrawer(
               border: Border(
                   top: BorderSide(
                 //                    <--- top side
-                color: Color(BACKGROUND),
+                color: Colors.white,
                 width: 1.0,
               )),
             ))),
@@ -905,7 +909,7 @@ Widget HomeDrawer(
       children: [
         Text('OSTALO',
             style: TextStyle(
-                color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
+                color: Colors.white, fontFamily: 'Inter', fontSize: 12)),
         SizedBox(
           width: 10,
         ),
@@ -915,7 +919,7 @@ Widget HomeDrawer(
           border: Border(
               top: BorderSide(
             //                    <--- top side
-            color: Color(BACKGROUND),
+            color: Colors.white,
             width: 1.0,
           )),
         ))),
