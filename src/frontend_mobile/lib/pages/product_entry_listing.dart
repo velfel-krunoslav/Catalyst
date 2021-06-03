@@ -327,6 +327,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                       ? Row(
                                           children: [
                                             JumpingDotsProgressIndicator(
+                                              color: Color(FOREGROUND),
                                               fontSize: 20.0,
                                             ),
                                           ],
@@ -1046,6 +1047,7 @@ class FullscreenSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        backgroundColor: Color(BACKGROUND),
         body: Stack(
           children: [
             Column(

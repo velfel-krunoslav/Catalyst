@@ -343,8 +343,7 @@ class _SignUpState extends State<SignUp> {
                                                       'Izaberite datum',
                                                       style: TextStyle(
                                                           fontFamily: 'Inter',
-                                                          color:
-                                                              Color(DARK_GREY),
+                                                          color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.w700,
                                                           fontSize: 24),

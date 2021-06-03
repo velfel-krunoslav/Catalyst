@@ -1097,14 +1097,19 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => new AlertDialog(
-          title: Center(child: Text("Uspešna registracija")),
+          backgroundColor: Color(BACKGROUND),
+          title: Center(
+              child: Text(
+            "Uspešna registracija",
+            style: TextStyle(color: Color(FOREGROUND)),
+          )),
           content: Container(
             width: MediaQuery.of(context).size.width / 1.3,
             height: MediaQuery.of(context).size.height /
                 4.5, // TODO PROVJERITI VISINU
             decoration: new BoxDecoration(
               shape: BoxShape.rectangle,
-              color: const Color(0xFFFFFF),
+              color: Color(BACKGROUND),
               borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
             ),
             child: new Column(

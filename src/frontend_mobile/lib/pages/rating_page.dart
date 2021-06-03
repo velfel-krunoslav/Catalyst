@@ -30,12 +30,14 @@ class _RatingPage extends State<RatingPage> {
     reviewsModel = Provider.of<ReviewsModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
+      backgroundColor: Color(BACKGROUND),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+              color: Color(FOREGROUND)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -45,7 +47,7 @@ class _RatingPage extends State<RatingPage> {
             child: Text(
               'Nova recenzija',
               style: TextStyle(
-                  color: Color(DARK_GREY),
+                  color: Color(FOREGROUND),
                   fontSize: 24,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w800),
@@ -66,7 +68,7 @@ class _RatingPage extends State<RatingPage> {
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Color(FOREGROUND),
+                          color: Colors.black,
                         ),
                         child: Image.network(
                           usr.photoUrl,
@@ -77,7 +79,10 @@ class _RatingPage extends State<RatingPage> {
                 SizedBox(height: 10),
                 Text(
                   usr.name + ' ' + usr.surname, // TODO SUBSTR IF NAME TOO LONG
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: Color(FOREGROUND)),
                 ),
                 SizedBox(
                   height: 20,
@@ -102,11 +107,20 @@ class _RatingPage extends State<RatingPage> {
                     hintText: "Unesi komentar",
                     // labelText: "Dodaj komentar",
                     labelStyle: TextStyle(
-                        fontSize: 16, fontFamily: 'Inter', color: Color(BLACK)),
-                    border: InputBorder.none,
-                    //border: OutlineInputBorder(),
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        color: Color(BACKGROUND)),
                     fillColor: Color(LIGHT_GREY),
-                    filled: true),
+                    filled: true,
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        color: Color(DARK_GREY)),
+                    counterStyle: TextStyle(
+                      color: Color(FOREGROUND),
+                      fontSize: 16,
+                      fontFamily: 'Inter',
+                    )),
                 // obscureText: false,
                 maxLength: 240,
                 maxLines: 7,

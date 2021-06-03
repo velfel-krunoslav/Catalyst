@@ -145,6 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 onChanged: (value) {
                   tmpMessage = value;
                 },
+                style: TextStyle(color: Color(FOREGROUND)),
                 decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         gapPadding: 0,
