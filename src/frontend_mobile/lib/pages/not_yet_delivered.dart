@@ -377,6 +377,13 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                         text: 'Otkaži',
                         onPressed: () {
                           setStatus(deliveryOrder.id, 3);
+                          BigInt totalWei = BigInt.parse("4000000000000") *
+                              BigInt.parse(
+                                  (deliveryOrder.price * deliveryOrder.amount)
+                                      .toInt()
+                                      .toString());
+                          performPayment(usr.privateKey, PUBLIC_KEY,
+                              wei: totalWei);
                         },
                       ),
                     ),
