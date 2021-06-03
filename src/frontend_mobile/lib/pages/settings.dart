@@ -29,11 +29,15 @@ class _SettingsState extends State<Settings> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter stateSetter) {
       return Scaffold(
-        backgroundColor: Color(LIGHT_GREY),
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
           title: Text(
             "Podešavanja",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: Color(DARK_GREY)),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -52,7 +56,7 @@ class _SettingsState extends State<Settings> {
               Text(
                 "Privatnost",
                 style: TextStyle(
-                    color: Color(BLACK),
+                    color: Color(DARK_GREY),
                     fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
@@ -62,7 +66,7 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Switch(
                       value: _value,
-                      activeColor: Color(BLACK),
+                      activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
                           _value = value;
@@ -72,7 +76,7 @@ class _SettingsState extends State<Settings> {
                     padding: const EdgeInsets.only(left: 24.0),
                     child: Text("Ostanite prijavljeni",
                         style: TextStyle(
-                            color: Color(BLACK),
+                            color: Color(FOREGROUND),
                             fontFamily: 'Inter',
                             fontSize: 16)),
                   ),
@@ -83,7 +87,7 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Switch(
                       value: _value1,
-                      activeColor: Color(BLACK),
+                      activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
                           _value1 = value;
@@ -93,7 +97,7 @@ class _SettingsState extends State<Settings> {
                     padding: const EdgeInsets.only(left: 24.0),
                     child: Text("Zatraži otključavanje ekrana",
                         style: TextStyle(
-                            color: Color(BLACK),
+                            color: Color(FOREGROUND),
                             fontFamily: 'Inter',
                             fontSize: 16)),
                   ),
@@ -103,7 +107,7 @@ class _SettingsState extends State<Settings> {
               Text(
                 "Pristupačnost",
                 style: TextStyle(
-                    color: Color(BLACK),
+                    color: Color(DARK_GREY),
                     fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
@@ -113,7 +117,7 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Switch(
                       value: _value2,
-                      activeColor: Color(BLACK),
+                      activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
                           _value2 = value;
@@ -123,28 +127,7 @@ class _SettingsState extends State<Settings> {
                     padding: const EdgeInsets.only(left: 24.0),
                     child: Text("Noćni režim",
                         style: TextStyle(
-                            color: Color(BLACK),
-                            fontFamily: 'Inter',
-                            fontSize: 16)),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Switch(
-                      value: _value3,
-                      activeColor: Color(BLACK),
-                      onChanged: (bool value) {
-                        setState(() {
-                          _value3 = value;
-                        });
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Režim visokog kontrasta",
-                        style: TextStyle(
-                            color: Color(BLACK),
+                            color: Color(FOREGROUND),
                             fontFamily: 'Inter',
                             fontSize: 16)),
                   ),
@@ -154,7 +137,7 @@ class _SettingsState extends State<Settings> {
               Text(
                 "Pretplate",
                 style: TextStyle(
-                    color: Color(BLACK),
+                    color: Color(DARK_GREY),
                     fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800),
@@ -164,7 +147,7 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Switch(
                       value: _value4,
-                      activeColor: Color(BLACK),
+                      activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
                           _value4 = value;
@@ -174,7 +157,7 @@ class _SettingsState extends State<Settings> {
                     padding: const EdgeInsets.only(left: 24.0),
                     child: Text("Prijavi me na bilten",
                         style: TextStyle(
-                            color: Color(BLACK),
+                            color: Color(FOREGROUND),
                             fontFamily: 'Inter',
                             fontSize: 16)),
                   ),

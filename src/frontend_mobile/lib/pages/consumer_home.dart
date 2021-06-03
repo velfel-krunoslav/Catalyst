@@ -432,7 +432,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           ),
                           Switch(
                               value: _value,
-                              activeColor: Color(BLACK),
+                              activeColor: Color(TEAL),
                               onChanged: (bool value) {
                                 stateSetter(() => onSwitchValueChanged(value));
                               }),
@@ -1210,11 +1210,8 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/icons/ArrowLeft.svg',
-                          height: ICON_SIZE,
-                          width: ICON_SIZE,
-                        ),
+                        icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                            color: Color(FOREGROUND)),
                         onPressed: () {
                           this.widget.callback(-1);
                         },

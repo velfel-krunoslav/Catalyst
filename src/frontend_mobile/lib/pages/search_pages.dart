@@ -233,7 +233,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           Switch(
                               value: _value,
-                              activeColor: Color(BLACK),
+                              activeColor: Color(TEAL),
                               onChanged: (bool value) {
                                 stateSetter(() => onSwitchValueChanged(value));
                               }),
