@@ -18,6 +18,12 @@ import 'models/usersModel.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Prefs.instance.containsKey('prefersDarkMode').then((value) {
+    if (value)
+      Prefs.instance.getBooleanValue('prefersDarkMode').then((_value) {
+        if (_value) switchToDarkTheme();
+      });
+  });
   Prefs.instance.containsKey('privateKey').then((priv) {
     Prefs.instance.containsKey('accountAddress').then((pub) {
       runApp(MaterialApp(

@@ -753,7 +753,8 @@ Widget HomeDrawer(
     dynamic Function(int id) getUserById,
     bool hasMessages,
     Function setHasNewMessages,
-    Function(User u) editUserCallback) {
+    Function(User u) editUserCallback,
+    VoidCallback initiateSetState) {
   final sizer = getSizer();
   final size = MediaQuery.of(context).size;
   List<Widget> options = [
@@ -980,7 +981,7 @@ Widget HomeDrawer(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Settings()),
+            MaterialPageRoute(builder: (context) => Settings(initiateSetState)),
           );
         },
         iconUrl: "assets/icons/Gear.svg"),

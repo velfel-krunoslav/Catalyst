@@ -431,6 +431,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             ],
                           ),
                           Switch(
+                              inactiveTrackColor: Color(DARK_GREY),
                               value: _value,
                               activeColor: Color(TEAL),
                               onChanged: (bool value) {
@@ -475,12 +476,16 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    VoidCallback initiateSetState = () {
+      setState(() {});
+    };
+
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
     usr = usersModel.user;
     return MaterialApp(
-      theme: new ThemeData(scaffoldBackgroundColor: const Color(BACKGROUND)),
+      theme: new ThemeData(scaffoldBackgroundColor: Color(BACKGROUND)),
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
@@ -510,7 +515,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   usersModel.getUserById,
                   hasNewMessages,
                   setHasNewMessages,
-                  editUserCallback), //TODO context
+                  editUserCallback,
+                  initiateSetState), //TODO context
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,

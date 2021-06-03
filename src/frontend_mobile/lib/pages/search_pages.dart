@@ -232,6 +232,7 @@ class _SearchPageState extends State<SearchPage> {
                             ],
                           ),
                           Switch(
+                              inactiveTrackColor: Color(DARK_GREY),
                               value: _value,
                               activeColor: Color(TEAL),
                               onChanged: (bool value) {

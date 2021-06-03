@@ -1,20 +1,62 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import '../config.dart';
+import '../internals.dart';
 import '../widgets.dart';
 
 class Settings extends StatefulWidget {
+  VoidCallback initiateSetState;
+
+  Settings(this.initiateSetState);
+
   @override
-  _SettingsState createState() => _SettingsState();
+  _SettingsState createState() => _SettingsState(initiateSetState);
 }
 
 class _SettingsState extends State<Settings> {
-  bool _value = false;
-  bool _value1 = false;
-  bool _value2 = false;
-  bool _value3 = false;
-  bool _value4 = false;
+  Function initiateSetState;
+
+  _SettingsState(this.initiateSetState);
+
+  bool stayLoggedIn = true;
+  bool prefersDarkMode = false;
+  bool newsletterSubscription = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Prefs.instance.containsKey('stayLoggedIn').then((value) {
+      if (value) {
+        Prefs.instance.getBooleanValue('stayLoggedIn').then((_value) {
+          setState(() {
+            stayLoggedIn = _value;
+          });
+        });
+      }
+    });
+
+    Prefs.instance.containsKey('prefersDarkMode').then((value) {
+      if (value) {
+        Prefs.instance.getBooleanValue('prefersDarkMode').then((_value) {
+          setState(() {
+            prefersDarkMode = _value;
+          });
+        });
+      }
+    });
+
+    Prefs.instance.containsKey('newsletterSubscription').then((value) {
+      if (value) {
+        Prefs.instance.getBooleanValue('newsletterSubscription').then((_value) {
+          setState(() {
+            newsletterSubscription = _value;
+          });
+        });
+      }
+    });
+  }
 
   onSwitchValueChanged(bool value) {
     /*  setState(() {
@@ -39,10 +81,11 @@ class _SettingsState extends State<Settings> {
                 fontWeight: FontWeight.w800,
                 color: Color(DARK_GREY)),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Color(BACKGROUND),
           elevation: 0,
           leading: IconButton(
-            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -65,37 +108,17 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value,
+                      inactiveTrackColor: Color(DARK_GREY),
+                      value: stayLoggedIn,
                       activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
-                          _value = value;
+                          stayLoggedIn = value;
                         });
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
                     child: Text("Ostanite prijavljeni",
-                        style: TextStyle(
-                            color: Color(FOREGROUND),
-                            fontFamily: 'Inter',
-                            fontSize: 16)),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Switch(
-                      value: _value1,
-                      activeColor: Color(TEAL),
-                      onChanged: (bool value) {
-                        setState(() {
-                          _value1 = value;
-                        });
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: Text("Zatraži otključavanje ekrana",
                         style: TextStyle(
                             color: Color(FOREGROUND),
                             fontFamily: 'Inter',
@@ -116,12 +139,21 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value2,
+                      value: prefersDarkMode,
+                      inactiveTrackColor: Color(DARK_GREY),
                       activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
-                          _value2 = value;
+                          prefersDarkMode = value;
                         });
+                        Prefs.instance
+                            .setBooleanValue('prefersDarkMode', value);
+                        if (prefersDarkMode)
+                          switchToDarkTheme();
+                        else
+                          switchToLightTheme();
+                        initiateSetState();
+                        setState(() {});
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),
@@ -146,11 +178,12 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Switch(
-                      value: _value4,
+                      inactiveTrackColor: Color(DARK_GREY),
+                      value: newsletterSubscription,
                       activeColor: Color(TEAL),
                       onChanged: (bool value) {
                         setState(() {
-                          _value4 = value;
+                          newsletterSubscription = value;
                         });
                       }),
                   Padding(
