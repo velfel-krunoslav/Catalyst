@@ -129,13 +129,14 @@ class _ChatScreenState extends State<ChatScreen> {
   _buildMessageComposer(ChatUser me) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      height: 80.0,
+      height: 86.0,
       color: Color(BACKGROUND),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: 5.0),
+              padding: EdgeInsets.only(left: 8.0, top: 6.0),
               child: TextField(
                 controller: txt,
                 cursorColor: Color(TEAL),
@@ -145,55 +146,59 @@ class _ChatScreenState extends State<ChatScreen> {
                   tmpMessage = value;
                 },
                 decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
+                        gapPadding: 0,
                         borderSide: BorderSide(
-                      color: Color(TEAL),
-                    )),
+                          color: Color(TEAL),
+                        )),
                     hintText: 'Pošalji poruku...',
                     hintStyle: TextStyle(
+                      color: Color(DARK_GREY),
                       fontFamily: 'Inter',
                     )),
               ),
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.send),
-            iconSize: 25.0,
-            color: Color(TEAL),
-            onPressed: () {
-              if (tmpMessage != null && tmpMessage.compareTo('') != 0) {
-                Message tmpmsg = Message(
-                    id: 0,
-                    sender: user,
-                    senderID: me.id,
-                    time:
-                        '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}',
-                    text: tmpMessage,
-                    unread: false);
+          Center(
+            child: IconButton(
+              icon: Icon(Icons.send),
+              iconSize: 24.0,
+              color: Color(TEAL),
+              onPressed: () {
+                if (tmpMessage != null && tmpMessage.compareTo('') != 0) {
+                  Message tmpmsg = Message(
+                      id: 0,
+                      sender: user,
+                      senderID: me.id,
+                      time:
+                          '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+                      text: tmpMessage,
+                      unread: false);
 
-                if (messageList != null) messageList[indexToUpdate] = tmpmsg;
+                  if (messageList != null) messageList[indexToUpdate] = tmpmsg;
 
-                if (updateLastMessage != null) updateLastMessage();
+                  if (updateLastMessage != null) updateLastMessage();
 
-                setState(() {
-                  messages.add(tmpmsg);
-                });
+                  setState(() {
+                    messages.add(tmpmsg);
+                  });
 
-                Message tmpmsgpub = Message(
-                    id: 0,
-                    sender: me,
-                    senderID: me.id,
-                    time: DateTime.now().toIso8601String(),
-                    text: tmpMessage,
-                    unread: true);
-                publishMessage(tmpmsgpub).then((value) =>
-                    print('Response value:${value.statusCode.toString()}'));
-                _scroll.jumpTo(_scroll.position.maxScrollExtent);
-                // TODO NOTIFY ON MESSAGE DELIVERY FAILURE
-                txt.text = '';
-              }
-            },
-          ),
+                  Message tmpmsgpub = Message(
+                      id: 0,
+                      sender: me,
+                      senderID: me.id,
+                      time: DateTime.now().toIso8601String(),
+                      text: tmpMessage,
+                      unread: true);
+                  publishMessage(tmpmsgpub).then((value) =>
+                      print('Response value:${value.statusCode.toString()}'));
+                  _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                  // TODO NOTIFY ON MESSAGE DELIVERY FAILURE
+                  txt.text = '';
+                }
+              },
+            ),
+          )
         ],
       ),
     );
@@ -209,10 +214,11 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        toolbarHeight: 95,
+        toolbarHeight: 104,
         backgroundColor: Color(BACKGROUND),
         leading: IconButton(
-            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
+            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             }),
@@ -223,7 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  color: Color(FOREGROUND),
+                  color: Colors.black,
                   width: 60,
                   height: 60,
                   child: Image.network(widget.user.photoUrl),

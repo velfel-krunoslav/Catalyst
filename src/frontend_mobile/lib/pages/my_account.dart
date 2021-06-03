@@ -36,6 +36,7 @@ class _MyAccountState extends State<MyAccount> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
           title: Text(
             "Moj nalog",
@@ -44,7 +45,8 @@ class _MyAccountState extends State<MyAccount> {
           backgroundColor: Color(BACKGROUND),
           elevation: 0,
           leading: IconButton(
-            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -80,7 +82,7 @@ class _MyAccountState extends State<MyAccount> {
                     borderRadius: BorderRadius.circular(60),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Color(FOREGROUND),
+                          color: Colors.black,
                         ),
                         child: Image.network(
                           user.photoUrl,
@@ -98,6 +100,7 @@ class _MyAccountState extends State<MyAccount> {
                 style: TextStyle(
                     fontFamily: "Inter",
                     fontSize: 35,
+                    color: Color(FOREGROUND),
                     fontWeight: FontWeight.w500),
               )),
               SizedBox(
@@ -107,7 +110,10 @@ class _MyAccountState extends State<MyAccount> {
                 padding: const EdgeInsets.only(left: 50, right: 50),
                 child: Text(
                   user.desc,
-                  style: TextStyle(fontFamily: "Inter", fontSize: 17),
+                  style: TextStyle(
+                      fontFamily: "Inter",
+                      color: Color(FOREGROUND),
+                      fontSize: 17),
                 ),
               ),
               SizedBox(
@@ -119,9 +125,7 @@ class _MyAccountState extends State<MyAccount> {
               Container(
                 width: width,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        topLeft: Radius.circular(5)),
+                    borderRadius: BorderRadius.circular(5),
                     color: Color(LIGHT_GREY)),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20, left: 50, bottom: 24),
@@ -130,13 +134,19 @@ class _MyAccountState extends State<MyAccount> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.mail_outline),
+                          Icon(
+                            Icons.mail_outline,
+                            color: Color(DARK_GREY),
+                          ),
                           SizedBox(
                             width: 15,
                           ),
                           Text(
                             user.email,
-                            style: TextStyle(fontFamily: "Inter", fontSize: 17),
+                            style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 17,
+                                color: Color(DARK_GREY)),
                           )
                         ],
                       ),
@@ -145,13 +155,17 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.local_phone_outlined),
+                          Icon(Icons.local_phone_outlined,
+                              color: Color(DARK_GREY)),
                           SizedBox(
                             width: 15,
                           ),
                           Text(
                             user.phoneNumber,
-                            style: TextStyle(fontFamily: "Inter", fontSize: 17),
+                            style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 17,
+                                color: Color(DARK_GREY)),
                           )
                         ],
                       ),
@@ -160,13 +174,17 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.location_city_outlined),
+                          Icon(Icons.location_city_outlined,
+                              color: Color(DARK_GREY)),
                           SizedBox(
                             width: 15,
                           ),
                           Text(
                             user.homeAddress,
-                            style: TextStyle(fontFamily: "Inter", fontSize: 17),
+                            style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 17,
+                                color: Color(DARK_GREY)),
                           )
                         ],
                       ),

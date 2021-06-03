@@ -51,6 +51,7 @@ class _DateOrdersState extends State<DateOrders> {
     usersModel = Provider.of<UsersModel>(context);
 
     return Scaffold(
+      backgroundColor: Color(LIGHT_GREY),
       appBar: AppBar(
           title: Text(
               dateOrder.date.day.toString() +
@@ -68,11 +69,8 @@ class _DateOrdersState extends State<DateOrders> {
           backgroundColor: Color(BACKGROUND),
           elevation: 0.0,
           leading: IconButton(
-            icon: SvgPicture.asset(
-              'assets/icons/ArrowLeft.svg',
-              height: ICON_SIZE,
-              width: ICON_SIZE,
-            ),
+            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -86,8 +84,13 @@ class _DateOrdersState extends State<DateOrders> {
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(LIGHT_GREY),
-                borderRadius: BorderRadius.circular(5),
+                color: Color(BACKGROUND),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                  bottomLeft: Radius.zero,
+                  bottomRight: Radius.zero,
+                ),
               ),
               child: Column(
                 children: List.generate(products.length, (index) {
@@ -171,7 +174,7 @@ class _DateOrdersState extends State<DateOrders> {
                                             fontFamily: 'Inter',
                                             fontSize: 16,
                                             fontWeight: FontWeight.w800,
-                                            color: Color(BLACK))),
+                                            color: Color(FOREGROUND))),
                                     SizedBox(
                                       height: 5,
                                     ),
@@ -205,11 +208,13 @@ class _DateOrdersState extends State<DateOrders> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('Stranica proizvoda ->',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            color: Colors.blue,
-                                            fontSize: 16)),
+                                    Text(
+                                      'Stranica proizvoda ->',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          color: Color(CYAN),
+                                          fontSize: 16),
+                                    ),
                                   ],
                                 ),
                                 Spacer(),
@@ -219,7 +224,7 @@ class _DateOrdersState extends State<DateOrders> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 18,
-                                      color: Color(BLACK)),
+                                      color: Color(FOREGROUND)),
                                   textAlign: TextAlign.end,
                                 )
                               ])),
@@ -234,7 +239,7 @@ class _DateOrdersState extends State<DateOrders> {
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(LIGHT_GREY),
+                color: Color(BACKGROUND),
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(5.0),
                     bottomRight: Radius.circular(5.0)),
@@ -253,14 +258,14 @@ class _DateOrdersState extends State<DateOrders> {
                                 fontFamily: 'Inter',
                                 fontSize: 20,
                                 fontWeight: FontWeight.w800,
-                                color: Color(BLACK))),
+                                color: Color(FOREGROUND))),
                         Spacer(),
                         Text(sum.toStringAsFixed(2) + CURRENCY,
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 20,
                                 fontWeight: FontWeight.w800,
-                                color: Color(BLACK)))
+                                color: Color(FOREGROUND)))
                       ],
                     ),
                   )),

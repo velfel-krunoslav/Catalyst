@@ -87,8 +87,10 @@ class _SkipState extends State<Skip> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          Center(child: SvgPicture.asset('assets/icons/KotaricaLogomark.svg')),
+      backgroundColor: Color(BACKGROUND),
+      body: Center(
+          child: SvgPicture.asset('assets/icons/KotaricaLogomark.svg',
+              color: (BACKGROUND == 0xFF000000) ? Colors.white : null)),
     );
   }
 }

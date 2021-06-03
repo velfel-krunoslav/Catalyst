@@ -30,6 +30,7 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
   Widget build(BuildContext context) {
     ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
+      backgroundColor: Color(BACKGROUND),
       appBar: AppBar(
           elevation: 0,
           backgroundColor: Color(BACKGROUND),
@@ -40,11 +41,8 @@ class _NotYetDeliveredState extends State<NotYetDelivered> {
                   color: Color(DARK_GREY),
                   fontWeight: FontWeight.w700)),
           leading: IconButton(
-            icon: SvgPicture.asset(
-              'assets/icons/ArrowLeft.svg',
-              height: ICON_SIZE,
-              width: ICON_SIZE,
-            ),
+            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -169,7 +167,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 16,
-                                color: Color(BLACK),
+                                color: Color(FOREGROUND),
                                 fontWeight: FontWeight.w700)),
                         SizedBox(height: 5),
                         Text(
@@ -300,7 +298,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                 style: TextStyle(
                                     fontFamily: 'IBM Plex Mono',
                                     fontSize: 16,
-                                    color: Color(BLACK)),
+                                    color: Color(DARK_GREY)),
                               ),
                               SizedBox(height: 5),
                               Text(
@@ -309,13 +307,13 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                   style: TextStyle(
                                       fontFamily: 'IBM Plex Mono',
                                       fontSize: 16,
-                                      color: Color(BLACK))),
+                                      color: Color(DARK_GREY))),
                               SizedBox(height: 15),
                               Text('Adresa: ' + deliveryOrder.deliveryAddress,
                                   style: TextStyle(
                                       fontFamily: 'IBM Plex Mono',
                                       fontSize: 16,
-                                      color: Color(BLACK))),
+                                      color: Color(DARK_GREY))),
                               SizedBox(height: 10),
                               Text(
                                   deliveryOrder.paymentType == 0
@@ -324,9 +322,9 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                   style: TextStyle(
                                       fontFamily: 'IBM Plex Mono',
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w600,
                                       color: Color(
-                                          BLACK))) // TODO insert payment method
+                                          DARK_GREY))) // TODO insert payment method
                             ],
                           ),
                         ),
@@ -341,7 +339,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 16,
-                            color: Color(BLACK))),
+                            color: Color(FOREGROUND))),
                     Spacer(),
                     Text(
                         (deliveryOrder.price * deliveryOrder.amount)

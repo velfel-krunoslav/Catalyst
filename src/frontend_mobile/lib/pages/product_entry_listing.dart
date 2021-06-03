@@ -339,7 +339,9 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                       .round(),
                                                   (i) => i + 1).map((e) {
                                                 return SvgPicture.asset(
-                                                    'assets/icons/StarFilled.svg');
+                                                  'assets/icons/StarFilled.svg',
+                                                  color: Color(FOREGROUND),
+                                                );
                                               }).toList(),
                                             ),
                                             Row(
@@ -809,7 +811,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                   ),
                   (showAlertDialog)
                       ? Container(
-                          color: Color(0xAA000000),
+                          color: Color(FOREGROUND ^ 0xAA000000),
                         )
                       : SizedBox.shrink(),
                   (showAlertDialog)
@@ -817,7 +819,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: Container(
-                                  color: Colors.white,
+                                  color: Color(BACKGROUND),
                                   width: MediaQuery.of(context).size.width - 40,
                                   height: 220,
                                   child: Padding(
@@ -930,16 +932,15 @@ class _PickerState extends State<Picker> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(BACKGROUND),
       height: 330,
       child: Column(
         children: <Widget>[
           SizedBox(height: 10),
           Text(
-            "Izaberite snizenje:",
+            "Izaberite sniženje:",
             style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 17,
-            ),
+                fontFamily: 'Inter', fontSize: 17, color: Color(FOREGROUND)),
           ),
           SizedBox(height: 10),
           Row(
@@ -948,25 +949,35 @@ class _PickerState extends State<Picker> {
               SizedBox(
                 width: 20,
               ),
-              NumberPicker(
-                value: _currentValue,
-                minValue: 5,
-                maxValue: 95,
-                step: 5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(LIGHT_GREY)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: NumberPicker(
+                      value: _currentValue,
+                      minValue: 5,
+                      maxValue: 95,
+                      step: 5,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.black),
+                      ),
+                      onChanged: (value) =>
+                          setState(() => _currentValue = value),
+                    ),
+                  ),
                 ),
-                onChanged: (value) => setState(() => _currentValue = value),
               ),
               SizedBox(
                 width: 10,
               ),
               Text("%",
                   style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 17,
-                  )),
+                      fontFamily: 'Inter',
+                      fontSize: 17,
+                      color: Color(FOREGROUND))),
             ],
           ),
           SizedBox(height: 20),
@@ -975,9 +986,7 @@ class _PickerState extends State<Picker> {
                 (price * (1 - _currentValue / 100)).toStringAsFixed(2) +
                 ' $CURRENCY',
             style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 17,
-            ),
+                fontFamily: 'Inter', fontSize: 17, color: Color(FOREGROUND)),
           ),
           SizedBox(height: 25),
           SizedBox(
@@ -1015,9 +1024,7 @@ class DropdownOption extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 17,
-              ),
+                  fontFamily: 'Inter', fontSize: 17, color: Color(FOREGROUND)),
             ),
           ),
         ),

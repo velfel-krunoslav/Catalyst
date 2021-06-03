@@ -553,7 +553,7 @@ class SettingsOption extends StatelessWidget {
                   fontFamily: "Inter", fontSize: 15, color: Color(FOREGROUND)),
             ),
             Spacer(),
-            Icon(Icons.arrow_forward_ios_outlined),
+            Icon(Icons.arrow_forward_ios_outlined, color: Color(FOREGROUND)),
             SizedBox(
               width: 20,
             )
@@ -599,7 +599,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                         borderRadius: BorderRadius.circular(40),
                         child: Container(
                             decoration: BoxDecoration(
-                              color: Color(FOREGROUND),
+                              color: Colors.black,
                             ),
                             child: Image.network(
                               usersModel.user.photoUrl,
@@ -635,6 +635,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                               widget.review.desc,
                               style: TextStyle(
                                 fontSize: 15,
+                                color: Color(FOREGROUND),
                                 fontFamily: 'Inter',
                               ),
                             )),
@@ -654,8 +655,8 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                             children:
                                 List.generate(widget.review.rating, (index) {
                               return SvgPicture.asset(
-                                "assets/icons/StarFilled.svg",
-                              );
+                                  "assets/icons/StarFilled.svg",
+                                  color: Color(FOREGROUND));
                             }),
                           ),
                           Wrap(
@@ -663,7 +664,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                                 5 - widget.review.rating.round(), (index) {
                               return SvgPicture.asset(
                                   "assets/icons/StarOutline.svg",
-                                  color: Color(LIGHT_GREY));
+                                  color: Color(FOREGROUND));
                             }),
                           ),
                           SizedBox(

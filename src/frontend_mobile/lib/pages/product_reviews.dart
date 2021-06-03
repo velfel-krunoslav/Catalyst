@@ -31,6 +31,7 @@ class ProductReviews extends StatelessWidget {
     usersModel = Provider.of<UsersModel>(context);
     ordersModel = Provider.of<OrdersModel>(context);
     return Scaffold(
+      backgroundColor: Color(BACKGROUND),
       appBar: AppBar(
         title: Text(
           "Recenzije",
@@ -42,7 +43,8 @@ class ProductReviews extends StatelessWidget {
         backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+              color: Color(FOREGROUND)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -99,7 +101,8 @@ class ProductReviews extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 36,
                         fontFamily: 'Inter',
-                        fontWeight: FontWeight.w800),
+                        fontWeight: FontWeight.w800,
+                        color: Color(FOREGROUND)),
                   ),
                   SizedBox(
                     height: 10,
@@ -159,7 +162,8 @@ class ProductReviews extends StatelessWidget {
                                     return SvgPicture.asset(
                                         'assets/icons/StarFilled.svg',
                                         width: 16,
-                                        height: 16);
+                                        height: 16,
+                                        color: Color(FOREGROUND));
                                   }).toList()),
                           SizedBox(width: 20),
                           SvgPicture.string('''

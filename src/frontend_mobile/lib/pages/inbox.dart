@@ -165,7 +165,8 @@ class _UserInboxState extends State<Inbox> {
       appBar: AppBar(
         backgroundColor: Color(BACKGROUND),
         leading: IconButton(
-            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
+            icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             }),
@@ -243,8 +244,7 @@ class _UserInboxState extends State<Inbox> {
                                                           BorderRadius.circular(
                                                               25),
                                                       child: Container(
-                                                          color:
-                                                              Color(FOREGROUND),
+                                                          color: Colors.black,
                                                           width: 50,
                                                           height: 50,
                                                           child: Image.network(
@@ -257,6 +257,8 @@ class _UserInboxState extends State<Inbox> {
                                                       contacts[index].name,
                                                       style: TextStyle(
                                                           fontFamily: 'Inter',
+                                                          color:
+                                                              Color(FOREGROUND),
                                                           fontSize: 16.0,
                                                           fontWeight:
                                                               FontWeight.w600),
@@ -323,8 +325,7 @@ class _UserInboxState extends State<Inbox> {
                                                             BorderRadius
                                                                 .circular(30),
                                                         child: Container(
-                                                          color:
-                                                              Color(FOREGROUND),
+                                                          color: Colors.black,
                                                           child: Image.network(
                                                             chat.sender
                                                                 .photoUrl,
@@ -334,7 +335,7 @@ class _UserInboxState extends State<Inbox> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: 5.0,
+                                                      width: 8.0,
                                                     ),
                                                     Column(
                                                       crossAxisAlignment:
@@ -349,10 +350,9 @@ class _UserInboxState extends State<Inbox> {
                                                               color: (chat.unread &&
                                                                       (!chat
                                                                           .isMine))
-                                                                  ? Color(
-                                                                      BACKGROUND)
-                                                                  : Colors
-                                                                      .black,
+                                                                  ? Colors.white
+                                                                  : Color(
+                                                                      FOREGROUND),
                                                               fontSize: 16.0,
                                                               fontWeight:
                                                                   FontWeight
@@ -372,8 +372,7 @@ class _UserInboxState extends State<Inbox> {
                                                               color: (chat.unread &&
                                                                       (!chat
                                                                           .isMine))
-                                                                  ? Color(
-                                                                      BACKGROUND)
+                                                                  ? Colors.white
                                                                   : Color(
                                                                       DARK_GREY),
                                                               fontSize: 16.0,
@@ -399,8 +398,8 @@ class _UserInboxState extends State<Inbox> {
                                                             color: (chat.unread &&
                                                                     (!chat
                                                                         .isMine))
-                                                                ? Color(
-                                                                    LIGHT_GREY)
+                                                                ? Colors
+                                                                    .grey[200]
                                                                 : Color(
                                                                     FOREGROUND),
                                                             fontSize: 15.0,
@@ -429,8 +428,9 @@ class _UserInboxState extends State<Inbox> {
                                                                 style: TextStyle(
                                                                     fontFamily:
                                                                         'Inter',
-                                                                    color: Color(
-                                                                        DARK_GREY),
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        800],
                                                                     fontSize:
                                                                         12.0),
                                                               ),

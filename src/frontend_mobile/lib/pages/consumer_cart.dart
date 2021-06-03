@@ -120,12 +120,11 @@ class _ConsumerCartState extends State<ConsumerCart> {
             backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.white),
-              child: SvgPicture.asset(
-                'assets/icons/ArrowLeft.svg',
-                height: ICON_SIZE,
-                width: ICON_SIZE,
-              ),
+              style: TextButton.styleFrom(backgroundColor: Color(BACKGROUND)),
+              child: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                  height: ICON_SIZE,
+                  width: ICON_SIZE,
+                  color: Color(FOREGROUND)),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -168,9 +167,9 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                     borderRadius: BorderRadius.circular(5),
                                     child: Image.network(
                                       products[index].photoUrl[0],
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.fill,
+                                      height: 106,
+                                      width: 106,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                   SizedBox(width: 10),
@@ -247,8 +246,9 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           width: 10,
                                         ),
                                         Text('${quantities[index]}',
-                                            style:
-                                                TextStyle(fontFamily: 'Inter')),
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Color(FOREGROUND))),
                                         SizedBox(
                                           width: 10,
                                         ),
@@ -280,11 +280,12 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             child: new TextButton(
                                                 style: TextButton.styleFrom(
                                                     backgroundColor:
-                                                        Colors.white,
+                                                        Color(LIGHT_GREY),
                                                     elevation: 3),
                                                 child: SvgPicture.asset(
                                                     'assets/icons/Trash.svg',
-                                                    height: INSET_ICON_SIZE),
+                                                    height: INSET_ICON_SIZE,
+                                                    color: Color(DARK_GREY)),
                                                 onPressed: () {
                                                   setState(() {
                                                     Prefs.instance
@@ -353,7 +354,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           fontFamily: 'Inter',
                                           fontSize: 24,
                                           fontWeight: FontWeight.w800,
-                                          color: Color(DARK_GREY)))),
+                                          color: Color(FOREGROUND)))),
                               SizedBox(height: 20),
                               MouseRegion(
                                   opaque: true,
@@ -382,7 +383,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                             'Promena adrese za dostavu',
                                                             style: TextStyle(
                                                                 color: Color(
-                                                                    DARK_GREY),
+                                                                    FOREGROUND),
                                                                 fontFamily:
                                                                     'Inter',
                                                                 fontWeight:
@@ -397,14 +398,28 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                           const EdgeInsets.all(
                                                               15.0),
                                                       child: TextField(
-                                                        onChanged:
-                                                            (String value) {
-                                                          setState(() {
-                                                            customerAddress =
-                                                                value;
-                                                          });
-                                                        },
-                                                      )),
+                                                          onChanged:
+                                                              (String value) {
+                                                            setState(() {
+                                                              customerAddress =
+                                                                  value;
+                                                            });
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Unesite adresu',
+                                                                  filled: true,
+                                                                  fillColor: Color(
+                                                                      LIGHT_GREY),
+                                                                  border:
+                                                                      new OutlineInputBorder(
+                                                                          borderRadius: const BorderRadius
+                                                                              .all(
+                                                                            const Radius.circular(5.0),
+                                                                          ),
+                                                                          borderSide:
+                                                                              BorderSide.none)))),
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -414,23 +429,17 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .all(10.0),
-                                                        child: Container(
-                                                          width: 280,
-                                                          height: 36,
-                                                          child: Text(
-                                                              "Trenutna adresa za dostavu je $customerAddress",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  color: Color(
-                                                                      BLACK),
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  fontSize:
-                                                                      16)),
-                                                        ),
+                                                                .all(20.0),
+                                                        child: Text(
+                                                            "Trenutna adresa za dostavu je $customerAddress",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    FOREGROUND),
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontSize: 16)),
                                                       ),
                                                       SizedBox(),
                                                     ],
@@ -533,7 +542,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                             'Odabir načina plaćanja',
                                                             style: TextStyle(
                                                                 color: Color(
-                                                                    DARK_GREY),
+                                                                    FOREGROUND),
                                                                 fontFamily:
                                                                     'Inter',
                                                                 fontWeight:
@@ -587,7 +596,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                             style: TextStyle(
                                                                                 fontFamily: 'Inter',
                                                                                 fontSize: 16,
-                                                                                color: Color(LIGHT_BLACK)))),
+                                                                                color: Color(FOREGROUND)))),
                                                                     SizedBox(
                                                                         height:
                                                                             36,
@@ -596,7 +605,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                             style: TextStyle(
                                                                                 fontFamily: 'Inter',
                                                                                 fontSize: 18,
-                                                                                color: Color(LIGHT_BLACK))))
+                                                                                color: Color(FOREGROUND))))
                                                                   ],
                                                                 ),
                                                               ),
@@ -626,7 +635,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                         child: Row(
                                                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                                                           children: [
-                                                                                            Text('Unos privatnog ključa', style: TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 18)),
+                                                                                            Text('Unos privatnog ključa', style: TextStyle(color: Color(FOREGROUND), fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 18)),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -652,12 +661,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                         children: [
                                                                                           SizedBox(),
                                                                                           Padding(
-                                                                                            padding: const EdgeInsets.all(10.0),
-                                                                                            child: Container(
-                                                                                              width: 280,
-                                                                                              height: 36,
-                                                                                              child: Text("Trenutni privatni ključ je $desc", textAlign: TextAlign.center, style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
-                                                                                            ),
+                                                                                            padding: const EdgeInsets.all(20.0),
+                                                                                            child: (desc.compareTo('Plaćanje pouzećem') == 0 || desc.trim().compareTo('') == 0) ? SizedBox.shrink() : Text("Trenutni privatni ključ je $desc", textAlign: TextAlign.center, style: TextStyle(color: Color(FOREGROUND), fontFamily: 'Inter', fontSize: 16)),
                                                                                           ),
                                                                                           SizedBox(),
                                                                                         ],
@@ -675,7 +680,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                                 });
                                                                                                 Navigator.pop(context);
                                                                                               },
-                                                                                              child: Text('Potvrdi', style: TextStyle(color: Color(BLACK), fontFamily: 'Inter', fontSize: 16)),
+                                                                                              child: Text('Potvrdi', style: TextStyle(color: Color(FOREGROUND), fontFamily: 'Inter', fontSize: 16)),
                                                                                             ))
                                                                                       ])
                                                                                     ]));
@@ -686,8 +691,23 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             crossAxisAlignment: CrossAxisAlignment.center,
                                                                             children: [
-                                                                              SizedBox(width: 280, height: 36, child: Text('Plaćanje putem e-novčanika', style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: Color(LIGHT_BLACK)))),
-                                                                              SizedBox(height: 36, child: Text('->', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: Color(LIGHT_BLACK))))
+                                                                              SizedBox(
+                                                                                  width: 280,
+                                                                                  height: 36,
+                                                                                  child: Text('Plaćanje putem e-novčanika',
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'Inter',
+                                                                                        fontSize: 16,
+                                                                                        color: Color(FOREGROUND),
+                                                                                      ))),
+                                                                              SizedBox(
+                                                                                  height: 36,
+                                                                                  child: Text('->',
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'Inter',
+                                                                                        fontSize: 18,
+                                                                                        color: Color(FOREGROUND),
+                                                                                      )))
                                                                             ])))
                                                           ]))
                                                 ]));
@@ -760,7 +780,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w800)),
+                                                fontWeight: FontWeight.w800,
+                                                color: Color(FOREGROUND))),
                                         alignment: Alignment.centerRight),
                                     Align(
                                         child: Text(
@@ -768,7 +789,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w800)),
+                                                fontWeight: FontWeight.w800,
+                                                color: Color(FOREGROUND))),
                                         alignment: Alignment.centerRight)
                                   ]),
                                 )
@@ -793,7 +815,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 18,
-                                              fontWeight: FontWeight.w800)),
+                                              fontWeight: FontWeight.w800,
+                                              color: Color(FOREGROUND))),
                                       alignment: Alignment.centerRight)
                                 ]))
                               ]),

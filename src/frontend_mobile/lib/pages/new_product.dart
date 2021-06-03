@@ -75,6 +75,7 @@ class _NewProductState extends State<NewProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
             title: Text('Novi proizvod',
                 style: TextStyle(
@@ -86,11 +87,8 @@ class _NewProductState extends State<NewProduct> {
             backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
-              icon: SvgPicture.asset(
-                'assets/icons/ArrowLeft.svg',
-                height: ICON_SIZE,
-                width: ICON_SIZE,
-              ),
+              icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                  color: Color(FOREGROUND)),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -132,6 +130,8 @@ class _NewProductState extends State<NewProduct> {
                           onChanged: (value) {
                             name = value;
                           },
+                          style: TextStyle(
+                              fontFamily: 'Inter', color: Color(FOREGROUND)),
                           decoration: InputDecoration(
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
@@ -150,6 +150,8 @@ class _NewProductState extends State<NewProduct> {
                   SizedBox(
                     height: textFieldHeight[1],
                     child: TextFormField(
+                        style: TextStyle(
+                            fontFamily: 'Inter', color: Color(FOREGROUND)),
                         maxLength: 200,
                         maxLengthEnforced: true,
                         validator: (value) {
@@ -196,6 +198,9 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[4],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(FOREGROUND)),
                                 maxLength: 10,
                                 maxLengthEnforced: true,
                                 validator: (value) {
@@ -247,6 +252,7 @@ class _NewProductState extends State<NewProduct> {
                           height: BUTTON_HEIGHT,
                           width: MediaQuery.of(context).size.width / 2.0 - 20,
                           child: DropdownButton(
+                              dropdownColor: Color(LIGHT_GREY),
                               underline: Container(color: Colors.transparent),
                               icon: SvgPicture.asset(
                                   'assets/icons/ArrowDown.svg',
@@ -323,6 +329,7 @@ class _NewProductState extends State<NewProduct> {
                               color: Color(LIGHT_GREY),
                               borderRadius: BorderRadius.circular(5)),
                           child: new DropdownButton<Category>(
+                              dropdownColor: Color(LIGHT_GREY),
                               underline: Container(color: Colors.transparent),
                               icon: SvgPicture.asset(
                                   'assets/icons/ArrowDown.svg',
@@ -369,6 +376,9 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[3],
                             width: MediaQuery.of(context).size.width / 2.0 - 20,
                             child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(FOREGROUND)),
                                 maxLength: 10,
                                 maxLengthEnforced: true,
                                 validator: (value) {
@@ -421,6 +431,9 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[5],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(FOREGROUND)),
                                 maxLength: 10,
                                 maxLengthEnforced: true,
                                 validator: (value) {
@@ -550,12 +563,13 @@ class _NewProductState extends State<NewProduct> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  color: Color(BACKGROUND),
                                                   width: 28,
                                                   height: 28,
                                                   decoration: BoxDecoration(
+                                                      color: Color(BACKGROUND),
                                                       border: Border.all(
-                                                          color: Colors.black,
+                                                          color:
+                                                              Color(FOREGROUND),
                                                           width: 1,
                                                           style: BorderStyle
                                                               .solid)),

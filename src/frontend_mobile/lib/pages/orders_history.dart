@@ -36,12 +36,13 @@ class _OrdersHistoryState extends State<OrdersHistory> {
       appBar: AppBar(
         title: Text(
           "Istorija narudžbi",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Color(FOREGROUND), fontFamily: 'Inter'),
         ),
         backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+              color: Color(FOREGROUND)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -72,7 +73,10 @@ class _OrdersHistoryState extends State<OrdersHistory> {
                               ordersModel.dateOrders[index].date.year
                                   .toString() +
                               ". ",
-                          icon: Icon(Icons.date_range),
+                          icon: Icon(
+                            Icons.date_range,
+                            color: Color(FOREGROUND),
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,

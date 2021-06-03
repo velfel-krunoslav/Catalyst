@@ -77,6 +77,7 @@ class _MyProductsState extends State<MyProducts> {
     productsModel = Provider.of<ProductsModel>(context);
     return Scaffold(
         key: _scaffoldKey,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
           title: Text(
             "Moji proizvodi",
@@ -85,7 +86,8 @@ class _MyProductsState extends State<MyProducts> {
           backgroundColor: Color(BACKGROUND),
           elevation: 0,
           leading: IconButton(
-            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
+            icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+                color: Color(FOREGROUND)),
             onPressed: () {
               Navigator.pop(context);
             },

@@ -58,22 +58,21 @@ class _UserEdit extends State<UserEdit> {
   Widget build(BuildContext context) {
     usersModel = Provider.of<UsersModel>(context);
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
             title: Text('Izmena profila',
                 style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Color(DARK_GREY))),
+                    color: Colors.black)),
             centerTitle: true,
             backgroundColor: Colors.white,
             elevation: 0.0,
             leading: IconButton(
               icon: SvgPicture.asset(
                 'assets/icons/ArrowLeft.svg',
-                height: ICON_SIZE,
-                width: ICON_SIZE,
+                color: Colors.black,
               ),
               onPressed: () {
                 Navigator.pop(
@@ -88,6 +87,9 @@ class _UserEdit extends State<UserEdit> {
             width: MediaQuery.of(context).size.width - 40,
             child: Column(
               children: [
+                SizedBox(
+                  height: 12,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -95,7 +97,7 @@ class _UserEdit extends State<UserEdit> {
                         style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Inter',
-                            color: Color(BLACK)))
+                            color: Color(FOREGROUND)))
                   ],
                 ),
                 SizedBox(height: 10),
@@ -134,7 +136,7 @@ class _UserEdit extends State<UserEdit> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Inter',
-                                  color: Color(BLACK)))
+                                  color: Color(FOREGROUND)))
                         ],
                       ),
                       SizedBox(height: 10),
@@ -187,7 +189,7 @@ class _UserEdit extends State<UserEdit> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Inter',
-                                  color: Color(BLACK)))
+                                  color: Color(FOREGROUND)))
                         ],
                       ),
                       SizedBox(height: 10),
@@ -243,7 +245,7 @@ class _UserEdit extends State<UserEdit> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Inter',
-                                  color: Color(BLACK)))
+                                  color: Color(FOREGROUND)))
                         ],
                       ),
                       SizedBox(height: 10),
@@ -299,7 +301,7 @@ class _UserEdit extends State<UserEdit> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Inter',
-                                  color: Color(BLACK)))
+                                  color: Color(FOREGROUND)))
                         ],
                       ),
                       SizedBox(height: 10),
