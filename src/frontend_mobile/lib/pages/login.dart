@@ -60,19 +60,19 @@ class LoginState extends State<Login> {
           if (rez != null && rez > -1) {
             Prefs.instance.setStringValue('privateKey', privateKey);
             Prefs.instance.setStringValue('accountAddress', accountAddress);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => new MultiProvider(providers: [
-                        ChangeNotifierProvider<ProductsModel>(
-                            create: (_) => ProductsModel()),
-                        ChangeNotifierProvider<CategoriesModel>(
-                            create: (_) => CategoriesModel()),
-                        ChangeNotifierProvider<UsersModel>(
-                            create: (_) =>
-                                UsersModel(privateKey, accountAddress)),
-                      ], child: ConsumerHomePage())),
-            );
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new MultiProvider(providers: [
+                          ChangeNotifierProvider<ProductsModel>(
+                              create: (_) => ProductsModel()),
+                          ChangeNotifierProvider<CategoriesModel>(
+                              create: (_) => CategoriesModel()),
+                          ChangeNotifierProvider<UsersModel>(
+                              create: (_) =>
+                                  UsersModel(privateKey, accountAddress)),
+                        ], child: ConsumerHomePage())),
+                (Route<dynamic> route) => false);
           } else {
             switchState();
             ScaffoldMessenger.of(context).showSnackBar(

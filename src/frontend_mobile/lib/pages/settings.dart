@@ -115,6 +115,7 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           stayLoggedIn = value;
                         });
+                        Prefs.instance.setBooleanValue('stayLoggedIn', value);
                       }),
                   Padding(
                     padding: const EdgeInsets.only(left: 24.0),

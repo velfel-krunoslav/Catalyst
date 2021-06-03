@@ -988,7 +988,9 @@ Widget HomeDrawer(
     DrawerOption(
         text: "Odjavi se",
         onPressed: () {
-          Prefs.instance.removeAll();
+          Prefs.instance.removeValue('cartProducts');
+          Prefs.instance.removeValue('privateKey');
+          Prefs.instance.removeValue('accountAddress');
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => new Welcome()),
               (Route<dynamic> route) => false);

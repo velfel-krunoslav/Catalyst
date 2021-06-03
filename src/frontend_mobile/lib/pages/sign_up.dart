@@ -106,25 +106,27 @@ class _SignUpState extends State<SignUp> {
                                 birthday,
                                 0)
                             .then((rez) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => new MultiProvider(
-                                        providers: [
-                                          ChangeNotifierProvider<ProductsModel>(
-                                              create: (_) => ProductsModel()),
-                                          ChangeNotifierProvider<
-                                                  CategoriesModel>(
-                                              create: (_) => CategoriesModel()),
-                                          ChangeNotifierProvider<UsersModel>(
-                                              create: (_) => UsersModel(
-                                                  private_key,
-                                                  metamask_address)),
-                                        ],
-                                        child: ConsumerHomePage(
-                                          reg: true,
-                                        ))),
-                          );
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new MultiProvider(
+                                          providers: [
+                                            ChangeNotifierProvider<
+                                                    ProductsModel>(
+                                                create: (_) => ProductsModel()),
+                                            ChangeNotifierProvider<
+                                                    CategoriesModel>(
+                                                create: (_) =>
+                                                    CategoriesModel()),
+                                            ChangeNotifierProvider<UsersModel>(
+                                                create: (_) => UsersModel(
+                                                    private_key,
+                                                    metamask_address)),
+                                          ],
+                                          child: ConsumerHomePage(
+                                            reg: true,
+                                          ))),
+                              (Route<dynamic> route) => false);
                         });
                       } else {
                         setState(() {

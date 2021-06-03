@@ -42,9 +42,34 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool isLoggedIn = false;
   MyAppState(this.isLoggedIn);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      if (AppLifecycleState.paused == state) {
+        Prefs.instance.getBooleanValue('stayLoggedIn').then((value) {
+          if (value == false) {
+            Prefs.instance.removeValue('privateKey');
+            Prefs.instance.removeValue('accountAddress');
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
