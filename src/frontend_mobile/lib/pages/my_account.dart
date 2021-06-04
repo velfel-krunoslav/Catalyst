@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart';
+import 'package:web3dart/web3dart.dart';
 import '../models/usersModel.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,7 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   User user;
   _MyAccountState(this.user);
+  var accBalance;
 
   editProfileCallback2(User u) {
     setState(() {
@@ -29,6 +32,23 @@ class _MyAccountState extends State<MyAccount> {
     widget.editUserCallback(u);
     ScaffoldMessenger.of(context).showSnackBar(
         new SnackBar(content: new Text("Informacije su uspešno ažurirane")));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final client =
+        Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
+    client.credentialsFromPrivateKey(user.privateKey).then((credentials) {
+      credentials.extractAddress().then((address) {
+        client.getBalance(address).then((balance) {
+          setState(() {
+            accBalance = balance.getValueInUnit(EtherUnit.ether);
+          });
+        }).whenComplete(() => client.dispose());
+      });
+    });
   }
 
   @override
@@ -181,6 +201,25 @@ class _MyAccountState extends State<MyAccount> {
                           ),
                           Text(
                             user.homeAddress,
+                            style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 17,
+                                color: Color(DARK_GREY)),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.account_balance_wallet_outlined,
+                              color: Color(DARK_GREY)),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            (accBalance == null) ? '' : accBalance.toString(),
                             style: TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 17,
