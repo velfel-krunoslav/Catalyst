@@ -40,6 +40,7 @@ class _ConsumerCartState extends State<ConsumerCart> {
   String method, paymentMethod;
   ProductsModel productsModel;
   Function showInSnackBar;
+  DateTime deliveryDate;
   List<CartProduct> products = [];
   List<int> quantities = [];
   List<int> indices = [];
@@ -750,6 +751,237 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                               color: Color(DARK_GREY)))
                                     ]),
                                   )),
+
+/* ********************************* */
+
+                              SizedBox(height: 20),
+                              MouseRegion(
+                                  opaque: true,
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                                height: 250,
+                                                color: Color(BACKGROUND),
+                                                child: Column(children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            'Izaberite datum dostave',
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    FOREGROUND),
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 18)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              50.0),
+                                                      child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            MouseRegion(
+                                                              opaque: true,
+                                                              cursor:
+                                                                  SystemMouseCursors
+                                                                      .click,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    deliveryDate =
+                                                                        null;
+                                                                  });
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                        width:
+                                                                            280,
+                                                                        height:
+                                                                            36,
+                                                                        child: Text(
+                                                                            'Dostavi odmah',
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 16,
+                                                                                color: Color(FOREGROUND)))),
+                                                                    SizedBox(
+                                                                        height:
+                                                                            36,
+                                                                        child: Text(
+                                                                            '->',
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 18,
+                                                                                color: Color(FOREGROUND))))
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 20,
+                                                                width: 200),
+                                                            MouseRegion(
+                                                                opaque: true,
+                                                                cursor:
+                                                                    SystemMouseCursors
+                                                                        .click,
+                                                                child:
+                                                                    GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          //////////////////////
+
+                                                                          showModalBottomSheet<
+                                                                              void>(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (BuildContext context) {
+                                                                              return Container(
+                                                                                height: 320,
+                                                                                child: Center(
+                                                                                  child: Column(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: <Widget>[
+                                                                                      Row(
+                                                                                        children: [
+                                                                                          SizedBox(width: 20),
+                                                                                          Text(
+                                                                                            'Izaberite datum',
+                                                                                            style: TextStyle(fontFamily: 'Inter', color: Colors.black, fontWeight: FontWeight.w700, fontSize: 24),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                      Container(
+                                                                                        height: 200,
+                                                                                        child: CupertinoDatePicker(
+                                                                                            minimumDate: DateTime.now(),
+                                                                                            maximumDate: DateTime(2022),
+                                                                                            initialDateTime: (deliveryDate == null) ? DateTime.now() : deliveryDate,
+                                                                                            mode: CupertinoDatePickerMode.date,
+                                                                                            onDateTimeChanged: (DateTime chosenDate) {
+                                                                                              setState(() {
+                                                                                                deliveryDate = chosenDate;
+                                                                                              });
+                                                                                            }),
+                                                                                      ),
+                                                                                      TextButton(
+                                                                                        onPressed: () {
+                                                                                          int count = 0;
+                                                                                          Navigator.of(context).popUntil((_) => count++ >= 2);
+                                                                                        },
+                                                                                        style: TextButton.styleFrom(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), backgroundColor: Color(LIGHT_GREY)),
+                                                                                        child: Text(
+                                                                                          'Potvrdi',
+                                                                                          style: TextStyle(fontFamily: 'Inter', color: Color(FOREGROUND), fontSize: 16),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                          );
+
+                                                                          ///////////////////////
+                                                                        },
+                                                                        child: Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                  width: 280,
+                                                                                  height: 36,
+                                                                                  child: Text('Navedi datum dostave',
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'Inter',
+                                                                                        fontSize: 16,
+                                                                                        color: Color(FOREGROUND),
+                                                                                      ))),
+                                                                              SizedBox(
+                                                                                  height: 36,
+                                                                                  child: Text('->',
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'Inter',
+                                                                                        fontSize: 18,
+                                                                                        color: Color(FOREGROUND),
+                                                                                      )))
+                                                                            ])))
+                                                          ]))
+                                                ]));
+                                          });
+                                    },
+                                    child: Row(children: [
+                                      SvgPicture.asset(
+                                          'assets/icons/CalendarEmpty.svg',
+                                          color: Color(FOREGROUND)),
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                          flex: 9,
+                                          child: Column(children: [
+                                            Row(children: [
+                                              Text('Datum dostave',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Color(FOREGROUND)))
+                                            ]),
+                                            Row(children: [
+                                              Text(
+                                                  (deliveryDate != null)
+                                                      ? '${deliveryDate.day}.${deliveryDate.month}.${deliveryDate.year}.'
+                                                      : 'Dostavi odmah',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 16,
+                                                      color: Color(DARK_GREY)))
+                                            ])
+                                          ])),
+                                      Expanded(
+                                          flex: 1,
+                                          child: SvgPicture.asset(
+                                              'assets/icons/ArrowRight.svg',
+                                              height: ICON_SIZE,
+                                              color: Color(DARK_GREY)))
+                                    ]),
+                                  )),
+
+/************************************* */
+
                               SizedBox(height: 20),
                               Row(children: [
                                 Expanded(
