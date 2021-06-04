@@ -378,6 +378,13 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                         text: 'Potvrdi',
                         onPressed: () {
                           setStatus(deliveryOrder.id, 1);
+                          BigInt totalWei = BigInt.parse("4000000000000") *
+                              BigInt.parse(
+                                  (deliveryOrder.price * deliveryOrder.amount)
+                                      .toInt()
+                                      .toString());
+                          performPayment(PRIVATE_KEY, usr.metamaskAddress,
+                              wei: totalWei);
                         },
                       ),
                     ),
@@ -396,7 +403,7 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                   (deliveryOrder.price * deliveryOrder.amount)
                                       .toInt()
                                       .toString());
-                          performPayment(usr.privateKey, PUBLIC_KEY,
+                          performPayment(PRIVATE_KEY, usersModel.user.metamaskAddress,
                               wei: totalWei);
                         },
                       ),
