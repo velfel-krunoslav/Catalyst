@@ -17,7 +17,6 @@ contract Products{
         uint sellerId;
         uint categoryId;
         uint inStock;
-
     }
 
     mapping (uint => Product) public products;
@@ -27,19 +26,19 @@ contract Products{
     constructor() public{
 
         products[0] = Product(0, "Domaći med", 50, 3, 0, "https://ipfs.io/ipfs/QmVB38abDTVj5FU1GTbW6k2QhDB8FHxYqhBHwFTrix78Bw", 1, 750,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,9,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,9, 1);
         products[1] = Product(1, "Pasirani paradajz", 43, 3, 20, "https://ipfs.io/ipfs/QmSGWhMdUK9YXdfZBP6gKQozXxqBe4mcdSuhusPbVyZTCx", 1, 500,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,3,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,3, 1);
         products[2] = Product(2, "Maslinovo ulje", 77, 3, 0, "https://ipfs.io/ipfs/QmRsZYboEhSYCGZCBiERvKCfEEBEBWxYm6FUNHg2oryKZk", 1, 750,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,9,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,9, 1);
         products[3] = Product(3, "Pršut", 154, 3, 0, "https://ipfs.io/ipfs/QmXd1VwfEJWea1TL62q9btikLypcwCf7VTB46HLYx7EsuQ", 1, 234,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,1,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,1, 1);
         products[4] = Product(4, "Rakija", 98, 3, 0, "https://ipfs.io/ipfs/Qmb1tVQBXnQeeaQdSoMHjTRBWnGuwGnsWqJg97LdvkkFzS", 2, 1000,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,5,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,5, 1);
         products[5] = Product(5, "Kobasica", 74, 3, 0, "https://ipfs.io/ipfs/QmRxCijtUoMGDP7vdff1r74DYPhhGhdemtkht5R39pGxzC", 1, 1000,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,1,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,1, 1);
         products[6] = Product(6, "Kamamber", 54, 3, 0, "https://ipfs.io/ipfs/QmWWrpbQgUB6LddC4UdZFgC6JPJcv52Sot7fAJjvsqcXgE", 1, 500,
-            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,2,1);
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", 53,2, 1);
         productsCount = 7;
         idCount = 7;
     }
@@ -213,7 +212,7 @@ contract Products{
             productsCount--;
         }
     }
-    
+
     function editProduct(uint _id, string memory _productName, uint _price_nominator, uint _price_denominator, string memory _assetUrls, uint _classif, uint _quantifier, string memory _desc, uint _categoryId, uint _inStock) public {
         for (uint i= 0; i < productsCount; i++) {
             if (products[i].id == _id){

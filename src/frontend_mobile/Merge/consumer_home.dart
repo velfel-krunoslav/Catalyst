@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,7 +21,6 @@ import '../models/productsModel.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
     if (dart.library.io) '../sizer_io.dart';
-import 'inbox.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   bool reg = false;
@@ -51,10 +47,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   UsersModel usersModel;
   int userID;
   bool reg;
-  bool hasNewMessages = false;
-
-  Function setHasNewMessages;
-
   _ConsumerHomePageState(this.reg);
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
@@ -111,58 +103,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
-  Timer _timer;
-
   @override
   void initState() {
     super.initState();
-    setHasNewMessages = (bool status) {
-      setState(() {
-        this.hasNewMessages = status;
-      });
-    };
-    final _tmp = Provider.of<UsersModel>(context, listen: false);
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
     if (reg == true) showWelcomeDialog();
-    const time = const Duration(seconds: 30);
-    _timer = new Timer.periodic(time, (Timer t) {
-      requestGetChat(usr.id).then((rawData) {
-        List<int> partnerIDs = [];
-        List<int> chatIDs = [];
-        List<ChatInfo> chatInfo = [];
-        var tmp = jsonDecode(rawData);
-        for (var t in tmp) {
-          chatInfo.add(ChatInfo.fromJson(t));
-        }
-        for (var chat in chatInfo) {
-          partnerIDs.add(
-              (chat.idReciever != usr.id) ? chat.idReciever : chat.idSender);
-          chatIDs.add(chat.id);
-        }
-
-        int newunread = 0;
-        for (int index = 0; index < partnerIDs.length; index++) {
-          _tmp.getUserById(partnerIDs[index]).then((userRawData) {
-            requestChatID(usr.id, userRawData.id).then((chatID) {
-              requestLatestMessageFromChat(chatIDs[index]).then((value) {
-                // TODO CHECK IF RETURN IS NULL
-                var msg = ChatMessageInfo.fromJson(jsonDecode(value)[0]);
-                setState(() {
-                  hasNewMessages = hasNewMessages || msg.unread;
-                });
-              });
-            });
-          });
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   void showInSnackBar(String value) {
@@ -212,7 +158,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               builder: (BuildContext context, StateSetter stateSetter) {
             return SingleChildScrollView(
                 child: Container(
-              color: Color(BACKGROUND),
               height: 480,
               child: Column(
                 children: [
@@ -261,7 +206,6 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                   RegExp(r'[0-9]')),
                             ],
                             decoration: InputDecoration(
-                              hintStyle: TextStyle(color: Color(FOREGROUND)),
                               hintText: '3',
                               filled: true,
                               fillColor: Color(LIGHT_GREY),
@@ -277,7 +221,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Text("km",
                               style: TextStyle(
-                                  color: Color(FOREGROUND),
+                                  color: Color(BLACK),
                                   fontFamily: 'Inter',
                                   fontSize: 14)),
                         ),
@@ -297,7 +241,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               "Prikazati proizvode dobavljača koji su udaljeni najviše $hintDistance km.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Color(FOREGROUND),
+                                  color: Color(BLACK),
                                   fontFamily: 'Inter',
                                   fontSize: 14)),
                         ),
@@ -324,7 +268,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                     children: [
                       Spacer(),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Container(
@@ -332,7 +276,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             height: 60,
                             child: Text("Raspon cena ($CURRENCY):",
                                 style: TextStyle(
-                                    color: Color(FOREGROUND),
+                                    color: Color(BLACK),
                                     fontFamily: 'Inter',
                                     fontSize: 14)),
                           ),
@@ -344,7 +288,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             height: 60,
                             child: Text("Sortiraj:",
                                 style: TextStyle(
-                                    color: Color(FOREGROUND),
+                                    color: Color(BLACK),
                                     fontFamily: 'Inter',
                                     fontSize: 14)),
                           ),
@@ -385,7 +329,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     EdgeInsets.only(left: 17.0, right: 17.0),
                                 child: Text("-",
                                     style: TextStyle(
-                                        color: Color(FOREGROUND),
+                                        color: Color(BLACK),
                                         fontFamily: 'Inter',
                                         fontSize: 14)),
                               ),
@@ -498,16 +442,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    VoidCallback initiateSetState = () {
-      setState(() {});
-    };
-
     productsModel = Provider.of<ProductsModel>(context);
     categoriesModel = Provider.of<CategoriesModel>(context);
     usersModel = Provider.of<UsersModel>(context);
     usr = usersModel.user;
     return MaterialApp(
-      theme: new ThemeData(scaffoldBackgroundColor: Color(BACKGROUND)),
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
@@ -521,7 +460,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                 },
                 child: SvgPicture.asset('assets/icons/Filters.svg',
                     width: 24, height: 24),
-                backgroundColor: Colors.white,
+                backgroundColor: Color(LIGHT_GREY),
               ),
             ),
           ),
@@ -535,10 +474,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   getProductByIdCallback,
                   incrementCart,
                   usersModel.getUserById,
-                  hasNewMessages,
-                  setHasNewMessages,
-                  editUserCallback,
-                  initiateSetState), //TODO context
+                  editUserCallback), //TODO context
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
@@ -557,11 +493,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             child: IconButton(
                                 padding: EdgeInsets.all(0),
                                 icon: SvgPicture.asset(
-                                  'assets/icons/DotsNine.svg',
-                                  width: 36,
-                                  height: 36,
-                                  color: Color(FOREGROUND),
-                                ),
+                                    'assets/icons/DotsNine.svg',
+                                    width: 36,
+                                    height: 36),
                                 onPressed: () {
                                   _scaffoldKey.currentState.openDrawer();
                                 })),
@@ -570,17 +504,13 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           width: 48,
                         ),
                         SvgPicture.asset(
-                            'assets/icons/KotaricaIconMonochrome.svg',
-                            color: BACKGROUND == 0xFF000000
-                                ? Colors.white
-                                : Color(DARK_GREEN)),
+                            'assets/icons/KotaricaIconMonochrome.svg'),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
                               'assets/icons/ShoppingCart.svg',
                               width: 36,
-                              height: 36,
-                              color: Color(FOREGROUND)),
+                              height: 36),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -636,16 +566,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         fillColor: Color(LIGHT_GREY),
                         filled: true,
                         hintText: 'Pretraga',
-                        hintStyle: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            color: Color(DARK_GREY)),
+                        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 16),
                         prefixIcon: Padding(
                           padding: EdgeInsets.only(left: 15, right: 10),
                           child: SvgPicture.asset(
-                            'assets/icons/MagnifyingGlass.svg',
-                            color: Color(DARK_GREY),
-                          ),
+                              'assets/icons/MagnifyingGlass.svg'),
                         ),
                         border: new OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
@@ -664,48 +589,41 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               )),
             ),
             bottom: TabBar(
-                indicatorColor: Color(FOREGROUND),
+                indicatorColor: Colors.black,
                 labelPadding: EdgeInsets.all(8),
                 tabs: List.generate(menuItems.length, (index) {
                   return Text(
                     menuItems[index],
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      color: Color(FOREGROUND),
+                      color: Colors.black,
                       fontSize: 16,
                     ),
                   );
                 })),
-            backgroundColor: Color(BACKGROUND),
+            backgroundColor: Colors.white,
           ),
           body: Stack(
             children: [
               TabBarView(
                 children: [
                   SingleChildScrollView(
-                    child: Container(
-                      color: Color(BACKGROUND),
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Color(DARK_GREY),
+                                backgroundColor: Colors.grey,
                               ),
                             )
-                          : HomeContent(),
-                    ),
-                  ),
+                          : HomeContent()),
                   SingleChildScrollView(
                       child: category == -1
                           ? (categoriesModel.isLoading
                               ? Center(
                                   child: LinearProgressIndicator(
-                                    backgroundColor: Color(DARK_GREY),
+                                    backgroundColor: Colors.grey,
                                   ),
                                 )
-                              : Container(
-                                  color: Color(BACKGROUND),
-                                  child:
-                                      Categories(categoriesModel.categories)))
+                              : Categories(categoriesModel.categories))
                           : MultiProvider(
                               providers: [
                                   ChangeNotifierProvider<ProductsModel>(
@@ -729,12 +647,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Color(DARK_GREY),
+                                backgroundColor: Colors.grey,
                               ),
                             )
-                          : Container(
-                              color: Color(BACKGROUND),
-                              child: BestDeals(initiateCartRefresh)))
+                          : BestDeals(initiateCartRefresh))
                 ],
               ),
             ],
@@ -1115,19 +1031,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => new AlertDialog(
-          backgroundColor: Color(BACKGROUND),
-          title: Center(
-              child: Text(
-            "Uspešna registracija",
-            style: TextStyle(color: Color(FOREGROUND)),
-          )),
+          title: Center(child: Text("Uspešna registracija")),
           content: Container(
             width: MediaQuery.of(context).size.width / 1.3,
             height: MediaQuery.of(context).size.height /
                 4.5, // TODO PROVJERITI VISINU
             decoration: new BoxDecoration(
               shape: BoxShape.rectangle,
-              color: Color(BACKGROUND),
+              color: const Color(0xFFFFFF),
               borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
             ),
             child: new Column(
@@ -1138,7 +1049,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
-                    color: Color(FOREGROUND),
+                    color: Colors.black,
                     fontSize: 18.0,
                     fontFamily: 'Inter',
                   ),
@@ -1249,7 +1160,7 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
     return productsModel.isLoading
         ? Center(
             child: LinearProgressIndicator(
-              backgroundColor: Color(DARK_GREY),
+              backgroundColor: Colors.grey,
             ),
           )
         : Container(
@@ -1262,8 +1173,11 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: IconButton(
-                        icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
-                            color: Color(FOREGROUND)),
+                        icon: SvgPicture.asset(
+                          'assets/icons/ArrowLeft.svg',
+                          height: ICON_SIZE,
+                          width: ICON_SIZE,
+                        ),
                         onPressed: () {
                           this.widget.callback(-1);
                         },

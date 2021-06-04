@@ -50,6 +50,7 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _setSale;
   ContractFunction _removeProduct;
   ContractFunction _editProduct;
+
   ProductsModel([int c = -1]) {
     this.category = c;
     initiateSetup();
@@ -197,6 +198,7 @@ class ProductsModel extends ChangeNotifier {
         params: [query, totalProducts]);
     for (int i = queryProductsCount - 1; i >= 0; i--) {
       var t = temp[0][i];
+
       if (t[4].toInt() == 0) {
         queryProducts.add(ProductEntry(
             id: t[0].toInt(),
@@ -221,7 +223,8 @@ class ProductsModel extends ChangeNotifier {
             desc: t[8],
             discountPercentage: t[4].toInt(),
             categoryId: t[10].toInt(),
-            sellerId: t[9].toInt()));
+            sellerId: t[9].toInt(),
+            inStock: t[11].toInt()));
       }
     }
     productsCount = queryProductsCount;

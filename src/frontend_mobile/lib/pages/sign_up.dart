@@ -66,8 +66,8 @@ class _SignUpState extends State<SignUp> {
           this.isLoading = true;
         });
 
-        private_key = private_key.trim();
-        metamask_address = metamask_address.trim();
+        private_key = private_key.toLowerCase().trim();
+        metamask_address = metamask_address.toLowerCase().trim();
 
         final client = Web3Client('http://' + HOST, Client(),
             enableBackgroundIsolate: true);

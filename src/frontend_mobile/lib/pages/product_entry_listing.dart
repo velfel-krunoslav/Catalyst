@@ -18,6 +18,7 @@ import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import '../internals.dart';
 import '../config.dart';
+import 'edit_product.dart';
 import 'inbox.dart';
 
 class ProductEntryListing extends StatefulWidget {
@@ -25,14 +26,19 @@ class ProductEntryListing extends StatefulWidget {
   VoidCallback refreshInitiator;
   Function setSale;
   Function removeProduct;
+  Function editProduct;
   ProductEntryListing(
-      ProductEntryListingPage productData, VoidCallback refreshInitiator,
-      {void Function(int productId, int percentage) setSale,
-      void Function(int productId) removeProduct}) {
+    ProductEntryListingPage productData,
+    VoidCallback refreshInitiator, {
+    void Function(int productId, int percentage) setSale,
+    void Function(int productId) removeProduct,
+    void Function(ProductEntry p) editProduct,
+  }) {
     this._data = productData;
     this.refreshInitiator = refreshInitiator;
     this.setSale = setSale;
     this.removeProduct = removeProduct;
+    this.editProduct = editProduct;
   }
   @override
   State<StatefulWidget> createState() {
@@ -57,6 +63,17 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   void refreshPage(int discountPercentage) {
     setState(() {
       _data.discountPercentage = discountPercentage;
+    });
+  }
+
+  void refreshProduct(ProductEntry p) {
+    setState(() {
+      _data.description = p.desc;
+      _data.price = p.price;
+      _data.assetUrls = p.assetUrls;
+      _data.classification = p.classification;
+      _data.quantifier = p.quantifier;
+      _data.name = p.name;
     });
   }
 
@@ -792,6 +809,20 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                   });
                                                 },
                                               ),
+                                        DropdownOption(
+                                          text: "Izmeni proizvod",
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditProduct(
+                                                          _data,
+                                                          widget.editProduct,
+                                                          refreshProduct)),
+                                            );
+                                          },
+                                        ),
                                         DropdownOption(
                                           text: "Ukloni proizvod",
                                           onPressed: () {

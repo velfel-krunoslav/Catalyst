@@ -55,11 +55,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
       if (AppLifecycleState.paused == state) {
-        Prefs.instance.getBooleanValue('stayLoggedIn').then((value) {
-          if (value == false) {
-            Prefs.instance.removeValue('privateKey');
-            Prefs.instance.removeValue('accountAddress');
-          }
+        Prefs.instance.containsKey('stayLoggedIn').then((_value) {
+          if (_value)
+            Prefs.instance.getBooleanValue('stayLoggedIn').then((value) {
+              if (value == false) {
+                Prefs.instance.removeValue('privateKey');
+                Prefs.instance.removeValue('accountAddress');
+              }
+            });
         });
       }
     });

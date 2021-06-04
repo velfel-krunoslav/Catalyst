@@ -53,8 +53,8 @@ class LoginState extends State<Login> {
           accountAddress != null &&
           accountAddress != "") {
         switchState();
-        privateKey = privateKey.trim();
-        accountAddress = accountAddress.trim();
+        privateKey = privateKey.toLowerCase().trim();
+        accountAddress = accountAddress.toLowerCase().trim();
         usersModel.checkForUser(accountAddress, privateKey).then((rez) {
           print(rez);
           if (rez != null && rez > -1) {
