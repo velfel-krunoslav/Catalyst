@@ -140,6 +140,26 @@ class LoginState extends State<Login> {
                                 fontFamily: 'Inter',
                                 fontSize: 16,
                                 color: Color(DARK_GREY))),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            return showDialog(context: context, builder: (context) {
+                              return AlertDialog(
+                                  title: Text(
+                                    "MetaMask adresa predstavlja niz od 27-34 karaktera (slova i cifara). MetaMask novčanik sadrži sve podatke o Vašem nalogu. Svakoj adresi odgovara određena količina sredstava koja je na raspolaganju za korišćenje, a dodeljen je i jedinstveni privatni ključ.",
+                                    style: TextStyle(
+                                      color: Color(DARK_GREY),
+                                      fontFamily: 'Inter',
+                                      fontSize: 16
+                                    ),
+                                  ),
+                                backgroundColor: Color(LIGHT_GREY)
+                              );
+                            });
+                          },
+                          child:
+                            SvgPicture.asset('assets/icons/Info.svg', color: Color(DARK_GREY), width: 18, height: 18)
+                        )
                       ],
                     ),
                     SizedBox(height: 5.0),
@@ -168,6 +188,25 @@ class LoginState extends State<Login> {
                                 fontFamily: 'Inter',
                                 fontSize: 16,
                                 color: Color(DARK_GREY))),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            return showDialog(context: context, builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Privatni ključ Vašeg naloga je niz od 52 karaktera (slova i cifara) koja je jedinstvena za svaki nalog i koristi se za prenos sredstava sa jednog računa na drugi. Privatni ključ je jedini način da potvrdite da ste Vi vlasnik Vaše MetaMask adrese, a samim tim i naloga koji koristite.",
+                                  style: TextStyle(
+                                    color: Color(DARK_GREY),
+                                    fontFamily: 'Inter',
+                                    fontSize: 16
+                                  )
+                                ),
+                                backgroundColor: Color(LIGHT_GREY)
+                              );
+                            });
+                          },
+                          child: SvgPicture.asset('assets/icons/Info.svg', color: Color(DARK_GREY), width: 18, height: 18)
+                        )
                       ],
                     ),
                     SizedBox(height: 5.0),
