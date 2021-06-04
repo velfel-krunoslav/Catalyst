@@ -13,11 +13,14 @@ import 'package:provider/provider.dart';
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
+  String assetUrl;
+  String name;
   UsersModel usersModel;
   OrdersModel ordersModel;
   List<Review> reviews = [];
   Function newReviewCallback2;
-  ProductReviews(this.productId, this.newReviewCallback2);
+  ProductReviews(
+      this.productId, this.name, this.assetUrl, this.newReviewCallback2);
   void newReviewCallback(int rating, String desc) {
     newReviewCallback2(productId, rating, desc, usr.id);
   }
@@ -69,8 +72,8 @@ class ProductReviews extends StatelessWidget {
                                       ChangeNotifierProvider<OrdersModel>(
                                           create: (_) => OrdersModel()),
                                     ],
-                                    child: RatingPage(
-                                        productId, newReviewCallback))),
+                                    child: RatingPage(productId, name, assetUrl,
+                                        newReviewCallback))),
                       );
                     },
                   )

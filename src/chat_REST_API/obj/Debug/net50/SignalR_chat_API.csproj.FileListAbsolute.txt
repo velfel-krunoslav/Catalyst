@@ -49,6 +49,7 @@
 /home/jovan/Catalyst/src/chat_REST_API/bin/Debug/net50/runtimes/win-arm64/native/e_sqlite3.dll
 /home/jovan/Catalyst/src/chat_REST_API/bin/Debug/net50/runtimes/win-x64/native/e_sqlite3.dll
 /home/jovan/Catalyst/src/chat_REST_API/bin/Debug/net50/runtimes/win-x86/native/e_sqlite3.dll
+/home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.csproj.AssemblyReference.cache
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.GeneratedMSBuildEditorConfig.editorconfig
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.AssemblyInfoInputs.cache
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.AssemblyInfo.cs
@@ -75,4 +76,3 @@
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/ref/SignalR_chat_API.dll
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.pdb
 /home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.genruntimeconfig.cache
-/home/jovan/Catalyst/src/chat_REST_API/obj/Debug/net50/SignalR_chat_API.csproj.AssemblyReference.cache
