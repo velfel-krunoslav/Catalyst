@@ -129,7 +129,14 @@ class OrdersModel extends ChangeNotifier {
         List<String> dateParts = t[3].split("-");
         DateTime date = DateTime(int.parse(dateParts[0]),
             int.parse(dateParts[1]), int.parse(dateParts[2].substring(0, 2)));
-
+        DateTime deliveryDate;
+        if (t[11] != "ODMAH") {
+          dateParts = t[11].split("-");
+          deliveryDate = DateTime(int.parse(dateParts[0]),
+              int.parse(dateParts[1]), int.parse(dateParts[2].substring(0, 2)));
+        }
+        else
+          deliveryDate = null;
         //print(t);
         Order o = Order(
             id: t[0].toInt(),
@@ -141,7 +148,8 @@ class OrdersModel extends ChangeNotifier {
             date: date,
             deliveryAddress: t[7],
             paymentType: t[8].toInt(),
-            price: t[9].toInt() / t[10].toInt());
+            price: t[9].toInt() / t[10].toInt(),
+        deliveryDate: deliveryDate);
         deliveryOrders.add(o);
       }
     }
@@ -167,6 +175,14 @@ class OrdersModel extends ChangeNotifier {
       List<String> dateParts = t[3].split("-");
       DateTime date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
           int.parse(dateParts[2].substring(0, 2)));
+      DateTime deliveryDate;
+      if (t[11] != "ODMAH") {
+        dateParts = t[11].split("-");
+        deliveryDate = DateTime(int.parse(dateParts[0]),
+            int.parse(dateParts[1]), int.parse(dateParts[2].substring(0, 2)));
+      }
+      else
+        deliveryDate = null;
       //print(t);
       Order o = Order(
           id: t[0].toInt(),
@@ -178,7 +194,8 @@ class OrdersModel extends ChangeNotifier {
           date: date,
           deliveryAddress: t[7],
           paymentType: t[8].toInt(),
-          price: t[9].toInt() / t[10].toInt());
+          price: t[9].toInt() / t[10].toInt(),
+      deliveryDate: deliveryDate);
       orders.add(o);
     }
     notifyListeners();
@@ -189,6 +206,11 @@ class OrdersModel extends ChangeNotifier {
 
     for (int i = 0; i < orders.length; i++) {
       String dateStr = orders[i].date.toString();
+      String deliveryDateStr;
+      if(orders[i].deliveryDate != null)
+        deliveryDateStr = orders[i].deliveryDate.toString();
+      else
+        deliveryDateStr = "ODMAH";
       if (orders[i].productId != null &&
           orders[i].buyerId != null &&
           orders[i].sellerId != null &&
@@ -212,7 +234,8 @@ class OrdersModel extends ChangeNotifier {
                   orders[i].deliveryAddress,
                   BigInt.from(orders[i].paymentType),
                   BigInt.from(numinator),
-                  BigInt.from(denuminator)
+                  BigInt.from(denuminator),
+                  deliveryDateStr
                 ],
                 gasPrice: EtherAmount.inWei(BigInt.one)));
         print("order dodat");

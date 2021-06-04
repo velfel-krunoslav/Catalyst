@@ -439,6 +439,7 @@ class Order {
   String deliveryAddress;
   int paymentType;
   double price;
+  DateTime deliveryDate;
   Order(
       {this.id,
       this.productId,
@@ -449,7 +450,8 @@ class Order {
       this.sellerId,
       this.deliveryAddress,
       this.paymentType,
-      this.price});
+      this.price,
+      this.deliveryDate});
 }
 
 String formattedDate = DateFormat('kk:mm').format(DateTime.now());

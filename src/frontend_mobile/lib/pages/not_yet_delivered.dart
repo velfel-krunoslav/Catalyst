@@ -314,17 +314,31 @@ class _DeliveryOrderState extends State<DeliveryOrder> {
                                       fontFamily: 'IBM Plex Mono',
                                       fontSize: 16,
                                       color: Color(DARK_GREY))),
-                              SizedBox(height: 10),
-                              Text(
-                                  deliveryOrder.paymentType == 0
-                                      ? "PLAĆANJE POUZEĆEM"
-                                      : "PLAĆANJE KRIPTOVALUTOM",
+                              SizedBox(height: 15),
+                              Text('Odlozena dostava: ' + (deliveryOrder.deliveryDate == null ? "NE" : "DA"),
                                   style: TextStyle(
                                       fontFamily: 'IBM Plex Mono',
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(
-                                          DARK_GREY))) // TODO insert payment method
+                                      color: Color(DARK_GREY))),
+                              SizedBox(height: 10),
+                              (deliveryOrder.deliveryDate == null) ? SizedBox.shrink() :
+                              Text("Datum dostave: ${deliveryOrder.deliveryDate.day}.${deliveryOrder.deliveryDate.month}.${deliveryOrder.deliveryDate.year}",
+                                  style: TextStyle(
+                                      fontFamily: 'IBM Plex Mono',
+                                      fontSize: 16,
+                                      color: Color(DARK_GREY))),
+                              SizedBox(height: 10),
+                              Text(
+                                deliveryOrder.paymentType == 0
+                                    ? "PLAĆANJE POUZEĆEM"
+                                    : "PLAĆANO KRIPTOVALUTOM",
+                                style: TextStyle(
+                                    fontFamily: 'IBM Plex Mono',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(
+                                        DARK_GREY)),
+                              ),
                             ],
                           ),
                         ),

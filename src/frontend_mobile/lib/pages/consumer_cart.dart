@@ -1132,7 +1132,8 @@ class _ConsumerCartState extends State<ConsumerCart> {
                                                   deliveryAddress:
                                                       customerAddress,
                                                   productId: products[i].id,
-                                                  price: products[i].price));
+                                                  price: products[i].price,
+                                              deliveryDate: deliveryDate));
                                             }
                                             ordersModel
                                                 .addOrders(orders)
