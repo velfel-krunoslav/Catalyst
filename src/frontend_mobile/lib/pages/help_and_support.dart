@@ -2,19 +2,54 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../config.dart';
-
 import '../internals.dart';
 import '../widgets.dart';
 import 'blank_page.dart';
 import 'consumer_home.dart';
 
+TextEditingController _textController = new TextEditingController();
+String chosenValue;
+String issueMessage;
+
+Future<bool> sendMail(String issueText) async {
+  String username = 'kotaricapmf@gmail.com';
+  String password = 'kotarica123';
+  bool emailSentCheck;
+  final smtpServer = gmail(username, password);
+  final message = Message()
+    ..from = Address(username, '${usr.name} ${usr.surname}')
+    ..recipients.add('korisnickapodrskakotarica@gmail.com')
+    ..subject =
+        '${usr.name} ${usr.surname} issue:$chosenValue ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}.'
+    ..html =
+        "<h1>Issue with:$chosenValue</h1>\n<p>User id: ${usr.id}</p><p>User mail: ${usr.email}</p><p>Issue date: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}.</p><p>Issue text:$issueText</p>";
+
+  try {
+    final sendReport = await send(message, smtpServer);
+    print('Message sent: ' + sendReport.toString());
+    emailSentCheck = true;
+  } on MailerException catch (e) {
+    print('Message not sent.');
+    for (var p in e.problems) {
+      print('Problem: ${p.code}: ${p.msg}');
+    }
+    emailSentCheck = false;
+  }
+
+  var connection = PersistentConnection(smtpServer);
+  await connection.send(message);
+  await connection.close();
+  return emailSentCheck;
+}
+
 class HelpSupport extends StatefulWidget {
   @override
   _HelpSupportState createState() => _HelpSupportState();
 }
-
-String chosenValue;
 
 List<String> problems = [
   'Prijavom',
@@ -45,6 +80,7 @@ class _HelpSupportState extends State<HelpSupport> {
               width: ICON_SIZE,
             ),
             onPressed: () {
+              _textController.text = '';
               Navigator.pop(context);
             },
           )),
@@ -107,6 +143,7 @@ class _HelpSupportState extends State<HelpSupport> {
                 ]),
                 SizedBox(height: 10),
                 TextField(
+                  controller: _textController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       //border: OutlineInputBorder(),
@@ -123,29 +160,44 @@ class _HelpSupportState extends State<HelpSupport> {
                   child: ButtonFill(
                       text: 'Pošaljite upit',
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                    appBar: AppBar(
-                                        backgroundColor: Color(BACKGROUND),
-                                        elevation: 0.0,
-                                        leading: IconButton(
-                                          icon: SvgPicture.asset(
-                                            'assets/icons/ArrowLeft.svg',
-                                            height: ICON_SIZE,
-                                            width: ICON_SIZE,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        )),
-                                    body: Center(
-                                        child: Text('Uspešno ste poslali upit!',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontFamily: 'Inter',
-                                                color: Color(BLACK)))))));
+                        if (_textController.text.toString() != '' &&
+                            chosenValue != '') {
+                          sendMail(_textController.text.toString())
+                              .then((emailSent) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Scaffold(
+                                        appBar: AppBar(
+                                            backgroundColor: Color(BACKGROUND),
+                                            elevation: 0.0,
+                                            leading: IconButton(
+                                              icon: SvgPicture.asset(
+                                                'assets/icons/ArrowLeft.svg',
+                                                height: ICON_SIZE,
+                                                width: ICON_SIZE,
+                                              ),
+                                              onPressed: () {
+                                                int count = 0;
+                                                _textController.text = '';
+                                                Navigator.of(context).popUntil(
+                                                    (_) => count++ >= 2);
+                                              },
+                                            )),
+                                        body: Center(
+                                            child: Text(
+                                                emailSent != null
+                                                    ? 'Uspešno ste poslali upit!'
+                                                    : 'Slanje upita neuspešno!',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontFamily: 'Inter',
+                                                    color: Color(BLACK)))))));
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Popunite sva polja.')));
+                        }
                       }),
                 )
               ],

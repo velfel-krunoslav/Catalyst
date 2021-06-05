@@ -22,13 +22,13 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   List<double> textFieldHeight = [
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT,
-    BUTTON_HEIGHT
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32,
+    BUTTON_HEIGHT + 32
   ];
   String name;
   DateTime _date;
@@ -195,332 +195,426 @@ class _SignUpState extends State<SignUp> {
                               height: textFieldHeight[0],
                               width:
                                   MediaQuery.of(context).size.width / 2.0 - 30,
-                              child: TextFormField(
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    setState(() {
-                                      textFieldHeight[0] = BUTTON_HEIGHT + 20;
-                                    });
-                                    return 'Obavezno polje';
-                                  } else {
-                                    setState(() {
-                                      textFieldHeight[0] = BUTTON_HEIGHT;
-                                    });
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    name = value;
-                                  });
-                                },
-                                style: TextStyle(
-                                    color: Color(DARK_GREY),
-                                    fontFamily: 'Inter',
-                                    fontSize: 16),
-                                decoration: InputDecoration(
-                                  errorStyle: TextStyle(
-                                    fontFamily: 'Inter',
-                                  ),
-                                  hintText: 'Ime',
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                ),
-                              ),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text('Ime',
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            color: Color(DARK_GREY))),
+                                    SizedBox(height: 5.0),
+                                    TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          setState(() {
+                                            textFieldHeight[0] =
+                                                BUTTON_HEIGHT + 46;
+                                          });
+                                          return 'Obavezno polje';
+                                        } else {
+                                          setState(() {
+                                            textFieldHeight[0] = BUTTON_HEIGHT;
+                                          });
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          name = value;
+                                        });
+                                      },
+                                      style: TextStyle(
+                                          color: Color(DARK_GREY),
+                                          fontFamily: 'Inter',
+                                          fontSize: 16),
+                                      decoration: InputDecoration(
+                                        errorStyle: TextStyle(
+                                          fontFamily: 'Inter',
+                                        ),
+                                        filled: true,
+                                        fillColor: Color(LIGHT_GREY),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                      ),
+                                    ),
+                                  ]),
                             ),
                             SizedBox(width: 20.0),
                             Container(
                               height: textFieldHeight[1],
                               width:
                                   MediaQuery.of(context).size.width / 2.0 - 30,
-                              child: TextFormField(
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    setState(() {
-                                      textFieldHeight[1] = BUTTON_HEIGHT + 20;
-                                    });
-                                    return 'Obavezno polje';
-                                  } else {
-                                    setState(() {
-                                      textFieldHeight[1] = BUTTON_HEIGHT;
-                                    });
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    surname = value;
-                                  });
-                                },
-                                style: TextStyle(
-                                    color: Color(DARK_GREY),
-                                    fontFamily: 'Inter',
-                                    fontSize: 16),
-                                decoration: InputDecoration(
-                                  hintText: 'Prezime',
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                ),
-                              ),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text('Prezime',
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            color: Color(DARK_GREY))),
+                                    SizedBox(height: 5.0),
+                                    TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          setState(() {
+                                            textFieldHeight[1] =
+                                                BUTTON_HEIGHT + 46;
+                                          });
+                                          return 'Obavezno polje';
+                                        } else {
+                                          setState(() {
+                                            textFieldHeight[1] = BUTTON_HEIGHT;
+                                          });
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          surname = value;
+                                        });
+                                      },
+                                      style: TextStyle(
+                                          color: Color(DARK_GREY),
+                                          fontFamily: 'Inter',
+                                          fontSize: 16),
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(LIGHT_GREY),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                      ),
+                                    ),
+                                  ]),
                             ),
                           ],
                         ),
                         SizedBox(height: 15.0),
-                        Row(
+                        Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Flexible(
-                                  child: TextFormField(
-                                validator: (value) {
-                                  if (_date == null) {
-                                    return 'Obavezno polje';
-                                  }
-                                  return null;
-                                },
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  hintText: (_date == null)
-                                      ? 'Datum rođenja'
-                                      : _date.day.toString() +
-                                          '.' +
-                                          _date.month.toString() +
-                                          '.' +
-                                          _date.year.toString() +
-                                          '.',
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                ),
-                              )),
-                              SizedBox(width: 20),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          5.0) //                 <--- border radius here
+                              Text('Datum rođenja',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      color: Color(DARK_GREY))),
+                              SizedBox(height: 5.0),
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                        child: TextFormField(
+                                      validator: (value) {
+                                        if (_date == null) {
+                                          return 'Obavezno polje';
+                                        }
+                                        return null;
+                                      },
+                                      readOnly: true,
+                                      decoration: InputDecoration(
+                                        hintText: (_date == null)
+                                            ? ''
+                                            : _date.day.toString() +
+                                                '.' +
+                                                _date.month.toString() +
+                                                '.' +
+                                                _date.year.toString() +
+                                                '.',
+                                        hintStyle: TextStyle(
+                                            fontFamily: 'Inter',
+                                            color: Color(DARK_GREY)),
+                                        filled: true,
+                                        fillColor: Color(LIGHT_GREY),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
                                       ),
-                                ),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                      padding: EdgeInsets.all(0),
-                                      backgroundColor: Color(LIGHT_GREY),
-                                      minimumSize:
-                                          Size(BUTTON_HEIGHT, BUTTON_HEIGHT)),
-                                  child: SvgPicture.asset(
-                                      'assets/icons/CalendarEmpty.svg',
-                                      color: Color(DARK_GREY),
-                                      width: INSET_ICON_SIZE,
-                                      height: INSET_ICON_SIZE),
-                                  onPressed: () {
-                                    showModalBottomSheet<void>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                          height: 320,
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Row(
-                                                  children: [
-                                                    SizedBox(width: 20),
-                                                    Text(
-                                                      'Izaberite datum',
-                                                      style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 24),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  height: 200,
-                                                  child: CupertinoDatePicker(
-                                                      maximumDate:
-                                                          DateTime(2010),
-                                                      initialDateTime:
-                                                          (_date == null)
-                                                              ? DateTime(2010)
-                                                              : _date,
-                                                      mode:
-                                                          CupertinoDatePickerMode
-                                                              .date,
-                                                      onDateTimeChanged:
-                                                          (DateTime
-                                                              chosenDate) {
-                                                        setState(() {
-                                                          _date = chosenDate;
-                                                        });
-                                                      }),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              20, 10, 20, 10),
-                                                      backgroundColor:
-                                                          Color(LIGHT_GREY)),
-                                                  child: Text(
-                                                    'Potvrdi',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(FOREGROUND),
-                                                        fontSize: 16),
+                                    )),
+                                    SizedBox(width: 20),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                5.0) //                 <--- border radius here
+                                            ),
+                                      ),
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                            padding: EdgeInsets.all(0),
+                                            backgroundColor: Color(LIGHT_GREY),
+                                            minimumSize: Size(
+                                                BUTTON_HEIGHT, BUTTON_HEIGHT)),
+                                        child: SvgPicture.asset(
+                                            'assets/icons/CalendarEmpty.svg',
+                                            color: Color(DARK_GREY),
+                                            width: INSET_ICON_SIZE,
+                                            height: INSET_ICON_SIZE),
+                                        onPressed: () {
+                                          showModalBottomSheet<void>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: 320,
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(width: 20),
+                                                          Text(
+                                                            'Izaberite datum',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 24),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        height: 200,
+                                                        child:
+                                                            CupertinoDatePicker(
+                                                                maximumDate:
+                                                                    DateTime(
+                                                                        2010),
+                                                                initialDateTime:
+                                                                    (_date ==
+                                                                            null)
+                                                                        ? DateTime(
+                                                                            2010)
+                                                                        : _date,
+                                                                mode:
+                                                                    CupertinoDatePickerMode
+                                                                        .date,
+                                                                onDateTimeChanged:
+                                                                    (DateTime
+                                                                        chosenDate) {
+                                                                  setState(() {
+                                                                    _date =
+                                                                        chosenDate;
+                                                                  });
+                                                                }),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        style: TextButton.styleFrom(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(20,
+                                                                    10, 20, 10),
+                                                            backgroundColor:
+                                                                Color(
+                                                                    LIGHT_GREY)),
+                                                        child: Text(
+                                                          'Potvrdi',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              color: Color(
+                                                                  FOREGROUND),
+                                                              fontSize: 16),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ]),
                             ]),
                         SizedBox(height: 15.0),
                         Container(
                           height: textFieldHeight[3],
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                setState(() {
-                                  textFieldHeight[3] = BUTTON_HEIGHT + 20;
-                                });
-                                return 'Obavezno polje';
-                              } else if (!regNum.hasMatch(value)) {
-                                setState(() {
-                                  textFieldHeight[3] = BUTTON_HEIGHT + 20;
-                                });
-                                return 'Format: 06XYYYYYYY';
-                              } else {
-                                setState(() {
-                                  textFieldHeight[3] = BUTTON_HEIGHT;
-                                });
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                phone_number = value;
-                              });
-                            },
-                            style: TextStyle(
-                                color: Color(DARK_GREY),
-                                fontFamily: 'Inter',
-                                fontSize: 16),
-                            decoration: InputDecoration(
-                              hintText: 'Broj telefona',
-                              filled: true,
-                              fillColor: Color(LIGHT_GREY),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                            ),
-                          ),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Broj telefona',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        color: Color(DARK_GREY))),
+                                SizedBox(height: 5.0),
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      setState(() {
+                                        textFieldHeight[3] = BUTTON_HEIGHT + 46;
+                                      });
+                                      return 'Obavezno polje';
+                                    } else if (!regNum.hasMatch(value)) {
+                                      setState(() {
+                                        textFieldHeight[3] = BUTTON_HEIGHT + 46;
+                                      });
+                                      return 'Format: 06XYYYYYYY';
+                                    } else {
+                                      setState(() {
+                                        textFieldHeight[3] = BUTTON_HEIGHT;
+                                      });
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      phone_number = value;
+                                    });
+                                  },
+                                  style: TextStyle(
+                                      color: Color(DARK_GREY),
+                                      fontFamily: 'Inter',
+                                      fontSize: 16),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                  ),
+                                ),
+                              ]),
                         ),
                         SizedBox(height: 15.0),
                         Container(
                           height: textFieldHeight[4],
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                setState(() {
-                                  textFieldHeight[4] = BUTTON_HEIGHT + 20;
-                                });
-                                return 'Obavezno polje';
-                              } else if (!regEmail.hasMatch(value)) {
-                                setState(() {
-                                  textFieldHeight[4] = BUTTON_HEIGHT + 20;
-                                });
-                                return 'Adresa e-pošte je neispravna';
-                              } else {
-                                setState(() {
-                                  textFieldHeight[4] = BUTTON_HEIGHT;
-                                });
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                email = value;
-                              });
-                            },
-                            style: TextStyle(
-                                color: Color(DARK_GREY),
-                                fontFamily: 'Inter',
-                                fontSize: 16),
-                            decoration: InputDecoration(
-                              hintText: 'E-mail',
-                              filled: true,
-                              fillColor: Color(LIGHT_GREY),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                            ),
-                          ),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Adresa e-pošte',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        color: Color(DARK_GREY))),
+                                SizedBox(height: 5.0),
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      setState(() {
+                                        textFieldHeight[4] = BUTTON_HEIGHT + 46;
+                                      });
+                                      return 'Obavezno polje';
+                                    } else if (!regEmail.hasMatch(value)) {
+                                      setState(() {
+                                        textFieldHeight[4] = BUTTON_HEIGHT + 46;
+                                      });
+                                      return 'Adresa e-pošte je neispravna';
+                                    } else {
+                                      setState(() {
+                                        textFieldHeight[4] = BUTTON_HEIGHT;
+                                      });
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      email = value;
+                                    });
+                                  },
+                                  style: TextStyle(
+                                      color: Color(DARK_GREY),
+                                      fontFamily: 'Inter',
+                                      fontSize: 16),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                  ),
+                                ),
+                              ]),
                         ),
                         SizedBox(height: 15.0),
                         Container(
-                          height: textFieldHeight[5],
-                          child: TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  setState(() {
-                                    textFieldHeight[5] = BUTTON_HEIGHT + 20;
-                                  });
-                                  return 'Adresa naloga je neispravna';
-                                } else {
-                                  setState(() {
-                                    textFieldHeight[5] = BUTTON_HEIGHT;
-                                  });
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  metamask_address = value;
-                                });
-                              },
-                              style: TextStyle(
-                                  color: Color(DARK_GREY),
-                                  fontFamily: 'Inter',
-                                  fontSize: 16),
-                              decoration: InputDecoration(
-                                  hintText: 'MetaMask adresa',
-                                  hintStyle: TextStyle(color: Color(DARK_GREY)),
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius:
-                                          BorderRadius.circular(5.0)))),
-                        ),
+                            height: textFieldHeight[5],
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Adresa naloga',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          color: Color(DARK_GREY))),
+                                  SizedBox(height: 5.0),
+                                  TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          setState(() {
+                                            textFieldHeight[5] =
+                                                BUTTON_HEIGHT + 46;
+                                          });
+                                          return 'Adresa naloga je neispravna';
+                                        } else {
+                                          setState(() {
+                                            textFieldHeight[5] = BUTTON_HEIGHT;
+                                          });
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          metamask_address = value;
+                                        });
+                                      },
+                                      style: TextStyle(
+                                          color: Color(DARK_GREY),
+                                          fontFamily: 'Inter',
+                                          fontSize: 16),
+                                      decoration: InputDecoration(
+                                          hintStyle: TextStyle(
+                                              color: Color(DARK_GREY)),
+                                          filled: true,
+                                          fillColor: Color(LIGHT_GREY),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)))),
+                                ])),
                         SizedBox(height: 15.0),
-                        PasswordField((val) {
-                          private_key = val;
-                        }, 'Privatni ključ', startRegisterRoutine),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Privatni ključ',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      color: Color(DARK_GREY))),
+                              SizedBox(height: 5.0),
+                              PasswordField((val) {
+                                private_key = val;
+                              }, '', startRegisterRoutine),
+                            ]),
                         SizedBox(height: 20.0),
                         ButtonFill(
                           text: 'Registruj se',
