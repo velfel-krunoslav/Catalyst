@@ -36,6 +36,7 @@ class UsersModel extends ChangeNotifier {
   ContractFunction _createUser;
   ContractFunction _getUser;
   ContractFunction _getUserById;
+  ContractFunction _editUser;
 
   UsersModel([String privateKey = "", String accountAddress = ""]) {
     this.privateKey = privateKey;
@@ -78,6 +79,8 @@ class UsersModel extends ChangeNotifier {
     _createUser = _contract.function("createUser");
     _getUser = _contract.function("getUser");
     _getUserById = _contract.function("getUserById");
+    _editUser = _contract.function("editUser");
+
     if (privateKey != null &&
         privateKey != "" &&
         accountAddress != null &&
@@ -202,5 +205,24 @@ class UsersModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return userr;
+  }
+
+  editUser(int _id, String _photoUrl, String _desc, String _email,
+      String _phoneNumber, String _homeAddress) async {
+    await _client.sendTransaction(
+        _credentials,
+        Transaction.callContract(
+            maxGas: 6721925,
+            contract: _contract,
+            function: _editUser,
+            parameters: [
+              BigInt.from(_id),
+              _photoUrl,
+              _desc,
+              _email,
+              _phoneNumber,
+              _homeAddress,
+            ],
+            gasPrice: EtherAmount.inWei(BigInt.one)));
   }
 }

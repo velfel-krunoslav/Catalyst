@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile/config.dart';
+import '../config.dart';
 
 class Rating extends StatefulWidget {
   final int maximumRating;

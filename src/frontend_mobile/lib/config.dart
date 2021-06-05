@@ -11,6 +11,8 @@ const TEAL = 0xFF0EAD65;
 const CYAN = 0xFF0F62FE;
 const LIGHT_BLACK = 0xFF202020;
 const YELLOW = 0xFFE7A600;
+const FOREGROUND = 0xFF000000;
+const BACKGROUND = 0xFFFFFFFF;
 
 /* PARAMS: */
 const double ICON_SIZE = 36;
@@ -18,11 +20,14 @@ const double INSET_ICON_SIZE = 24;
 const double BUTTON_HEIGHT = 60;
 const double PRODUCT_ENTRY_HEIGHT = 200;
 const double CATEGORY_HEIGHT = 126;
-const String CURRENCY = '€';
+const String CURRENCY = ' RSD';
 const double REVIEW_BAR_WIDTH_PERCENT = 0.64;
 
 /* GLOBALS: */
+const MESSAGING_SERVER_PORT = 11135;
+const MESSAGING_SERVER_HOSTNAME = '192.168.1.3';
+const PUBLIC_KEY = "459ca368505e9e0600f9f926ef9d3d2cb0c9e4bb";
 const PRIVATE_KEY =
-    "7097e2fa2beaf3ff46c0edafb37ca4b1ad021c3d5e70ca5057bca3754a9aa3b9";
+    "132f4ebc52cf7c27c954bcc14121ad05dd1a1625c8dbcb63eebabb2e3e79c3df";
 const HOST = "192.168.1.3:7545";
-const JSON_NETWORK_ATTR = "5720";
+const JSON_NETWORK_ATTR = "1622665965377";

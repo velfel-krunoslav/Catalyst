@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
+import '../config.dart';
 import '../image_picker_helper.dart'
     if (dart.library.html) '../image_picker_web.dart'
     if (dart.library.io) '../image_picker_io.dart';
@@ -11,17 +11,23 @@ import '../internals.dart';
 import '../widgets.dart';
 import '../internals.dart';
 
-class NewProduct extends StatefulWidget {
-  Function addProductCallback;
-  Function showInSnackBar;
-  NewProduct(this.addProductCallback, this.showInSnackBar);
+class SuperImage {
+  Uint8List rawData;
+  String url;
 
-  @override
-  _NewProductState createState() =>
-      _NewProductState(this.addProductCallback, this.showInSnackBar);
+  SuperImage({this.rawData, this.url});
 }
 
-List<Uint8List> images = [];
+class NewProduct extends StatefulWidget {
+  Function addProductCallback;
+
+  NewProduct(this.addProductCallback);
+
+  @override
+  _NewProductState createState() => _NewProductState(this.addProductCallback);
+}
+
+List<SuperImage> images = [];
 List<double> textFieldHeight = [
   BUTTON_HEIGHT,
   BUTTON_HEIGHT + 20,
@@ -30,7 +36,7 @@ List<double> textFieldHeight = [
   BUTTON_HEIGHT,
   BUTTON_HEIGHT
 ];
-List<String> imagesUrls = [];
+
 RegExp regNum = new RegExp(r"^[0-9]*$");
 RegExp regReal = new RegExp(r'^\d+(\.\d+)?$');
 String name, description;
@@ -47,21 +53,28 @@ List<Category> categories = [
   Category(id: 4, name: "Bezalkoholna pića", assetUrl: ""),
   Category(id: 5, name: "Alkohol", assetUrl: ""),
   Category(id: 6, name: "Žita", assetUrl: ""),
-  Category(id: 7, name: "Živina", assetUrl: ""),
+  Category(id: 7, name: "Domaće životinje", assetUrl: ""),
   Category(id: 8, name: "Zimnice", assetUrl: ""),
   Category(id: 9, name: "Ostali proizvodi", assetUrl: "")
 ];
 
 class _NewProductState extends State<NewProduct> {
+  static GlobalKey<ScaffoldState> _scaffoldKey;
   Function addProductCallback;
-  Function showInSnackBar;
-  _NewProductState(this.addProductCallback, this.showInSnackBar);
+  _NewProductState(this.addProductCallback);
   bool isSetUnit = true;
   bool isSetCategory = true;
   bool isSetImages = true;
   @override
+  void initState() {
+    super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
             title: Text('Novi proizvod',
                 style: TextStyle(
@@ -70,7 +83,7 @@ class _NewProductState extends State<NewProduct> {
                     fontWeight: FontWeight.w800,
                     color: Color(DARK_GREY))),
             centerTitle: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
               icon: SvgPicture.asset(
@@ -101,6 +114,8 @@ class _NewProductState extends State<NewProduct> {
                   SizedBox(
                       height: textFieldHeight[0],
                       child: TextFormField(
+                          maxLength: 30,
+                          maxLengthEnforced: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               setState(() {
@@ -135,6 +150,8 @@ class _NewProductState extends State<NewProduct> {
                   SizedBox(
                     height: textFieldHeight[1],
                     child: TextFormField(
+                        maxLength: 200,
+                        maxLengthEnforced: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
@@ -179,6 +196,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[4],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -202,6 +221,7 @@ class _NewProductState extends State<NewProduct> {
                                   quantity = int.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(
@@ -270,7 +290,8 @@ class _NewProductState extends State<NewProduct> {
                                 child: Text(
                                   "Obavezno polje",
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.red[700]),
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
                                 ),
                               )
                             : Container()
@@ -329,7 +350,8 @@ class _NewProductState extends State<NewProduct> {
                                 child: Text(
                                   "Obavezno polje",
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.red[700]),
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
                                 ),
                               )
                             : Container()
@@ -347,6 +369,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[3],
                             width: MediaQuery.of(context).size.width / 2.0 - 20,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -370,6 +394,7 @@ class _NewProductState extends State<NewProduct> {
                                   inStock = int.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(
@@ -396,6 +421,8 @@ class _NewProductState extends State<NewProduct> {
                             height: textFieldHeight[5],
                             width: MediaQuery.of(context).size.width / 2.0 - 40,
                             child: TextFormField(
+                                maxLength: 10,
+                                maxLengthEnforced: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     setState(() {
@@ -419,6 +446,7 @@ class _NewProductState extends State<NewProduct> {
                                   price = double.parse(value);
                                 },
                                 decoration: InputDecoration(
+                                    counterText: "",
                                     filled: true,
                                     fillColor: Color(LIGHT_GREY),
                                     border: OutlineInputBorder(
@@ -466,51 +494,100 @@ class _NewProductState extends State<NewProduct> {
                           final imagePicker = getImagePickerMain();
                           if (imgCount < 3) {
                             imagePicker.getImage().then((bytes) {
-                              setState(() {
-                                images.add(bytes);
-                              });
                               asyncFileUpload(bytes).then((value) {
-                                imagesUrls.add('https://ipfs.io/ipfs/$value');
+                                SuperImage tmp = SuperImage();
+                                tmp.rawData = bytes;
+                                tmp.url = 'https://ipfs.io/ipfs/$value';
+                                setState(() {
+                                  images.add(tmp);
+                                  imgCount++;
+                                });
                               });
                             });
                           } else {
-                            // TODO WARN THAT MAX NO. OF IMAGES EXCEEDED
+                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                content: new Text(
+                                    "Ne možete postaviti više od 3 fotografije")));
                           }
                         }),
                     SizedBox(width: 10),
-                    Wrap(
-                      children: List.generate(images.length, (index) {
-                        return Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              child: Image.memory(
-                                images[index],
-                                height:
-                                    (MediaQuery.of(context).size.width - 80) /
-                                        4.0,
-                                width:
-                                    (MediaQuery.of(context).size.width - 80) /
-                                        4.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            )
-                          ],
-                        );
-                      }),
-                    ),
+                    (images != null)
+                        ? Wrap(
+                            children: List.generate(images.length, (index) {
+                              return Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        child: Image.memory(
+                                          images[index].rawData,
+                                          height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: MouseRegion(
+                                              opaque: true,
+                                              cursor: SystemMouseCursors.click,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    images
+                                                        .remove(images[index]);
+                                                    imgCount--;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  color: Color(BACKGROUND),
+                                                  width: 28,
+                                                  height: 28,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.black,
+                                                          width: 1,
+                                                          style: BorderStyle
+                                                              .solid)),
+                                                  child: Center(
+                                                    child: Text('-',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: Color(
+                                                                FOREGROUND))),
+                                                  ),
+                                                ),
+                                              )))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  )
+                                ],
+                              );
+                            }),
+                          )
+                        : SizedBox.shrink()
                   ]),
                   !isSetImages
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
                           child: Text(
                             "Izaberite barem jednu fotografiju",
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.red[700]),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(RED_ATTENTION)),
                           ),
                         )
                       : Container(),
@@ -532,7 +609,7 @@ class _NewProductState extends State<NewProduct> {
                         } else {
                           isSetCategory = true;
                         }
-                        if (imagesUrls.length == 0) {
+                        if (images.length == 0) {
                           isSetImages = false;
                         } else {
                           isSetImages = true;
@@ -541,6 +618,10 @@ class _NewProductState extends State<NewProduct> {
                             isSetCategory &&
                             isSetUnit &&
                             isSetImages) {
+                          List<String> imagesUrls = [];
+                          for (var t in images) {
+                            imagesUrls.add(t.url);
+                          }
                           addProductCallback(
                               name,
                               price,
@@ -550,7 +631,10 @@ class _NewProductState extends State<NewProduct> {
                               description,
                               usr.id,
                               selectedCategory.id);
-                          showInSnackBar("Proizvod je uspešno dodat");
+                          setState(() {
+                            images = null;
+                            imgCount = 0;
+                          });
                           Navigator.pop(context);
                         }
                       }),

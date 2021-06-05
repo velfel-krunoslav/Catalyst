@@ -94,12 +94,15 @@ class ReviewsModel extends ChangeNotifier {
 
     for (int i = 0; i < reviewsCount; i++) {
       var t = temp[0][i];
+      DateTime date = DateTime.parse(t[5]);
       reviews.add(Review(
           id: t[0].toInt(),
           userId: t[4].toInt(),
           desc: t[3],
           productId: t[1].toInt(),
-          rating: t[2].toInt()));
+          rating: t[2].toInt(),
+          date: date
+          ));
 
     }
     getAverage();
@@ -108,10 +111,10 @@ class ReviewsModel extends ChangeNotifier {
     isLoading = false;
   }
 
-  addReview(int productId, int rating, String desc, int userId) async {
+  addReview(int productId, int rating, String desc, int userId, DateTime date) async {
     isLoading = true;
     notifyListeners();
-
+    String dateStr = date.toString();
     await _client.sendTransaction(
         _credentials,
         Transaction.callContract(
@@ -122,7 +125,8 @@ class ReviewsModel extends ChangeNotifier {
               BigInt.from(productId),
               BigInt.from(rating),
               desc,
-              BigInt.from(userId)
+              BigInt.from(userId),
+              dateStr
             ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
     await getReviews(productId);

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/pages/product_reviews.dart';
+import '../internals.dart';
+import '../models/ordersModel.dart';
+import '../models/usersModel.dart';
 import 'package:provider/provider.dart';
 
 import '../config.dart';
@@ -39,7 +38,7 @@ class _OrdersHistoryState extends State<OrdersHistory> {
           "Istorija narudžbi",
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),

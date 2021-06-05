@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/pages/rating.dart';
-import 'package:frontend_mobile/pages/rating_page.dart';
-import 'package:frontend_mobile/widgets.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../models/ordersModel.dart';
+import '../models/reviewsModel.dart';
+import '../models/usersModel.dart';
+import '../pages/rating.dart';
+import '../pages/rating_page.dart';
+import '../widgets.dart';
 import 'package:provider/provider.dart';
 
 class ProductReviews extends StatelessWidget {
   int productId = 0;
   var reviewsModel;
+  String assetUrl;
+  String name;
   UsersModel usersModel;
   OrdersModel ordersModel;
   List<Review> reviews = [];
   Function newReviewCallback2;
-  ProductReviews(this.productId, this.newReviewCallback2);
+  ProductReviews(
+      this.productId, this.name, this.assetUrl, this.newReviewCallback2);
   void newReviewCallback(int rating, String desc) {
     newReviewCallback2(productId, rating, desc, usr.id);
   }
@@ -37,9 +40,9 @@ class ProductReviews extends StatelessWidget {
           style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w800,
-              color: Colors.black),
+              color: Color(FOREGROUND)),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
           icon: SvgPicture.asset("assets/icons/ArrowLeft.svg"),
@@ -67,8 +70,8 @@ class ProductReviews extends StatelessWidget {
                                       ChangeNotifierProvider<OrdersModel>(
                                           create: (_) => OrdersModel()),
                                     ],
-                                    child: RatingPage(
-                                        productId, newReviewCallback))),
+                                    child: RatingPage(productId, name, assetUrl,
+                                        newReviewCallback))),
                       );
                     },
                   )
@@ -84,7 +87,7 @@ class ProductReviews extends StatelessWidget {
       ),
       body: reviewsModel.isLoading
           ? LinearProgressIndicator(
-              backgroundColor: Colors.grey,
+              backgroundColor: Color(DARK_GREY),
             )
           : SingleChildScrollView(
               child: Column(
@@ -113,7 +116,7 @@ class ProductReviews extends StatelessWidget {
                               (index) {
                             return SvgPicture.asset(
                                 "assets/icons/StarFilled.svg",
-                                color: Colors.yellow[700]);
+                                color: Color(YELLOW));
                           }),
                         ),
                         Wrap(
@@ -121,7 +124,7 @@ class ProductReviews extends StatelessWidget {
                               5 - reviewsModel.average.round(), (index) {
                             return SvgPicture.asset(
                                 "assets/icons/StarOutline.svg",
-                                color: Colors.yellow[700]);
+                                color: Color(YELLOW));
                           }),
                         ),
                         SizedBox(
@@ -133,7 +136,9 @@ class ProductReviews extends StatelessWidget {
                   Text(
                     reviewsModel.reviewsCount.toString() + " recenzija",
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 16, color: Colors.black),
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        color: Color(FOREGROUND)),
                   ),
                   SizedBox(
                     height: 25,
@@ -191,7 +196,7 @@ class ProductReviews extends StatelessWidget {
                         ));
                   })),
                   SizedBox(
-                    height: 10,
+                    height: 120,
                   ),
                 ],
               ),

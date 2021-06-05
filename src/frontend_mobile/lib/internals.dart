@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:frontend_mobile/config.dart';
+import './config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,14 +15,15 @@ Future<String> requestChatID(int userID1, int userID2) async {
     'UserID1': userID1.toString(),
     'UserID2': userID2.toString()
   };
-  var uri = Uri.http(
-      '192.168.1.3:3000', '/Chat/GetChatBetweenUsers', queryParameters);
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatBetweenUsers', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }
 
 Future<http.Response> publishMessage(Message msg) async {
-  final String apiURL = "http://192.168.1.3:3000/Message/AddMessage";
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Message/AddMessage";
   final response = await http.post(apiURL,
       headers: <String, String>{
         'content-type': 'application/json; charset=utf-8',
@@ -38,16 +39,17 @@ Future<http.Response> publishMessage(Message msg) async {
   return response;
 }
 
-Future<http.Response> addChat(ChatInfo chat) async {
-  final String apiURL = "http://192.168.1.3:3000/Chat/AddChat";
+Future<http.Response> addChat({int idSender, int idReceiver}) async {
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Chat/AddChat";
   final response = await http.post(apiURL,
       headers: <String, String>{
         'content-type': 'application/json; charset=utf-8',
       },
       body: jsonEncode(<String, dynamic>{
-        "id": chat.id,
-        "id_Sender": chat.idSender,
-        "id_Reciever": chat.idReciever,
+        "id": 0,
+        "id_Sender": idSender,
+        "id_Reciever": idReceiver,
       }));
   return response;
 }
@@ -57,31 +59,31 @@ void setMessageReadStatus(int id, bool readStatus) async {
     'IDMessage': id.toString(),
     'status': readStatus.toString()
   };
-  var uri = Uri.http(
-      '192.168.1.3:3000', '/Message/ChangeStatusRead', queryParameters);
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/ChangeStatusRead', queryParameters);
   await http.get(uri);
 }
 
 Future<String> requestGetChat(int id) async {
   var queryParameters = {'id': id.toString()};
-  var uri =
-      Uri.http('192.168.1.3:3000', '/Chat/GetChatsFromUserID', queryParameters);
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatsFromUserID', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }
 
 Future<String> requestLatestMessageFromChat(int chatID) async {
   var queryParameters = {'chatID': chatID.toString()};
-  var uri = Uri.http('192.168.1.3:3000', '/Message/GetLatestMessageFromChatID',
-      queryParameters);
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetLatestMessageFromChatID', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }
 
 Future<String> requestAllMessagesFromChat(int chatID) async {
   var queryParameters = {'messageChatID': chatID.toString()};
-  var uri = Uri.http(
-      '192.168.1.3:3000', '/Message/GetAllMessagesFromChatID', queryParameters);
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetAllMessagesFromChatID', queryParameters);
   var response = await http.get(uri);
   return response.body;
 }
@@ -98,22 +100,39 @@ Future<String> asyncFileUpload(Uint8List contents) async {
   return jsonDecode(responseString)['Hash'];
 }
 
-void performPayment(String targetAccountAddress, int eth) async {
+Future<bool> performPayment(String privateKey, String targetAccountAddress,
+    {dynamic eth, dynamic wei}) async {
+  bool hasFault = false;
   final client =
       Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
-  final credentials = await client.credentialsFromPrivateKey(PRIVATE_KEY);
+  final credentials = await client
+      .credentialsFromPrivateKey(privateKey)
+      .onError((error, stackTrace) {
+    hasFault = true;
+  });
+  String hash;
+  hash = await client
+      .sendTransaction(
+        credentials,
+        Transaction(
+          to: EthereumAddress.fromHex(targetAccountAddress),
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: 100000,
+          value: (eth != null)
+              ? EtherAmount.fromUnitAndValue(EtherUnit.ether, eth)
+              : EtherAmount.fromUnitAndValue(EtherUnit.wei, wei),
+        ),
+        fetchChainIdFromNetworkId: false,
+      )
+      .onError((error, stackTrace) => hash = null);
 
-  await client.sendTransaction(
-    credentials,
-    Transaction(
-      to: EthereumAddress.fromHex(targetAccountAddress),
-      gasPrice: EtherAmount.inWei(BigInt.one),
-      maxGas: 100000,
-      value: EtherAmount.fromUnitAndValue(EtherUnit.ether, eth),
-    ),
-    fetchChainIdFromNetworkId: false,
-  );
-  await client.dispose();
+  if (hash == null || hasFault) return false;
+
+  var res = await client
+      .getTransactionReceipt(hash)
+      .whenComplete(() => client.dispose());
+
+  return res.status;
 }
 
 class Prefs {
@@ -174,6 +193,7 @@ class ProductEntry {
   List<String> assetUrls;
   String name;
   double price;
+  int discountPercentage;
   Classification classification;
   int quantifier;
   String desc;
@@ -184,6 +204,7 @@ class ProductEntry {
       this.assetUrls,
       this.name,
       this.price,
+      this.discountPercentage,
       this.classification,
       this.quantifier,
       this.desc,
@@ -245,6 +266,7 @@ class ProductEntryListingPage extends ProductEntry {
       Classification classification,
       int quantifier,
       int id,
+      int discountPercentage,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
@@ -256,7 +278,8 @@ class ProductEntryListingPage extends ProductEntry {
             name: name,
             price: price,
             classification: classification,
-            quantifier: quantifier);
+            quantifier: quantifier,
+            discountPercentage: discountPercentage);
 }
 
 class User {
@@ -294,8 +317,14 @@ class Review {
   int rating;
   String desc;
   int userId;
-
-  Review({this.id, this.productId, this.rating, this.desc, this.userId});
+  DateTime date;
+  Review(
+      {this.id,
+      this.productId,
+      this.rating,
+      this.desc,
+      this.userId,
+      this.date});
 }
 
 class CartProduct {
@@ -303,6 +332,8 @@ class CartProduct {
   String name;
   double price;
   int cartQuantity, id, vendorId;
+  Classification classification;
+  int quantifier;
 
   CartProduct(
       {this.id,
@@ -310,7 +341,9 @@ class CartProduct {
       this.photoUrl,
       this.name,
       this.price,
-      this.cartQuantity});
+      this.cartQuantity,
+      this.classification,
+      this.quantifier});
 }
 
 class UserReview extends User {
@@ -365,6 +398,7 @@ class Order {
   int sellerId;
   String deliveryAddress;
   int paymentType;
+  double price;
   Order(
       {this.id,
       this.productId,
@@ -374,7 +408,8 @@ class Order {
       this.date,
       this.sellerId,
       this.deliveryAddress,
-      this.paymentType});
+      this.paymentType,
+      this.price});
 }
 
 String formattedDate = DateFormat('kk:mm').format(DateTime.now());

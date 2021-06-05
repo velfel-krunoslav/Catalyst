@@ -88,12 +88,13 @@ namespace SignalR_chat_API.Controllers
         public IActionResult AddChat([FromBody] Chat chatParam)
         {
             var isChatPresent = context.Chats.Where(c =>(c.Id_Sender==chatParam.Id_Sender&&c.Id_Reciever==chatParam.Id_Reciever) || (c.Id_Sender == chatParam.Id_Reciever && c.Id_Reciever == chatParam.Id_Sender));
+            
+            Chat chat = new Chat();
+            chat.Id_Sender = chatParam.Id_Sender;
+            chat.Id_Reciever = chatParam.Id_Reciever;
+
             if (!isChatPresent.Any())
             {
-                Chat chat = new Chat();
-                chat.Id_Sender = chatParam.Id_Sender;
-                chat.Id_Reciever = chatParam.Id_Reciever;
-
                 context.Chats.Add(chat);
                 context.SaveChanges();
 
@@ -101,7 +102,8 @@ namespace SignalR_chat_API.Controllers
             }
             else
             {
-                return BadRequest(new { message = "Chat already exists!" });
+                chat.Id = -1;
+                return Ok(chat);
             }
         }
 

@@ -1,24 +1,30 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/models/reviewsModel.dart';
-import 'package:frontend_mobile/models/usersModel.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/pages/product_entry_listing.dart';
-import 'package:frontend_mobile/pages/consumer_cart.dart';
-import 'package:frontend_mobile/pages/search_pages.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../models/categoriesModel.dart';
+import '../models/ordersModel.dart';
+import '../models/reviewsModel.dart';
+import '../models/usersModel.dart';
+import '../widgets.dart';
+import '../pages/product_entry_listing.dart';
+import '../pages/consumer_cart.dart';
+import '../pages/search_pages.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../internals.dart';
+import 'package:flutter/widgets.dart';
 import '../models/productsModel.dart';
 import '../sizer_helper.dart'
     if (dart.library.html) '../sizer_web.dart'
     if (dart.library.io) '../sizer_io.dart';
+import 'inbox.dart';
 
 class ConsumerHomePage extends StatefulWidget {
   bool reg = false;
@@ -31,12 +37,12 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   int category = -1;
   int activeMenu = 0;
   int cartItemsCount = 0;
-  String query;
+  String query = "";
   final sizer = getSizer();
   List menuItems = ['Početna', 'Kategorije', 'Akcije'];
   String privateKey, accountAddress;
 
-  static GlobalKey<ScaffoldState> _scaffoldKey;
+  GlobalKey<ScaffoldState> _scaffoldKey;
 
   List<ProductEntry> recently = [];
   List<ProductEntry> products = [];
@@ -45,6 +51,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
   UsersModel usersModel;
   int userID;
   bool reg;
+  bool hasNewMessages = false;
+
+  Function setHasNewMessages;
+
   _ConsumerHomePageState(this.reg);
 
   Future<ProductEntry> getProductByIdCallback(int id) async {
@@ -101,17 +111,357 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     });
   }
 
+  Timer _timer;
+
   @override
   void initState() {
     super.initState();
+    setHasNewMessages = (bool status) {
+      setState(() {
+        this.hasNewMessages = status;
+      });
+    };
+    final _tmp = Provider.of<UsersModel>(context, listen: false);
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initiateCartRefresh();
     if (reg == true) showWelcomeDialog();
+    const time = const Duration(seconds: 30);
+    _timer = new Timer.periodic(time, (Timer t) {
+      requestGetChat(usr.id).then((rawData) {
+        List<int> partnerIDs = [];
+        List<int> chatIDs = [];
+        List<ChatInfo> chatInfo = [];
+        var tmp = jsonDecode(rawData);
+        for (var t in tmp) {
+          chatInfo.add(ChatInfo.fromJson(t));
+        }
+        for (var chat in chatInfo) {
+          partnerIDs.add(
+              (chat.idReciever != usr.id) ? chat.idReciever : chat.idSender);
+          chatIDs.add(chat.id);
+        }
+
+        int newunread = 0;
+        for (int index = 0; index < partnerIDs.length; index++) {
+          _tmp.getUserById(partnerIDs[index]).then((userRawData) {
+            requestChatID(usr.id, userRawData.id).then((chatID) {
+              requestLatestMessageFromChat(chatIDs[index]).then((value) {
+                // TODO CHECK IF RETURN IS NULL
+                var msg = ChatMessageInfo.fromJson(jsonDecode(value)[0]);
+                setState(() {
+                  hasNewMessages = hasNewMessages || msg.unread;
+                });
+              });
+            });
+          });
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
+  }
+
+  final keyCategories = GlobalKey<_ProductsForCategoryState>();
+
+  final _textController = new TextEditingController();
+  String hintDistance = "3";
+  String filterCategoryName;
+  var _currentCategorySelected = "Izaberite kategoriju...";
+  bool _value = false;
+  onSwitchValueChanged(bool value) {
+    setState(() {
+      _value = value;
+    });
+  }
+
+  void _FilterButtonPress() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter stateSetter) {
+            return SingleChildScrollView(
+                child: Container(
+              height: 480,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Lokacija',
+                            style: TextStyle(
+                                color: Color(DARK_GREY),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 15.0, bottom: 15.0, left: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 70,
+                          height: 55,
+                          child: TextField(
+                            controller: _textController,
+                            onChanged: (String value) {
+                              setState(() {
+                                if (value == "") {
+                                  hintDistance = "3";
+                                } else {
+                                  if (value == "0") {
+                                    hintDistance = "1";
+                                    value = "1";
+                                  } else {
+                                    hintDistance = value;
+                                  }
+                                }
+                              });
+                            },
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')),
+                            ],
+                            decoration: InputDecoration(
+                              hintText: '3',
+                              filled: true,
+                              fillColor: Color(LIGHT_GREY),
+                              border: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(5.0),
+                                  ),
+                                  borderSide: BorderSide.none),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text("km",
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          width: 282,
+                          height: 34,
+                          child: Text(
+                              "Prikazati proizvode dobavljača koji su udaljeni najviše $hintDistance km.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(BLACK),
+                                  fontFamily: 'Inter',
+                                  fontSize: 14)),
+                        ),
+                      ),
+                      SizedBox(),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Filteri',
+                            style: TextStyle(
+                                color: Color(DARK_GREY),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top: 5.0, right: 5.0),
+                            height: 60,
+                            child: Text('Kategorija:',
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 10.0, right: 5.0),
+                            height: 60,
+                            child: Text("Raspon cena ($CURRENCY):",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 3.0, right: 5.0),
+                            height: 60,
+                            child: Text("Proizvodi na akciji:",
+                                style: TextStyle(
+                                    color: Color(BLACK),
+                                    fontFamily: 'Inter',
+                                    fontSize: 14)),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 5.0),
+                            child: SizedBox(
+                              width: 240,
+                              height: 60,
+                              child: DropdownButtonFormField<String>(
+                                items: categoriesModel.categories
+                                    .map((Category t) {
+                                  return DropdownMenuItem<String>(
+                                      value: t.name, child: Text(t.name));
+                                }).toList(),
+                                onChanged: (String newCategorySelected) {
+                                  setState(() {
+                                    filterCategoryName = newCategorySelected;
+                                    _currentCategorySelected =
+                                        newCategorySelected;
+                                  });
+                                  ;
+                                },
+                                hint: Text(_currentCategorySelected),
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(5.0),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: 17.0, right: 17.0),
+                                child: Text("-",
+                                    style: TextStyle(
+                                        color: Color(BLACK),
+                                        fontFamily: 'Inter',
+                                        fontSize: 14)),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Switch(
+                              value: _value,
+                              activeColor: Color(BLACK),
+                              onChanged: (bool value) {
+                                stateSetter(() => onSwitchValueChanged(value));
+                              }),
+                          SizedBox(
+                            width: 86,
+                            height: 40,
+                            // ignore: deprecated_member_use
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              color: Color(LIGHT_GREY),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Primeni',
+                                  style: TextStyle(
+                                      color: Color(BLACK),
+                                      fontFamily: 'Inter',
+                                      fontSize: 14)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                    ],
+                  )
+                ],
+              ),
+            ));
+          });
+        });
+  }
+
+  editUserCallback(User u) {
+    final _tmp = Provider.of<UsersModel>(context, listen: false);
+    setState(() {
+      _tmp.user = u;
+    });
   }
 
   @override
@@ -124,17 +474,35 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       home: DefaultTabController(
         length: menuItems.length,
         child: Scaffold(
+          floatingActionButton: Container(
+            height: 70.0,
+            width: 70.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                onPressed: () {
+                  _FilterButtonPress();
+                },
+                child: SvgPicture.asset('assets/icons/Filters.svg',
+                    width: 24, height: 24),
+                backgroundColor: Color(LIGHT_GREY),
+              ),
+            ),
+          ),
           key: _scaffoldKey,
           drawer: usersModel.isLoading
               ? LinearProgressIndicator()
               : HomeDrawer(
                   context,
-                  usersModel.user,
+                  usr,
                   refreshProductsCallback,
                   getProductByIdCallback,
                   incrementCart,
-                  usersModel.getUserById), //TODO context
+                  usersModel.getUserById,
+                  hasNewMessages,
+                  setHasNewMessages,
+                  editUserCallback), //TODO context
           appBar: AppBar(
+            centerTitle: true,
             automaticallyImplyLeading: false,
             toolbarHeight: 160,
             flexibleSpace: Container(
@@ -151,12 +519,20 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             child: IconButton(
                                 padding: EdgeInsets.all(0),
                                 icon: SvgPicture.asset(
-                                    'assets/icons/DotsNine.svg',
-                                    width: 36,
-                                    height: 36),
+                                  'assets/icons/DotsNine.svg',
+                                  width: 36,
+                                  height: 36,
+                                  color: Color(FOREGROUND),
+                                ),
                                 onPressed: () {
                                   _scaffoldKey.currentState.openDrawer();
                                 })),
+                        Spacer(),
+                        SizedBox(
+                          width: 48,
+                        ),
+                        SvgPicture.asset(
+                            'assets/icons/KotaricaIconMonochrome.svg'),
                         Spacer(),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -228,11 +604,19 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                             borderSide: BorderSide.none),
                       ),
                       onEditingComplete: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    SearchPage(query: this.query)));
+                        productsModel.getQueryProducts(this.query);
+                        if (keyCategories.currentState != null)
+                          keyCategories.currentState.setQuery(this.query);
+                        // Navigator.push(
+                        //     context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => new MultiProvider(
+                        //           providers: [
+                        //             ChangeNotifierProvider<ProductsModel>(
+                        //                 create: (_) => ProductsModel.fromQuery(this.query)),
+                        //           ],
+                        //           child: SearchPage(
+                        //               query: this.query,))),);
                       },
                     ),
                   ],
@@ -240,38 +624,42 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               )),
             ),
             bottom: TabBar(
-                indicatorColor: Colors.black,
+                indicatorColor: Color(FOREGROUND),
                 labelPadding: EdgeInsets.all(8),
                 tabs: List.generate(menuItems.length, (index) {
                   return Text(
                     menuItems[index],
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      color: Colors.black,
+                      color: Color(FOREGROUND),
                       fontSize: 16,
                     ),
                   );
                 })),
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
           ),
           body: Stack(
             children: [
               TabBarView(
                 children: [
                   SingleChildScrollView(
+                    child: Container(
+                      color: Color(BACKGROUND),
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Color(DARK_GREY),
                               ),
                             )
-                          : HomeContent()),
+                          : HomeContent(),
+                    ),
+                  ),
                   SingleChildScrollView(
                       child: category == -1
                           ? (categoriesModel.isLoading
                               ? Center(
                                   child: LinearProgressIndicator(
-                                    backgroundColor: Colors.grey,
+                                    backgroundColor: Color(DARK_GREY),
                                   ),
                                 )
                               : Categories(categoriesModel.categories))
@@ -283,6 +671,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                       create: (_) => UsersModel()),
                                 ],
                               child: ProductsForCategory(
+                                query: this.query,
+                                key: keyCategories,
                                 category: category,
                                 categoryName:
                                     categoriesModel.categories[category].name,
@@ -293,10 +683,10 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                       child: productsModel.isLoading
                           ? Center(
                               child: LinearProgressIndicator(
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Color(DARK_GREY),
                               ),
                             )
-                          : BestDeals())
+                          : BestDeals(initiateCartRefresh))
                 ],
               ),
             ],
@@ -316,11 +706,14 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
-            'Preporučeno',
+            this.query == ""
+                ? 'Preporučeno'
+                : 'Pretraga: \"${(this.query.length > 10) ? this.query.substring(0, 10) + '...' : this.query}\"',
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 28,
-                color: Color(DARK_GREY),
+                color:
+                    FOREGROUND == 0xFFFFFFFF ? Colors.white : Color(DARK_GREY),
                 fontWeight: FontWeight.w700),
           ),
         ),
@@ -374,6 +767,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                         product.assetUrls,
                                                     name: product.name,
                                                     price: product.price,
+                                                    discountPercentage: product
+                                                        .discountPercentage,
                                                     classification:
                                                         product.classification,
                                                     quantifier:
@@ -467,6 +862,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                             .name,
                                                         price: recently[index]
                                                             .price,
+                                                        discountPercentage:
+                                                            recently[index]
+                                                                .discountPercentage,
                                                         classification:
                                                             recently[index]
                                                                 .classification,
@@ -515,16 +913,18 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     );
   }
 
-  Widget BestDeals() {
+  Widget BestDeals(VoidCallback initiateRefresh) {
     final size = MediaQuery.of(context).size;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Wrap(
-            children: List.generate(productsModel.products.length, (index) {
+            children:
+                List.generate(productsModel.discountedProducts.length, (index) {
               return InkWell(
                 onTap: () {},
                 child: Padding(
@@ -539,17 +939,61 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                           : (size.width - 60) / 2,
                       child: DiscountedProductEntryCard(
                           product: new DiscountedProductEntry(
-                              assetUrls:
-                                  productsModel.products[index].assetUrls,
-                              name: productsModel.products[index].name,
-                              price: productsModel.products[index].price,
+                              assetUrls: productsModel
+                                  .discountedProducts[index].assetUrls,
+                              name:
+                                  productsModel.discountedProducts[index].name,
+                              price: productsModel
+                                      .discountedProducts[index].price *
+                                  (1 -
+                                      productsModel.discountedProducts[index]
+                                              .discountPercentage /
+                                          100),
                               prevPrice:
-                                  productsModel.products[index].price * 2,
-                              classification:
-                                  productsModel.products[index].classification,
-                              quantifier:
-                                  productsModel.products[index].quantifier),
-                          onPressed: () {})),
+                                  productsModel.discountedProducts[index].price,
+                              classification: productsModel
+                                  .discountedProducts[index].classification,
+                              quantifier: productsModel
+                                  .discountedProducts[index].quantifier),
+                          onPressed: () {
+                            ProductEntry product =
+                                productsModel.discountedProducts[index];
+                            usersModel
+                                .getUserById(product.sellerId)
+                                .then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        new ChangeNotifierProvider(
+                                            create: (context) =>
+                                                ReviewsModel(product.id),
+                                            child: ProductEntryListing(
+                                                ProductEntryListingPage(
+                                                    assetUrls:
+                                                        product.assetUrls,
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    discountPercentage: product
+                                                        .discountPercentage,
+                                                    classification:
+                                                        product.classification,
+                                                    quantifier:
+                                                        product.quantifier,
+                                                    description: product.desc,
+                                                    id: product.id,
+                                                    userInfo: new UserInfo(
+                                                      profilePictureAssetUrl:
+                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                      fullName: 'Petar Nikolić',
+                                                      reputationNegative: 7,
+                                                      reputationPositive: 240,
+                                                    ),
+                                                    vendor: value),
+                                                incrementCart))),
+                              );
+                            });
+                          })),
                 ),
               );
             }),
@@ -624,10 +1068,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => new AlertDialog(
-          title: Center(child: Text("Čestitamo")),
+          title: Center(child: Text("Uspešna registracija")),
           content: Container(
             width: MediaQuery.of(context).size.width / 1.3,
-            height: MediaQuery.of(context).size.height / 2.5,
+            height: MediaQuery.of(context).size.height /
+                4.5, // TODO PROVJERITI VISINU
             decoration: new BoxDecoration(
               shape: BoxShape.rectangle,
               color: const Color(0xFFFFFF),
@@ -637,14 +1082,11 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "...and allows you to save your favorite items as well as have "
-                  "access to other premium features. If you'd like to just "
-                  "browse blabla then click \"Enter "
-                  "without Login\".",
+                  "Uživajte u kupovini!",
                   maxLines: 6,
                   overflow: TextOverflow.visible,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Color(FOREGROUND),
                     fontSize: 18.0,
                     fontFamily: 'Inter',
                   ),
@@ -665,5 +1107,256 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
         ),
       );
     });
+  }
+}
+
+class ProductsForCategory extends StatefulWidget {
+  ProductsForCategory(
+      {this.query,
+      this.category,
+      this.categoryName,
+      this.callback,
+      this.initiateRefresh,
+      Key key})
+      : super(key: key);
+  int category;
+  Function callback;
+  String categoryName;
+  VoidCallback initiateRefresh;
+  String query;
+  @override
+  _ProductsForCategoryState createState() => _ProductsForCategoryState(
+      category: category,
+      categoryName: categoryName,
+      callback: callback,
+      initiateRefresh: initiateRefresh,
+      query: query);
+}
+
+class _ProductsForCategoryState extends State<ProductsForCategory> {
+  _ProductsForCategoryState(
+      {this.query,
+      this.category,
+      this.categoryName,
+      this.callback,
+      this.initiateRefresh});
+  List<ProductEntry> products;
+  int category;
+  Function callback;
+  String categoryName;
+  String query;
+  VoidCallback initiateRefresh;
+  var productsModel;
+  UsersModel usersModel;
+  var size;
+  void setQuery(String query) {
+    setState(() {
+      this.query = query;
+    });
+  }
+
+  //   productsModel.getQueryProducts(text);
+  //   //     .where((product) {
+  //   //   var productTitle = product.name.toLowerCase();
+  //   //   return productTitle.contains(text);
+  //   // }).toList();
+
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    productsModel = Provider.of<ProductsModel>(context);
+    usersModel = Provider.of<UsersModel>(context);
+    products = productsModel.productsForCategory.where((product) {
+      var productTitle = product.name.toLowerCase();
+      return productTitle.contains(query) ? true : false;
+    }).toList();
+
+    return productsModel.isLoading
+        ? Center(
+            child: LinearProgressIndicator(
+              backgroundColor: Color(DARK_GREY),
+            ),
+          )
+        : Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          'assets/icons/ArrowLeft.svg',
+                          height: ICON_SIZE,
+                          width: ICON_SIZE,
+                        ),
+                        onPressed: () {
+                          this.widget.callback(-1);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        categoryName,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 28,
+                            color: Color(DARK_GREY),
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Wrap(
+                    children: List.generate(products.length, (index) {
+                      return InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: (index + 1) % 2 == 0
+                              ? EdgeInsets.only(left: 10, bottom: 15)
+                              : EdgeInsets.only(right: 10, bottom: 15),
+                          child: SizedBox(
+                              width: (size.width - 60) / 2,
+                              child: products[index].discountPercentage == 0
+                                  ? ProductEntryCard(
+                                      product: products[index],
+                                      onPressed: () {
+                                        ProductEntry product = products[index];
+                                        usersModel
+                                            .getUserById(product.sellerId)
+                                            .then((value) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    new ChangeNotifierProvider(
+                                                        create: (context) =>
+                                                            ReviewsModel(
+                                                                product.id),
+                                                        child:
+                                                            ProductEntryListing(
+                                                                ProductEntryListingPage(
+                                                                    assetUrls:
+                                                                        product
+                                                                            .assetUrls,
+                                                                    name: product
+                                                                        .name,
+                                                                    price: product
+                                                                        .price,
+                                                                    discountPercentage:
+                                                                        product
+                                                                            .discountPercentage,
+                                                                    classification:
+                                                                        product
+                                                                            .classification,
+                                                                    quantifier:
+                                                                        product
+                                                                            .quantifier,
+                                                                    description:
+                                                                        product
+                                                                            .desc,
+                                                                    id:
+                                                                        product
+                                                                            .id,
+                                                                    userInfo:
+                                                                        new UserInfo(
+                                                                      profilePictureAssetUrl:
+                                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                                      fullName:
+                                                                          'Petar Nikolić',
+                                                                      reputationNegative:
+                                                                          7,
+                                                                      reputationPositive:
+                                                                          240,
+                                                                    ),
+                                                                    vendor:
+                                                                        value),
+                                                                initiateRefresh))),
+                                          );
+                                        });
+                                      })
+                                  : DiscountedProductEntryCard(
+                                      product: new DiscountedProductEntry(
+                                          assetUrls: products[index].assetUrls,
+                                          name: products[index].name,
+                                          price: products[index].price *
+                                              (1 -
+                                                  products[index]
+                                                          .discountPercentage /
+                                                      100),
+                                          prevPrice: products[index].price,
+                                          classification:
+                                              products[index].classification,
+                                          quantifier:
+                                              products[index].quantifier),
+                                      onPressed: () {
+                                        ProductEntry product = products[index];
+                                        usersModel
+                                            .getUserById(product.sellerId)
+                                            .then((value) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    new ChangeNotifierProvider(
+                                                        create: (context) =>
+                                                            ReviewsModel(
+                                                                product.id),
+                                                        child:
+                                                            ProductEntryListing(
+                                                                ProductEntryListingPage(
+                                                                    assetUrls:
+                                                                        product
+                                                                            .assetUrls,
+                                                                    name: product
+                                                                        .name,
+                                                                    price: product
+                                                                        .price,
+                                                                    discountPercentage:
+                                                                        product
+                                                                            .discountPercentage,
+                                                                    classification:
+                                                                        product
+                                                                            .classification,
+                                                                    quantifier:
+                                                                        product
+                                                                            .quantifier,
+                                                                    description:
+                                                                        product
+                                                                            .desc,
+                                                                    id:
+                                                                        product
+                                                                            .id,
+                                                                    userInfo:
+                                                                        new UserInfo(
+                                                                      profilePictureAssetUrl:
+                                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                                      fullName:
+                                                                          'Petar Nikolić',
+                                                                      reputationNegative:
+                                                                          7,
+                                                                      reputationPositive:
+                                                                          240,
+                                                                    ),
+                                                                    vendor:
+                                                                        value),
+                                                                initiateRefresh))),
+                                          );
+                                        });
+                                      })),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }

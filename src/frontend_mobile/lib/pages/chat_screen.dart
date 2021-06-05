@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/pages/inbox.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
+import '../config.dart';
+import '../internals.dart';
+import '../config.dart';
+import '../internals.dart';
+import 'inbox.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatUser user;
@@ -84,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
       decoration: BoxDecoration(
         gradient: isMe
-            ? LinearGradient(colors: [Colors.white, Colors.white])
+            ? LinearGradient(colors: [Color(BACKGROUND), Color(BACKGROUND)])
             : LinearGradient(colors: <Color>[Color(MINT), Color(TEAL)]),
         borderRadius: isMe
             ? BorderRadius.only(
@@ -103,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Text(message.text,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: isMe ? Colors.black : Colors.white,
+                  color: isMe ? Color(FOREGROUND) : Color(BACKGROUND),
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600)),
           SizedBox(
@@ -113,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
             message.time,
             style: TextStyle(
               fontFamily: 'Inter',
-              color: isMe ? Colors.black : Colors.white,
+              color: isMe ? Color(FOREGROUND) : Color(BACKGROUND),
               fontSize: 14.0,
             ),
           ),
@@ -128,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 80.0,
-      color: Colors.white,
+      color: Color(BACKGROUND),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -169,9 +171,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     text: tmpMessage,
                     unread: false);
 
-                messageList[indexToUpdate] = tmpmsg;
+                if (messageList != null) messageList[indexToUpdate] = tmpmsg;
 
-                updateLastMessage();
+                if (updateLastMessage != null) updateLastMessage();
 
                 setState(() {
                   messages.add(tmpmsg);
@@ -186,6 +188,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     unread: true);
                 publishMessage(tmpmsgpub).then((value) =>
                     print('Response value:${value.statusCode.toString()}'));
+                _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                // TODO NOTIFY ON MESSAGE DELIVERY FAILURE
                 txt.text = '';
               }
             },
@@ -195,15 +199,18 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  ScrollController _scroll = new ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scroll.jumpTo(_scroll.position.maxScrollExtent);
+    });
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 95,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(BACKGROUND),
         leading: IconButton(
             icon: SvgPicture.asset('assets/icons/ArrowLeft.svg'),
             onPressed: () {
@@ -216,7 +223,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  color: Colors.black,
+                  color: Color(FOREGROUND),
                   width: 60,
                   height: 60,
                   child: Image.network(widget.user.photoUrl),
@@ -226,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 widget.user.name,
                 style: TextStyle(
                     fontFamily: 'Inter',
-                    color: Colors.black,
+                    color: Color(FOREGROUND),
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold),
               ),
@@ -246,7 +253,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: ClipRRect(
                     child: ListView.builder(
-                        //reverse: true,
+                        controller: _scroll,
+                        dragStartBehavior: DragStartBehavior.down,
                         padding: EdgeInsets.only(top: 25.0),
                         itemCount: messages.length,
                         itemBuilder: (BuildContext context, int index) {

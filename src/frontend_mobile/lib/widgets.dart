@@ -3,24 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/main.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
-import 'package:frontend_mobile/pages/help_and_support.dart';
-import 'package:frontend_mobile/pages/my_account.dart';
-import 'package:frontend_mobile/pages/my_products.dart';
-import 'package:frontend_mobile/pages/new_product.dart';
-import 'package:frontend_mobile/pages/not_yet_delivered.dart';
-import 'package:frontend_mobile/pages/orders_history.dart';
-import 'package:frontend_mobile/pages/product_entry_listing.dart';
-import 'package:frontend_mobile/pages/settings.dart';
-import 'package:frontend_mobile/pages/welcome.dart';
+import './config.dart';
+import './internals.dart';
+import './main.dart';
+import './models/ordersModel.dart';
+import './pages/help_and_support.dart';
+import './pages/my_account.dart';
+import './pages/my_products.dart';
+import './pages/new_product.dart';
+import './pages/not_yet_delivered.dart';
+import './pages/orders_history.dart';
+import './pages/product_entry_listing.dart';
+import './pages/settings.dart';
+import './pages/welcome.dart';
 import 'package:provider/provider.dart';
 import 'models/productsModel.dart';
 import 'models/reviewsModel.dart';
-import 'package:frontend_mobile/pages/chat_screen.dart';
-import 'package:frontend_mobile/pages/inbox.dart';
+import './pages/chat_screen.dart';
+import './pages/inbox.dart';
 import './sizer_helper.dart'
     if (dart.library.html) './sizer_web.dart'
     if (dart.library.io) './sizer_io.dart';
@@ -54,7 +54,7 @@ class ButtonFill extends TextButton {
                         ? Row(children: [
                             SvgPicture.asset(
                               iconPath,
-                              color: Colors.white,
+                              color: Color(BACKGROUND),
                               width: ICON_SIZE,
                               height: ICON_SIZE,
                             ),
@@ -73,7 +73,7 @@ class ButtonFill extends TextButton {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
-                                color: Colors.white))
+                                color: Color(BACKGROUND)))
                         : SizedBox.shrink(),
                     Spacer()
                   ],
@@ -111,7 +111,7 @@ class ButtonOutline extends TextButton {
                   child: Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        color: Colors.white,
+                        color: Color(BACKGROUND),
                         borderRadius: BorderRadius.all(Radius.circular(2))),
                     child: Row(
                       children: [
@@ -158,56 +158,65 @@ class ButtonOutline extends TextButton {
 class _PasswordFieldState extends State<PasswordField> {
   final ValueChanged<String> onChange;
   final String hintText;
+  final VoidCallback onSubmitted;
   bool _obscureText = true;
   String password;
   double textFieldHeight = BUTTON_HEIGHT;
-  _PasswordFieldState(this.onChange, this.hintText);
+  _PasswordFieldState(this.onChange, this.hintText, this.onSubmitted);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         height: textFieldHeight,
         width: MediaQuery.of(context).size.width,
-        child: Stack(children: [
-          Container(
+        child: Container(
             height: textFieldHeight,
             width: MediaQuery.of(context).size.width,
-            child: TextFormField(
-              onChanged: onChange,
-              validator: (value) {
-                if (value == null || value.isEmpty || value.length < 6) {
-                  setState(() {
-                    textFieldHeight = BUTTON_HEIGHT + 20;
-                  });
-                  return 'Privatni ključ je neispravan';
-                } else {
-                  setState(() {
-                    textFieldHeight = BUTTON_HEIGHT;
-                  });
-                }
-                return null;
-              },
-              onSaved: (val) => password = val,
-              obscureText: _obscureText,
-              style: TextStyle(
-                  color: Color(DARK_GREY), fontFamily: 'Inter', fontSize: 16),
-              decoration: InputDecoration(
-                hintText: hintText,
-                filled: true,
-                fillColor: Color(LIGHT_GREY),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(5.0)),
+            child: Row(children: [
+              Expanded(
+                child: TextFormField(
+                  onFieldSubmitted: (value) {
+                    onSubmitted();
+                  },
+                  onChanged: onChange,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 6) {
+                      setState(() {
+                        textFieldHeight = BUTTON_HEIGHT + 20;
+                      });
+                      return 'Privatni ključ je neispravan';
+                    } else {
+                      setState(() {
+                        textFieldHeight = BUTTON_HEIGHT;
+                      });
+                    }
+                    return null;
+                  },
+                  onSaved: (val) => password = val,
+                  obscureText: _obscureText,
+                  style: TextStyle(
+                      color: Color(DARK_GREY),
+                      fontFamily: 'Inter',
+                      fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    filled: true,
+                    fillColor: Color(LIGHT_GREY),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Row(
-            children: [
-              Spacer(),
+              SizedBox(
+                width: 20,
+              ),
               SizedBox(
                 height: BUTTON_HEIGHT,
                 width: BUTTON_HEIGHT,
                 child: TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Color(LIGHT_GREY)),
                   onPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -221,18 +230,18 @@ class _PasswordFieldState extends State<PasswordField> {
                   ),
                 ),
               )
-            ],
-          )
-        ]));
+            ])));
   }
 }
 
 class PasswordField extends StatefulWidget {
   final ValueChanged<String> onChange;
   final String hintText;
-  PasswordField(this.onChange, this.hintText);
+  final VoidCallback onSubmitted;
+  PasswordField(this.onChange, this.hintText, [this.onSubmitted]);
   @override
-  _PasswordFieldState createState() => _PasswordFieldState(onChange, hintText);
+  _PasswordFieldState createState() =>
+      _PasswordFieldState(onChange, hintText, onSubmitted);
 }
 
 class DatePickerPopup extends StatefulWidget {
@@ -320,7 +329,7 @@ class _DatePickerState extends State<DatePickerPopup> {
                           'Potvrdi',
                           style: TextStyle(
                               fontFamily: 'Inter',
-                              color: Colors.black,
+                              color: Color(FOREGROUND),
                               fontSize: 16),
                         ),
                       ),
@@ -337,6 +346,7 @@ class _DatePickerState extends State<DatePickerPopup> {
 }
 
 class ProductEntryCard extends GestureDetector {
+  String unit = '';
   ProductEntryCard({VoidCallback onPressed, ProductEntry product})
       : super(
             onTap: onPressed,
@@ -371,9 +381,9 @@ class ProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.price.toStringAsFixed(2) +
-                                ' €' +
-                                ' (' +
+                            (product.price.toStringAsFixed(2) +
+                                CURRENCY +
+                                '\n' +
                                 product.quantifier.toString() +
                                 ' ' +
                                 ((product.classification ==
@@ -382,8 +392,7 @@ class ProductEntryCard extends GestureDetector {
                                     : ((product.classification ==
                                             Classification.Weight)
                                         ? 'gr'
-                                        : 'kom')) +
-                                ')',
+                                        : 'kom'))),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
@@ -435,7 +444,7 @@ class DiscountedProductEntryCard extends GestureDetector {
                       child: Row(
                         children: [
                           Text(
-                            product.prevPrice.toStringAsFixed(2),
+                            product.prevPrice.toStringAsFixed(2) + '$CURRENCY',
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'Inter',
@@ -450,17 +459,15 @@ class DiscountedProductEntryCard extends GestureDetector {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       product.price.toStringAsFixed(2) +
-                          ' €' +
-                          ' (' +
+                          CURRENCY +
+                          '\n' +
                           product.quantifier.toString() +
-                          ' ' +
                           ((product.classification == Classification.Volume)
                               ? 'ml'
                               : ((product.classification ==
                                       Classification.Weight)
                                   ? 'gr'
-                                  : 'kom')) +
-                          ')',
+                                  : 'kom')),
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
@@ -489,7 +496,7 @@ class DrawerOption extends StatelessWidget {
         children: [
           SvgPicture.asset(
             this.iconUrl,
-            color: Colors.white,
+            color: Color(BACKGROUND),
           ),
           SizedBox(
             width: 15,
@@ -497,7 +504,7 @@ class DrawerOption extends StatelessWidget {
           Text(
             this.text,
             style: TextStyle(
-                fontFamily: 'Inter', color: Colors.white, fontSize: 16),
+                fontFamily: 'Inter', color: Color(BACKGROUND), fontSize: 16),
           ),
           SizedBox(
             height: 65,
@@ -524,7 +531,7 @@ class SettingsOption extends StatelessWidget {
         decoration: BoxDecoration(
             //border: Border.all(color: Color(DARK_GREY)),
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.white),
+            color: Color(BACKGROUND)),
         child: Row(
           children: [
             SizedBox(
@@ -537,7 +544,7 @@ class SettingsOption extends StatelessWidget {
             Text(
               this.text,
               style: TextStyle(
-                  fontFamily: "Inter", fontSize: 15, color: Colors.black),
+                  fontFamily: "Inter", fontSize: 15, color: Color(FOREGROUND)),
             ),
             Spacer(),
             Icon(Icons.arrow_forward_ios_outlined),
@@ -586,7 +593,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                         borderRadius: BorderRadius.circular(40),
                         child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: Color(FOREGROUND),
                             ),
                             child: Image.network(
                               usersModel.user.photoUrl,
@@ -611,7 +618,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                               fontSize: 14,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w800,
-                              color: Colors.black)),
+                              color: Color(FOREGROUND))),
                       SizedBox(
                         height: 5,
                       ),
@@ -661,7 +668,14 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Pre 1 dan",
+                      Text(
+                          (widget.review.date.year == DateTime.now().year &&
+                                  (widget.review.date.month ==
+                                          DateTime.now().month &&
+                                      widget.review.date.day ==
+                                          DateTime.now().day)
+                              ? '${widget.review.date.hour.toString().padLeft(2, '0')}:${widget.review.date.minute.toString().padLeft(2, '0')}'
+                              : '${widget.review.date.day}.${widget.review.date.month}.${widget.review.date.year}.'),
                           style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'Inter',
@@ -675,148 +689,6 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                 height: 20,
               )
             ],
-          );
-  }
-}
-
-class ProductsForCategory extends StatefulWidget {
-  ProductsForCategory(
-      {this.category, this.categoryName, this.callback, this.initiateRefresh});
-  int category;
-  Function callback;
-  String categoryName;
-  VoidCallback initiateRefresh;
-  @override
-  _ProductsForCategoryState createState() => _ProductsForCategoryState(
-      category: category,
-      categoryName: categoryName,
-      callback: callback,
-      initiateRefresh: initiateRefresh);
-}
-
-class _ProductsForCategoryState extends State<ProductsForCategory> {
-  _ProductsForCategoryState(
-      {this.category, this.categoryName, this.callback, this.initiateRefresh});
-  List<ProductEntry> products;
-  int category;
-  Function callback;
-  String categoryName;
-  VoidCallback initiateRefresh;
-  var productsModel;
-  UsersModel usersModel;
-  var size;
-
-  @override
-  Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
-    productsModel = Provider.of<ProductsModel>(context);
-    usersModel = Provider.of<UsersModel>(context);
-    products = productsModel.productsForCategory;
-
-    return productsModel.isLoading
-        ? Center(
-            child: LinearProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          )
-        : Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/icons/ArrowLeft.svg',
-                          height: ICON_SIZE,
-                          width: ICON_SIZE,
-                        ),
-                        onPressed: () {
-                          this.widget.callback(-1);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        categoryName,
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 28,
-                            color: Color(DARK_GREY),
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Wrap(
-                    children: List.generate(products.length, (index) {
-                      return InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: (index + 1) % 2 == 0
-                              ? EdgeInsets.only(left: 10, bottom: 15)
-                              : EdgeInsets.only(right: 10, bottom: 15),
-                          child: SizedBox(
-                              width: (size.width - 60) / 2,
-                              child: ProductEntryCard(
-                                  product: products[index],
-                                  onPressed: () {
-                                    ProductEntry product = products[index];
-                                    usersModel
-                                        .getUserById(product.sellerId)
-                                        .then((value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                new ChangeNotifierProvider(
-                                                    create: (context) =>
-                                                        ReviewsModel(
-                                                            product.id),
-                                                    child: ProductEntryListing(
-                                                        ProductEntryListingPage(
-                                                            assetUrls: product
-                                                                .assetUrls,
-                                                            name: product.name,
-                                                            price:
-                                                                product.price,
-                                                            classification: product
-                                                                .classification,
-                                                            quantifier: product
-                                                                .quantifier,
-                                                            description:
-                                                                product.desc,
-                                                            id: product.id,
-                                                            userInfo:
-                                                                new UserInfo(
-                                                              profilePictureAssetUrl:
-                                                                  'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-                                                              fullName:
-                                                                  'Petar Nikolić',
-                                                              reputationNegative:
-                                                                  7,
-                                                              reputationPositive:
-                                                                  240,
-                                                            ),
-                                                            vendor: value),
-                                                        initiateRefresh))),
-                                      );
-                                    });
-                                  })),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ],
-            ),
           );
   }
 }
@@ -850,14 +722,14 @@ class CategoryEntry extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(LIGHT_GREY),
                   shadows: <Shadow>[
-                    Shadow(blurRadius: 28, color: Colors.black),
-                    Shadow(blurRadius: 26, color: Colors.black),
-                    Shadow(blurRadius: 24, color: Colors.black),
-                    Shadow(blurRadius: 20, color: Colors.black),
-                    Shadow(blurRadius: 18, color: Colors.black),
-                    Shadow(blurRadius: 16, color: Colors.black),
-                    Shadow(blurRadius: 14, color: Colors.black),
-                    Shadow(blurRadius: 12, color: Colors.black),
+                    Shadow(blurRadius: 28, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 26, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 24, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 20, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 18, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 16, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 14, color: Color(FOREGROUND)),
+                    Shadow(blurRadius: 12, color: Color(FOREGROUND)),
                   ])),
         ),
       ],
@@ -871,7 +743,10 @@ Widget HomeDrawer(
     void Function() refreshProductsCallback,
     Future<ProductEntry> Function(int id) getProductByIdCallback,
     VoidCallback initiateRefresh,
-    dynamic Function(int id) getUserById) {
+    dynamic Function(int id) getUserById,
+    bool hasMessages,
+    Function setHasNewMessages,
+    Function(User u) editUserCallback) {
   final sizer = getSizer();
   final size = MediaQuery.of(context).size;
   List<Widget> options = [
@@ -884,7 +759,7 @@ Widget HomeDrawer(
             borderRadius: BorderRadius.circular(30),
             child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Color(FOREGROUND),
                 ),
                 child: Image.network(
                   user.photoUrl,
@@ -909,7 +784,7 @@ Widget HomeDrawer(
                   : user.name,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Colors.white,
+                  color: Color(BACKGROUND),
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             ),
@@ -919,7 +794,7 @@ Widget HomeDrawer(
                   : user.surname,
               style: TextStyle(
                   fontFamily: 'Inter',
-                  color: Colors.white,
+                  color: Color(BACKGROUND),
                   fontSize: 19,
                   fontWeight: FontWeight.w800),
             )
@@ -927,60 +802,165 @@ Widget HomeDrawer(
         ),
       ],
     ),
+    Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text('PRODAJA',
+              style: TextStyle(
+                  color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
+          SizedBox(
+            width: 10,
+          ),
+          Flexible(
+              child: Container(
+                  decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(
+              //                    <--- top side
+              color: Color(BACKGROUND),
+              width: 1.0,
+            )),
+          ))),
+          SizedBox(
+            width: 10,
+          )
+        ],
+      ),
+      DrawerOption(
+          text: "Moji proizvodi",
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider<ProductsModel>(
+                                create: (_) => ProductsModel.forVendor(usr.id)),
+                          ],
+                          child: MyProducts(
+                              refreshProductsCallback, initiateRefresh))),
+            );
+          },
+          iconUrl: "assets/icons/Package.svg"),
+      DrawerOption(
+          text: "Na čekanju",
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new MultiProvider(providers: [
+                        ChangeNotifierProvider<OrdersModel>(
+                            create: (_) => OrdersModel(usr.id)),
+                      ], child: NotYetDelivered())),
+            );
+          },
+          iconUrl: "assets/icons/Clock.svg"),
+    ]),
+    Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('PORUČIVANJE',
+                style: TextStyle(
+                    color: Color(BACKGROUND),
+                    fontFamily: 'Inter',
+                    fontSize: 12)),
+            SizedBox(
+              width: 10,
+            ),
+            Flexible(
+                child: Container(
+                    decoration: BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+                //                    <--- top side
+                color: Color(BACKGROUND),
+                width: 1.0,
+              )),
+            ))),
+            SizedBox(
+              width: 10,
+            )
+          ],
+        ),
+        DrawerOption(
+            text: "Istorija narudžbi",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new ChangeNotifierProvider(
+                        create: (context) => OrdersModel(usr.id),
+                        child: OrdersHistory(
+                            getProductByIdCallback, initiateRefresh))),
+              );
+            },
+            iconUrl: "assets/icons/Newspaper.svg"),
+      ],
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text('OSTALO',
+            style: TextStyle(
+                color: Color(BACKGROUND), fontFamily: 'Inter', fontSize: 12)),
+        SizedBox(
+          width: 10,
+        ),
+        Flexible(
+            child: Container(
+                decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+            //                    <--- top side
+            color: Color(BACKGROUND),
+            width: 1.0,
+          )),
+        ))),
+        SizedBox(
+          width: 10,
+        )
+      ],
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        DrawerOption(
+            text: "Poruke",
+            onPressed: () {
+              setHasNewMessages(false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Inbox(getUserById)),
+              );
+            },
+            iconUrl: "assets/icons/Envelope.svg"),
+        SizedBox(
+          width: 6,
+        ),
+        (hasMessages)
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  color: Color(RED_ATTENTION),
+                ))
+            : SizedBox.shrink()
+      ],
+    ),
     DrawerOption(
         text: "Moj nalog",
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MyAccount(user: user)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MyAccount(
+                      user: user, editUserCallback: editUserCallback)));
         },
         iconUrl: "assets/icons/User.svg"),
-    DrawerOption(
-        text: "Moji proizvodi",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new MultiProvider(
-                        providers: [
-                          ChangeNotifierProvider<ProductsModel>(
-                              create: (_) => ProductsModel.forVendor(usr.id)),
-                        ],
-                        child: MyProducts(
-                            refreshProductsCallback, initiateRefresh))),
-          );
-        },
-        iconUrl: "assets/icons/Package.svg"),
-    DrawerOption(
-        text: "Na čekanju",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NotYetDelivered()),
-          );
-        },
-        iconUrl: "assets/icons/Clock.svg"),
-    DrawerOption(
-        text: "Poruke",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Inbox(getUserById)),
-          );
-        },
-        iconUrl: "assets/icons/Envelope.svg"),
-    DrawerOption(
-        text: "Istorija narudžbi",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new ChangeNotifierProvider(
-                    create: (context) => OrdersModel(usr.id),
-                    child: OrdersHistory(
-                        getProductByIdCallback, initiateRefresh))),
-          );
-        },
-        iconUrl: "assets/icons/Newspaper.svg"),
     DrawerOption(
         text: "Pomoć i podrška",
         onPressed: () {
@@ -1003,8 +983,11 @@ Widget HomeDrawer(
         text: "Odjavi se",
         onPressed: () {
           Prefs.instance.removeAll();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => new Welcome()));
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => new Welcome()),
+              (Route<dynamic> route) => false);
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => new Welcome()));
         },
         iconUrl: "assets/icons/SignOut.svg")
   ];
@@ -1013,36 +996,14 @@ Widget HomeDrawer(
     child: new Drawer(
         child: SingleChildScrollView(
       child: Container(
-          padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+          constraints: BoxConstraints(minHeight: size.height),
           color: Color(LIGHT_BLACK),
+          padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
           child: Column(
-              children: List.generate(
-                  ((!sizer.isWeb()) && size.width > size.height)
-                      ? ((options.length + 1) / 2.0).toInt()
-                      : options.length, (index) {
-            if ((!sizer.isWeb()) && size.width > size.height) {
-              return Row(
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 80,
-                    child: options[index * 2],
-                  ),
-                  Spacer(),
-                  (index * 2 + 1 >= options.length)
-                      ? SizedBox()
-                      : SizedBox(
-                          width: 200,
-                          height: 80,
-                          child: options[index * 2 + 1],
-                        ),
-                ],
-              );
-            } else {
-              return Column(
-                children: [options[index], SizedBox(height: 10)],
-              );
-            }
+              children: List.generate(options.length, (index) {
+            return Column(
+              children: [options[index], SizedBox(height: 10)],
+            );
           }).toList())),
     )),
   );

@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/internals.dart';
-import 'package:frontend_mobile/models/categoriesModel.dart';
-import 'package:frontend_mobile/models/ordersModel.dart';
+import 'package:http/http.dart';
+import 'package:web3dart/web3dart.dart';
+import './config.dart';
+import './internals.dart';
+import './models/categoriesModel.dart';
+import './models/ordersModel.dart';
 
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:frontend_mobile/pages/consumer_home.dart';
-import 'package:frontend_mobile/pages/welcome.dart';
+import './models/productsModel.dart';
+import './pages/consumer_home.dart';
+import './pages/welcome.dart';
 
 import 'package:provider/provider.dart';
 
@@ -15,10 +18,12 @@ import 'models/usersModel.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Prefs.instance.containsKey('privateKey').then((value) {
-    runApp(MaterialApp(
-      home: MyApp(value),
-    ));
+  Prefs.instance.containsKey('privateKey').then((priv) {
+    Prefs.instance.containsKey('accountAddress').then((pub) {
+      runApp(MaterialApp(
+        home: MyApp(priv || pub),
+      ));
+    });
   });
 }
 
@@ -52,21 +57,28 @@ class _SkipState extends State<Skip> {
     super.initState();
     Prefs.instance.getStringValue("privateKey").then((value1) {
       Prefs.instance.getStringValue("accountAddress").then((value2) {
-        Timer.run(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new MultiProvider(providers: [
-                      ChangeNotifierProvider<ProductsModel>(
-                          create: (_) => ProductsModel()),
-                      ChangeNotifierProvider<CategoriesModel>(
-                          create: (_) => CategoriesModel()),
-                      ChangeNotifierProvider<OrdersModel>(
-                          create: (_) => OrdersModel()),
-                      ChangeNotifierProvider<UsersModel>(
-                          create: (_) => UsersModel(value1, value2)),
-                    ], child: ConsumerHomePage())),
-          );
+        performPayment(value1, PUBLIC_KEY, wei: 1).then((value) {
+          Timer.run(() {
+            if (value) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new MultiProvider(providers: [
+                          ChangeNotifierProvider<ProductsModel>(
+                              create: (_) => ProductsModel()),
+                          ChangeNotifierProvider<CategoriesModel>(
+                              create: (_) => CategoriesModel()),
+                          ChangeNotifierProvider<UsersModel>(
+                              create: (_) => UsersModel(value1, value2)),
+                        ], child: ConsumerHomePage())),
+              );
+            } else {
+              Prefs.instance.removeAll();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => new Welcome()),
+                  (Route<dynamic> route) => false);
+            }
+          });
         });
       });
     });

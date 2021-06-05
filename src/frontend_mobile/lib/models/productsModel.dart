@@ -11,9 +11,11 @@ import '../internals.dart';
 
 class ProductsModel extends ChangeNotifier {
   List<ProductEntry> products = [];
+  List<ProductEntry> discountedProducts = [];
   List<ProductEntry> productsForCategory = [];
   int category = -1;
   int userId;
+  String query;
   final String _rpcUrl = "HTTP://" + HOST;
   final String _wsUrl = "ws://" + HOST;
 
@@ -37,7 +39,10 @@ class ProductsModel extends ChangeNotifier {
   ContractFunction _getProductById;
   ContractFunction _getSellerProductsCount;
   ContractFunction _getSellerProducts;
-
+  ContractFunction _getQueryProducts;
+  ContractFunction _getQueryProductsCount;
+  ContractFunction _setSale;
+  ContractFunction _removeProduct;
   ProductsModel([int c = -1]) {
     this.category = c;
     initiateSetup();
@@ -46,7 +51,18 @@ class ProductsModel extends ChangeNotifier {
     this.userId = id;
     initiateSetup();
   }
-  //ProductsModel(int c){this.category = c;}
+  int productId;
+  ProductEntry product;
+  ProductsModel.forId(int id){
+    this.productId = id;
+    initiateSetup();
+  }
+  List<ProductEntry> productsToDisplay = [];
+  int productsToDisplayCount;
+  ProductsModel.fromQuery(String query){
+    this.query = query;
+    initiateSetup();
+  }
   Future<void> initiateSetup() async {
     _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(_wsUrl).cast<String>();
@@ -84,43 +100,123 @@ class ProductsModel extends ChangeNotifier {
     _getProductById = _contract.function("getProductById");
     _getSellerProductsCount = _contract.function("getSellerProductsCount");
     _getSellerProducts = _contract.function("getSellerProducts");
-    if (userId != null)
+    _getQueryProducts = _contract.function("getQueryProducts");
+    _getQueryProductsCount = _contract.function("getQueryProductsCount");
+    _setSale = _contract.function("setSale");
+    _removeProduct = _contract.function("removeProduct");
+
+    if (productId != null){
+      product = await getProductById(productId);
+      isLoading = false;
+      notifyListeners();
+    }
+    else if (userId != null)
       products = await getSellersProducts(userId);
+    else if (query != null){
+      getQueryProducts(query);
+    }
     else {
       getProducts();
       getProductsForCategory(category);
     }
   }
+  getQueryProducts(String query) async {
 
+    isLoading = true;
+    notifyListeners();
+    List<ProductEntry> queryProducts = [];
+    List<ProductEntry> disQueryProducts = [];
+    List totalProductsList = await _client.call(
+        contract: _contract,
+        function: _getQueryProductsCount,
+        params: [query]);
+    BigInt totalProducts = totalProductsList[0];
+    int queryProductsCount = totalProducts.toInt();
+    var temp = await _client.call(
+        contract: _contract,
+        function: _getQueryProducts,
+        params: [query, totalProducts]);
+    for (int i = queryProductsCount - 1; i >= 0; i--) {
+      var t = temp[0][i];
+      //print(t);
+      if (t[4].toInt() == 0) {
+        queryProducts.add(ProductEntry(
+            id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            discountPercentage: t[4].toInt(),
+            categoryId: t[10].toInt(),
+            sellerId: t[9].toInt()));
+      }
+      else{
+        disQueryProducts.add(ProductEntry(
+            id: t[0].toInt(),
+            name: t[1],
+            price: t[2].toInt() / t[3].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            discountPercentage: t[4].toInt(),
+            categoryId: t[10].toInt(),
+            sellerId: t[9].toInt()));
+      }
+    }
+    productsCount = queryProductsCount;
+    products = queryProducts;
+    discountedProducts = disQueryProducts;
+    isLoading = false;
+    notifyListeners();
+   // return queryProducts;
+
+
+  }
   getProducts() async {
     List totalProductsList = await _client
         .call(contract: _contract, function: _productsCount, params: []);
     BigInt totalProducts = totalProductsList[0];
     productsCount = totalProducts.toInt();
     products.clear();
-
+    discountedProducts.clear();
     for (int i = productsCount - 1; i >= 0; i--) {
       var temp = await _client.call(
           contract: _contract, function: _products, params: [BigInt.from(i)]);
 
       //print(temp);
       double price = temp[2].toInt() / temp[3].toInt();
-      String assets = temp[4];
-      var list = temp[4].split(",").toList();
+      String assets = temp[5];
+      var list = temp[5].split(",").toList();
 
-      Classification classif = getClassification(temp[5].toInt());
-
-      products.add(ProductEntry(
-          id: temp[0].toInt(),
-          name: temp[1],
-          price: price,
-          assetUrls: list,
-          classification: classif,
-          quantifier: temp[6].toInt(),
-          desc: temp[7],
-          sellerId: temp[8].toInt()));
+      Classification classif = getClassification(temp[6].toInt());
+      if (temp[4].toInt() == 0) {
+        products.add(ProductEntry(
+            id: temp[0].toInt(),
+            name: temp[1],
+            price: price,
+            discountPercentage: temp[4].toInt(),
+            assetUrls: list,
+            classification: classif,
+            quantifier: temp[7].toInt(),
+            desc: temp[8],
+            sellerId: temp[9].toInt()));
+      }
+      else{
+        discountedProducts.add(ProductEntry(
+            id: temp[0].toInt(),
+            name: temp[1],
+            price: price,
+            discountPercentage: temp[4].toInt(),
+            assetUrls: list,
+            classification: classif,
+            quantifier: temp[7].toInt(),
+            desc: temp[8],
+            sellerId: temp[9].toInt()));
+      }
     }
-
     isLoading = false;
     notifyListeners();
   }
@@ -171,6 +267,7 @@ class ProductsModel extends ChangeNotifier {
                 name,
                 BigInt.from(numinator),
                 BigInt.from(denuminator),
+                BigInt.from(0),
                 assets,
                 BigInt.from(classification),
                 BigInt.from(quantifier),
@@ -209,11 +306,12 @@ class ProductsModel extends ChangeNotifier {
             id: t[0].toInt(),
             name: t[1],
             price: t[2].toInt() / t[3].toInt(),
-            assetUrls: t[4].split(",").toList(),
-            classification: getClassification(t[5].toInt()),
-            quantifier: t[6].toInt(),
-            desc: t[7],
-            sellerId: t[8].toInt()));
+            discountPercentage: t[4].toInt(),
+            assetUrls: t[5].split(",").toList(),
+            classification: getClassification(t[6].toInt()),
+            quantifier: t[7].toInt(),
+            desc: t[8],
+            sellerId: t[9].toInt()));
       }
       isLoading = false;
       notifyListeners();
@@ -221,7 +319,7 @@ class ProductsModel extends ChangeNotifier {
   }
 
   getProductById(int id) async {
-    isLoading = true;
+
     var temp = await _client.call(
         contract: _contract,
         function: _getProductById,
@@ -231,12 +329,13 @@ class ProductsModel extends ChangeNotifier {
         id: temp[0].toInt(),
         name: temp[1],
         price: temp[2].toInt() / temp[3].toInt(),
-        assetUrls: temp[4].split(",").toList(),
-        classification: getClassification(temp[5].toInt()),
-        quantifier: temp[6].toInt(),
-        desc: temp[7],
-        sellerId: temp[8].toInt());
-    isLoading = false;
+        discountPercentage: temp[4].toInt(),
+        assetUrls: temp[5].split(",").toList(),
+        classification: getClassification(temp[6].toInt()),
+        quantifier: temp[7].toInt(),
+        desc: temp[8],
+        sellerId: temp[9].toInt());
+
     return product;
   }
 
@@ -261,14 +360,55 @@ class ProductsModel extends ChangeNotifier {
           id: t[0].toInt(),
           name: t[1],
           price: t[2].toInt() / t[3].toInt(),
-          assetUrls: t[4].split(",").toList(),
-          classification: getClassification(t[5].toInt()),
-          quantifier: t[6].toInt(),
-          desc: t[7],
-          sellerId: t[8].toInt()));
+          discountPercentage: t[4].toInt(),
+          assetUrls: t[5].split(",").toList(),
+          classification: getClassification(t[6].toInt()),
+          quantifier: t[7].toInt(),
+          desc: t[8],
+          sellerId: t[9].toInt()));
     }
     isLoading = false;
     notifyListeners();
     return sellersProducts;
+  }
+  
+  setSale(int productId, int discountPercentage) async {
+    isLoading = true;
+    notifyListeners();
+    if(productId != null && discountPercentage!= null){
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _setSale,
+              parameters: [
+                BigInt.from(productId),
+                BigInt.from(discountPercentage)
+              ],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      products = await getSellersProducts(userId);
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+  removeProduct(int productId) async {
+    isLoading = true;
+    notifyListeners();
+    if(productId != null){
+      await _client.sendTransaction(
+          _credentials,
+          Transaction.callContract(
+              maxGas: 6721925,
+              contract: _contract,
+              function: _removeProduct,
+              parameters: [
+                BigInt.from(productId),
+              ],
+              gasPrice: EtherAmount.inWei(BigInt.one)));
+      products = await getSellersProducts(userId);
+      isLoading = false;
+      notifyListeners();
+    }
   }
 }
