@@ -27,18 +27,21 @@ class ProductEntryListing extends StatefulWidget {
   Function setSale;
   Function removeProduct;
   Function editProduct;
+  Function voteCallback;
   ProductEntryListing(
     ProductEntryListingPage productData,
     VoidCallback refreshInitiator, {
     void Function(int productId, int percentage) setSale,
     void Function(int productId) removeProduct,
     void Function(ProductEntry p) editProduct,
+        void Function(int id, int r) voteCallback
   }) {
     this._data = productData;
     this.refreshInitiator = refreshInitiator;
     this.setSale = setSale;
     this.removeProduct = removeProduct;
     this.editProduct = editProduct;
+    this.voteCallback = voteCallback;
   }
   @override
   State<StatefulWidget> createState() {
@@ -54,10 +57,25 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   VoidCallback refreshInitiator;
   ProductEntryListingPage _data;
   var reviewsModel;
+  UsersModel usersModel;
   Function setSale;
   Function removeProduct;
-  void newReviewCallback2(int productId, int rating, String desc, int userId) {
-    reviewsModel.addReview(productId, rating, desc, usr.id, DateTime.now());
+  void newReviewCallback2(int productId, int rating, String desc, int userId, int r) {
+    reviewsModel.addReview(productId, rating, desc, usr.id, DateTime.now()).then((value){
+      if (r != -1) {
+        widget.voteCallback(_data.vendor.id, r);
+      }
+    });
+    if (r == 0){
+      setState(() {
+        _data.vendor.reputationNegative++;
+      });
+    }
+    else if (r == 1){
+      setState(() {
+        _data.vendor.reputationPositive++;
+      });
+    }
   }
 
   void refreshPage(int discountPercentage) {
@@ -91,6 +109,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   @override
   Widget build(BuildContext context) {
     reviewsModel = Provider.of<ReviewsModel>(context);
+    //usersModel = Provider.of<UsersModel>(context);
     _data.averageReviewScore = reviewsModel.average;
     _data.numberOfReviews = reviewsModel.reviewsCount;
     return SafeArea(
@@ -515,7 +534,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                                     3),
                                                             child: Center(
                                                                 child: Text(
-                                                              _data.userInfo
+                                                              _data.vendor
                                                                   .reputationPositive
                                                                   .toString(),
                                                               style: TextStyle(
@@ -547,8 +566,7 @@ class _ProductEntryListing extends State<ProductEntryListing> {
                                                                     3),
                                                             child: Center(
                                                                 child: Text(
-                                                              // TODO ADD VENDOR REP
-                                                              _data.userInfo
+                                                              _data.vendor
                                                                   .reputationNegative
                                                                   .toString(),
                                                               style: TextStyle(

@@ -495,6 +495,9 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
       _tmp.user = u;
     });
   }
+  voteCallback(int id, int r){
+    usersModel.vote(id, r);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -572,7 +575,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                         SvgPicture.asset(
                             'assets/icons/KotaricaIconMonochrome.svg',
                             color: BACKGROUND == 0xFF000000
-                                ? Colors.white
+                                ? Colors.green[200]
                                 : Color(DARK_GREEN)),
                         Spacer(),
                         IconButton(
@@ -724,6 +727,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                     categoriesModel.categories[category].name,
                                 callback: this.callback,
                                 initiateRefresh: incrementCart,
+                                voteCallback: voteCallback,
                               ))),
                   SingleChildScrollView(
                       child: productsModel.isLoading
@@ -830,7 +834,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                       reputationPositive: 240,
                                                     ),
                                                     vendor: value),
-                                                incrementCart))),
+                                                incrementCart, voteCallback: voteCallback,))),
                               );
                             });
                           })),
@@ -932,7 +936,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                               240,
                                                         ),
                                                         vendor: value),
-                                                    initiateCartRefresh),
+                                                    initiateCartRefresh,
+                                                    voteCallback: voteCallback),
                                               )),
                                     );
                                   });
@@ -1037,7 +1042,8 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                                       reputationPositive: 240,
                                                     ),
                                                     vendor: value),
-                                                incrementCart))),
+                                                incrementCart,
+                                                voteCallback: voteCallback))),
                               );
                             });
                           })),
@@ -1172,6 +1178,7 @@ class ProductsForCategory extends StatefulWidget {
       this.getMin,
       this.getMax,
       this.getSort,
+        this.voteCallback,
       Key key})
       : super(key: key);
   int category;
@@ -1182,6 +1189,7 @@ class ProductsForCategory extends StatefulWidget {
   Function getMin;
   Function getMax;
   Function getSort;
+  Function voteCallback;
   @override
   _ProductsForCategoryState createState() => _ProductsForCategoryState(
       category: category,
@@ -1349,7 +1357,8 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                                                     ),
                                                                     vendor:
                                                                         value),
-                                                                initiateRefresh))),
+                                                                initiateRefresh,
+                                                                voteCallback: widget.voteCallback))),
                                           );
                                         });
                                       })
@@ -1418,7 +1427,8 @@ class _ProductsForCategoryState extends State<ProductsForCategory> {
                                                                     ),
                                                                     vendor:
                                                                         value),
-                                                                initiateRefresh))),
+                                                                initiateRefresh,
+                                                                voteCallback: widget.voteCallback))),
                                           );
                                         });
                                       })),

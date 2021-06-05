@@ -335,7 +335,8 @@ class User {
   String homeAddress;
   String birthday;
   int uType;
-  // TODO add rating
+  int reputationPositive;
+  int reputationNegative;
   User(
       {this.id,
       this.name,
@@ -348,7 +349,9 @@ class User {
       this.phoneNumber,
       this.homeAddress,
       this.birthday,
-      this.uType});
+      this.uType,
+      this.reputationPositive,
+      this.reputationNegative});
 }
 
 class Review {
@@ -453,7 +456,6 @@ class Order {
       this.price,
       this.deliveryDate});
 }
-
 String formattedDate = DateFormat('kk:mm').format(DateTime.now());
 
 ChatUserInfo chatUserInfoFromJson(String str) =>

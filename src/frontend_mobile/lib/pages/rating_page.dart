@@ -1,3 +1,4 @@
+import 'package:Kotarica/models/usersModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../config.dart';
@@ -29,6 +30,7 @@ class _RatingPage extends State<RatingPage> {
   String name;
   int productId;
   Function newReviewCallback;
+  bool isLiked = false, isDisliked = false;
   _RatingPage(this.productId, this.name, this.assetUrl, this.newReviewCallback);
   @override
   Widget build(BuildContext context) {
@@ -132,7 +134,50 @@ class _RatingPage extends State<RatingPage> {
                 ),
               ),
               SizedBox(
-                height: 150,
+                height: 15,
+              ),
+              Container(
+                color: Color(LIGHT_GREY),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text("Ocenite prodavca",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: Color(FOREGROUND)),),
+                      SizedBox(height: 15,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                isLiked ? isLiked = false : isLiked = true;
+                                isDisliked = false;
+                              });
+                            },
+                              child: Icon(Icons.thumb_up_alt_outlined,size: 35, color: isLiked ? Colors.green : Colors.black,)
+                          ),
+                          SizedBox(width: 20,),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                isDisliked ? isDisliked = false : isDisliked = true;
+                                isLiked = false;
+                              });
+                            },
+                              child: Icon(Icons.thumb_down_alt_outlined,size: 35, color: isDisliked ? Colors.deepOrangeAccent : Colors.black)
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 50,
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
@@ -147,7 +192,14 @@ class _RatingPage extends State<RatingPage> {
                               .checkForReview(usr.id, productId)
                               .then((value2) {
                             if (value2 == false) {
-                              newReviewCallback(_rating, desc);
+                              int r;
+                              if (isLiked)
+                                r = 1;
+                              else if (isDisliked)
+                                r = 0;
+                              else
+                                r = -1;
+                              newReviewCallback(_rating, desc, r);
                               int count = 0;
                               Navigator.of(context)
                                   .popUntil((_) => count++ >= 2);

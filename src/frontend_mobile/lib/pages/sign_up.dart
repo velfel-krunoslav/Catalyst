@@ -103,8 +103,7 @@ class _SignUpState extends State<SignUp> {
                                 email,
                                 phone_number,
                                 homeAddress,
-                                birthday,
-                                0)
+                                birthday)
                             .then((rez) {
                           Navigator.pushAndRemoveUntil(
                               context,

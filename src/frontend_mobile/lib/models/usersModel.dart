@@ -37,6 +37,7 @@ class UsersModel extends ChangeNotifier {
   ContractFunction _getUser;
   ContractFunction _getUserById;
   ContractFunction _editUser;
+  ContractFunction _vote;
 
   UsersModel([String privateKey = "", String accountAddress = ""]) {
     this.privateKey = privateKey;
@@ -80,6 +81,7 @@ class UsersModel extends ChangeNotifier {
     _getUser = _contract.function("getUser");
     _getUserById = _contract.function("getUserById");
     _editUser = _contract.function("editUser");
+    _vote = _contract.function("vote");
 
     if (privateKey != null &&
         privateKey != "" &&
@@ -119,8 +121,7 @@ class UsersModel extends ChangeNotifier {
       String _email,
       String _phoneNumber,
       String _homeAddress,
-      String _birthday,
-      int _uType) async {
+      String _birthday) async {
     isLoading = true;
 
     if (_privateKey != null && _metamaskAddress != null) {
@@ -142,7 +143,6 @@ class UsersModel extends ChangeNotifier {
                 _phoneNumber,
                 _homeAddress,
                 _birthday,
-                BigInt.from(_uType)
               ],
               gasPrice: EtherAmount.inWei(BigInt.one)));
 
@@ -177,7 +177,8 @@ class UsersModel extends ChangeNotifier {
         phoneNumber: temp[8],
         homeAddress: temp[9],
         birthday: temp[10],
-        uType: temp[11].toInt());
+        reputationPositive: temp[11][0].toInt(),
+        reputationNegative: temp[11][1].toInt());
 
     isLoading = false;
     notifyListeners();
@@ -201,7 +202,9 @@ class UsersModel extends ChangeNotifier {
         phoneNumber: temp[8],
         homeAddress: temp[9],
         birthday: temp[10],
-        uType: temp[11].toInt());
+        reputationPositive: temp[11][0].toInt(),
+        reputationNegative: temp[11][1].toInt(),
+    );
     isLoading = false;
     notifyListeners();
     return userr;
@@ -222,6 +225,22 @@ class UsersModel extends ChangeNotifier {
               _email,
               _phoneNumber,
               _homeAddress,
+            ],
+            gasPrice: EtherAmount.inWei(BigInt.one)));
+  }
+  vote(int productId, int vote) async {
+    print("-");
+    print(productId);
+    print(vote);
+    await _client.sendTransaction(
+        _credentials,
+        Transaction.callContract(
+            maxGas: 6721925,
+            contract: _contract,
+            function: _vote,
+            parameters: [
+              BigInt.from(productId),
+              BigInt.from(vote)
             ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
   }

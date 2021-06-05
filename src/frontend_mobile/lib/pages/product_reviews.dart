@@ -21,12 +21,12 @@ class ProductReviews extends StatelessWidget {
   Function newReviewCallback2;
   ProductReviews(
       this.productId, this.name, this.assetUrl, this.newReviewCallback2);
-  void newReviewCallback(int rating, String desc) {
-    newReviewCallback2(productId, rating, desc, usr.id);
+  void newReviewCallback(int rating, String desc, int r) {
+    newReviewCallback2(productId, rating, desc, usr.id, r);
   }
 
   @override
-  void init() {}
+  void initState() {}
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -71,6 +71,8 @@ class ProductReviews extends StatelessWidget {
                                           create: (_) => ReviewsModel(0)),
                                       ChangeNotifierProvider<OrdersModel>(
                                           create: (_) => OrdersModel()),
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
                                     ],
                                     child: RatingPage(productId, name, assetUrl,
                                         newReviewCallback))),
