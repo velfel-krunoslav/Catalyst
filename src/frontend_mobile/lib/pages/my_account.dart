@@ -219,7 +219,9 @@ class _MyAccountState extends State<MyAccount> {
                             width: 15,
                           ),
                           Text(
-                            (accBalance == null) ? '' : accBalance.toString(),
+                            (accBalance == null)
+                                ? ''
+                                : '${accBalance.toString()} ETH',
                             style: TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 17,

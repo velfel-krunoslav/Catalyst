@@ -91,12 +91,14 @@ class _ConsumerCartState extends State<ConsumerCart> {
                     cartQuantity: int.parse(ids[i][1]),
                     classification: pr.classification,
                     quantifier: pr.quantifier);
-                setState(() {
-                  products.add(p);
-                  quantities.add(int.parse(ids[i][1]));
-                  subtotal += (p.price * p.cartQuantity);
-                  total += (p.price * p.cartQuantity);
-                });
+                if (p.name != "") {
+                  setState(() {
+                    products.add(p);
+                    quantities.add(int.parse(ids[i][1]));
+                    subtotal += (p.price * p.cartQuantity);
+                    total += (p.price * p.cartQuantity);
+                  });
+                }
               });
             }
           });
