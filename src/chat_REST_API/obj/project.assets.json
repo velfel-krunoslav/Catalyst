@@ -1577,26 +1577,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mayab\\.nuget\\packages\\": {}
+    "/home/jovan/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Catalyst\\src\\chat_REST_API\\SignalR_chat_API.csproj",
+      "projectUniqueName": "/home/jovan/Catalyst/src/chat_REST_API/SignalR_chat_API.csproj",
       "projectName": "SignalR_chat_API",
-      "projectPath": "E:\\Catalyst\\src\\chat_REST_API\\SignalR_chat_API.csproj",
-      "packagesPath": "C:\\Users\\mayab\\.nuget\\packages\\",
-      "outputPath": "E:\\Catalyst\\src\\chat_REST_API\\obj\\",
+      "projectPath": "/home/jovan/Catalyst/src/chat_REST_API/SignalR_chat_API.csproj",
+      "packagesPath": "/home/jovan/.nuget/packages/",
+      "outputPath": "/home/jovan/Catalyst/src/chat_REST_API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\mayab\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/jovan/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net50"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1656,7 +1654,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/128/sdk/5.0.300/RuntimeIdentifierGraph.json"
       }
     }
   }

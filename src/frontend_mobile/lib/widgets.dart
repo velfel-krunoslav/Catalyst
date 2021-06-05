@@ -930,6 +930,16 @@ Widget HomeDrawer(
         )
       ],
     ),
+    DrawerOption(
+        text: "Moj nalog",
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MyAccount(
+                      user: user, editUserCallback: editUserCallback)));
+        },
+        iconUrl: "assets/icons/User.svg"),
     Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -957,16 +967,6 @@ Widget HomeDrawer(
             : SizedBox.shrink()
       ],
     ),
-    DrawerOption(
-        text: "Moj nalog",
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MyAccount(
-                      user: user, editUserCallback: editUserCallback)));
-        },
-        iconUrl: "assets/icons/User.svg"),
     DrawerOption(
         text: "Pomoć i podrška",
         onPressed: () {

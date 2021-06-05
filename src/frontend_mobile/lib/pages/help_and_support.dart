@@ -63,6 +63,7 @@ class _HelpSupportState extends State<HelpSupport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(BACKGROUND),
       appBar: AppBar(
           title: Text('Pomoć i podrška',
               style: TextStyle(
@@ -76,8 +77,7 @@ class _HelpSupportState extends State<HelpSupport> {
           leading: IconButton(
             icon: SvgPicture.asset(
               'assets/icons/ArrowLeft.svg',
-              height: ICON_SIZE,
-              width: ICON_SIZE,
+              color: Color(FOREGROUND),
             ),
             onPressed: () {
               _textController.text = '';
@@ -110,6 +110,7 @@ class _HelpSupportState extends State<HelpSupport> {
                               color: Color(LIGHT_GREY),
                               borderRadius: BorderRadius.circular(5)),
                           child: DropdownButton(
+                              dropdownColor: Color(LIGHT_GREY),
                               underline: Container(color: Colors.transparent),
                               icon: SvgPicture.asset(
                                   'assets/icons/ArrowDown.svg',
@@ -144,6 +145,8 @@ class _HelpSupportState extends State<HelpSupport> {
                 SizedBox(height: 10),
                 TextField(
                   controller: _textController,
+                  style:
+                      TextStyle(color: Color(DARK_GREY), fontFamily: 'Inter'),
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       //border: OutlineInputBorder(),
@@ -168,15 +171,14 @@ class _HelpSupportState extends State<HelpSupport> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Scaffold(
+                                        backgroundColor: Color(BACKGROUND),
                                         appBar: AppBar(
                                             backgroundColor: Color(BACKGROUND),
                                             elevation: 0.0,
                                             leading: IconButton(
                                               icon: SvgPicture.asset(
-                                                'assets/icons/ArrowLeft.svg',
-                                                height: ICON_SIZE,
-                                                width: ICON_SIZE,
-                                              ),
+                                                  'assets/icons/ArrowLeft.svg',
+                                                  color: Color(FOREGROUND)),
                                               onPressed: () {
                                                 int count = 0;
                                                 _textController.text = '';
@@ -190,9 +192,11 @@ class _HelpSupportState extends State<HelpSupport> {
                                                     ? 'Uspešno ste poslali upit!'
                                                     : 'Slanje upita neuspešno!',
                                                 style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w700,
                                                     fontFamily: 'Inter',
-                                                    color: Color(BLACK)))))));
+                                                    color:
+                                                        Color(FOREGROUND)))))));
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
