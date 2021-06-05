@@ -43,7 +43,8 @@ class _RatingPage extends State<RatingPage> {
         backgroundColor: Color(BACKGROUND),
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg", color: Color(FOREGROUND)),
+          icon: SvgPicture.asset("assets/icons/ArrowLeft.svg",
+              color: Color(FOREGROUND)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -142,34 +143,48 @@ class _RatingPage extends State<RatingPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Text("Ocenite prodavca",
+                      Text(
+                        "Ocenite prodavca",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
-                            color: Color(FOREGROUND)),),
-                      SizedBox(height: 15,),
+                            color: Color(FOREGROUND)),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
-                            onTap: (){
-                              setState(() {
-                                isLiked ? isLiked = false : isLiked = true;
-                                isDisliked = false;
-                              });
-                            },
-                              child: Icon(Icons.thumb_up_alt_outlined,size: 35, color: isLiked ? Colors.green : Colors.black,)
+                              onTap: () {
+                                setState(() {
+                                  isLiked ? isLiked = false : isLiked = true;
+                                  isDisliked = false;
+                                });
+                              },
+                              child: Icon(
+                                Icons.thumb_up_alt_outlined,
+                                size: 35,
+                                color: isLiked ? Colors.green : Colors.black,
+                              )),
+                          SizedBox(
+                            width: 20,
                           ),
-                          SizedBox(width: 20,),
                           InkWell(
-                            onTap: (){
-                              setState(() {
-                                isDisliked ? isDisliked = false : isDisliked = true;
-                                isLiked = false;
-                              });
-                            },
-                              child: Icon(Icons.thumb_down_alt_outlined,size: 35, color: isDisliked ? Colors.deepOrangeAccent : Colors.black)
-                          ),
+                              onTap: () {
+                                setState(() {
+                                  isDisliked
+                                      ? isDisliked = false
+                                      : isDisliked = true;
+                                  isLiked = false;
+                                });
+                              },
+                              child: Icon(Icons.thumb_down_alt_outlined,
+                                  size: 35,
+                                  color: isDisliked
+                                      ? Colors.deepOrangeAccent
+                                      : Colors.black)),
                         ],
                       ),
                     ],

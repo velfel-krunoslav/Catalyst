@@ -29,13 +29,11 @@ class ProductEntryListing extends StatefulWidget {
   Function editProduct;
   Function voteCallback;
   ProductEntryListing(
-    ProductEntryListingPage productData,
-    VoidCallback refreshInitiator, {
-    void Function(int productId, int percentage) setSale,
-    void Function(int productId) removeProduct,
-    void Function(ProductEntry p) editProduct,
-        void Function(int id, int r) voteCallback
-  }) {
+      ProductEntryListingPage productData, VoidCallback refreshInitiator,
+      {void Function(int productId, int percentage) setSale,
+      void Function(int productId) removeProduct,
+      void Function(ProductEntry p) editProduct,
+      void Function(int id, int r) voteCallback}) {
     this._data = productData;
     this.refreshInitiator = refreshInitiator;
     this.setSale = setSale;
@@ -60,18 +58,20 @@ class _ProductEntryListing extends State<ProductEntryListing> {
   UsersModel usersModel;
   Function setSale;
   Function removeProduct;
-  void newReviewCallback2(int productId, int rating, String desc, int userId, int r) {
-    reviewsModel.addReview(productId, rating, desc, usr.id, DateTime.now()).then((value){
+  void newReviewCallback2(
+      int productId, int rating, String desc, int userId, int r) {
+    reviewsModel
+        .addReview(productId, rating, desc, usr.id, DateTime.now())
+        .then((value) {
       if (r != -1) {
         widget.voteCallback(_data.vendor.id, r);
       }
     });
-    if (r == 0){
+    if (r == 0) {
       setState(() {
         _data.vendor.reputationNegative++;
       });
-    }
-    else if (r == 1){
+    } else if (r == 1) {
       setState(() {
         _data.vendor.reputationPositive++;
       });
@@ -998,8 +998,27 @@ class _PickerState extends State<Picker> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              getSizer().isWeb()
+                  ? Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () => setState(() {
+                            final newValue = _currentValue - 5;
+                            _currentValue = newValue.clamp(5, 95);
+                          }),
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () => setState(() {
+                                  final newValue = _currentValue + 5;
+                                  _currentValue = newValue.clamp(5, 95);
+                                })),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
-                width: 20,
+                width: 10,
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),

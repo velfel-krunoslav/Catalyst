@@ -202,7 +202,7 @@ class ProductReviews extends StatelessWidget {
                         ));
                   })),
                   SizedBox(
-                    height: 60,
+                    height: 120,
                   ),
                 ],
               ),
