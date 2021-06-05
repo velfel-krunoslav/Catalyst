@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/widgets.dart';
-import 'package:frontend_mobile/pages/login.dart';
-import 'package:frontend_mobile/pages/sign_up.dart';
+import '../config.dart';
+import '../widgets.dart';
+import '../pages/login.dart';
+import '../pages/sign_up.dart';
+import 'package:provider/provider.dart';
+import '../models/usersModel.dart';
 
 class Welcome extends StatelessWidget {
   @override
@@ -13,6 +15,7 @@ class Welcome extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(BACKGROUND),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -20,17 +23,8 @@ class Welcome extends StatelessWidget {
               Center(
                 //logo
                 child: Container(
-                  child: ShaderMask(
                     child:
-                        SvgPicture.asset('assets/icons/KotaricaLogomark.svg'),
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                          colors: [Color(MINT), Color(TEAL)],
-                          stops: [0.2, 0.7]).createShader(bounds);
-                    },
-                    blendMode: BlendMode.srcATop,
-                  ),
-                ),
+                        SvgPicture.asset('assets/icons/KotaricaLogomark.svg')),
               ), //end logo
               SizedBox(
                 height: 10,
@@ -42,7 +36,9 @@ class Welcome extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w800,
                     fontSize: 28,
-                    color: Color(DARK_GREEN)),
+                    color: BACKGROUND == 0xFF000000
+                        ? Colors.white
+                        : Color(DARK_GREEN)),
               ), //end title
 
               SizedBox(height: 40.0),
@@ -68,7 +64,14 @@ class Welcome extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new SignUp()),
+                                builder: (context) =>
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
+
+                                      // ChangeNotifierProvider<OrdersModel>(
+                                      //     create: (_) => OrdersModel()),
+                                    ], child: SignUp())),
                           );
                         },
                       ),
@@ -79,7 +82,11 @@ class Welcome extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new Login()),
+                                builder: (context) =>
+                                    new MultiProvider(providers: [
+                                      ChangeNotifierProvider<UsersModel>(
+                                          create: (_) => UsersModel()),
+                                    ], child: Login())),
                           );
                         },
                       )

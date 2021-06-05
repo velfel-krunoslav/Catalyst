@@ -35,7 +35,7 @@ class ReviewsModel extends ChangeNotifier {
   ContractFunction _getReviews;
   ContractFunction _countStars;
   ContractFunction _getReviewsCount;
-
+  ContractFunction _checkForReview;
   ReviewsModel(int productId) {
     this.productId = productId;
     initiateSetup();
@@ -54,8 +54,8 @@ class ReviewsModel extends ChangeNotifier {
     String abiStringFile = await rootBundle.loadString("src/abis/Reviews.json");
     var jsonAbi = jsonDecode(abiStringFile);
     _abiCode = jsonEncode(jsonAbi["abi"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonAbi["networks"]["5777"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonAbi["networks"][JSON_NETWORK_ATTR]["address"]);
   }
 
   Future<void> getCredentials() async {
@@ -74,13 +74,12 @@ class ReviewsModel extends ChangeNotifier {
     _getReviews = _contract.function("getReviews");
     _countStars = _contract.function("countStars");
     _getReviewsCount = _contract.function("getReviewsCount");
-
+    _checkForReview = _contract.function("checkForReview");
     await getReviews(productId);
-    await getAverage();
-    await getStars();
   }
 
   getReviews(int productId) async {
+    isLoading = true;
     List totalReviewsList = await _client.call(
         contract: _contract,
         function: _getReviewsCount,
@@ -95,36 +94,42 @@ class ReviewsModel extends ChangeNotifier {
 
     for (int i = 0; i < reviewsCount; i++) {
       var t = temp[0][i];
-      //print(t);
+      DateTime date = DateTime.parse(t[5]);
       reviews.add(Review(
           id: t[0].toInt(),
           userId: t[4].toInt(),
           desc: t[3],
           productId: t[1].toInt(),
-          rating: t[2].toInt()));
-    }
+          rating: t[2].toInt(),
+          date: date
+          ));
 
+    }
+    getAverage();
+    getStars();
     notifyListeners();
+    isLoading = false;
   }
 
-  addReview(int productId, int rating, String desc, int userId) async {
+  addReview(int productId, int rating, String desc, int userId, DateTime date) async {
     isLoading = true;
     notifyListeners();
-
+    String dateStr = date.toString();
     await _client.sendTransaction(
         _credentials,
         Transaction.callContract(
-            maxGas: 6721925,
+            maxGas: 6721975,
             contract: _contract,
             function: _createReview,
             parameters: [
               BigInt.from(productId),
               BigInt.from(rating),
               desc,
-              BigInt.from(userId)
+              BigInt.from(userId),
+              dateStr
             ],
             gasPrice: EtherAmount.inWei(BigInt.one)));
-    getReviews(productId);
+    await getReviews(productId);
   }
 
   getAverage() async {
@@ -151,4 +156,15 @@ class ReviewsModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+  checkForReview(int userId, int productId) async {
+
+    var temp = await _client.call(
+        contract: _contract,
+        function: _checkForReview,
+        params: [BigInt.from(userId), BigInt.from(productId)]);
+    print(temp[0]);
+    return temp[0];
+
+  }
+
 }

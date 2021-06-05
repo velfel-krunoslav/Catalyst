@@ -1,34 +1,50 @@
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_mobile/config.dart';
-import 'package:frontend_mobile/models/productsModel.dart';
-import 'package:provider/provider.dart';
-
+import '../config.dart';
+import '../image_picker_helper.dart'
+    if (dart.library.html) '../image_picker_web.dart'
+    if (dart.library.io) '../image_picker_io.dart';
 import '../internals.dart';
 import '../widgets.dart';
-import 'blank_page.dart';
-import 'consumer_home.dart';
+import '../internals.dart';
+
+class SuperImage {
+  Uint8List rawData;
+  String url;
+
+  SuperImage({this.rawData, this.url});
+}
 
 class NewProduct extends StatefulWidget {
   Function addProductCallback;
+
   NewProduct(this.addProductCallback);
 
   @override
   _NewProductState createState() => _NewProductState(this.addProductCallback);
 }
 
-String chosenValue;
-int selected;
-bool textFld = false;
+List<SuperImage> images = [];
+List<double> textFieldHeight = [
+  BUTTON_HEIGHT,
+  BUTTON_HEIGHT + 20,
+  BUTTON_HEIGHT,
+  BUTTON_HEIGHT,
+  BUTTON_HEIGHT,
+  BUTTON_HEIGHT
+];
 
-TextEditingController nameController = new TextEditingController();
-TextEditingController descriptionController = new TextEditingController();
-TextEditingController inStockController = new TextEditingController();
-int measure = 0;
-TextEditingController amountController = new TextEditingController();
-
+RegExp regNum = new RegExp(r"^[0-9]*$");
+RegExp regReal = new RegExp(r'^\d+(\.\d+)?$');
+String name, description;
+int selectedUnit, inStock, quantity, imgCount = 0;
+double price;
+Category selectedCategory;
+final _formKey = GlobalKey<FormState>();
+// TODO PULL CATEGORIES FROM BLOCKCHAIN
 List<Category> categories = [
   Category(id: 0, name: "Peciva", assetUrl: ""),
   Category(id: 1, name: "Suhomesnato", assetUrl: ""),
@@ -37,24 +53,29 @@ List<Category> categories = [
   Category(id: 4, name: "Bezalkoholna pića", assetUrl: ""),
   Category(id: 5, name: "Alkohol", assetUrl: ""),
   Category(id: 6, name: "Žita", assetUrl: ""),
-  Category(id: 7, name: "Živina", assetUrl: ""),
+  Category(id: 7, name: "Domaće životinje", assetUrl: ""),
   Category(id: 8, name: "Zimnice", assetUrl: ""),
   Category(id: 9, name: "Ostali proizvodi", assetUrl: "")
 ];
-Category selectedCategory;
-double price;
-List<String> images = [
-  "assets/product_listings/rakija_silverije_cc_by_sa.jpg",
-  "assets/product_listings/salami_pbkwee_by_sa.jpg"
-];
 
 class _NewProductState extends State<NewProduct> {
+  static GlobalKey<ScaffoldState> _scaffoldKey;
   Function addProductCallback;
   _NewProductState(this.addProductCallback);
+  bool isSetUnit = true;
+  bool isSetCategory = true;
+  bool isSetImages = true;
+  @override
+  void initState() {
+    super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Color(BACKGROUND),
         appBar: AppBar(
             title: Text('Novi proizvod',
                 style: TextStyle(
@@ -63,300 +84,579 @@ class _NewProductState extends State<NewProduct> {
                     fontWeight: FontWeight.w800,
                     color: Color(DARK_GREY))),
             centerTitle: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(BACKGROUND),
             elevation: 0.0,
             leading: IconButton(
-              icon: SvgPicture.asset(
-                'assets/icons/ArrowLeft.svg',
-                height: ICON_SIZE,
-                width: ICON_SIZE,
-              ),
+              icon: SvgPicture.asset('assets/icons/ArrowLeft.svg',
+                  color: Color(FOREGROUND)),
               onPressed: () {
                 Navigator.pop(context);
               },
             )),
         body: Center(
             child: SingleChildScrollView(
-                child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    child: Column(children: [
-                      Row(children: [
-                        Text('Naziv proizvoda:',
+                child: Form(
+          key: _formKey,
+          child: Container(
+              width: MediaQuery.of(context).size.width - 40,
+              child: Column(children: [
+                SizedBox(
+                  height: 24,
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Naziv proizvoda:',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Color(DARK_GREY))),
+                  SizedBox(
+                      height: textFieldHeight[0],
+                      child: TextFormField(
+                          maxLength: 30,
+                          maxLengthEnforced: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                textFieldHeight[0] = BUTTON_HEIGHT + 20;
+                              });
+                              return 'Obavezno polje';
+                            } else {
+                              setState(() {
+                                textFieldHeight[0] = BUTTON_HEIGHT;
+                              });
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            name = value;
+                          },
+                          style: TextStyle(
+                              fontFamily: 'Inter', color: Color(FOREGROUND)),
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(LIGHT_GREY),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(5.0)))))
+                ]),
+                SizedBox(height: 5),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Opis proizvoda: (do 200 reči)',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Color(DARK_GREY)),
+                      textAlign: TextAlign.left),
+                  SizedBox(
+                    height: textFieldHeight[1],
+                    child: TextFormField(
+                        style: TextStyle(
+                            fontFamily: 'Inter', color: Color(FOREGROUND)),
+                        maxLength: 200,
+                        maxLengthEnforced: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            setState(() {
+                              textFieldHeight[1] = BUTTON_HEIGHT + 20 + 20;
+                            });
+                            return 'Obavezno polje';
+                          } else {
+                            setState(() {
+                              textFieldHeight[1] = BUTTON_HEIGHT + 20;
+                            });
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          description = value;
+                        },
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(LIGHT_GREY),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(5.0)))),
+                  ),
+                ]),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Količina:',
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
-                                color: Color(DARK_GREY)))
-                      ]),
-                      SizedBox(height: 10),
-                      SizedBox(
-                          child: TextField(
-                              controller: nameController,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius:
-                                          BorderRadius.circular(5.0)))),
-                          height: 44,
-                          width: MediaQuery.of(context).size.width - 40),
-                      SizedBox(height: 20),
-                      Row(children: [
-                        Text('Opis proizvoda: (do 200 reči)',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                color: Color(DARK_GREY)),
-                            textAlign: TextAlign.left)
-                      ]),
-                      SizedBox(height: 10),
-                      SizedBox(
-                          child: TextField(
-                              controller: descriptionController,
-                              maxLines: 2,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Color(LIGHT_GREY),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius:
-                                          BorderRadius.circular(5.0)))),
-                          width: MediaQuery.of(context).size.width - 40),
-                      SizedBox(height: 20),
-                      Row(children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text('Kategorija:',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  color: Color(DARK_GREY))),
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: Text('Trenutno na stanju:',
+                                color: Color(DARK_GREY))),
+                        Container(
+                            height: textFieldHeight[4],
+                            width: MediaQuery.of(context).size.width / 2.0 - 40,
+                            child: TextFormField(
                                 style: TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    color: Color(DARK_GREY))))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 8,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              height: 44,
-                              decoration: BoxDecoration(
-                                  color: Color(LIGHT_GREY),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: new DropdownButton<Category>(
-                                  underline:
-                                      Container(color: Colors.transparent),
-                                  icon: SvgPicture.asset(
-                                      'assets/icons/ArrowDown.svg',
-                                      color: Color(DARK_GREY)),
-                                  isExpanded: true,
-                                  value: selectedCategory,
-                                  onChanged: (Category newValue) {
+                                    color: Color(FOREGROUND)),
+                                maxLength: 10,
+                                maxLengthEnforced: true,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
                                     setState(() {
-                                      selectedCategory = newValue;
+                                      textFieldHeight[4] = BUTTON_HEIGHT + 20;
                                     });
-                                  },
-                                  items: categories.map((Category c) {
-                                    return DropdownMenuItem<Category>(
-                                        child: Text(c.name,
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: c);
-                                  }).toList()),
-                            )),
-                        Expanded(flex: 1, child: SizedBox(width: 5)),
-                        Expanded(
-                            flex: 9,
-                            child: SizedBox(
-                                child: TextField(
-                                    controller: inStockController,
-                                    decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(LIGHT_GREY),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)))),
-                                height: 44,
-                                width: 142))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text('Jedinica mere:',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    color: Color(DARK_GREY)))),
-                        Expanded(
-                            flex: 1,
-                            child: Text('Količina:',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    color: Color(DARK_GREY))))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Expanded(
-                            flex: 8,
-                            child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                height: 44,
-                                decoration: BoxDecoration(
-                                    color: Color(LIGHT_GREY),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: DropdownButton(
-                                    underline:
-                                        Container(color: Colors.transparent),
-                                    icon: SvgPicture.asset(
-                                        'assets/icons/ArrowDown.svg',
-                                        color: Color(DARK_GREY)),
-                                    dropdownColor: Color(LIGHT_GREY),
-                                    isExpanded: true,
-                                    value: selected,
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text("Komad",
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: 0,
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("Masa",
-                                            style: TextStyle(
-                                                color: Color(DARK_GREY),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter')),
-                                        value: 1,
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text("Zapremina",
-                                              style: TextStyle(
-                                                  color: Color(DARK_GREY),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter')),
-                                          value: 2)
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selected = value;
-                                        textFld = true;
-                                      });
-                                    }))),
-                        Expanded(flex: 1, child: SizedBox(width: 5)),
-                        Expanded(
-                            flex: 9,
-                            child: SizedBox(
-                                child: TextField(
-                                    controller: amountController,
-                                    enabled: textFld,
-                                    decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(LIGHT_GREY),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)))),
-                                height: 44,
-                                width: 142))
-                      ]),
-                      SizedBox(height: 20),
-                      Row(children: [
-                        Text('Fotografije: (max. 5)',
+                                    return 'Obavezno polje';
+                                  } else if (!regNum.hasMatch(value)) {
+                                    setState(() {
+                                      textFieldHeight[4] = BUTTON_HEIGHT + 20;
+                                    });
+                                    return 'Uneti celi broj';
+                                  } else {
+                                    setState(() {
+                                      textFieldHeight[4] = BUTTON_HEIGHT;
+                                    });
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  quantity = int.parse(value);
+                                },
+                                decoration: InputDecoration(
+                                    counterText: "",
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0))))),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Jedinica mere:',
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
-                                color: Color(DARK_GREY)))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        InkWell(
-                            //borderRadius: BorderRadius.circular(5.0),
-                            child: Container(
-                                color: Color(LIGHT_GREY),
-                                height: 80,
-                                width: 80,
-                                child: Center(
-                                  child: Text('+',
+                                color: Color(DARK_GREY))),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius: BorderRadius.circular(5)),
+                          height: BUTTON_HEIGHT,
+                          width: MediaQuery.of(context).size.width / 2.0 - 20,
+                          child: DropdownButton(
+                              dropdownColor: Color(LIGHT_GREY),
+                              underline: Container(color: Colors.transparent),
+                              icon: SvgPicture.asset(
+                                  'assets/icons/ArrowDown.svg',
+                                  color: Color(DARK_GREY)),
+                              isExpanded: true,
+                              value: selectedUnit,
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text("Komad",
                                       style: TextStyle(
-                                          fontSize: 48,
-                                          color: Color(DARK_GREY))),
-                                )),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          new Blank() // TODO - ADD PICTURES
-                                      ));
-                            }),
-                        SizedBox(width: 10),
-                        Wrap(
-                          children: List.generate(images.length, (index) {
-                            return InkWell(
-                                child: SizedBox(
-                                  child: Image.asset(
-                                    images[index],
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.fitHeight,
-                                  ),
+                                          color: Color(DARK_GREY),
+                                          fontSize: 14,
+                                          fontFamily: 'Inter')),
+                                  value: 0,
                                 ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              new Blank() // TODO - SELECT PICTURE TO ADD
-                                          ));
+                                DropdownMenuItem(
+                                  child: Text("Masa (g)",
+                                      style: TextStyle(
+                                          color: Color(DARK_GREY),
+                                          fontSize: 14,
+                                          fontFamily: 'Inter')),
+                                  value: 1,
+                                ),
+                                DropdownMenuItem(
+                                    child: Text("Zapremina (ml)",
+                                        style: TextStyle(
+                                            color: Color(DARK_GREY),
+                                            fontSize: 14,
+                                            fontFamily: 'Inter')),
+                                    value: 2)
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedUnit = value;
                                 });
-                          }),
+                              }),
                         ),
-                      ]),
-                      SizedBox(height: 20),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 40,
-                        height: 60,
-                        child: ButtonFill(
-                            text: 'Dodaj proizvod',
-                            onPressed: () {
-                              price = 2.33;
-                              if (nameController.text != null &&
-                                  images.length != 0 &&
-                                  selected != null &&
-                                  amountController.text != null &&
-                                  descriptionController.text != null &&
-                                  selectedCategory != null) {
-                                addProductCallback(
-                                    nameController.text,
-                                    price,
-                                    images,
-                                    selected,
-                                    int.parse(amountController.text),
-                                    descriptionController.text,
-                                    0,
-                                    selectedCategory.id);
-                                Navigator.pop(context);
-                              } else {
-                                //TODO istampati poruku da se popune sva polja
-                              }
+                        !isSetUnit
+                            ? Padding(
+                                padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
+                                child: Text(
+                                  "Obavezno polje",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
+                                ),
+                              )
+                            : Container()
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Kategorija:',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                color: Color(DARK_GREY))),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          height: BUTTON_HEIGHT,
+                          width: MediaQuery.of(context).size.width / 2.0 - 40,
+                          decoration: BoxDecoration(
+                              color: Color(LIGHT_GREY),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: new DropdownButton<Category>(
+                              dropdownColor: Color(LIGHT_GREY),
+                              underline: Container(color: Colors.transparent),
+                              icon: SvgPicture.asset(
+                                  'assets/icons/ArrowDown.svg',
+                                  color: Color(DARK_GREY)),
+                              isExpanded: true,
+                              value: selectedCategory,
+                              onChanged: (Category newValue) {
+                                setState(() {
+                                  selectedCategory = newValue;
+                                });
+                              },
+                              items: categories.map((Category c) {
+                                return DropdownMenuItem<Category>(
+                                    child: Text(c.name,
+                                        style: TextStyle(
+                                            color: Color(DARK_GREY),
+                                            fontSize: 14,
+                                            fontFamily: 'Inter')),
+                                    value: c);
+                              }).toList()),
+                        ),
+                        !isSetCategory
+                            ? Padding(
+                                padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
+                                child: Text(
+                                  "Obavezno polje",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(RED_ATTENTION)),
+                                ),
+                              )
+                            : Container()
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Na lageru:',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                color: Color(DARK_GREY))),
+                        SizedBox(
+                            height: textFieldHeight[3],
+                            width: MediaQuery.of(context).size.width / 2.0 - 20,
+                            child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(FOREGROUND)),
+                                maxLength: 10,
+                                maxLengthEnforced: true,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    setState(() {
+                                      textFieldHeight[3] = BUTTON_HEIGHT + 20;
+                                    });
+                                    return 'Obavezno polje';
+                                  } else if (!regNum.hasMatch(value)) {
+                                    setState(() {
+                                      textFieldHeight[3] = BUTTON_HEIGHT + 20;
+                                    });
+                                    return 'Uneti celi broj';
+                                  } else {
+                                    setState(() {
+                                      textFieldHeight[3] = BUTTON_HEIGHT;
+                                    });
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  inStock = int.parse(value);
+                                },
+                                decoration: InputDecoration(
+                                    counterText: "",
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)))))
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Cena:',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                color: Color(DARK_GREY))),
+                        Container(
+                            height: textFieldHeight[5],
+                            width: MediaQuery.of(context).size.width / 2.0 - 40,
+                            child: TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(FOREGROUND)),
+                                maxLength: 10,
+                                maxLengthEnforced: true,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    setState(() {
+                                      textFieldHeight[5] = BUTTON_HEIGHT + 20;
+                                    });
+                                    return 'Obavezno polje';
+                                  } else if (!regReal.hasMatch(value)) {
+                                    setState(() {
+                                      textFieldHeight[5] = BUTTON_HEIGHT + 20;
+                                    });
+                                    return 'Uneti broj';
+                                  } else {
+                                    setState(() {
+                                      textFieldHeight[5] = BUTTON_HEIGHT;
+                                    });
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  price = double.parse(value);
+                                },
+                                decoration: InputDecoration(
+                                    counterText: "",
+                                    filled: true,
+                                    fillColor: Color(LIGHT_GREY),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0))))),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 12, 0, 0),
+                      child: Text(CURRENCY,
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Color(DARK_GREY))),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Fotografije (max. 3):',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Color(DARK_GREY))),
+                  SizedBox(height: 10),
+                  Row(children: [
+                    InkWell(
+                        //borderRadius: BorderRadius.circular(5.0),
+                        child: Container(
+                            color: Color(LIGHT_GREY),
+                            height:
+                                (MediaQuery.of(context).size.width - 80) / 4.0,
+                            width:
+                                (MediaQuery.of(context).size.width - 80) / 4.0,
+                            child: Center(
+                              child: Text('+',
+                                  style: TextStyle(
+                                      fontSize: 48, color: Color(DARK_GREY))),
+                            )),
+                        onTap: () async {
+                          final imagePicker = getImagePickerMain();
+                          if (imgCount < 3) {
+                            imagePicker.getImage().then((bytes) {
+                              asyncFileUpload(bytes).then((value) {
+                                SuperImage tmp = SuperImage();
+                                tmp.rawData = bytes;
+                                tmp.url = 'https://ipfs.io/ipfs/$value';
+                                setState(() {
+                                  images.add(tmp);
+                                  imgCount++;
+                                });
+                              });
+                            });
+                          } else {
+                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                content: new Text(
+                                    "Ne možete postaviti više od 3 fotografije")));
+                          }
+                        }),
+                    SizedBox(width: 10),
+                    (images != null)
+                        ? Wrap(
+                            children: List.generate(images.length, (index) {
+                              return Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        child: Image.memory(
+                                          images[index].rawData,
+                                          height: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80) /
+                                              4.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: MouseRegion(
+                                              opaque: true,
+                                              cursor: SystemMouseCursors.click,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    images
+                                                        .remove(images[index]);
+                                                    imgCount--;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 28,
+                                                  height: 28,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(BACKGROUND),
+                                                      border: Border.all(
+                                                          color:
+                                                              Color(FOREGROUND),
+                                                          width: 1,
+                                                          style: BorderStyle
+                                                              .solid)),
+                                                  child: Center(
+                                                    child: Text('-',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: Color(
+                                                                FOREGROUND))),
+                                                  ),
+                                                ),
+                                              )))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  )
+                                ],
+                              );
                             }),
-                      )
-                    ])))));
+                          )
+                        : SizedBox.shrink()
+                  ]),
+                  !isSetImages
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
+                          child: Text(
+                            "Izaberite barem jednu fotografiju",
+                            style: TextStyle(
+                                fontSize: 12, color: Color(RED_ATTENTION)),
+                          ),
+                        )
+                      : Container(),
+                ]),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 40,
+                  height: 60,
+                  child: ButtonFill(
+                      text: 'Dodaj proizvod',
+                      onPressed: () {
+                        if (selectedUnit == null) {
+                          isSetUnit = false;
+                        } else {
+                          isSetUnit = true;
+                        }
+                        if (selectedCategory == null) {
+                          isSetCategory = false;
+                        } else {
+                          isSetCategory = true;
+                        }
+                        if (images.length == 0) {
+                          isSetImages = false;
+                        } else {
+                          isSetImages = true;
+                        }
+                        if (_formKey.currentState.validate() &&
+                            isSetCategory &&
+                            isSetUnit &&
+                            isSetImages) {
+                          List<String> imagesUrls = [];
+                          for (var t in images) {
+                            imagesUrls.add(t.url);
+                          }
+                          addProductCallback(
+                              name,
+                              price,
+                              imagesUrls,
+                              selectedUnit,
+                              quantity,
+                              description,
+                              usr.id,
+                              selectedCategory.id);
+                          setState(() {
+                            images = null;
+                            imgCount = 0;
+                          });
+                          Navigator.pop(context);
+                        }
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ])),
+        ))));
   }
 }

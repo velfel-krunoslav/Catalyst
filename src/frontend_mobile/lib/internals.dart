@@ -1,26 +1,172 @@
-import 'package:frontend_mobile/config.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import './config.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'pages/inbox.dart';
 
-void performPayment(String targetAccountAddress, int eth) async {
+User usr;
+
+void switchToDarkTheme() {
+  RED_ATTENTION = 0xFFCB1C04;
+  GREEN_SUCCESSFUL = 0xFF33AE08;
+  BLACK = 0xFF000000;
+  DARK_GREY = 0xFFECECEC;
+  LIGHT_GREY = 0xFF6D6D6D;
+  DARK_GREEN = 0xFF07630B;
+  MINT = 0xFF1BD14C;
+  OLIVE = 0xFF009A29;
+  TEAL = 0xFF0EAD65;
+  CYAN = 0xFF0F62FE;
+  LIGHT_BLACK = 0xFF202020;
+  YELLOW = 0xFFE7A600;
+  FOREGROUND = 0xFFFFFFFF;
+  BACKGROUND = 0xFF000000;
+}
+
+void switchToLightTheme() {
+  RED_ATTENTION = 0xFFCB1C04;
+  GREEN_SUCCESSFUL = 0xFF33AE08;
+  BLACK = 0xFF000000;
+  DARK_GREY = 0xFF6D6D6D;
+  LIGHT_GREY = 0xFFECECEC;
+  DARK_GREEN = 0xFF07630B;
+  MINT = 0xFF1BD14C;
+  OLIVE = 0xFF009A29;
+  TEAL = 0xFF0EAD65;
+  CYAN = 0xFF0F62FE;
+  LIGHT_BLACK = 0xFF202020;
+  YELLOW = 0xFFE7A600;
+  FOREGROUND = 0xFF000000;
+  BACKGROUND = 0xFFFFFFFF;
+}
+
+Future<String> requestChatID(int userID1, int userID2) async {
+  var queryParameters = {
+    'UserID1': userID1.toString(),
+    'UserID2': userID2.toString()
+  };
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatBetweenUsers', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<http.Response> publishMessage(Message msg) async {
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Message/AddMessage";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'id': msg.id.toString(),
+        'chatId': msg.sender.chatID.toString(),
+        'fromId': msg.sender.id.toString(),
+        'messageText': msg.text,
+        'timestamp': msg.time,
+        'unread': msg.unread
+      }));
+  return response;
+}
+
+Future<http.Response> addChat({int idSender, int idReceiver}) async {
+  final String apiURL =
+      "http://$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT/Chat/AddChat";
+  final response = await http.post(apiURL,
+      headers: <String, String>{
+        'content-type': 'application/json; charset=utf-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "id": 0,
+        "id_Sender": idSender,
+        "id_Reciever": idReceiver,
+      }));
+  return response;
+}
+
+void setMessageReadStatus(int id, bool readStatus) async {
+  var queryParameters = {
+    'IDMessage': id.toString(),
+    'status': readStatus.toString()
+  };
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/ChangeStatusRead', queryParameters);
+  await http.get(uri);
+}
+
+Future<String> requestGetChat(int id) async {
+  var queryParameters = {'id': id.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Chat/GetChatsFromUserID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> requestLatestMessageFromChat(int chatID) async {
+  var queryParameters = {'chatID': chatID.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetLatestMessageFromChatID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> requestAllMessagesFromChat(int chatID) async {
+  var queryParameters = {'messageChatID': chatID.toString()};
+  var uri = Uri.http('$MESSAGING_SERVER_HOSTNAME:$MESSAGING_SERVER_PORT',
+      '/Message/GetAllMessagesFromChatID', queryParameters);
+  var response = await http.get(uri);
+  return response.body;
+}
+
+Future<String> asyncFileUpload(Uint8List contents) async {
+  var request = http.MultipartRequest(
+      'POST', Uri.parse('https://ipfs.infura.io:5001/api/v0/add'));
+  // ignore: await_only_futures
+  var pic = await http.MultipartFile.fromBytes('file', contents);
+  request.files.add(pic);
+  var response = await request.send();
+  var responseData = await response.stream.toBytes();
+  var responseString = String.fromCharCodes(responseData);
+  return jsonDecode(responseString)['Hash'];
+}
+
+Future<bool> performPayment(String privateKey, String targetAccountAddress,
+    {dynamic eth, dynamic wei}) async {
+  bool hasFault = false;
   final client =
       Web3Client('http://' + HOST, Client(), enableBackgroundIsolate: true);
-  final credentials = await client.credentialsFromPrivateKey(PRIVATE_KEY);
+  final credentials = await client
+      .credentialsFromPrivateKey(privateKey)
+      .onError((error, stackTrace) {
+    hasFault = true;
+  });
+  String hash;
+  hash = await client
+      .sendTransaction(
+        credentials,
+        Transaction(
+          to: EthereumAddress.fromHex(targetAccountAddress),
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: 100000,
+          value: (eth != null)
+              ? EtherAmount.fromUnitAndValue(EtherUnit.ether, eth)
+              : EtherAmount.fromUnitAndValue(EtherUnit.wei, wei),
+        ),
+        fetchChainIdFromNetworkId: false,
+      )
+      .onError((error, stackTrace) => hash = null);
 
-  await client.sendTransaction(
-    credentials,
-    Transaction(
-      to: EthereumAddress.fromHex(targetAccountAddress),
-      gasPrice: EtherAmount.inWei(BigInt.one),
-      maxGas: 100000,
-      value: EtherAmount.fromUnitAndValue(EtherUnit.ether, eth),
-    ),
-    fetchChainIdFromNetworkId: false,
-  );
-  await client.dispose();
+  if (hash == null || hasFault) return false;
+
+  var res = await client
+      .getTransactionReceipt(hash)
+      .whenComplete(() => client.dispose());
+
+  return res.status;
 }
 
 class Prefs {
@@ -81,21 +227,25 @@ class ProductEntry {
   List<String> assetUrls;
   String name;
   double price;
+  int discountPercentage;
   Classification classification;
   int quantifier;
   String desc;
   int sellerId;
   int categoryId;
+  int inStock;
   ProductEntry(
       {this.id,
       this.assetUrls,
       this.name,
       this.price,
+      this.discountPercentage,
       this.classification,
       this.quantifier,
       this.desc,
       this.sellerId,
-      this.categoryId});
+      this.categoryId,
+      this.inStock});
 }
 
 class DiscountedProductEntry extends ProductEntry {
@@ -144,7 +294,7 @@ class ProductEntryListingPage extends ProductEntry {
   double averageReviewScore;
   int numberOfReviews;
   UserInfo userInfo;
-
+  User vendor;
   ProductEntryListingPage(
       {List<String> assetUrls,
       String name,
@@ -152,43 +302,56 @@ class ProductEntryListingPage extends ProductEntry {
       Classification classification,
       int quantifier,
       int id,
+      int discountPercentage,
+      int categoryId,
+      int inStock,
       this.description,
       this.averageReviewScore,
       this.numberOfReviews,
-      this.userInfo})
+      this.userInfo,
+      this.vendor})
       : super(
+            inStock: inStock,
+            categoryId: categoryId,
             id: id,
             assetUrls: assetUrls,
             name: name,
             price: price,
             classification: classification,
-            quantifier: quantifier);
+            quantifier: quantifier,
+            discountPercentage: discountPercentage);
 }
 
 class User {
-  String forename;
+  int id;
+  String name;
   String surname;
+  String privateKey;
+  String metamaskAddress;
   String photoUrl;
+  String desc;
+  String email;
   String phoneNumber;
-  String address;
-  String city;
-  String mail;
-  String about;
-  double rating;
-  int reviewsCount;
-
-  User({
-    this.forename,
-    this.surname,
-    this.photoUrl,
-    this.phoneNumber,
-    this.address,
-    this.city,
-    this.mail,
-    this.about,
-    this.rating,
-    this.reviewsCount,
-  });
+  String homeAddress;
+  String birthday;
+  int uType;
+  int reputationPositive;
+  int reputationNegative;
+  User(
+      {this.id,
+      this.name,
+      this.surname,
+      this.privateKey,
+      this.metamaskAddress,
+      this.photoUrl,
+      this.desc,
+      this.email,
+      this.phoneNumber,
+      this.homeAddress,
+      this.birthday,
+      this.uType,
+      this.reputationPositive,
+      this.reputationNegative});
 }
 
 class Review {
@@ -197,18 +360,33 @@ class Review {
   int rating;
   String desc;
   int userId;
-
-  Review({this.id, this.productId, this.rating, this.desc, this.userId});
+  DateTime date;
+  Review(
+      {this.id,
+      this.productId,
+      this.rating,
+      this.desc,
+      this.userId,
+      this.date});
 }
 
 class CartProduct {
   List<String> photoUrl;
   String name;
   double price;
-  int cartQuantity, id;
+  int cartQuantity, id, vendorId;
+  Classification classification;
+  int quantifier;
 
   CartProduct(
-      {this.id, this.photoUrl, this.name, this.price, this.cartQuantity});
+      {this.id,
+      this.vendorId,
+      this.photoUrl,
+      this.name,
+      this.price,
+      this.cartQuantity,
+      this.classification,
+      this.quantifier});
 }
 
 class UserReview extends User {
@@ -216,29 +394,33 @@ class UserReview extends User {
   int stars;
 
   UserReview(
-      {String forename,
+      {int id,
+      String name,
       String surname,
+      String privateKey,
+      String metamaskAddress,
       String photoUrl,
+      String desc,
+      String email,
       String phoneNumber,
-      String address,
-      String city,
-      String mail,
-      String about,
-      double rating,
-      int reviewsCount,
+      String homeAddress,
+      String birthday,
+      int uType,
       this.text,
       this.stars})
       : super(
-            forename: forename,
-            surname: surname,
-            photoUrl: photoUrl,
-            phoneNumber: phoneNumber,
-            address: address,
-            city: city,
-            mail: mail,
-            about: about,
-            rating: rating,
-            reviewsCount: reviewsCount);
+          name: name,
+          surname: surname,
+          privateKey: privateKey,
+          metamaskAddress: metamaskAddress,
+          photoUrl: photoUrl,
+          desc: desc,
+          email: email,
+          phoneNumber: phoneNumber,
+          homeAddress: homeAddress,
+          birthday: birthday,
+          uType: uType,
+        );
 }
 
 class ReviewPage {
@@ -249,150 +431,142 @@ class ReviewPage {
   ReviewPage({this.average, this.reviews, this.reviewsCount, this.stars});
 }
 
-class ChatUser {
-  int id;
-  String name;
-  String photoUrl;
-
-  ChatUser({this.id, this.name, this.photoUrl});
-}
-
-class Message {
-  final ChatUser sender;
-  final String time;
-  final String text;
-  bool unread;
-
-  Message({this.sender, this.time, this.text, this.unread});
-}
-
-class ChatMessage {
-  String messageContent;
-  String messageType;
-  ChatMessage({this.messageContent, this.messageType});
-}
-
 class Order {
   int id;
-  List<int> productIds;
-  double price;
+  int productId;
+  int amount;
   DateTime date;
   int status; //  confirmed, delivered, refunded, rejected
   int buyerId;
+  int sellerId;
+  String deliveryAddress;
+  int paymentType;
+  double price;
+  DateTime deliveryDate;
   Order(
       {this.id,
-      this.productIds,
+      this.productId,
+      this.amount,
       this.status,
       this.buyerId,
+      this.date,
+      this.sellerId,
+      this.deliveryAddress,
+      this.paymentType,
       this.price,
-      this.date});
+      this.deliveryDate});
+}
+String formattedDate = DateFormat('kk:mm').format(DateTime.now());
+
+ChatUserInfo chatUserInfoFromJson(String str) =>
+    ChatUserInfo.fromJson(json.decode(str));
+
+String chatUserInfoToJson(ChatUserInfo data) => json.encode(data.toJson());
+
+class ChatUserInfo {
+  ChatUserInfo({
+    this.id,
+    this.metaMaskAddress,
+    this.privateKey,
+    this.firstName,
+    this.lastName,
+  });
+
+  int id;
+  String metaMaskAddress;
+  String privateKey;
+  String firstName;
+  String lastName;
+
+  factory ChatUserInfo.fromJson(Map<String, dynamic> json) => ChatUserInfo(
+        id: json["id"],
+        metaMaskAddress: json["metaMaskAddress"],
+        privateKey: json["privateKey"],
+        firstName: json["first_Name"],
+        lastName: json["last_Name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "metaMaskAddress": metaMaskAddress,
+        "privateKey": privateKey,
+        "first_Name": firstName,
+        "last_Name": lastName,
+      };
 }
 
-ChatUser currentUser = ChatUser(
-  id: 0,
-  name: 'Trenutni user',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-);
-ChatUser jelena = ChatUser(
-  id: 1,
-  name: 'Jelena',
-  photoUrl: 'assets/avatars/avatar2.jpg',
-);
-ChatUser luka = ChatUser(
-  id: 2,
-  name: 'Luka',
-  photoUrl: 'assets/avatars/avatar1.jpg',
-);
-ChatUser marija = ChatUser(
-  id: 3,
-  name: 'Marija',
-  photoUrl: 'assets/avatars/avatar3.jpg',
-);
-ChatUser pera = ChatUser(
-  id: 4,
-  name: 'Slobodanka',
-  photoUrl: 'assets/avatars/avatar4.jpg',
-);
-ChatUser krunoslav = ChatUser(
-  id: 5,
-  name: 'Krunoslav',
-  photoUrl: 'assets/avatars/avatar5.jpg',
-);
-ChatUser stefan = ChatUser(
-  id: 6,
-  name: 'Stefan',
-  photoUrl: 'assets/avatars/vendor_andrew_ballantyne_cc_by.jpg',
-);
+ChatInfo chatInfoFromJson(String str) => ChatInfo.fromJson(json.decode(str));
 
-List<ChatUser> contacts = [jelena, luka, marija, pera, krunoslav, stefan];
+String chatInfoToJson(ChatInfo data) => json.encode(data.toJson());
 
-DateTime now = DateTime.now();
-String formattedDate = DateFormat('kk:mm').format(now);
+class ChatInfo {
+  ChatInfo({
+    this.id,
+    this.idSender,
+    this.idReciever,
+  });
 
-List<Message> chats = [
-  Message(sender: jelena, time: formattedDate, text: 'Hey?', unread: true),
-  Message(
-      sender: luka,
-      time: formattedDate,
-      text: 'Jesam li parsirao?',
-      unread: false),
-  Message(
-      sender: marija,
-      time: formattedDate,
-      text: 'Posto je paprika,druze?',
-      unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi?', unread: false),
-  Message(
-      sender: stefan,
-      time: formattedDate,
-      text: '.................',
-      unread: false),
-  Message(sender: krunoslav, time: formattedDate, text: 'stres', unread: true),
-  Message(sender: pera, time: formattedDate, text: 'zdera', unread: false),
-  Message(sender: jelena, time: formattedDate, text: 'Hey', unread: true),
-  Message(sender: luka, time: formattedDate, text: 'Parsiraj', unread: false),
-  Message(sender: marija, time: formattedDate, text: 'Aloee', unread: true),
-  Message(sender: jelena, time: formattedDate, text: 'Desi', unread: false),
-  Message(sender: stefan, time: formattedDate, text: '...', unread: false),
-  Message(
-      sender: krunoslav, time: formattedDate, text: 'helloouuu', unread: true),
-  Message(
-      sender: pera,
-      time: formattedDate,
-      text: 'Sta je bre ovo?',
-      unread: false),
-];
+  int id;
+  int idSender;
+  int idReciever;
 
-List<Message> messages = [
-  Message(sender: luka, time: '5:30', text: 'Jesam li parsirao?', unread: true),
-  Message(
-      sender: currentUser, time: '5:30', text: 'Nisi parsirao!', unread: true),
-  Message(
-    sender: luka,
-    time: '5:31',
-    text: 'Posto paradajz?',
-    unread: true,
-  ),
-  Message(
-      sender: currentUser,
-      time: '5:38',
-      text: '150 dinara kilo!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '8:30',
-      text: 'Skup si brate,moze popust?',
-      unread: true),
-  Message(
-      sender: currentUser,
-      time: '8:32',
-      text: 'Moze,dajem 10% za tebe popusta!',
-      unread: true),
-  Message(
-      sender: luka,
-      time: '9:00',
-      text:
-          'Moze salji na sledecu adresu: Radoja Domanovica 1,Kragujevac,34000',
-      unread: true),
-  Message(sender: currentUser, time: '9:11', text: 'Dogovoreno!', unread: true),
-];
+  factory ChatInfo.fromJson(Map<String, dynamic> json) => ChatInfo(
+        id: json["id"],
+        idSender: json["id_Sender"],
+        idReciever: json["id_Reciever"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "id_Sender": idSender,
+        "id_Reciever": idReciever,
+      };
+}
+
+ChatMessageInfo chatMessageInfoFromJson(String str) =>
+    ChatMessageInfo.fromJson(json.decode(str));
+
+String chatMessageInfoToJson(ChatMessageInfo data) =>
+    json.encode(data.toJson());
+
+class ChatMessageInfo {
+  ChatMessageInfo({
+    this.id,
+    this.chatId,
+    this.fromId,
+    this.messageText,
+    this.timestamp,
+    this.unread,
+  });
+
+  @override
+  String toString() {
+    return '[${this.id},${this.chatId},${this.fromId},${this.messageText},${this.timestamp},${this.unread}]';
+  }
+
+  int id;
+  int chatId;
+  int fromId;
+  String messageText;
+  DateTime timestamp;
+  bool unread;
+
+  factory ChatMessageInfo.fromJson(Map<String, dynamic> json) =>
+      ChatMessageInfo(
+        id: json["id"],
+        chatId: json["chatId"],
+        fromId: json["fromId"],
+        messageText: json["messageText"],
+        timestamp: DateTime.parse(json["timestamp"]),
+        unread: json["unread"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "chatId": chatId,
+        "fromId": fromId,
+        "messageText": messageText,
+        "timestamp": timestamp.toIso8601String(),
+        "unread": unread,
+      };
+}
