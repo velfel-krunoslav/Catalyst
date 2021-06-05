@@ -188,7 +188,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
     return maxPrice;
   }
 
-  var _currentCategorySelected = "Izaberite sortiranje...";
+  var _currentCategorySelected = "Bez sortiranja";
   bool _value = false;
   onSwitchValueChanged(bool value) {
     setState(() {
@@ -425,7 +425,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               items: [
                                 DropdownMenuItem<String>(
                                   value: "",
-                                  child: Text(""),
+                                  child: Text("Bez sortiranja"),
                                 ),
                                 DropdownMenuItem<String>(
                                   value: "Najjeftinije prvo",
@@ -443,9 +443,15 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                                       newCategorySelected;
                                 });
                               },
-                              hint: Text(_currentCategorySelected),
-                              decoration: const InputDecoration(
+                              hint: Text(
+                                _currentCategorySelected,
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color(DARK_GREY)),
+                              ),
+                              decoration: InputDecoration(
                                 filled: true,
+                                fillColor: Color(LIGHT_GREY),
                                 border: const OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(5.0),
@@ -472,7 +478,7 @@ class _ConsumerHomePageState extends State<ConsumerHomePage> {
                               },
                               child: Text('Primeni',
                                   style: TextStyle(
-                                      color: Color(BLACK),
+                                      color: Color(DARK_GREY),
                                       fontFamily: 'Inter',
                                       fontSize: 14)),
                             ),

@@ -24,7 +24,7 @@ class EditProduct extends StatefulWidget {
 
 List<double> textFieldHeight = [
   BUTTON_HEIGHT,
-  BUTTON_HEIGHT + 20,
+  BUTTON_HEIGHT + 80,
   BUTTON_HEIGHT,
   BUTTON_HEIGHT,
   BUTTON_HEIGHT,
@@ -157,36 +157,34 @@ class _EditProductState extends State<EditProduct> {
                           fontSize: 14,
                           color: Color(DARK_GREY)),
                       textAlign: TextAlign.left),
-                  SizedBox(
-                    height: textFieldHeight[1],
-                    child: TextFormField(
-                        initialValue: product.description,
-                        maxLength: 200,
-                        maxLengthEnforced: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            setState(() {
-                              textFieldHeight[1] = BUTTON_HEIGHT + 20 + 20;
-                            });
-                            return 'Obavezno polje';
-                          } else {
-                            setState(() {
-                              textFieldHeight[1] = BUTTON_HEIGHT + 20;
-                            });
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          description = value;
-                        },
-                        maxLines: 2,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color(LIGHT_GREY),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(5.0)))),
-                  ),
+                  TextFormField(
+                      initialValue: product.description,
+                      maxLength: 200,
+                      maxLengthEnforced: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() {
+                            textFieldHeight[1] = BUTTON_HEIGHT + 20 + 20;
+                          });
+                          return 'Obavezno polje';
+                        } else {
+                          setState(() {
+                            textFieldHeight[1] = BUTTON_HEIGHT + 20;
+                          });
+                        }
+                        return null;
+                      },
+                      minLines: 6,
+                      maxLines: 7,
+                      onChanged: (value) {
+                        description = value;
+                      },
+                      decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(LIGHT_GREY),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(5.0)))),
                 ]),
                 SizedBox(
                   height: 5,

@@ -172,60 +172,35 @@ class _MyProductsState extends State<MyProducts> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          new ChangeNotifierProvider(
-                                                              create: (context) =>
-                                                                  ReviewsModel(
-                                                                      product
-                                                                          .id),
-                                                              child:
-                                                                  ProductEntryListing(
-                                                                ProductEntryListingPage(
-                                                                    inStock: product
-                                                                        .inStock,
-                                                                    categoryId:
-                                                                        product
-                                                                            .categoryId,
-                                                                    assetUrls: product
-                                                                        .assetUrls,
-                                                                    name: product
-                                                                        .name,
-                                                                    price: product
-                                                                        .price,
-                                                                    discountPercentage:
-                                                                        product
-                                                                            .discountPercentage,
-                                                                    classification:
-                                                                        product
-                                                                            .classification,
-                                                                    quantifier:
-                                                                        product
-                                                                            .quantifier,
-                                                                    description:
-                                                                        product
-                                                                            .desc,
-                                                                    id:
-                                                                        product
-                                                                            .id,
-                                                                    userInfo:
-                                                                        new UserInfo(
-                                                                      profilePictureAssetUrl:
-                                                                          'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
-                                                                      fullName:
-                                                                          'Petar Nikolić',
-                                                                      reputationNegative:
-                                                                          7,
-                                                                      reputationPositive:
-                                                                          240,
-                                                                    ),
-                                                                    vendor:
-                                                                        usr),
-                                                                initiateRefresh,
-                                                                setSale:
-                                                                    setSale,
-                                                                removeProduct:
-                                                                    removeProduct,
-                                                              ))),
+                                                      builder: (context) => new ChangeNotifierProvider(
+                                                          create: (context) => ReviewsModel(product.id),
+                                                          child: ProductEntryListing(
+                                                              ProductEntryListingPage(
+                                                                  inStock: product.inStock,
+                                                                  categoryId: product.categoryId,
+                                                                  assetUrls: product.assetUrls,
+                                                                  name: product.name,
+                                                                  price: product.price,
+                                                                  discountPercentage: product.discountPercentage,
+                                                                  classification: product.classification,
+                                                                  quantifier: product.quantifier,
+                                                                  description: product.desc,
+                                                                  id: product.id,
+                                                                  userInfo: new UserInfo(
+                                                                    profilePictureAssetUrl:
+                                                                        'https://ipfs.io/ipfs/QmRCHi7CRFfbgyNXYsiSJ8wt8XMD3rjt3YCQ2LccpqwHke',
+                                                                    fullName:
+                                                                        'Petar Nikolić',
+                                                                    reputationNegative:
+                                                                        7,
+                                                                    reputationPositive:
+                                                                        240,
+                                                                  ),
+                                                                  vendor: usr),
+                                                              initiateRefresh,
+                                                              setSale: setSale,
+                                                              removeProduct: removeProduct,
+                                                              editProduct: editProductCallback))),
                                                 );
                                               })
                                           : DiscountedProductEntryCard(
